@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>관리 이력 — shortflow Admin</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<link rel="stylesheet" href="admin-common.css">
+<script src="admin-common.js" defer></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#f5f5f3;
+  --surface:#ffffff;
+  --sidebar:#141414;
+  --sidebar-hover:#1f1f1f;
+  --sidebar-active:#242424;
+  --text-primary:#1a1a1a;
+  --text-secondary:#6b6b6b;
+  --text-muted:#9b9b9b;
+  --text-sidebar:#999;
+  --border:#e8e8e5;
+  --border-mid:#d0d0cc;
+}
+
+body{font-family:'Inter',-apple-system,sans-serif;font-size:13px;color:var(--text-primary);background:var(--bg);height:100vh;display:flex;overflow:hidden}
+
+/* Sidebar */
+.sb{width:210px;min-width:210px;background:#13130f;display:flex;flex-direction:column;height:100vh;flex-shrink:0}
+.sb-logo{padding:16px 16px 12px;border-bottom:.5px solid rgba(255,255,255,.08)}
+.sb-logo-main{color:#fff;font-size:14px;font-weight:600}
+.sb-logo-sub{font-size:9px;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;margin-top:1px}
+.nav{flex:1;overflow-y:auto;padding:6px 0}
+.nav-label{font-size:9px;color:rgba(255,255,255,.22);letter-spacing:.08em;text-transform:uppercase;padding:10px 16px 3px}
+.ni{display:flex;align-items:center;gap:7px;padding:6px 16px;font-size:12.5px;color:rgba(255,255,255,.42);cursor:pointer;border-left:2px solid transparent}
+.ni:hover{color:rgba(255,255,255,.7)}
+.ni.active{color:#fff;border-left-color:#fff;background:rgba(255,255,255,.04)}
+.ni i{font-size:13px;flex-shrink:0}
+.ni-badge{margin-left:auto;font-size:10px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.5);padding:1px 6px;border-radius:10px}
+.ni-badge.hot{background:#fff;color:#13130f}
+.sub .ni{padding-left:36px;font-size:12px;color:rgba(255,255,255,.32)}
+.sub .ni:hover{color:rgba(255,255,255,.6)}
+.sb-foot{padding:10px 16px;border-top:.5px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:9px}
+.ava{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:500;flex-shrink:0}
+.uname{font-size:11px;color:#fff;font-weight:500}
+.uemail{font-size:10px;color:rgba(255,255,255,.28);margin-top:1px}
+
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:48px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-left{font-size:14px;font-weight:500}
+.topbar-right{font-size:12px;color:var(--text-muted)}
+.content{padding:24px;flex:1;overflow-y:auto}
+.page-title{font-size:18px;font-weight:600;margin-bottom:3px}
+.page-sub{font-size:13px;color:var(--text-secondary);margin-bottom:20px}
+
+/* Filter */
+.filter-area{margin-bottom:16px}
+.filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+.date-range{display:flex;align-items:center;border:1px solid var(--border-mid);border-radius:8px;background:var(--surface);overflow:hidden;height:36px}
+.date-range input[type=date]{border:none;outline:none;background:transparent;font-size:12px;font-family:inherit;color:var(--text-primary);padding:0 12px;height:100%;cursor:pointer;width:136px}
+.date-range input[type=date]:first-child{border-right:1px solid var(--border-mid)}
+
+/* Custom select */
+.custom-select{position:relative;display:inline-block}
+.cs-btn{display:flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:1px solid var(--border-mid);border-radius:8px;background:var(--surface);color:var(--text-primary);font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:border-color .15s}
+.cs-btn:hover{border-color:#aaa}
+.cs-btn.open{border-color:#888;border-bottom-left-radius:0;border-bottom-right-radius:0}
+.cs-btn.has-value{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.cs-btn.has-value .cs-arrow{opacity:.5}
+.cs-arrow{font-size:10px;color:var(--text-muted);margin-left:4px;transition:transform .15s;line-height:1}
+.cs-btn.open .cs-arrow{transform:rotate(180deg)}
+
+.cs-dropdown{display:none;position:absolute;top:100%;left:0;z-index:200;background:var(--surface);border:1px solid #888;border-top:none;border-radius:0 0 8px 8px;min-width:210px;max-height:300px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.1)}
+.cs-dropdown.open{display:block}
+.cs-group-label{font-size:10px;font-weight:600;letter-spacing:.08em;color:var(--text-muted);padding:10px 12px 4px;text-transform:uppercase}
+.cs-option{display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:12px;color:var(--text-primary);cursor:pointer}
+.cs-option:hover{background:var(--bg)}
+.cs-option.selected{font-weight:500}
+.cs-check{width:13px;height:13px;flex-shrink:0;color:#1a1a1a;opacity:0}
+.cs-option.selected .cs-check{opacity:1}
+.cs-divider{border:none;border-top:1px solid var(--border);margin:3px 0}
+
+.btn-reset{height:36px;padding:0 12px;border:1px solid var(--border-mid);border-radius:8px;background:transparent;color:var(--text-secondary);font-size:12px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s}
+.btn-reset:hover{background:var(--surface);border-color:#aaa;color:var(--text-primary)}
+
+/* Active tags */
+.active-tags{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:10px}
+.filter-tag{display:flex;align-items:center;gap:5px;background:#1a1a1a;color:#fff;font-size:12px;padding:5px 11px;border-radius:20px}
+.tag-x{cursor:pointer;opacity:.5;font-size:12px;line-height:1}
+.tag-x:hover{opacity:1}
+
+/* Result meta */
+.result-meta{font-size:12px;color:var(--text-secondary);margin-bottom:10px}
+.result-meta strong{color:var(--text-primary);font-weight:600}
+
+/* Table */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+colgroup .c-dt{width:170px}
+colgroup .c-admin{width:150px}
+colgroup .c-type{width:190px}
+colgroup .c-target{width:170px}
+colgroup .c-desc{}
+thead tr{background:#fafaf8}
+th{font-size:11px;font-weight:500;color:var(--text-muted);text-align:left;padding:10px 18px;border-bottom:1px solid var(--border);letter-spacing:.03em}
+td{padding:11px 18px;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#fafaf8}
+.dt-date{display:inline;font-size:12px}
+.dt-time{display:inline;margin-left:6px;font-size:12px;color:var(--text-secondary)}
+.admin-name{font-size:12px}
+.badge{display:inline-block;font-size:11px;font-weight:500;padding:2px 8px;border-radius:9px;white-space:nowrap}
+.b-content{background:#E6F1FB;color:#0C447C}
+.b-user{background:#EEEDFE;color:#3C3489}
+.b-workflow{background:#E1F5EE;color:#085041}
+.b-settle{background:#FAEEDA;color:#633806}
+.b-credit{background:#FAECE7;color:#712B13}
+.b-perf{background:#EAF3DE;color:#27500A}
+.b-modify{background:#FBEAF0;color:#72243E}
+.target{font-size:12px;color:var(--text-secondary);font-family:'SF Mono','Fira Code',monospace;background:var(--bg);padding:3px 8px;border-radius:5px;border:1px solid var(--border)}
+.desc{font-size:12px;line-height:1.5}
+
+/* Pagination */
+.pag-wrap{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px}
+.pag-btn{min-width:30px;height:30px;padding:0 9px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer;background:transparent;color:var(--text-secondary);font-family:inherit}
+.pag-btn:hover{background:var(--bg);border-color:var(--border-mid);color:var(--text-primary)}
+.pag-btn.on{background:#1a1a1a;color:#fff;border-color:#1a1a1a;font-weight:500}
+.pag-dots{min-width:22px;text-align:center;font-size:12px;color:var(--text-muted)}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-main">shortflow</div>
+    <div class="sb-logo-sub">Admin</div>
+    <button class="sb-toggle" type="button" aria-label="네비 접기" aria-expanded="true"><i class="ti ti-chevron-left"></i></button>
+  </div>
+  <nav class="nav">
+    <div class="nav-label">메인</div>
+    <a class="ni" href="dashboard-admin.html"><i class="ti ti-home"></i> 홈</a>
+    <div class="nav-label">회원</div>
+    <a class="ni" href="member-admin.html"><i class="ti ti-users"></i> 회원 관리</a>
+    <div class="sub">
+      <a class="ni" href="member-admin.html#users">유저</a>
+      <a class="ni" href="member-admin.html#companies">회사</a>
+    </div>
+    <div class="nav-label">콘텐츠</div>
+    <a class="ni" href="content-admin-full.html"><i class="ti ti-file-text"></i> 콘텐츠 관리</a>
+    <div class="sub">
+      <a class="ni" href="content-admin-full.html#list">전체 콘텐츠</a>
+      <a class="ni" href="content-admin-full.html#revisions">수정 요청</a>
+    </div>
+    <div class="nav-label">거래</div>
+    <a class="ni" href="workflow-admin.html"><i class="ti ti-git-branch"></i> 워크플로우</a>
+    <div class="sub">
+      <a class="ni" href="workflow-admin.html#platform">단일 거래</a>
+      <a class="ni" href="workflow-admin.html#bundle">묶음 거래</a>
+      <a class="ni" href="workflow-admin.html#turnkey">턴키 거래</a>
+    </div>
+    <a class="ni" href="turnkey-intent-admin.html"><i class="ti ti-clipboard-list"></i> 턴키 판매 의사</a>
+    <div class="nav-label">운영</div>
+    <a class="ni" href="settlement-admin.html"><i class="ti ti-receipt"></i> 정산</a>
+    <div class="sub">
+      <a class="ni" href="settlement-admin.html#contracts">계약 관리</a>
+      <a class="ni" href="settlement-admin.html#settlement">정산 처리</a>
+    </div>
+    <a class="ni" href="mail-admin.html"><i class="ti ti-mail"></i> 메일 발송</a>
+    <a class="ni active" href="audit-log.html"><i class="ti ti-shield-check"></i> 관리 이력</a>
+  </nav>
+  <div class="sb-foot">
+    <div class="ava">L</div>
+    <div>
+      <div class="uname">Lee · Admin</div>
+      <div class="uemail">ops@shortflow.io</div>
+    </div>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <div class="topbar">
+    <span class="topbar-left">관리 이력</span>
+  </div>
+
+  <div class="content">
+    <div class="filter-area">
+      <div class="filter-row">
+
+          <!-- 액션 유형 -->
+          <div class="custom-select" id="cs-action">
+            <button class="cs-btn" onclick="toggleDropdown('cs-action')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+              <span class="cs-label">액션 유형</span>
+              <span class="cs-arrow">▾</span>
+            </button>
+            <div class="cs-dropdown" id="dd-action">
+            <div class="cs-group-label">유저</div>
+            <div class="cs-option" data-value="user-approve" onclick="pick('cs-action','user-approve','유저 승인')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>유저 승인</div>
+            <div class="cs-option" data-value="user-reject" onclick="pick('cs-action','user-reject','유저 거절')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>유저 거절</div>
+            <div class="cs-option" data-value="user-edit" onclick="pick('cs-action','user-edit','유저 정보수정')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>유저 정보수정</div>
+            <hr class="cs-divider">
+            <div class="cs-group-label">콘텐츠</div>
+            <div class="cs-option" data-value="content-approve" onclick="pick('cs-action','content-approve','콘텐츠 승인')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>콘텐츠 승인</div>
+            <div class="cs-option" data-value="content-reject" onclick="pick('cs-action','content-reject','콘텐츠 거절')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>콘텐츠 거절</div>
+            <div class="cs-option" data-value="content-edit" onclick="pick('cs-action','content-edit','콘텐츠 수정')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>콘텐츠 수정</div>
+            <div class="cs-option" data-value="content-delete" onclick="pick('cs-action','content-delete','콘텐츠 삭제')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>콘텐츠 삭제</div>
+            <div class="cs-option" data-value="ep-save" onclick="pick('cs-action','ep-save','번역/에피소드/티저 저장')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>번역/에피소드/티저 저장</div>
+            <div class="cs-option" data-value="release" onclick="pick('cs-action','release','릴리즈 이력')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>릴리즈 이력</div>
+            <hr class="cs-divider">
+            <div class="cs-group-label">수정 요청</div>
+            <div class="cs-option" data-value="modify-approve" onclick="pick('cs-action','modify-approve','수정 요청 승인')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>수정 요청 승인</div>
+            <div class="cs-option" data-value="modify-reject" onclick="pick('cs-action','modify-reject','수정 요청 거절')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>수정 요청 거절</div>
+            <hr class="cs-divider">
+            <div class="cs-group-label">제작사</div>
+            <div class="cs-option" data-value="company-edit" onclick="pick('cs-action','company-edit','제작사 정보수정')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>제작사 정보수정</div>
+            <hr class="cs-divider">
+            <div class="cs-group-label">워크플로우</div>
+            <div class="cs-option" data-value="confirm-send" onclick="pick('cs-action','confirm-send','컨펌 전송')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>컨펌 전송</div>
+            <div class="cs-option" data-value="meta-grant" onclick="pick('cs-action','meta-grant','메타데이터 권한 부여')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>메타데이터 권한 부여</div>
+            <div class="cs-option" data-value="wf-close" onclick="pick('cs-action','wf-close','워크플로우 종료')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>워크플로우 종료</div>
+            <div class="cs-option" data-value="contract-upload" onclick="pick('cs-action','contract-upload','계약서 업로드')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>계약서 업로드</div>
+            <div class="cs-option" data-value="contract-del" onclick="pick('cs-action','contract-del','계약서 삭제')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>계약서 삭제</div>
+            <div class="cs-option" data-value="bundle" onclick="pick('cs-action','bundle','묶음 거래 컨펌')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>묶음 거래 컨펌</div>
+            <div class="cs-option" data-value="turnkey" onclick="pick('cs-action','turnkey','턴키 거래 컨펌')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>턴키 거래 컨펌</div>
+            <hr class="cs-divider">
+            <div class="cs-group-label">정산·계약</div>
+            <div class="cs-option" data-value="ct-create" onclick="pick('cs-action','ct-create','계약 생성')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>계약 생성</div>
+            <div class="cs-option" data-value="ct-edit" onclick="pick('cs-action','ct-edit','계약 수정')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>계약 수정</div>
+            <div class="cs-option" data-value="ct-delete" onclick="pick('cs-action','ct-delete','계약 삭제')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>계약 삭제</div>
+            <div class="cs-option" data-value="rs-input" onclick="pick('cs-action','rs-input','RS 데이터 입력')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>RS 데이터 입력</div>
+            <div class="cs-option" data-value="rs-edit" onclick="pick('cs-action','rs-edit','RS 데이터 수정')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>RS 데이터 수정</div>
+            <div class="cs-option" data-value="rs-delete" onclick="pick('cs-action','rs-delete','RS 데이터 삭제')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>RS 데이터 삭제</div>
+            <div class="cs-option" data-value="settle-done" onclick="pick('cs-action','settle-done','정산 완료')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>정산 완료</div>
+            <hr class="cs-divider">
+            <div class="cs-group-label">퍼포먼스</div>
+            <div class="cs-option" data-value="perf-input" onclick="pick('cs-action','perf-input','퍼포먼스 데이터 입력')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>퍼포먼스 데이터 입력</div>
+            <div class="cs-option" data-value="perf-edit" onclick="pick('cs-action','perf-edit','퍼포먼스 데이터 수정')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>퍼포먼스 데이터 수정</div>
+            <hr class="cs-divider">
+            <div class="cs-group-label">크레딧</div>
+            <div class="cs-option" data-value="credit-charge" onclick="pick('cs-action','credit-charge','크레딧 충전')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>크레딧 충전</div>
+            <div class="cs-option" data-value="credit-adj" onclick="pick('cs-action','credit-adj','크레딧 조정')"><svg class="cs-check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2,7 5,10 12,3"/></svg>크레딧 조정</div>
+            </div>
+          </div>
+
+          <!-- 날짜 -->
+          <div class="date-range">
+            <input type="date" id="date-from" value="2026-05-01">
+            <input type="date" id="date-to" value="2026-05-14">
+          </div>
+
+          <button class="btn-reset" onclick="resetAll()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            초기화
+          </button>
+        </div>
+
+      <div class="active-tags" id="active-tags"></div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <colgroup><col class="c-dt"><col class="c-admin"><col class="c-type"><col class="c-target"><col class="c-desc"></colgroup>
+        <thead>
+          <tr><th>처리 일시</th><th>관리자</th><th>액션 유형</th><th>대상</th><th>내용</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><div class="dt-date">2026-05-14</div><div class="dt-time">10:32</div></td><td><span class="admin-name">Lee Admin</span></td><td><span class="badge b-content">콘텐츠 승인</span></td><td><span class="target">CONTENT #42</span></td><td class="desc">콘텐츠 승인 — 사랑의 불시착</td></tr>
+          <tr><td><div class="dt-date">2026-05-14</div><div class="dt-time">09:51</div></td><td><span class="admin-name">Lee Admin</span></td><td><span class="badge b-user">유저 승인</span></td><td><span class="target">USER #109</span></td><td class="desc">유저 승인 — 이준혁 (NextWave Studios)</td></tr>
+          <tr><td><div class="dt-date">2026-05-14</div><div class="dt-time">09:20</div></td><td><span class="admin-name">Kim Admin</span></td><td><span class="badge b-workflow">컨펌 전송</span></td><td><span class="target">WORKFLOW #18</span></td><td class="desc">컨펌 전송 — Seven Suns → Viki</td></tr>
+          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">17:44</div></td><td><span class="admin-name">Lee Admin</span></td><td><span class="badge b-workflow">메타데이터 권한</span></td><td><span class="target">WORKFLOW #15</span></td><td class="desc">메타데이터 권한 부여 — Netflix Korea</td></tr>
+          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">16:05</div></td><td><span class="admin-name">Park Admin</span></td><td><span class="badge b-settle">계약 생성</span></td><td><span class="target">CONTRACT #31</span></td><td class="desc">계약 생성 — (주)스튜디오드래곤 RS 계약</td></tr>
+          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">14:30</div></td><td><span class="admin-name">Lee Admin</span></td><td><span class="badge b-credit">크레딧 충전</span></td><td><span class="target">COMPANY #7</span></td><td class="desc">크레딧 충전 — BrightFrame +$12,000</td></tr>
+          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">12:18</div></td><td><span class="admin-name">Lee Admin</span></td><td><span class="badge b-workflow">거래 종료</span></td><td><span class="target">WORKFLOW #12</span></td><td class="desc">거래 종료 — Cinderella in Tokyo · ReelShort</td></tr>
+          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">11:05</div></td><td><span class="admin-name">Kim Admin</span></td><td><span class="badge b-modify">수정 요청 거절</span></td><td><span class="target">CONTENT #38</span></td><td class="desc">수정 요청 거절 — The Last Letter</td></tr>
+          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">09:55</div></td><td><span class="admin-name">Park Admin</span></td><td><span class="badge b-settle">RS 데이터 입력</span></td><td><span class="target">CONTRACT #28</span></td><td class="desc">RS 데이터 입력 — 2026-04 정산</td></tr>
+          <tr><td><div class="dt-date">2026-05-12</div><div class="dt-time">15:22</div></td><td><span class="admin-name">Park Admin</span></td><td><span class="badge b-perf">퍼포먼스 입력</span></td><td><span class="target">CONTENT #29</span></td><td class="desc">퍼포먼스 데이터 입력 — 2026-04 지표</td></tr>
+          <tr><td><div class="dt-date">2026-05-12</div><div class="dt-time">14:10</div></td><td><span class="admin-name">Lee Admin</span></td><td><span class="badge b-content">콘텐츠 거절</span></td><td><span class="target">CONTENT #41</span></td><td class="desc">콘텐츠 거절 — Bloom Again (사유: 메타데이터 누락)</td></tr>
+          <tr><td><div class="dt-date">2026-05-12</div><div class="dt-time">11:30</div></td><td><span class="admin-name">Kim Admin</span></td><td><span class="badge b-workflow">묶음 거래 컨펌</span></td><td><span class="target">WORKFLOW #20</span></td><td class="desc">묶음 거래 컨펌 전송 — Midnight Tokyo Drift · BUNDLE</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pag-wrap">
+      <button class="pag-btn">이전</button>
+      <button class="pag-btn on">1</button>
+      <button class="pag-btn">2</button>
+      <button class="pag-btn">3</button>
+      <span class="pag-dots">…</span>
+      <button class="pag-btn">13</button>
+      <button class="pag-btn">다음</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const state={'cs-action':[]};
+const defaults={'cs-action':'액션 유형'};
+const defaultDates={from:'2026-05-01',to:'2026-05-14'};
+
+function toggleDropdown(id){
+  const dd=document.getElementById('dd-'+id.replace('cs-',''));
+  const btn=document.querySelector('#'+id+' .cs-btn');
+  const isOpen=dd.classList.contains('open');
+  closeAll();
+  if(!isOpen){dd.classList.add('open');btn.classList.add('open')}
+}
+
+function closeAll(){
+  document.querySelectorAll('.cs-dropdown').forEach(d=>d.classList.remove('open'));
+  document.querySelectorAll('.cs-btn').forEach(b=>b.classList.remove('open'));
+}
+
+function pick(id,value,label){
+  const selected=state[id];
+  const el=document.getElementById(id);
+  const opt=el.querySelector(`.cs-option[data-value="${value}"]`);
+  const idx=selected.indexOf(value);
+  if(idx>-1){
+    selected.splice(idx,1);
+    opt.classList.remove('selected');
+  }else{
+    selected.push(value);
+    opt.classList.add('selected');
+  }
+  updateSelectLabel(id);
+  renderTags();
+}
+
+function clearSelect(id){
+  state[id]=[];
+  const el=document.getElementById(id);
+  el.querySelectorAll('.cs-option').forEach(o=>o.classList.remove('selected'));
+  el.querySelector('.cs-btn').classList.remove('has-value');
+  el.querySelector('.cs-label').textContent=defaults[id];
+}
+
+function updateSelectLabel(id){
+  const el=document.getElementById(id);
+  const selected=state[id];
+  const btn=el.querySelector('.cs-btn');
+  const label=el.querySelector('.cs-label');
+  if(!selected.length){
+    btn.classList.remove('has-value');
+    label.textContent=defaults[id];
+    return;
+  }
+  btn.classList.add('has-value');
+  label.textContent=defaults[id];
+}
+
+function renderTags(){
+  const wrap=document.getElementById('active-tags');
+  wrap.innerHTML='';
+  Object.entries(state).forEach(([id,values])=>{
+    values.forEach(val=>{
+      const opt=document.querySelector(`#${id} .cs-option[data-value="${val}"]`);
+      if(!opt)return;
+      const label=opt.textContent.trim();
+      const tag=document.createElement('div');
+      tag.className='filter-tag';
+      tag.innerHTML=`${label} <span class="tag-x" onclick="removeValue('${id}','${val}')">✕</span>`;
+      wrap.appendChild(tag);
+    });
+  });
+  renderDateTag(wrap);
+}
+
+function removeValue(id,value){
+  state[id]=state[id].filter(v=>v!==value);
+  const el=document.getElementById(id);
+  const opt=el.querySelector(`.cs-option[data-value="${value}"]`);
+  if(opt)opt.classList.remove('selected');
+  updateSelectLabel(id);
+  renderTags();
+}
+
+function renderDateTag(wrap){
+  const from=document.getElementById('date-from').value;
+  const to=document.getElementById('date-to').value;
+  if(from===defaultDates.from&&to===defaultDates.to)return;
+  const text=from&&to?`${from} ~ ${to}`:from||to;
+  const tag=document.createElement('div');
+  tag.className='filter-tag';
+  tag.innerHTML=`${text} <span class="tag-x" onclick="resetDates()">✕</span>`;
+  wrap.appendChild(tag);
+}
+
+function resetDates(){
+  document.getElementById('date-from').value=defaultDates.from;
+  document.getElementById('date-to').value=defaultDates.to;
+  renderTags();
+}
+
+function resetAll(){
+  Object.keys(state).forEach(id=>clearSelect(id));
+  resetDates();
+  renderTags();
+}
+
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.custom-select'))closeAll();
+});
+document.getElementById('date-from').addEventListener('change',renderTags);
+document.getElementById('date-to').addEventListener('change',renderTags);
+</script>
+</body>
+</html>

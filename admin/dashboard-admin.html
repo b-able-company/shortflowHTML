@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>홈 — Shortflow Admin</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+<link rel="stylesheet" href="admin-common.css"/>
+<script src="admin-common.js" defer></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5f4f0; display: flex; height: 100vh; overflow: hidden; font-size: 13px; color: #1a1a18; }
+
+/* SIDEBAR */
+.sb { width: 210px; min-width: 210px; background: #13130f; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
+.sb-logo { padding: 16px 16px 12px; border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+.sb-logo-main { color: #fff; font-size: 14px; font-weight: 600; }
+.sb-logo-sub { font-size: 9px; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 1px; }
+.nav { flex: 1; overflow-y: auto; padding: 6px 0; }
+.nav-label { font-size: 9px; color: rgba(255,255,255,0.22); letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 16px 3px; }
+.ni { display: flex; align-items: center; gap: 7px; padding: 6px 16px; font-size: 12.5px; color: rgba(255,255,255,0.42); cursor: pointer; border-left: 2px solid transparent; }
+.ni:hover { color: rgba(255,255,255,0.7); }
+.ni.active { color: #fff; border-left-color: #fff; background: rgba(255,255,255,0.04); }
+.ni i { font-size: 13px; flex-shrink: 0; }
+.ni-badge { margin-left: auto; font-size: 10px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 1px 6px; border-radius: 10px; }
+.ni-badge.hot { background: #fff; color: #13130f; }
+.sub .ni { padding-left: 36px; font-size: 12px; color: rgba(255,255,255,0.32); }
+.sub .ni:hover { color: rgba(255,255,255,0.6); }
+.sb-foot { padding: 10px 16px; border-top: 0.5px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 9px; }
+.ava { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 10px; color: #fff; font-weight: 500; flex-shrink: 0; }
+.uname { font-size: 11px; color: #fff; font-weight: 500; }
+.uemail { font-size: 10px; color: rgba(255,255,255,0.28); margin-top: 1px; }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { height: 46px; background: #fff; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; padding: 0 20px; flex-shrink: 0; }
+.topbar-title { font-size: 14px; font-weight: 600; }
+.topbar-right { margin-left: auto; font-size: 12px; color: #aaa; }
+.topbar-date { font-size: 12px; color: #888; }
+
+/* BODY */
+.body { flex: 1; overflow-y: auto; padding: 20px; display: flex; gap: 14px; align-items: flex-start; max-width: 1180px; width: 100%; margin: 0 auto; }
+.dash-main-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.dash-side-col { width: 320px; min-width: 320px; display: flex; flex-direction: column; gap: 14px; }
+
+/* CARDS */
+.card { background: #fff; border: 0.5px solid #e8e6e0; border-radius: 10px; overflow: hidden; }
+.card-head { padding: 12px 16px; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; justify-content: space-between; }
+.card-title { font-size: 12px; font-weight: 500; color: #888; letter-spacing: 0.03em; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+.card-title i { font-size: 14px; }
+.card-action { font-size: 11.5px; color: #888; cursor: pointer; display: flex; align-items: center; gap: 3px; }
+.card-action:hover { color: #333; }
+
+/* FOCUS */
+.focus-card { grid-column: 1; }
+.focus-head-meta { display: flex; align-items: center; gap: 8px; }
+.sort-sel { font-size: 11px; padding: 2px 7px; border: 0.5px solid #e0dfd9; border-radius: 5px; background: #fff; color: #666; outline: none; cursor: pointer; font-family: inherit; }
+.focus-list { display: flex; flex-direction: column; }
+.focus-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-bottom: 0.5px solid #f5f4f0; cursor: pointer; }
+.focus-item:last-child { border-bottom: none; }
+.focus-item:hover { background: #fafaf7; }
+.focus-num { font-size: 11px; color: #ccc; font-weight: 500; width: 18px; flex-shrink: 0; }
+.focus-tag { font-size: 10px; padding: 2px 7px; border-radius: 5px; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
+.ft-revision  { background: #E6F1FB; color: #185FA5; }
+.ft-content   { background: #FAEEDA; color: #854F0B; }
+.ft-inquiry   { background: #EDE9FE; color: #534AB7; }
+.ft-user      { background: #EAF3DE; color: #3B6D11; }
+.focus-info { flex: 1; min-width: 0; }
+.focus-title { font-size: 13px; font-weight: 500; color: #1a1a18; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.focus-meta { font-size: 11px; color: #aaa; margin-top: 2px; }
+.focus-age { font-size: 11px; color: #bbb; white-space: nowrap; flex-shrink: 0; }
+.focus-btn { font-size: 11.5px; padding: 5px 11px; border-radius: 6px; border: 0.5px solid #e0dfd9; cursor: pointer; background: #1a1a18; color: #fff; font-family: inherit; white-space: nowrap; flex-shrink: 0; }
+.focus-empty { padding: 32px 16px; text-align: center; color: #ccc; font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.focus-empty i { font-size: 24px; }
+.focus-pagination { padding: 10px 16px; border-top: 0.5px solid #f0efe9; display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #aaa; }
+
+/* QUEUE (우측) */
+.queue-card { }
+.queue-list { padding: 8px 0; }
+.queue-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; cursor: pointer; border-bottom: 0.5px solid #f5f4f0; }
+.queue-item:last-child { border-bottom: none; }
+.queue-item:hover { background: #fafaf7; }
+.queue-left { display: flex; align-items: center; gap: 8px; }
+.queue-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.queue-label { font-size: 12.5px; color: #333; font-weight: 500; }
+.queue-sub { font-size: 11px; color: #aaa; margin-top: 1px; }
+.queue-num { font-size: 18px; font-weight: 600; color: #1a1a18; }
+.queue-num.zero { color: #ccc; font-size: 16px; }
+
+/* WORKFLOW STATUS */
+.wf-card { grid-column: 1; }
+.wf-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 14px 16px; }
+.wf-step { background: #f7f6f2; border-radius: 7px; padding: 10px 10px 8px; text-align: center; }
+.wf-step-label { font-size: 9.5px; color: #aaa; font-weight: 500; letter-spacing: 0.03em; margin-bottom: 6px; text-transform: uppercase; }
+.wf-step-num { font-size: 20px; font-weight: 600; color: #1a1a18; }
+.wf-step-type { font-size: 9.5px; color: #bbb; margin-top: 3px; }
+.wf-step.highlight .wf-step-label { color: #854F0B; }
+.wf-step.highlight { background: #FAEEDA; }
+.wf-step.highlight .wf-step-num { color: #854F0B; }
+
+/* RECENT */
+.recent-card { grid-column: 1; }
+.recent-list { display: flex; flex-direction: column; }
+.recent-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; border-bottom: 0.5px solid #f5f4f0; }
+.recent-item:last-child { border-bottom: none; }
+.rt { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
+.rt-approve  { background: #EAF3DE; color: #3B6D11; }
+.rt-reject   { background: #FCEBEB; color: #A32D2D; }
+.rt-meta     { background: #EDE9FE; color: #534AB7; }
+.rt-confirm  { background: #FAEEDA; color: #854F0B; }
+.rt-credit   { background: #E6F1FB; color: #185FA5; }
+.rt-close    { background: #f0efe9; color: #888; }
+.recent-main { flex: 1; min-width: 0; font-size: 12.5px; color: #1a1a18; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.recent-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.recent-who { font-size: 11px; color: #888; }
+.recent-time { font-size: 11px; color: #bbb; white-space: nowrap; }
+
+/* SETTLEMENT PREVIEW */
+.settle-card { grid-column: 2; }
+.settle-month { display: flex; align-items: center; gap: 6px; padding: 10px 16px 0; }
+.settle-month select { font-size: 12px; padding: 3px 7px; border: 0.5px solid #e0dfd9; border-radius: 5px; background: #fff; color: #555; outline: none; cursor: pointer; font-family: inherit; }
+.settle-list { padding: 8px 0; }
+.settle-item { padding: 9px 16px; border-bottom: 0.5px solid #f5f4f0; cursor: pointer; }
+.settle-item:last-child { border-bottom: none; }
+.settle-item:hover { background: #fafaf7; }
+.settle-company { font-size: 12.5px; font-weight: 500; color: #1a1a18; }
+.settle-breakdown { font-size: 11px; color: #aaa; margin-top: 2px; }
+.settle-amount { font-size: 13px; font-weight: 600; color: #1a1a18; font-family: monospace; }
+.settle-status { font-size: 10px; padding: 1px 6px; border-radius: 4px; font-weight: 500; }
+.ss-scheduled { background: #FAEEDA; color: #854F0B; }
+.ss-completed { background: #EAF3DE; color: #3B6D11; }
+.settle-total { padding: 10px 16px; border-top: 0.5px solid #e8e6e0; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+.settle-total-label { color: #aaa; }
+.settle-total-amt { font-size: 14px; font-weight: 600; font-family: monospace; color: #1a1a18; }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-main">shortflow</div>
+    <div class="sb-logo-sub">Admin</div>
+    <button class="sb-toggle" type="button" aria-label="네비 접기" aria-expanded="true"><i class="ti ti-chevron-left"></i></button>
+  </div>
+  <nav class="nav">
+    <div class="nav-label">메인</div>
+    <a class="ni active" href="dashboard-admin.html"><i class="ti ti-home"></i> 홈</a>
+    <div class="nav-label">회원</div>
+    <a class="ni" href="member-admin.html"><i class="ti ti-users"></i> 회원 관리</a>
+    <div class="sub">
+      <a class="ni" href="member-admin.html#users">유저</a>
+      <a class="ni" href="member-admin.html#companies">회사</a>
+    </div>
+    <div class="nav-label">콘텐츠</div>
+    <a class="ni" href="content-admin-full.html"><i class="ti ti-file-text"></i> 콘텐츠 관리</a>
+    <div class="sub">
+      <a class="ni" href="content-admin-full.html#list">전체 콘텐츠</a>
+      <a class="ni" href="content-admin-full.html#revisions">수정 요청</a>
+    </div>
+    <div class="nav-label">거래</div>
+    <a class="ni" href="workflow-admin.html"><i class="ti ti-git-branch"></i> 워크플로우</a>
+    <div class="sub">
+      <a class="ni" href="workflow-admin.html#platform">단일 거래</a>
+      <a class="ni" href="workflow-admin.html#bundle">묶음 거래</a>
+      <a class="ni" href="workflow-admin.html#turnkey">턴키 거래</a>
+    </div>
+    <a class="ni" href="turnkey-intent-admin.html"><i class="ti ti-clipboard-list"></i> 턴키 판매 의사</a>
+    <div class="nav-label">운영</div>
+    <a class="ni" href="settlement-admin.html"><i class="ti ti-receipt"></i> 정산</a>
+    <div class="sub">
+      <a class="ni" href="settlement-admin.html#contracts">계약 관리</a>
+      <a class="ni" href="settlement-admin.html#settlement">정산 처리</a>
+    </div>
+    <a class="ni" href="mail-admin.html"><i class="ti ti-mail"></i> 메일 발송</a>
+    <a class="ni" href="audit-log.html"><i class="ti ti-shield-check"></i> 관리 이력</a>
+  </nav>
+  <div class="sb-foot">
+    <div class="ava">L</div>
+    <div>
+      <div class="uname">Lee · Admin</div>
+      <div class="uemail">ops@shortflow.io</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <span class="topbar-title">홈</span>
+  </div>
+
+  <div class="body">
+
+    <!-- 좌측 칼럼 wrapper -->
+    <div class="dash-main-col">
+
+    <!-- FOCUS -->
+    <div class="card focus-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-focus-2"></i> FOCUS <span style="font-size:11px;color:#bbb;font-weight:400;text-transform:none;letter-spacing:0">처리 대기 항목</span></div>
+        <span style="font-size:11.5px;color:#aaa">오래된 순</span>
+      </div>
+      <div class="focus-list" id="focus-list"></div>
+      <div class="focus-pagination">
+        <span id="focus-page">1 / 5 페이지</span>
+        <div style="display:flex;gap:5px">
+          <button style="font-size:11px;padding:3px 8px;border:0.5px solid #e0dfd9;border-radius:5px;background:#fff;cursor:pointer">이전</button>
+          <button style="font-size:11px;padding:3px 8px;border:0.5px solid #e0dfd9;border-radius:5px;background:#fff;cursor:pointer">다음</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 워크플로우 현황 -->
+    <div class="card wf-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-git-branch"></i> 워크플로우 현황</div>
+        <div style="display:flex;gap:5px">
+          <span style="font-size:11px;padding:2px 7px;border-radius:4px;background:#E6F1FB;color:#185FA5;cursor:pointer">단일</span>
+          <span style="font-size:11px;padding:2px 7px;border-radius:4px;background:#f0efe9;color:#888;cursor:pointer">묶음</span>
+          <span style="font-size:11px;padding:2px 7px;border-radius:4px;background:#FAEEDA;color:#854F0B;cursor:pointer">턴키</span>
+        </div>
+      </div>
+      <div class="wf-grid">
+        <div class="wf-step highlight">
+          <div class="wf-step-label">INQUIRY</div>
+          <div class="wf-step-num">5</div>
+          <div class="wf-step-type">신규 구매의사</div>
+        </div>
+        <div class="wf-step">
+          <div class="wf-step-label">CONFIRM</div>
+          <div class="wf-step-num">8</div>
+          <div class="wf-step-type">컨펌 발송됨</div>
+        </div>
+        <div class="wf-step">
+          <div class="wf-step-label">ACK</div>
+          <div class="wf-step-num">6</div>
+          <div class="wf-step-type">플랫폼 확인</div>
+        </div>
+        <div class="wf-step">
+          <div class="wf-step-label">META</div>
+          <div class="wf-step-num">3</div>
+          <div class="wf-step-type">메타 부여됨</div>
+        </div>
+        <div class="wf-step">
+          <div class="wf-step-label">CLOSED</div>
+          <div class="wf-step-num" style="color:#aaa">1</div>
+          <div class="wf-step-type">이번 달</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECENT -->
+    <div class="card recent-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-clock"></i> 최근 처리 이력</div>
+        <div class="card-action">전체 보기 <i class="ti ti-chevron-right" style="font-size:12px"></i></div>
+      </div>
+      <div class="recent-list" id="recent-list"></div>
+    </div>
+
+    </div><!-- /좌측 칼럼 wrapper -->
+
+    <!-- 우측 칼럼 wrapper -->
+    <div class="dash-side-col">
+
+    <!-- QUEUE -->
+    <div class="card queue-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-stack-2"></i> QUEUE</div>
+      </div>
+      <div class="queue-list">
+        <div class="queue-item" onclick="">
+          <div class="queue-left">
+            <div class="queue-dot" style="background:#E24B4A"></div>
+            <div>
+              <div class="queue-label">유저 승인</div>
+              <div class="queue-sub">대기 중</div>
+            </div>
+          </div>
+          <div class="queue-num">7</div>
+        </div>
+        <div class="queue-item" onclick="">
+          <div class="queue-left">
+            <div class="queue-dot" style="background:#BA7517"></div>
+            <div>
+              <div class="queue-label">콘텐츠 승인</div>
+              <div class="queue-sub">대기 중</div>
+            </div>
+          </div>
+          <div class="queue-num">12</div>
+        </div>
+        <div class="queue-item" onclick="">
+          <div class="queue-left">
+            <div class="queue-dot" style="background:#378ADD"></div>
+            <div>
+              <div class="queue-label">수정 요청</div>
+              <div class="queue-sub">대기 중</div>
+            </div>
+          </div>
+          <div class="queue-num">3</div>
+        </div>
+        <div class="queue-item" onclick="">
+          <div class="queue-left">
+            <div class="queue-dot" style="background:#7F77DD"></div>
+            <div>
+              <div class="queue-label">구매의사</div>
+              <div class="queue-sub">미처리</div>
+            </div>
+          </div>
+          <div class="queue-num">5</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 이번 달 정산 예정 -->
+    <div class="card" style="cursor:pointer" onclick="">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-receipt"></i> 이번 달 정산 예정</div>
+      </div>
+      <div style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:24px;font-weight:600;color:#1a1a18;font-family:monospace">$51,940</div>
+          <div style="font-size:11px;color:#aaa;margin-top:4px">3개 제작사 · 2025-03 · SCHEDULED</div>
+        </div>
+        <i class="ti ti-chevron-right" style="font-size:14px;color:#ccc"></i>
+      </div>
+    </div>
+
+    </div><!-- /우측 칼럼 wrapper -->
+
+  </div>
+</div>
+
+<script>
+const focusItems = [
+  { type:'content', tag:'콘텐츠 승인', tagClass:'ft-content', title:'The Last Letter', meta:'NextWave Studios · 시놉시스 + 번역 완료', age:'48h 경과' },
+  { type:'revision', tag:'수정 요청', tagClass:'ft-revision', title:'Reverse Cinderella', meta:'OneTake Media · 회차 수 변경', age:'28h 경과' },
+  { type:'inquiry', tag:'구매의사', tagClass:'ft-inquiry', title:'Midnight Tokyo Drift', meta:'ShortReel (US) · PLATFORM', age:'4h 경과' },
+  { type:'user', tag:'유저 승인', tagClass:'ft-user', title:'김은진 (NextWave Studios)', meta:'PRODUCTION · OWNER', age:'2h 경과' },
+  { type:'content', tag:'콘텐츠 승인', tagClass:'ft-content', title:'Bloom Again', meta:'PaperLens · 번역 미완료', age:'1h 경과' },
+];
+
+const recentItems = [
+  { type:'콘텐츠 승인', cls:'rt-approve', main:'Echo of Spring 승인 처리', who:'Lee Admin', time:'14:55' },
+  { type:'유저 승인', cls:'rt-approve', main:'이준혁 (NextWave) 승인', who:'Lee Admin', time:'14:42' },
+  { type:'거래 종료', cls:'rt-close', main:'Cinderella in Tokyo — ReelShort · $42,500', who:'Lee Admin', time:'12:18' },
+  { type:'크레딧 충전', cls:'rt-credit', main:'BrightFrame +$12,000', who:'Lee Admin', time:'11:05' },
+  { type:'컨펌 발송', cls:'rt-confirm', main:'Seven Suns → Viki 컨펌 메시지 발송', who:'Lee Admin', time:'10:30' },
+  { type:'수정 거절', cls:'rt-reject', main:'The Last Letter 수정 요청 거절', who:'Lee Admin', time:'09:15' },
+];
+
+function renderFocus() {
+  const list = document.getElementById('focus-list');
+  if (focusItems.length === 0) {
+    list.innerHTML = `<div class="focus-empty"><i class="ti ti-circle-check"></i><span>모든 항목이 처리됐습니다</span></div>`;
+    return;
+  }
+  list.innerHTML = focusItems.slice(0,5).map((item, i) => `
+    <div class="focus-item">
+      <span class="focus-num">0${i+1}</span>
+      <span class="focus-tag ${item.tagClass}">${item.tag}</span>
+      <div class="focus-info">
+        <div class="focus-title">${item.title}</div>
+        <div class="focus-meta">${item.meta}</div>
+      </div>
+      <span class="focus-age">${item.age}</span>
+      <button class="focus-btn">검토 →</button>
+    </div>`).join('');
+}
+
+function renderRecent() {
+  const list = document.getElementById('recent-list');
+  list.innerHTML = recentItems.map(r => `
+    <div class="recent-item">
+      <span class="rt ${r.cls}">${r.type}</span>
+      <span class="recent-main">${r.main}</span>
+      <div class="recent-right">
+        <span class="recent-who">${r.who}</span>
+        <span class="recent-time">${r.time}</span>
+      </div>
+    </div>`).join('');
+}
+
+renderFocus();
+renderRecent();
+</script>
+</body>
+</html>

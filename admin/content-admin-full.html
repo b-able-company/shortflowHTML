@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>콘텐츠 관리 — Shortflow Admin</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+<link rel="stylesheet" href="admin-common.css" />
+<script src="admin-common.js" defer></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5f4f0; display: flex; height: 100vh; overflow: hidden; font-size: 13px; color: #1a1a18; }
+
+/* ── SIDEBAR ── */
+.sb { width: 210px; min-width: 210px; background: #13130f; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
+.sb-logo { padding: 16px 16px 12px; border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+.sb-logo-main { color: #fff; font-size: 14px; font-weight: 600; }
+.sb-logo-sub { font-size: 9px; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 1px; }
+.nav { flex: 1; overflow-y: auto; padding: 6px 0; }
+.nav-label { font-size: 9px; color: rgba(255,255,255,0.22); letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 16px 3px; }
+.ni { display: flex; align-items: center; gap: 7px; padding: 6px 16px; font-size: 12.5px; color: rgba(255,255,255,0.42); cursor: pointer; border-left: 2px solid transparent; }
+.ni:hover { color: rgba(255,255,255,0.7); }
+.ni.active { color: #fff; }
+.ni i { font-size: 13px; flex-shrink: 0; }
+.ni-badge { margin-left: auto; font-size: 10px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 1px 6px; border-radius: 10px; }
+.ni-badge.hot { background: #fff; color: #13130f; }
+.sub .ni { padding-left: 36px; font-size: 12px; color: rgba(255,255,255,0.32); }
+.sub .ni:hover { color: rgba(255,255,255,0.6); }
+.sub .ni.active { color: #fff; background: rgba(255,255,255,0.04); border-left-color: #fff; }
+.sb-foot { padding: 10px 16px; border-top: 0.5px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 9px; }
+.ava { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 10px; color: #fff; font-weight: 500; flex-shrink: 0; }
+.uname { font-size: 11px; color: #fff; font-weight: 500; }
+.uemail { font-size: 10px; color: rgba(255,255,255,0.28); margin-top: 1px; }
+
+/* ── MAIN ── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+.topbar { height: 46px; background: #fff; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; padding: 0 18px; gap: 10px; flex-shrink: 0; }
+.topbar-title { font-size: 14px; font-weight: 600; }
+.topbar-right { margin-left: auto; font-size: 12px; color: #999; }
+
+/* ── VIEW SWITCHER ── */
+.view { display: none; flex-direction: column; flex: 1; overflow: hidden; }
+.view.active { display: flex; }
+
+/* ── TAB BAR ── */
+.tabbar { background: #fff; border-bottom: 0.5px solid #e8e6e0; display: flex; padding: 0 18px; flex-shrink: 0; }
+.tab { padding: 10px 14px; font-size: 12.5px; color: #999; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -0.5px; display: flex; align-items: center; gap: 5px; user-select: none; }
+.tab:hover { color: #555; }
+.tab.active { color: #1a1a18; border-bottom-color: #1a1a18; font-weight: 500; }
+
+/* ── LIST / DETAIL SPLIT ── */
+.split { flex: 1; display: flex; overflow: hidden; }
+.lp { width: 440px; min-width: 440px; display: flex; flex-direction: column; border-right: 0.5px solid #e8e6e0; overflow: hidden; flex-shrink: 0; }
+.dp { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #fafaf7; }
+
+/* ── TOOLBAR ── */
+.toolbar { background: #fff; border-bottom: 0.5px solid #e8e6e0; padding: 8px 14px; display: flex; align-items: center; gap: 5px; flex-shrink: 0; flex-wrap: wrap; }
+.chip { font-size: 11px; padding: 3px 9px; border-radius: 20px; border: 0.5px solid #e0dfd9; color: #666; cursor: pointer; background: #fff; user-select: none; white-space: nowrap; }
+.chip:hover { border-color: #bbb; }
+.chip.on { background: #1a1a18; color: #fff; border-color: #1a1a18; }
+.csub { font-size: 9.5px; margin-left: 2px; background: #FAEEDA; color: #854F0B; padding: 0 4px; border-radius: 6px; }
+.srch { margin-left: auto; position: relative; display: flex; align-items: center; }
+.srch i { position: absolute; left: 7px; font-size: 12px; color: #bbb; pointer-events: none; }
+.srch input { font-size: 11.5px; padding: 4px 8px 4px 25px; border: 0.5px solid #e0dfd9; border-radius: 7px; background: #f7f6f2; width: 170px; outline: none; color: #1a1a18; }
+.srch input:focus { border-color: #bbb; background: #fff; }
+
+/* ── TABLE ── */
+.tscroll { flex: 1; overflow-y: auto; background: #fff; }
+table { width: 100%; border-collapse: collapse; }
+thead th { background: #f7f6f2; padding: 7px 12px; text-align: left; font-size: 10px; font-weight: 500; color: #aaa; border-bottom: 0.5px solid #e8e6e0; position: sticky; top: 0; white-space: nowrap; }
+tbody tr { border-bottom: 0.5px solid #f0efe9; cursor: pointer; }
+tbody tr:hover { background: #fafaf7; }
+tbody tr.sel { background: #f3f2ee; }
+td { padding: 9px 12px; vertical-align: middle; }
+.tname { font-size: 12.5px; font-weight: 500; }
+.tco { font-size: 11px; color: #aaa; margin-top: 1px; }
+.tmeta { font-size: 12.5px; color: #888; }
+
+/* ── BADGES ── */
+.bdg { display: inline-flex; align-items: center; font-size: 10px; padding: 2px 7px; border-radius: 9px; font-weight: 500; white-space: nowrap; }
+.b-draft     { background: #f0efe9; color: #888; }
+.b-pending   { background: #FAEEDA; color: #854F0B; }
+.b-approved  { background: #EAF3DE; color: #3B6D11; }
+.b-rejected  { background: #FCEBEB; color: #A32D2D; }
+
+/* ── EMPTY STATE ── */
+.empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #ccc; gap: 8px; }
+.empty i { font-size: 28px; }
+.empty p { font-size: 12px; }
+
+/* ── DETAIL HEADER ── */
+.dh { background: #fff; border-bottom: 0.5px solid #e8e6e0; padding: 14px 18px; flex-shrink: 0; }
+.dh-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.dh-title { font-size: 15px; font-weight: 600; }
+.dh-sub { font-size: 11.5px; color: #999; margin-top: 3px; }
+.dh-right { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+.dh-acts { display: flex; gap: 5px; margin-top: 11px; flex-wrap: wrap; }
+.btn { font-size: 11.5px; padding: 5px 11px; border-radius: 6px; border: 0.5px solid #e0dfd9; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; }
+.btn:hover { opacity: 0.8; }
+.btn-approve { background: #EAF3DE; color: #3B6D11; border-color: #C0DD97; }
+.btn-reject  { background: #FCEBEB; color: #A32D2D; border-color: #F7C1C1; }
+.btn-edit    { background: #fff; color: #444; }
+.btn-del     { background: #fff; color: #ccc; }
+.btn-icon    { width: 28px; height: 28px; padding: 0; justify-content: center; color: #888; background: #fff; }
+.btn-close   { background: transparent; border: none; color: #bbb; cursor: pointer; font-size: 15px; padding: 2px 5px; }
+.btn-save    { background: #1a1a18; color: #fff; border-color: #1a1a18; }
+.btn-cancel  { background: #fff; color: #666; }
+.btn-upload  { background: #f7f6f2; color: #555; border-style: dashed; }
+
+/* ── DETAIL INNER TABS ── */
+.dtabbar { background: #fff; border-bottom: 0.5px solid #e8e6e0; display: flex; padding: 0 18px; flex-shrink: 0; }
+.dtab { padding: 9px 12px; font-size: 12px; color: #aaa; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -0.5px; user-select: none; }
+.dtab:hover { color: #666; }
+.dtab.active { color: #1a1a18; border-bottom-color: #1a1a18; font-weight: 500; }
+
+/* ── DETAIL BODY ── */
+.dbody { flex: 1; overflow-y: auto; }
+.dpanel { display: none; padding: 16px 18px; }
+.dpanel.active { display: block; }
+
+/* ── FORM ── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-grid.full { grid-template-columns: 1fr; }
+.basic-stack { display: flex; flex-direction: column; gap: 14px; }
+.form-section { border: 0.5px solid #eeede8; border-radius: 8px; background: #fff; padding: 13px 14px 14px; }
+.form-section-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 11px; padding-bottom: 7px; border-bottom: 0.5px solid #f0efe9; font-size: 12px; font-weight: 600; color: #333; }
+.form-section.reject-section { border-color: #f1d0d0; background: #fffafa; }
+.form-section.reject-section .form-section-title { color: #A32D2D; border-bottom-color: #f5dddd; }
+.fg { display: flex; flex-direction: column; gap: 4px; }
+.fg label { font-size: 10px; color: #b4b2aa; font-weight: 500; }
+.fg label .req { display: none; }
+.fg label .admin-only { font-size: 9px; background: #FAEEDA; color: #854F0B; padding: 1px 5px; border-radius: 4px; margin-left: 4px; }
+.fg input, .fg select, .fg textarea { font-size: 12px; padding: 7px 10px; border: 0.5px solid #e0dfd9; border-radius: 6px; background: #fff; color: #1a1a18; outline: none; font-family: inherit; width: 100%; }
+.fg input:focus, .fg select:focus, .fg textarea:focus { border-color: #aaa; }
+.fg textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
+.fg input[readonly] { background: #f7f6f2; color: #aaa; }
+.field-with-action { display: flex; align-items: center; gap: 7px; }
+.field-with-action input { flex: 1; min-width: 0; }
+.field-with-action .btn { height: 31px; white-space: nowrap; flex-shrink: 0; }
+.material-folder { display: flex; align-items: flex-end; gap: 8px; }
+.material-folder .fg { flex: 1; min-width: 0; }
+.btn-material { background: #1a1a18; color: #fff; border-color: #1a1a18; height: 31px; white-space: nowrap; flex-shrink: 0; }
+.multi-select { position: relative; }
+.multi-select-trigger { width: 100%; min-height: 31px; padding: 7px 32px 7px 10px; border: 0.5px solid #e0dfd9; border-radius: 6px; background: #fff; color: #1a1a18; font-size: 12px; font-family: inherit; text-align: left; cursor: pointer; position: relative; }
+.multi-select-trigger::after { content: '⌄'; position: absolute; right: 10px; top: 50%; transform: translateY(-52%); color: #aaa; font-size: 12px; }
+.multi-select-menu { display: none; position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 20; max-height: 210px; overflow-y: auto; padding: 6px; border: 0.5px solid #dddcd6; border-radius: 8px; background: #fff; box-shadow: 0 8px 22px rgba(0,0,0,0.08); }
+.multi-select.open .multi-select-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+.multi-option { display: flex; align-items: center; gap: 7px; padding: 6px 7px; border-radius: 6px; font-size: 11.5px; color: #555; cursor: pointer; }
+.multi-option:hover { background: #fafaf7; }
+.multi-option input { width: 13px; height: 13px; accent-color: #1a1a18; }
+
+/* ── LANG TABS ── */
+.ltabs { display: flex; gap: 4px; margin-bottom: 14px; }
+.ltab { font-size: 12px; padding: 6px 15px; border-radius: 6px; border: 0.5px solid #e0dfd9; cursor: pointer; color: #888; background: #fff; user-select: none; }
+.ltab:hover { border-color: #bbb; color: #444; }
+.ltab.active { background: #1a1a18; color: #fff; border-color: #1a1a18; }
+.ltab .dot { width: 5px; height: 5px; border-radius: 50%; background: #639922; display: inline-block; margin-right: 4px; }
+.ltab .dot.empty { background: #ddd; }
+
+/* ── SECTION ── */
+.sec { margin-bottom: 18px; }
+.sec-title { font-size: 11px; font-weight: 500; color: #aaa; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 0.5px solid #eeede8; display: flex; align-items: center; justify-content: space-between; }
+
+/* ── MEDIA ── */
+.media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+.media-card { border: 0.5px solid #e8e6e0; border-radius: 8px; overflow: hidden; background: #fff; position: relative; }
+.media-thumb { width: 100%; aspect-ratio: 16/9; background: #f0efe9; display: flex; align-items: center; justify-content: center; }
+.media-thumb i { font-size: 22px; color: #ccc; }
+.media-info { padding: 7px 8px; }
+.media-label { font-size: 11px; font-weight: 500; color: #333; }
+.media-sub { font-size: 10px; color: #aaa; margin-top: 1px; }
+.media-del { position: absolute; top: 5px; right: 5px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0,0,0,0.45); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.media-del i { font-size: 11px; color: #fff; }
+.upload-card { border: 1px dashed #d5d4ce; border-radius: 8px; aspect-ratio: 16/9; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background: #fafaf7; color: #bbb; gap: 4px; transition: border-color 0.15s; }
+.upload-card:hover { border-color: #aaa; color: #888; }
+.upload-card i { font-size: 20px; }
+.upload-card span { font-size: 10.5px; }
+
+/* ── INFO ROWS ── */
+.irow { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0; font-size: 12px; border-bottom: 0.5px solid #f5f4f0; }
+.irow:last-child { border-bottom: none; }
+.ik { color: #aaa; flex-shrink: 0; min-width: 90px; }
+.iv { color: #1a1a18; text-align: right; }
+
+/* ── TIMELINE ── */
+.tl { display: flex; flex-direction: column; }
+.tl-item { display: flex; gap: 10px; padding: 7px 0; position: relative; }
+.tl-item:not(:last-child)::after { content: ''; position: absolute; left: 5px; top: 19px; bottom: -6px; width: 0.5px; background: #e8e6e0; }
+.tl-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; border: 2px solid #fafaf7; }
+.tl-dot.blue  { background: #378ADD; }
+.tl-dot.green { background: #639922; }
+.tl-dot.red   { background: #E24B4A; }
+.tl-dot.gray  { background: #ccc; }
+.tl-text { font-size: 12px; color: #333; }
+.tl-time { font-size: 10.5px; color: #bbb; margin-top: 1px; }
+
+/* ── MAIL ROWS ── */
+.mrow { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 9px 10px; font-size: 12px; border: 0.5px solid #eeeeea; border-radius: 7px; background: #fff; }
+.mrow + .mrow { margin-top: 6px; }
+.mplatform { color: #333; font-weight: 500; }
+.mdate { color: #bbb; font-size: 11px; white-space: nowrap; }
+
+/* ── BOOKMARK ── */
+.bookmark-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.brow { min-height: 34px; display: flex; align-items: center; justify-content: center; padding: 8px 9px; font-size: 11.5px; border: 0.5px solid #eeeeea; border-radius: 7px; background: #fff; }
+.bplatform { color: #333; font-weight: 500; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── EXTRA INFO ── */
+.extra-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.extra-panel { border: 0.5px solid #e8e6e0; border-radius: 8px; background: #fff; overflow: hidden; }
+.extra-panel-head { padding: 11px 13px; border-bottom: 0.5px solid #f0efe9; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.extra-panel-title { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 500; color: #333; }
+.extra-panel-title i { font-size: 14px; color: #aaa; }
+.extra-panel-count { font-size: 10.5px; color: #aaa; }
+.extra-panel-body { padding: 12px 13px; }
+.extra-panel-body .tl-item:first-child { padding-top: 0; }
+.extra-panel-body .tl-item:last-child { padding-bottom: 0; }
+.extra-empty { font-size: 12px; color: #bbb; padding: 4px 0; }
+
+/* ── RELEASE HISTORY ── */
+.release-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.release-list { border: 0.5px solid #e8e6e0; border-radius: 8px; overflow: hidden; background: #fff; }
+.release-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-bottom: 0.5px solid #f5f4f0; }
+.release-row:last-child { border-bottom: none; }
+.release-main { flex: 1; min-width: 0; }
+.release-name { font-size: 12.5px; font-weight: 500; color: #1a1a18; }
+.release-meta { font-size: 11px; color: #aaa; margin-top: 2px; }
+.release-type { font-size: 10.5px; padding: 2px 7px; border-radius: 999px; white-space: nowrap; background: #f0efe9; color: #666; }
+.release-type.internal { background: #E6F1FB; color: #185FA5; }
+.release-actions { display: flex; align-items: center; gap: 5px; }
+.release-empty { padding: 22px 12px; color: #bbb; font-size: 12px; text-align: center; }
+.release-form { display: none; border: 0.5px solid #e8e6e0; border-radius: 8px; background: #fafaf7; padding: 12px; margin-bottom: 10px; }
+.release-form.show { display: block; }
+.release-form-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 10px; }
+
+/* ── REVISION COMPARE ── */
+.cmp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
+.cmp-col { background: #f9f8f4; border: 0.5px solid #e8e6e0; border-radius: 8px; padding: 12px; }
+.cmp-col.changed { background: #f8fbf8; border-color: #cddfcb; }
+.cmp-head { font-size: 10px; font-weight: 500; color: #aaa; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 10px; }
+.cmp-head.warn { color: #3B6D11; }
+.cmp-field { padding: 5px 0; border-bottom: 0.5px solid #eeede8; }
+.cmp-field:last-child { border-bottom: none; }
+.cmp-field.long { padding: 8px 0; }
+.cmp-k { font-size: 10px; color: #bbb; margin-bottom: 2px; }
+.cmp-k.hl { display: inline-flex; align-items: center; gap: 4px; width: fit-content; background: #EAF3DE; border-radius: 3px; padding: 1px 5px; color: #2f5f13; font-weight: 500; }
+.cmp-k.hl::after { content: '변경'; font-size: 9px; color: #5f8a34; font-weight: 500; }
+.cmp-v { font-size: 12px; color: #333; }
+.cmp-v.long-text { max-height: 132px; overflow-y: auto; margin-top: 5px; padding: 9px 10px; border: 0.5px solid #eeede8; border-radius: 7px; background: #fff; line-height: 1.6; white-space: pre-line; }
+.cmp-col.changed .cmp-v.long-text { border-color: #dbe8d8; background: #fff; }
+.rev-summary { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.rev-chip { font-size: 11px; padding: 4px 8px; border-radius: 999px; background: #EAF3DE; color: #2f5f13; border: 0.5px solid #cddfcb; }
+.rev-change-list { display: flex; flex-direction: column; gap: 10px; }
+.long-compare { margin-top: 12px; border: 0.5px solid #e8e6e0; border-radius: 8px; background: #fff; overflow: hidden; }
+.long-compare-head { padding: 10px 12px; border-bottom: 0.5px solid #f0efe9; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.long-compare-title { font-size: 12px; font-weight: 600; color: #333; }
+.long-compare-badge { font-size: 10px; color: #2f5f13; background: #EAF3DE; border-radius: 999px; padding: 2px 7px; }
+.long-compare-body { display: grid; grid-template-columns: 1fr; }
+.long-text-block { padding: 12px; }
+.long-text-block + .long-text-block { border-top: 0.5px solid #f0efe9; }
+.long-text-label { font-size: 10.5px; font-weight: 500; color: #aaa; margin-bottom: 6px; }
+.long-text-content { max-height: 150px; overflow-y: auto; font-size: 12.5px; color: #333; line-height: 1.65; white-space: pre-line; }
+.long-text-block.changed { background: #f8fbf8; }
+.short-change { display: grid; grid-template-columns: 1fr 1fr; }
+.short-change .long-text-content { max-height: none; overflow: visible; white-space: normal; }
+.hl { color: inherit; font-weight: inherit; background: none; padding: 0; }
+
+/* ── REJECT REASON ── */
+.rr-box { background: #FCEBEB; border: 0.5px solid #F7C1C1; border-radius: 8px; padding: 12px; margin-top: 12px; display: none; }
+.rr-box.show { display: block; }
+.rr-box label { font-size: 11px; color: #A32D2D; font-weight: 500; display: block; margin-bottom: 6px; }
+.rr-box textarea { width: 100%; font-size: 12px; padding: 7px 10px; border: 0.5px solid #F7C1C1; border-radius: 6px; background: #fff; color: #333; resize: none; height: 68px; outline: none; font-family: inherit; }
+.rr-box .rr-acts { display: flex; gap: 6px; margin-top: 8px; justify-content: flex-end; }
+
+/* ── SAVE BAR ── */
+.savebar { background: #fff; border-top: 0.5px solid #e8e6e0; padding: 10px 18px; display: flex; justify-content: flex-end; gap: 7px; flex-shrink: 0; }
+.savebar.edit-only { display: none; }
+#dp-detail.editing .savebar.edit-only { display: flex; }
+#dp-detail.editing.no-savebar .savebar.edit-only { display: none; }
+#dp-detail.read-mode .dpanel.active {
+  padding-top: 18px;
+}
+#dp-detail.read-mode .form-grid {
+  gap: 14px 18px;
+}
+#dp-detail.read-mode .form-section-title {
+  color: #333;
+}
+#dp-detail.read-mode .fg input,
+#dp-detail.read-mode .fg select,
+#dp-detail.read-mode .fg textarea {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border-color: transparent;
+  border-radius: 0;
+  color: #1a1a18;
+  opacity: 1;
+  -webkit-text-fill-color: #1a1a18;
+  padding-left: 0;
+  padding-right: 0;
+  pointer-events: none;
+}
+#dp-detail.read-mode .fg {
+  gap: 5px;
+  padding-bottom: 10px;
+  border-bottom: 0.5px solid #f2f1ed;
+}
+#dp-detail.read-mode .fg label {
+  color: #aaa79f;
+}
+#dp-detail.read-mode .material-folder .fg {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+#dp-detail.read-mode .form-grid:not(.full) .fg:nth-last-child(-n+2),
+#dp-detail.read-mode .form-grid.full .fg:last-child {
+  border-bottom: none;
+}
+#dp-detail.read-mode .fg select {
+  background-image: none;
+}
+#dp-detail.read-mode .fg textarea {
+  resize: none;
+}
+#dp-detail.read-mode .multi-select {
+  pointer-events: none;
+}
+#dp-detail.read-mode .multi-select-trigger {
+  min-height: auto;
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+  color: #1a1a18;
+  cursor: default;
+}
+#dp-detail.read-mode .multi-select-trigger::after,
+#dp-detail.read-mode .multi-select-menu {
+  display: none;
+}
+#dp-detail.read-mode .divider {
+  background: transparent;
+  height: 10px;
+  margin: 8px 0 4px;
+}
+#dp-detail.read-mode .sec-title {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 8px;
+}
+#dp-detail.read-mode .upload-card,
+#dp-detail.read-mode .media-del,
+#dp-detail.read-mode .release-toolbar .btn,
+#dp-detail.read-mode .release-actions,
+#dp-detail.read-mode .release-form {
+  display: none !important;
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+.divider { height: 1px; background: #f0efe9; margin: 14px 0; }
+.note { font-size: 11px; color: #bbb; margin-top: 4px; }
+.tag { display: inline-block; font-size: 10.5px; background: #f0efe9; color: #666; padding: 2px 7px; border-radius: 5px; margin: 2px 2px 0 0; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-main">shortflow</div>
+    <div class="sb-logo-sub">Admin</div>
+    <button class="sb-toggle" type="button" aria-label="네비 접기" aria-expanded="true"><i class="ti ti-chevron-left"></i></button>
+  </div>
+  <nav class="nav">
+    <div class="nav-label">메인</div>
+    <a class="ni" href="dashboard-admin.html"><i class="ti ti-home"></i> 홈</a>
+    <div class="nav-label">회원</div>
+    <a class="ni" href="member-admin.html"><i class="ti ti-users"></i> 회원 관리</a>
+    <div class="sub">
+      <a class="ni" href="member-admin.html#users">유저</a>
+      <a class="ni" href="member-admin.html#companies">회사</a>
+    </div>
+    <div class="nav-label">콘텐츠</div>
+    <a class="ni active" href="content-admin-full.html"><i class="ti ti-file-text"></i> 콘텐츠 관리</a>
+    <div class="sub">
+      <a class="ni active" href="#list" onclick="gotoView('list'); return false;">전체 콘텐츠</a>
+      <a class="ni" href="#revisions" onclick="gotoView('revisions'); return false;">수정 요청</a>
+    </div>
+    <div class="nav-label">거래</div>
+    <a class="ni" href="workflow-admin.html"><i class="ti ti-git-branch"></i> 워크플로우</a>
+    <div class="sub">
+      <a class="ni" href="workflow-admin.html#platform">단일 거래</a>
+      <a class="ni" href="workflow-admin.html#bundle">묶음 거래</a>
+      <a class="ni" href="workflow-admin.html#turnkey">턴키 거래</a>
+    </div>
+    <a class="ni" href="turnkey-intent-admin.html"><i class="ti ti-clipboard-list"></i> 턴키 판매 의사</a>
+    <div class="nav-label">운영</div>
+    <a class="ni" href="settlement-admin.html"><i class="ti ti-receipt"></i> 정산</a>
+    <div class="sub">
+      <a class="ni" href="settlement-admin.html#contracts">계약 관리</a>
+      <a class="ni" href="settlement-admin.html#settlement">정산 처리</a>
+    </div>
+    <a class="ni" href="mail-admin.html"><i class="ti ti-mail"></i> 메일 발송</a>
+    <a class="ni" href="audit-log.html"><i class="ti ti-shield-check"></i> 관리 이력</a>
+  </nav>
+  <div class="sb-foot">
+    <div class="ava">L</div>
+    <div>
+      <div class="uname">Lee · Admin</div>
+      <div class="uemail">ops@shortflow.io</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <span id="topbar-title" class="topbar-title">콘텐츠 관리</span>
+    <!-- topbar-right count removed -->
+  </div>
+
+  <!-- ════ VIEW: LIST ════ -->
+  <div class="view active" id="view-list">
+    <div class="tabbar">
+      <div class="tab active" onclick="switchMainTab('contents')">전체 콘텐츠</div>
+      <div class="tab" onclick="switchMainTab('revisions')">수정 요청</div>
+    </div>
+
+    <!-- 전체 콘텐츠 -->
+    <div class="split" id="pane-contents">
+      <div class="lp">
+        <div class="toolbar">
+          <div class="chip on" onclick="setChip(this,'all')">전체</div>
+          <div class="chip" onclick="setChip(this,'PENDING')">PENDING</div>
+          <div class="chip" onclick="setChip(this,'APPROVED')">APPROVED</div>
+          <div class="chip" onclick="setChip(this,'REJECTED')">REJECTED</div>
+          <div class="chip" onclick="setChip(this,'DRAFT')">DRAFT</div>
+          <div class="srch"><i class="ti ti-search"></i><input placeholder="콘텐츠명, 제작사" /></div>
+        </div>
+        <div class="tscroll">
+          <table>
+            <thead><tr><th>콘텐츠</th><th>제작사</th><th>제작연도</th><th class="status-col">상태</th><th>등록일</th></tr></thead>
+            <tbody id="ctbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="dp" id="dp-contents">
+        <div class="empty" id="dp-empty"><i class="ti ti-file-text"></i><p>콘텐츠를 선택해주세요</p></div>
+        <div id="dp-detail" style="display:none;flex-direction:column;height:100%;">
+          <div class="dh">
+            <div class="dh-top">
+              <div class="content-detail-head">
+                <div id="d-poster"></div>
+                <div>
+                <div class="dh-title" id="d-title"></div>
+                <div class="dh-sub" id="d-sub"></div>
+                </div>
+              </div>
+              <div class="dh-right">
+                <span class="bdg" id="d-status"></span>
+                <button class="btn-close" onclick="closeDetail()"><i class="ti ti-x"></i></button>
+              </div>
+            </div>
+            <div class="dh-acts" id="d-acts"></div>
+            <!-- reject reason box -->
+            <div class="rr-box" id="rr-box">
+              <label>거절 사유를 입력해주세요</label>
+              <textarea placeholder="제작사에게 전달될 거절 사유입니다"></textarea>
+              <div class="rr-acts">
+                <button class="btn btn-cancel" onclick="hideReject()">취소</button>
+                <button class="btn btn-reject">거절 확정</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- INNER TABS -->
+          <div class="dtabbar">
+            <div class="dtab active" onclick="switchDTab(this,'tab-basic')">기본 정보</div>
+            <div class="dtab" onclick="switchDTab(this,'tab-trans')">번역 데이터</div>
+            <div class="dtab" onclick="switchDTab(this,'tab-image')">이미지</div>
+            <div class="dtab" onclick="switchDTab(this,'tab-video')">영상</div>
+            <div class="dtab" onclick="switchDTab(this,'tab-material')">자료</div>
+            <div class="dtab" onclick="switchDTab(this,'tab-release')">릴리즈</div>
+            <div class="dtab" onclick="switchDTab(this,'tab-extra')">부가 정보</div>
+          </div>
+
+          <div class="dbody">
+
+            <!-- ── 탭: 기본 정보 ── -->
+            <div class="dpanel active" id="tab-basic">
+              <div class="basic-stack">
+                <div class="form-section">
+                  <div class="form-section-title">핵심 정보</div>
+                  <div class="form-grid">
+                    <div class="fg"><label>콘텐츠 제목 (원제)</label><input id="b-origtitle" /></div>
+                    <div class="fg"><label>제작사</label><input id="b-company" readonly /></div>
+                    <div class="fg"><label>제작연도</label><input id="b-year" type="number" /></div>
+                    <div class="fg"><label>제작언어</label>
+                      <select id="b-lang">
+                        <option>한국어 (KO)</option><option>영어 (EN)</option><option>중국어 (ZH)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <div class="form-section-title">분량 정보</div>
+                  <div class="form-grid">
+                    <div class="fg"><label>총 회차 수</label><input id="b-eps" type="number" /></div>
+                    <div class="fg"><label>시작 지점</label><input id="b-start-point" type="number" placeholder="예: 1" /></div>
+                    <div class="fg"><label>회차당 러닝타임 (분)</label><input id="b-runtime" type="number" /></div>
+                    <div class="fg"><label>총 러닝타임 (분)</label><input id="b-total-runtime" type="number" /></div>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <div class="form-section-title">분류 및 상태</div>
+                  <div class="form-grid">
+                    <div class="fg"><label>장르</label>
+                      <div class="multi-select" id="b-genre">
+                        <button type="button" class="multi-select-trigger" onclick="toggleGenreMenu()">선택 없음</button>
+                        <div class="multi-select-menu">
+                          <label class="multi-option"><input type="checkbox" value="드라마" onchange="updateGenreSummary()" />드라마</label>
+                          <label class="multi-option"><input type="checkbox" value="로맨스" onchange="updateGenreSummary()" />로맨스</label>
+                          <label class="multi-option"><input type="checkbox" value="멜로" onchange="updateGenreSummary()" />멜로</label>
+                          <label class="multi-option"><input type="checkbox" value="코미디" onchange="updateGenreSummary()" />코미디</label>
+                          <label class="multi-option"><input type="checkbox" value="액션" onchange="updateGenreSummary()" />액션</label>
+                          <label class="multi-option"><input type="checkbox" value="스릴러" onchange="updateGenreSummary()" />스릴러</label>
+                          <label class="multi-option"><input type="checkbox" value="미스터리" onchange="updateGenreSummary()" />미스터리</label>
+                          <label class="multi-option"><input type="checkbox" value="판타지" onchange="updateGenreSummary()" />판타지</label>
+                          <label class="multi-option"><input type="checkbox" value="SF" onchange="updateGenreSummary()" />SF</label>
+                          <label class="multi-option"><input type="checkbox" value="공포" onchange="updateGenreSummary()" />공포</label>
+                          <label class="multi-option"><input type="checkbox" value="청춘" onchange="updateGenreSummary()" />청춘</label>
+                          <label class="multi-option"><input type="checkbox" value="가족" onchange="updateGenreSummary()" />가족</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="fg"><label>영상 등급</label>
+                      <select id="b-rating">
+                        <option>전체 관람가 (ALL)</option><option>12세 이상</option><option>15세 이상</option><option>청소년 관람 불가</option>
+                      </select>
+                    </div>
+                    <div class="fg"><label>콘텐츠 유형</label>
+                      <select id="b-type"><option>오리지널 (ORIGINAL)</option><option>리메이크 (REMAKE)</option></select>
+                    </div>
+                    <div class="fg"><label>제작 상태</label>
+                      <select id="b-pstatus">
+                        <option>기획 중 (PLANNING)</option><option>제작 중 (IN_PRODUCTION)</option><option>심의 중 (IN_REVIEW)</option><option>제작 완료 (COMPLETED)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-section reject-section" id="approval-section">
+                  <div class="form-section-title">거절 사유</div>
+                  <div class="form-grid full">
+                    <div class="fg"><input id="b-reject" readonly placeholder="거절 이력 없음" /></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── 탭: 번역 데이터 ── -->
+            <div class="dpanel" id="tab-trans">
+              <div class="ltabs">
+                <div class="ltab active" onclick="switchLang(this,'KO','trans')"><span class="dot"></span>한국어</div>
+                <div class="ltab" onclick="switchLang(this,'EN','trans')"><span class="dot"></span>English</div>
+                <div class="ltab" onclick="switchLang(this,'ZH','trans')"><span class="dot empty"></span>中文</div>
+              </div>
+              <div class="basic-stack">
+                <div class="form-section">
+                  <div class="form-section-title">콘텐츠 소개</div>
+                  <div class="form-grid full">
+                    <div class="fg"><label>제목</label><input placeholder="이 언어의 제목" /></div>
+                    <div class="fg"><label>한 줄 줄거리 (Logline) <span class="req">*</span></label><textarea rows="2" placeholder="한 문장으로 줄거리를 표현"></textarea></div>
+                    <div class="fg"><label>시놉시스 <span class="req">*</span></label><textarea rows="4" placeholder="줄거리 요약"></textarea></div>
+                    <div class="fg"><label>캐릭터 소개 <span class="req">*</span></label><textarea rows="3" placeholder="주요 등장인물 소개"></textarea></div>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <div class="form-section-title">제작진 및 출시</div>
+                  <div class="form-grid">
+                    <div class="fg"><label>출시일 <span class="req">*</span></label><input type="date" /></div>
+                    <div class="fg"><label>감독</label><input placeholder="감독 이름" /></div>
+                    <div class="fg"><label>작가</label><input placeholder="작가 이름" /></div>
+                    <div class="fg"><label>출연 배우</label><input placeholder="주요 배우 (쉼표 구분)" /></div>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <div class="form-section-title">관리자 전용</div>
+                  <div class="form-grid">
+                    <div class="fg"><label>키 테마 (Key Theme)</label><input placeholder="예: 치유, 성장, 사랑" /></div>
+                    <div class="fg"><label>해시태그</label><input placeholder="#힐링 #로맨스 (# 포함)" /></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── 탭: 이미지 (언어 무관, 공통) ── -->
+            <div class="dpanel" id="tab-image">
+              <div class="sec">
+                <div class="sec-title">
+                  대표 이미지
+                  <span style="font-size:10px;color:#bbb;font-weight:400;text-transform:none">1장 · 언어 공통</span>
+                </div>
+                <div class="media-grid" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr))">
+                  <div class="media-card">
+                    <div class="media-thumb" style="aspect-ratio:3/4"><i class="ti ti-photo"></i></div>
+                    <div class="media-info"><div class="media-label">대표 이미지</div><div class="media-sub">1200×1600</div></div>
+                    <button class="media-del"><i class="ti ti-x"></i></button>
+                  </div>
+                  <div class="upload-card" style="aspect-ratio:3/4" onclick="alert('대표 이미지 업로드')">
+                    <i class="ti ti-upload"></i><span>업로드</span>
+                  </div>
+                </div>
+                <p class="note" style="margin-top:8px">기존 이미지를 교체하려면 새 이미지를 업로드하세요.</p>
+              </div>
+
+              <div class="sec">
+                <div class="sec-title">
+                  관련 이미지
+                  <span style="font-size:10px;color:#bbb;font-weight:400;text-transform:none">최대 10장 · 언어 공통</span>
+                </div>
+                <div class="media-grid">
+                  <div class="media-card">
+                    <div class="media-thumb"><i class="ti ti-photo"></i></div>
+                    <div class="media-info"><div class="media-label">관련 이미지 1</div><div class="media-sub">1920×1080</div></div>
+                    <button class="media-del"><i class="ti ti-x"></i></button>
+                  </div>
+                  <div class="media-card">
+                    <div class="media-thumb"><i class="ti ti-photo"></i></div>
+                    <div class="media-info"><div class="media-label">관련 이미지 2</div><div class="media-sub">1920×1080</div></div>
+                    <button class="media-del"><i class="ti ti-x"></i></button>
+                  </div>
+                  <div class="upload-card" onclick="alert('관련 이미지 업로드')">
+                    <i class="ti ti-upload"></i><span>이미지 추가</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── 탭: 영상 (언어별) ── -->
+            <div class="dpanel" id="tab-video">
+              <div class="ltabs">
+                <div class="ltab active" onclick="switchLang(this,'KO','video')"><span class="dot"></span>한국어</div>
+                <div class="ltab" onclick="switchLang(this,'EN','video')"><span class="dot"></span>English</div>
+                <div class="ltab" onclick="switchLang(this,'ZH','video')"><span class="dot empty"></span>中文</div>
+              </div>
+              <p class="note" style="margin-bottom:14px">언어별로 영상을 업로드합니다. 추후 VTT 자막만 언어별 업로드로 전환 예정.</p>
+
+              <div class="sec">
+                <div class="sec-title">
+                  티저 영상
+                  <span style="font-size:10px;color:#bbb;font-weight:400;text-transform:none">최대 10개</span>
+                </div>
+                <div class="media-grid">
+                  <div class="media-card">
+                    <div class="media-thumb"><i class="ti ti-player-play"></i></div>
+                    <div class="media-info"><div class="media-label">티저 1</div><div class="media-sub">KO · 02:14</div></div>
+                    <button class="media-del"><i class="ti ti-x"></i></button>
+                  </div>
+                  <div class="upload-card" onclick="alert('S3 presign URL 발급 후 업로드')">
+                    <i class="ti ti-upload"></i><span>티저 추가</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sec">
+                <div class="sec-title">
+                  무료회차 영상
+                  <span style="font-size:10px;color:#bbb;font-weight:400;text-transform:none">최대 10개</span>
+                </div>
+                <div class="media-grid">
+                  <div class="media-card">
+                    <div class="media-thumb"><i class="ti ti-player-play"></i></div>
+                    <div class="media-info"><div class="media-label">1화</div><div class="media-sub">KO · 24:30</div></div>
+                    <button class="media-del"><i class="ti ti-x"></i></button>
+                  </div>
+                  <div class="media-card">
+                    <div class="media-thumb"><i class="ti ti-player-play"></i></div>
+                    <div class="media-info"><div class="media-label">2화</div><div class="media-sub">KO · 23:55</div></div>
+                    <button class="media-del"><i class="ti ti-x"></i></button>
+                  </div>
+                  <div class="media-card">
+                    <div class="media-thumb"><i class="ti ti-player-play"></i></div>
+                    <div class="media-info"><div class="media-label">3화</div><div class="media-sub">KO · 25:10</div></div>
+                    <button class="media-del"><i class="ti ti-x"></i></button>
+                  </div>
+                  <div class="upload-card" onclick="alert('S3 presign URL 발급 후 업로드')">
+                    <i class="ti ti-upload"></i><span>회차 추가</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── 탭: 자료 ── -->
+            <div class="dpanel" id="tab-material">
+              <div class="basic-stack">
+                <div class="form-section">
+                  <div class="form-section-title">메타데이터 자료 폴더</div>
+                  <div class="material-folder">
+                    <div class="fg"><input id="b-drive-url" placeholder="https://drive.google.com/..." /></div>
+                    <button class="btn btn-material" onclick="openDriveFolder()"><i class="ti ti-external-link"></i> 자료 폴더 열기</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── 탭: 릴리즈 히스토리 ── -->
+            <div class="dpanel" id="tab-release">
+              <div class="sec">
+                <div class="release-toolbar">
+                  <div class="sec-title" style="margin:0;padding:0;border:none">릴리즈 플랫폼</div>
+                  <button class="btn btn-edit" onclick="showReleaseForm()"><i class="ti ti-plus"></i> 추가</button>
+                </div>
+                <div class="release-form" id="release-form">
+                  <input type="hidden" id="release-id" />
+                  <div class="form-grid">
+                    <div class="fg"><label>플랫폼명</label><input id="release-platform" placeholder="예: ShortReel (US)" /></div>
+                    <div class="fg"><label>구분</label>
+                      <select id="release-internal">
+                        <option value="true">내부 플랫폼</option>
+                        <option value="false">외부 플랫폼</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="release-form-actions">
+                    <button class="btn" onclick="hideReleaseForm()">취소</button>
+                    <button class="btn btn-save" onclick="saveReleaseHistory()"><i class="ti ti-device-floppy"></i> 저장</button>
+                  </div>
+                </div>
+                <div class="release-list" id="release-list"></div>
+              </div>
+            </div>
+
+            <!-- ── 탭: 부가 정보 ── -->
+            <div class="dpanel" id="tab-extra">
+              <div class="extra-grid">
+                <div class="extra-panel">
+                  <div class="extra-panel-head">
+                    <div class="extra-panel-title"><i class="ti ti-bookmark"></i> 북마크한 플랫폼</div>
+                    <div class="extra-panel-count" id="extra-bookmark-count"></div>
+                  </div>
+                  <div class="extra-panel-body" id="extra-bookmarks"></div>
+                </div>
+                <div class="extra-panel">
+                  <div class="extra-panel-head">
+                    <div class="extra-panel-title"><i class="ti ti-timeline"></i> 등록 이력</div>
+                    <div class="extra-panel-count" id="extra-timeline-count"></div>
+                  </div>
+                  <div class="extra-panel-body">
+                    <div class="tl" id="extra-timeline"></div>
+                  </div>
+                </div>
+                <div class="extra-panel">
+                  <div class="extra-panel-head">
+                    <div class="extra-panel-title"><i class="ti ti-mail-forward"></i> 제안 메일 발송 이력</div>
+                    <div class="extra-panel-count" id="extra-mail-count"></div>
+                  </div>
+                  <div class="extra-panel-body" id="extra-mails"></div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /dbody -->
+
+          <div class="savebar edit-only">
+            <button class="btn btn-cancel" onclick="setContentEditMode(false)">취소</button>
+            <button class="btn btn-save" onclick="setContentEditMode(false)"><i class="ti ti-device-floppy"></i> 저장</button>
+          </div>
+        </div><!-- /dp-detail -->
+      </div><!-- /dp -->
+    </div><!-- /split contents -->
+
+    <!-- 수정 요청 pane -->
+    <div class="split" id="pane-revisions" style="display:none">
+      <div class="lp">
+        <div class="toolbar">
+          <div class="chip on">전체</div>
+          <div class="chip">PENDING</div>
+          <div class="chip">APPROVED</div>
+          <div class="chip">REJECTED</div>
+          <div class="srch"><i class="ti ti-search"></i><input placeholder="콘텐츠명 검색" /></div>
+        </div>
+        <div class="tscroll">
+          <table>
+            <thead><tr><th>콘텐츠</th><th>제작사</th><th class="status-col">상태</th><th>요청일</th></tr></thead>
+            <tbody>
+              <tr class="sel" onclick="showRevDetail(this)">
+                <td>
+                  <div class="content-cell">
+                    <div class="poster poster-sm poster-p1" data-mark="TL"></div>
+                    <div><div class="tname">The Last Letter</div></div>
+                  </div>
+                </td>
+                <td class="tmeta">NextWave Studios</td>
+                <td><span class="bdg b-pending">PENDING</span></td>
+                <td class="tmeta">2026.05.08</td>
+              </tr>
+              <tr onclick="showRevDetail(this)">
+                <td>
+                  <div class="content-cell">
+                    <div class="poster poster-sm poster-p4" data-mark="BA"></div>
+                    <div><div class="tname">Bloom Again</div></div>
+                  </div>
+                </td>
+                <td class="tmeta">PaperLens</td>
+                <td><span class="bdg b-pending">PENDING</span></td>
+                <td class="tmeta">2026.05.07</td>
+              </tr>
+              <tr onclick="showRevDetail(this)">
+                <td>
+                  <div class="content-cell">
+                    <div class="poster poster-sm poster-p6" data-mark="ES"></div>
+                    <div><div class="tname">Echo of Spring</div></div>
+                  </div>
+                </td>
+                <td class="tmeta">NextWave Studios</td>
+                <td><span class="bdg b-pending">PENDING</span></td>
+                <td class="tmeta">2026.05.05</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="content-cell">
+                    <div class="poster poster-sm poster-p3" data-mark="MT"></div>
+                    <div><div class="tname">Midnight Tokyo Drift</div></div>
+                  </div>
+                </td>
+                <td class="tmeta">ShortReel (US)</td>
+                <td><span class="bdg b-approved">APPROVED</span></td>
+                <td class="tmeta">2026.05.01</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="dp" id="dp-revisions">
+        <div class="empty" id="rev-empty"><i class="ti ti-git-diff"></i><p>수정 요청을 선택해주세요</p></div>
+        <div id="rev-detail" style="display:none;flex-direction:column;height:100%">
+          <div class="dh">
+            <div class="dh-top">
+              <div class="content-detail-head">
+                <div class="poster poster-lg poster-p1" data-mark="TL"></div>
+                <div>
+                  <div class="dh-title">The Last Letter</div>
+                  <div class="dh-sub">NextWave Studios · 수정 요청 2026.05.08 14:32</div>
+                </div>
+              </div>
+              <div class="dh-right">
+                <span class="bdg b-pending">PENDING</span>
+                <button class="btn-close" onclick="closeRevDetail()"><i class="ti ti-x"></i></button>
+              </div>
+            </div>
+            <div class="dh-acts">
+              <button class="btn btn-approve"><i class="ti ti-check"></i> 승인</button>
+              <button class="btn btn-reject" onclick="toggleRRBox('rev-rr')"><i class="ti ti-x"></i> 거절</button>
+            </div>
+            <div class="rr-box" id="rev-rr">
+              <label>거절 사유를 입력해주세요</label>
+              <textarea placeholder="제작사에게 전달될 거절 사유입니다"></textarea>
+              <div class="rr-acts">
+                <button class="btn btn-cancel" onclick="toggleRRBox('rev-rr')">취소</button>
+                <button class="btn btn-reject">거절 확정</button>
+              </div>
+            </div>
+          </div>
+          <div class="dbody" style="padding:16px 18px">
+            <div class="rev-summary">
+              <span class="rev-chip">시놉시스</span>
+              <span class="rev-chip">회차 수</span>
+              <span class="rev-chip">제작연도</span>
+            </div>
+            <div class="rev-change-list">
+              <div class="long-compare">
+                <div class="long-compare-head">
+                  <div class="long-compare-title">시놉시스</div>
+                  <span class="long-compare-badge">변경</span>
+                </div>
+                <div class="long-compare-body">
+                  <div class="long-text-block">
+                    <div class="long-text-label">원본</div>
+                    <div class="long-text-content">서로를 오해하며 멀어진 두 남녀가 오래된 편지를 계기로 다시 마주한다.
+도시의 겨울과 작은 서점을 배경으로, 두 사람은 과거의 선택이 남긴 상처를 하나씩 확인한다.
+마지막 편지에 담긴 진실이 드러나며 관계는 다시 흔들리고, 각자는 떠남과 회복 사이에서 선택해야 한다.</div>
+                  </div>
+                  <div class="long-text-block changed">
+                    <div class="long-text-label">수정 요청</div>
+                    <div class="long-text-content">서로를 오해하며 멀어진 두 남녀가 오래된 편지를 계기로 다시 마주한다.
+도시의 겨울과 작은 서점을 배경으로, 두 사람은 과거의 선택이 남긴 상처를 하나씩 확인한다.
+마지막 편지에 담긴 진실이 드러나며 관계는 다시 흔들리고, 각자는 떠남과 회복 사이에서 선택해야 한다.
+수정 요청본에서는 여주인공이 편지를 처음 발견하는 장면과 결말부의 화해 장면을 보강하여 감정선이 더 분명하게 이어지도록 구성했다.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="long-compare">
+                <div class="long-compare-head">
+                  <div class="long-compare-title">회차 수</div>
+                  <span class="long-compare-badge">변경</span>
+                </div>
+                <div class="long-compare-body short-change">
+                  <div class="long-text-block">
+                    <div class="long-text-label">원본</div>
+                    <div class="long-text-content">14화</div>
+                  </div>
+                  <div class="long-text-block changed">
+                    <div class="long-text-label">수정 요청</div>
+                    <div class="long-text-content">16화</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="long-compare">
+                <div class="long-compare-head">
+                  <div class="long-compare-title">제작연도</div>
+                  <span class="long-compare-badge">변경</span>
+                </div>
+                <div class="long-compare-body short-change">
+                  <div class="long-text-block">
+                    <div class="long-text-label">원본</div>
+                    <div class="long-text-content">2023</div>
+                  </div>
+                  <div class="long-text-block changed">
+                    <div class="long-text-label">수정 요청</div>
+                    <div class="long-text-content">2024</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /view-list -->
+</div><!-- /main -->
+
+<script>
+const contents = [
+  { id:1, title:'The Last Letter', origTitle:'마지막 편지', company:'NextWave Studios', genre:'드라마, 로맨스', year:'2024', status:'PENDING', date:'2026.05.08',
+    poster:'poster-p1',
+    lang:'한국어', eps:16, runtime:12, totalRuntime:192, startPoint:1, rating:'15세 이상', type:'오리지널', pstatus:'제작 완료',
+    driveFolderUrl:'https://drive.google.com/drive/folders/last-letter', rejectReason:'',
+    bookmarks:['ShortReel (US)','Viki'],
+    timeline:[
+      {dot:'blue',text:'제작사가 등록 재신청함',time:'2026.05.08 · 10:32'},
+      {dot:'red',text:'관리자가 거절함',time:'2026.05.05 · 14:11'},
+      {dot:'blue',text:'제작사가 최초 신청함',time:'2026.05.03 · 09:05'},
+    ],
+    mails:['ShortReel (US) — 2026.05.07 · 15:20','Viki — 2026.05.07 · 15:20']
+  },
+  { id:2, title:'Reverse Cinderella', origTitle:'역신데렐라', company:'OneTake Media', genre:'로맨스', year:'2024', status:'PENDING', date:'2026.05.07',
+    poster:'poster-p2',
+    lang:'한국어', eps:20, runtime:10, totalRuntime:200, startPoint:1, rating:'전체 관람가', type:'오리지널', pstatus:'제작 완료',
+    driveFolderUrl:'https://drive.google.com/drive/folders/reverse-cinderella', rejectReason:'',
+    bookmarks:['WeTV'],
+    timeline:[{dot:'blue',text:'제작사가 등록 신청함',time:'2026.05.07 · 11:00'}],
+    mails:[]
+  },
+  { id:3, title:'Midnight Tokyo Drift', origTitle:'Midnight Tokyo Drift', company:'ShortReel (US)', genre:'액션', year:'2023', status:'APPROVED', date:'2026.05.01',
+    poster:'poster-p3',
+    lang:'일본어', eps:12, runtime:8, totalRuntime:96, startPoint:1, rating:'15세 이상', type:'오리지널', pstatus:'제작 완료',
+    driveFolderUrl:'https://drive.google.com/drive/folders/tokyo-drift', rejectReason:'',
+    bookmarks:['Viki','iQIYI','WeTV'],
+    timeline:[
+      {dot:'green',text:'관리자가 승인함',time:'2026.05.01 · 09:20'},
+      {dot:'blue',text:'제작사가 등록 신청함',time:'2026.04.28 · 16:45'}
+    ],
+    mails:['Viki — 2026.05.02 · 10:00','iQIYI — 2026.05.02 · 10:00']
+  },
+  { id:4, title:'Bloom Again', origTitle:'다시 피다', company:'PaperLens', genre:'드라마', year:'2024', status:'REJECTED', date:'2026.04.29',
+    poster:'poster-p4',
+    lang:'한국어', eps:10, runtime:14, totalRuntime:140, startPoint:1, rating:'12세 이상', type:'리메이크', pstatus:'제작 완료',
+    driveFolderUrl:'', rejectReason:'캐릭터 설명이 부족합니다. 주요 인물 소개를 보완해주세요.',
+    bookmarks:[],
+    timeline:[
+      {dot:'red',text:'관리자가 거절함',time:'2026.04.29 · 14:00'},
+      {dot:'blue',text:'제작사가 등록 신청함',time:'2026.04.27 · 10:30'}
+    ],
+    mails:[]
+  },
+  { id:5, title:'Seven Suns', origTitle:'일곱 개의 태양', company:'BrightFrame', genre:'SF', year:'2023', status:'DRAFT', date:'2026.04.25',
+    poster:'poster-p5',
+    lang:'한국어', eps:8, runtime:18, totalRuntime:144, startPoint:1, rating:'전체 관람가', type:'오리지널', pstatus:'제작 중',
+    driveFolderUrl:'', rejectReason:'',
+    bookmarks:[],
+    timeline:[{dot:'gray',text:'초안 저장됨',time:'2026.04.25 · 09:00'}],
+    mails:[]
+  },
+  { id:6, title:'Echo of Spring', origTitle:'봄의 메아리', company:'NextWave Studios', genre:'멜로', year:'2024', status:'APPROVED', date:'2026.04.20',
+    poster:'poster-p6',
+    lang:'한국어', eps:18, runtime:11, totalRuntime:198, startPoint:1, rating:'전체 관람가', type:'오리지널', pstatus:'제작 완료',
+    driveFolderUrl:'https://drive.google.com/drive/folders/echo-spring', rejectReason:'',
+    bookmarks:['Viki','WeTV'],
+    timeline:[
+      {dot:'green',text:'관리자가 승인함',time:'2026.04.20 · 11:00'},
+      {dot:'blue',text:'제작사가 등록 신청함',time:'2026.04.18 · 14:00'}
+    ],
+    mails:['Viki — 2026.04.21 · 09:00']
+  },
+];
+
+const sc = {DRAFT:'b-draft',PENDING:'b-pending',APPROVED:'b-approved',REJECTED:'b-rejected'};
+let selId = null;
+let releaseSeq = 10;
+
+const releaseHistories = {
+  1: [
+    { id: 1, platformName: 'ShortReel (US)', isInternal: false },
+    { id: 2, platformName: 'Viki', isInternal: false },
+  ],
+  2: [
+    { id: 3, platformName: 'WeTV', isInternal: false },
+  ],
+  3: [
+    { id: 4, platformName: 'Shortflow', isInternal: true },
+    { id: 5, platformName: 'WeTV', isInternal: false },
+  ],
+  6: [
+    { id: 6, platformName: 'Viki', isInternal: false },
+  ],
+};
+
+function posterMark(title) {
+  return title.split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+}
+
+function posterHtml(c, size) {
+  return `<div class="poster poster-${size} ${c.poster}" data-mark="${posterMark(c.title)}"></div>`;
+}
+
+function renderTable() {
+  const tbody = document.getElementById('ctbody');
+  tbody.innerHTML = '';
+  contents.forEach(c => {
+    const tr = document.createElement('tr');
+    if (c.id === selId) tr.classList.add('sel');
+    tr.innerHTML = `
+      <td>
+        <div class="content-cell">
+          ${posterHtml(c, 'sm')}
+          <div><div class="tname">${c.title}</div></div>
+        </div>
+      </td>
+      <td class="tmeta">${c.company}</td>
+      <td class="tmeta">${c.year}</td>
+      <td><span class="bdg ${sc[c.status]}">${c.status}</span></td>
+      <td class="tmeta">${c.date}</td>`;
+    tr.onclick = () => selectContent(c.id);
+    tbody.appendChild(tr);
+  });
+}
+
+function selectContent(id) {
+  selId = id;
+  renderTable();
+  const c = contents.find(x => x.id === id);
+
+  document.getElementById('d-poster').innerHTML = posterHtml(c, 'lg');
+  document.getElementById('d-title').textContent = c.title;
+  document.getElementById('d-sub').textContent = `${c.company} · ${c.genre} · ${c.year}`;
+  const st = document.getElementById('d-status');
+  st.className = `bdg ${sc[c.status]}`;
+  st.textContent = c.status;
+
+  const isPending = c.status === 'PENDING';
+  document.getElementById('d-acts').innerHTML = `
+    ${isPending ? `<button class="btn btn-approve"><i class="ti ti-check"></i> 승인</button>` : ''}
+    ${isPending ? `<button class="btn btn-reject" onclick="showReject()"><i class="ti ti-x"></i> 거절</button>` : ''}
+    <button class="btn btn-edit" id="content-edit-btn" onclick="setContentEditMode(true)"><i class="ti ti-edit"></i> 수정</button>
+    <button class="btn btn-del"><i class="ti ti-trash"></i></button>`;
+
+  // basic
+  document.getElementById('b-origtitle').value = c.origTitle;
+  document.getElementById('b-year').value = c.year;
+  setGenreChips(c.genre);
+  document.getElementById('b-company').value = c.company;
+  document.getElementById('b-eps').value = c.eps;
+  document.getElementById('b-runtime').value = c.runtime || '';
+  document.getElementById('b-total-runtime').value = c.totalRuntime || '';
+  document.getElementById('b-start-point').value = c.startPoint || '';
+  document.getElementById('b-drive-url').value = c.driveFolderUrl || '';
+  setSelectByText('b-lang', c.lang);
+  setSelectByText('b-rating', c.rating);
+  setSelectByText('b-type', c.type);
+  setSelectByText('b-pstatus', c.pstatus);
+  document.getElementById('b-reject').value = c.rejectReason || '';
+  document.getElementById('approval-section').style.display = c.rejectReason ? '' : 'none';
+
+  // extra
+  const bk = document.getElementById('extra-bookmarks');
+  document.getElementById('extra-bookmark-count').textContent = `${c.bookmarks.length}개`;
+  bk.innerHTML = c.bookmarks.length
+    ? `<div class="bookmark-grid">${c.bookmarks.map(p=>`<div class="brow"><span class="bplatform">${p}</span></div>`).join('')}</div>`
+    : '<div class="extra-empty">북마크 없음</div>';
+
+  const tl = document.getElementById('extra-timeline');
+  document.getElementById('extra-timeline-count').textContent = `${c.timeline.length}건`;
+  tl.innerHTML = c.timeline.map(t=>`
+    <div class="tl-item">
+      <div class="tl-dot ${t.dot}"></div>
+      <div><div class="tl-text">${t.text}</div><div class="tl-time">${t.time}</div></div>
+    </div>`).join('');
+
+  const ml = document.getElementById('extra-mails');
+  document.getElementById('extra-mail-count').textContent = `${c.mails.length}건`;
+  ml.innerHTML = c.mails.length
+    ? c.mails.map(m=>{const[p,d]=m.split(' — ');return`<div class="mrow"><span class="mplatform">${p}</span><span class="mdate">${d}</span></div>`;}).join('')
+    : '<div class="extra-empty">발송 이력 없음</div>';
+
+  hideReleaseForm();
+  renderReleaseHistory();
+
+  document.getElementById('dp-empty').style.display = 'none';
+  const dd = document.getElementById('dp-detail');
+  dd.style.display = 'flex';
+  setContentEditMode(false);
+
+  // reset to first tab
+  document.querySelectorAll('.dtab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  document.querySelectorAll('.dpanel').forEach((p,i)=>p.classList.toggle('active',i===0));
+  document.getElementById('rr-box').classList.remove('show');
+}
+
+function closeDetail() {
+  selId = null;
+  renderTable();
+  document.getElementById('dp-empty').style.display = '';
+  document.getElementById('dp-detail').style.display = 'none';
+}
+
+function setContentEditMode(isEditing) {
+  const detail = document.getElementById('dp-detail');
+  if (!detail) return;
+  detail.classList.toggle('editing', isEditing);
+  detail.classList.toggle('read-mode', !isEditing);
+  syncContentSavebar();
+  detail.querySelectorAll('.fg input, .fg select, .fg textarea').forEach(el => {
+    if (el.id === 'b-company' || el.id === 'b-reject') {
+      el.readOnly = true;
+      el.disabled = false;
+      return;
+    }
+    el.disabled = !isEditing;
+  });
+  const editBtn = document.getElementById('content-edit-btn');
+  if (editBtn) editBtn.style.display = isEditing ? 'none' : '';
+  if (!isEditing) hideReleaseForm();
+}
+
+function switchDTab(el, panelId) {
+  document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.dpanel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+  syncContentSavebar(panelId);
+}
+
+function syncContentSavebar(panelId) {
+  const detail = document.getElementById('dp-detail');
+  if (!detail) return;
+  const activePanelId = panelId || document.querySelector('.dpanel.active')?.id;
+  detail.classList.toggle('no-savebar', activePanelId === 'tab-extra');
+}
+
+function setSelectByText(id, value) {
+  const select = document.getElementById(id);
+  if (!select || value == null) return;
+  const target = String(value);
+  const option = [...select.options].find(opt => opt.textContent.includes(target) || opt.value === target);
+  if (option) select.value = option.value;
+}
+
+function setGenreChips(genreText) {
+  const selected = String(genreText || '').split(',').map(g => g.trim()).filter(Boolean);
+  document.querySelectorAll('#b-genre input[type="checkbox"]').forEach(input => {
+    input.checked = selected.includes(input.value);
+  });
+  updateGenreSummary();
+}
+
+function toggleGenreMenu() {
+  if (document.getElementById('dp-detail')?.classList.contains('read-mode')) return;
+  document.getElementById('b-genre')?.classList.toggle('open');
+}
+
+function updateGenreSummary() {
+  const selected = [...document.querySelectorAll('#b-genre input[type="checkbox"]:checked')].map(input => input.value);
+  const trigger = document.querySelector('#b-genre .multi-select-trigger');
+  if (trigger) trigger.textContent = selected.length ? selected.join(', ') : '선택 없음';
+}
+
+function openDriveFolder() {
+  const url = document.getElementById('b-drive-url')?.value.trim();
+  if (!url) {
+    alert('등록된 드라이브 폴더 URL이 없습니다.');
+    return;
+  }
+  window.open(url, '_blank');
+}
+
+function switchLang(el, lang, ctx) {
+  el.closest('.ltabs').querySelectorAll('.ltab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function getCurrentReleaseList() {
+  if (!releaseHistories[selId]) releaseHistories[selId] = [];
+  return releaseHistories[selId];
+}
+
+function renderReleaseHistory() {
+  const list = document.getElementById('release-list');
+  if (!list || !selId) return;
+  const rows = getCurrentReleaseList();
+  list.innerHTML = rows.length ? rows.map(r => `
+    <div class="release-row">
+      <div class="release-main">
+        <div class="release-name">${r.platformName}</div>
+        <div class="release-meta">content_release_history #${r.id}</div>
+      </div>
+      <span class="release-type ${r.isInternal ? 'internal' : ''}">${r.isInternal ? '내부' : '외부'}</span>
+      <div class="release-actions">
+        <button class="btn btn-icon" onclick="editReleaseHistory(${r.id})" title="수정"><i class="ti ti-edit"></i></button>
+        <button class="btn btn-icon" onclick="deleteReleaseHistory(${r.id})" title="삭제"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>
+  `).join('') : '<div class="release-empty">등록된 릴리즈 플랫폼이 없습니다</div>';
+}
+
+function showReleaseForm(release) {
+  document.getElementById('release-form').classList.add('show');
+  document.getElementById('release-id').value = release ? release.id : '';
+  document.getElementById('release-platform').value = release ? release.platformName : '';
+  document.getElementById('release-internal').value = release && release.isInternal ? 'true' : 'false';
+  document.getElementById('release-platform').focus();
+}
+
+function hideReleaseForm() {
+  const form = document.getElementById('release-form');
+  if (!form) return;
+  form.classList.remove('show');
+  document.getElementById('release-id').value = '';
+  document.getElementById('release-platform').value = '';
+  document.getElementById('release-internal').value = 'false';
+}
+
+function saveReleaseHistory() {
+  const platformName = document.getElementById('release-platform').value.trim();
+  const isInternal = document.getElementById('release-internal').value === 'true';
+  const id = Number(document.getElementById('release-id').value);
+  if (!platformName) {
+    alert('플랫폼명을 입력해주세요.');
+    return;
+  }
+  const rows = getCurrentReleaseList();
+  if (id) {
+    const row = rows.find(r => r.id === id);
+    if (row) {
+      row.platformName = platformName;
+      row.isInternal = isInternal;
+    }
+  } else {
+    rows.push({ id: ++releaseSeq, platformName, isInternal });
+  }
+  hideReleaseForm();
+  renderReleaseHistory();
+}
+
+function editReleaseHistory(id) {
+  const row = getCurrentReleaseList().find(r => r.id === id);
+  if (row) showReleaseForm(row);
+}
+
+function deleteReleaseHistory(id) {
+  releaseHistories[selId] = getCurrentReleaseList().filter(r => r.id !== id);
+  hideReleaseForm();
+  renderReleaseHistory();
+}
+
+function showReject() { document.getElementById('rr-box').classList.add('show'); }
+function hideReject() { document.getElementById('rr-box').classList.remove('show'); }
+function toggleRRBox(id) { document.getElementById(id).classList.toggle('show'); }
+
+function setChip(el, val) {
+  el.closest('.toolbar').querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function switchMainTab(tab) {
+  const isContents = tab === 'contents';
+  document.getElementById('pane-contents').style.display = isContents ? 'flex' : 'none';
+  document.getElementById('pane-revisions').style.display = isContents ? 'none' : 'flex';
+  document.querySelectorAll('.tabbar .tab').forEach((t,i)=>t.classList.toggle('active', isContents ? i===0 : i===1));
+  document.querySelectorAll('.nav a[href="#list"], .nav a[href="#revisions"]').forEach((n,i)=>n.classList.toggle('active', isContents ? i===0 : i===1));
+}
+
+function gotoView(view) {
+  switchMainTab(view === 'revisions' ? 'revisions' : 'contents');
+}
+
+function showRevDetail(tr) {
+  document.querySelectorAll('#pane-revisions tbody tr').forEach(r=>r.classList.remove('sel'));
+  tr.classList.add('sel');
+  document.getElementById('rev-empty').style.display = 'none';
+  document.getElementById('rev-detail').style.display = 'flex';
+}
+function closeRevDetail() {
+  document.getElementById('rev-empty').style.display = '';
+  document.getElementById('rev-detail').style.display = 'none';
+}
+
+renderTable();
+if (['list', 'revisions'].includes(location.hash.slice(1))) {
+  gotoView(location.hash.slice(1));
+}
+</script>
+</body>
+</html>

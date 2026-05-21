@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>워크플로우 — Shortflow Admin</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+<link rel="stylesheet" href="admin-common.css" />
+<script src="admin-common.js" defer></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5f4f0; display: flex; height: 100vh; overflow: hidden; font-size: 13px; color: #1a1a18; }
+
+/* SIDEBAR */
+.sb { width: 210px; min-width: 210px; background: #13130f; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
+.sb-logo { padding: 16px 16px 12px; border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+.sb-logo-main { color: #fff; font-size: 14px; font-weight: 600; }
+.sb-logo-sub { font-size: 9px; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 1px; }
+.nav { flex: 1; overflow-y: auto; padding: 6px 0; }
+.nav-label { font-size: 9px; color: rgba(255,255,255,0.22); letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 16px 3px; }
+.ni { display: flex; align-items: center; gap: 7px; padding: 6px 16px; font-size: 12.5px; color: rgba(255,255,255,0.42); cursor: pointer; border-left: 2px solid transparent; }
+.ni:hover { color: rgba(255,255,255,0.7); }
+.ni.active { color: #fff; }
+.ni i { font-size: 13px; flex-shrink: 0; }
+.ni-badge { margin-left: auto; font-size: 10px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 1px 6px; border-radius: 10px; }
+.ni-badge.hot { background: #fff; color: #13130f; }
+.sub .ni { padding-left: 36px; font-size: 12px; color: rgba(255,255,255,0.32); }
+.sub .ni:hover { color: rgba(255,255,255,0.6); }
+.sub .ni.active { color: #fff; background: rgba(255,255,255,0.04); border-left-color: #fff; }
+.sb-foot { padding: 10px 16px; border-top: 0.5px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 9px; }
+.ava { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 10px; color: #fff; font-weight: 500; flex-shrink: 0; }
+.uname { font-size: 11px; color: #fff; font-weight: 500; }
+.uemail { font-size: 10px; color: rgba(255,255,255,0.28); margin-top: 1px; }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+.topbar { height: 46px; background: #fff; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; padding: 0 18px; flex-shrink: 0; }
+.topbar-title { font-size: 14px; font-weight: 600; }
+.topbar-right { margin-left: auto; font-size: 12px; color: #999; }
+
+/* TABS */
+.tabbar { background: #fff; border-bottom: 0.5px solid #e8e6e0; display: flex; padding: 0 18px; flex-shrink: 0; }
+.tab { padding: 10px 14px; font-size: 12.5px; color: #999; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -0.5px; display: flex; align-items: center; gap: 5px; user-select: none; }
+.tab:hover { color: #555; }
+.tab.active { color: #1a1a18; border-bottom-color: #1a1a18; font-weight: 500; }
+
+/* SPLIT */
+.split { flex: 1; display: flex; overflow: hidden; }
+.lp { width: 400px; min-width: 400px; display: flex; flex-direction: column; border-right: 0.5px solid #e8e6e0; overflow: hidden; flex-shrink: 0; }
+.dp { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #fafaf7; }
+
+/* TOOLBAR */
+.toolbar { background: #fff; border-bottom: 0.5px solid #e8e6e0; padding: 8px 14px; display: flex; align-items: center; gap: 5px; flex-shrink: 0; flex-wrap: wrap; }
+.chip { font-size: 11px; padding: 3px 9px; border-radius: 20px; border: 0.5px solid #e0dfd9; color: #666; cursor: pointer; background: #fff; user-select: none; white-space: nowrap; }
+.chip:hover { border-color: #bbb; }
+.chip.on { background: #1a1a18; color: #fff; border-color: #1a1a18; }
+.srch { margin-left: auto; position: relative; display: flex; align-items: center; }
+.srch i { position: absolute; left: 7px; font-size: 12px; color: #bbb; pointer-events: none; }
+.srch input { font-size: 11.5px; padding: 4px 8px 4px 25px; border: 0.5px solid #e0dfd9; border-radius: 7px; background: #f7f6f2; width: 160px; outline: none; color: #1a1a18; }
+
+/* TABLE */
+.tscroll { flex: 1; overflow-y: auto; background: #fff; }
+table { width: 100%; border-collapse: collapse; }
+thead th { background: #f7f6f2; padding: 7px 12px; text-align: left; font-size: 10px; font-weight: 500; color: #aaa; border-bottom: 0.5px solid #e8e6e0; position: sticky; top: 0; white-space: nowrap; }
+tbody tr { border-bottom: 0.5px solid #f0efe9; cursor: pointer; }
+tbody tr:hover { background: #fafaf7; }
+tbody tr.sel { background: #f3f2ee; }
+td { padding: 9px 12px; vertical-align: middle; }
+.tname { font-size: 12.5px; font-weight: 500; }
+.tsub { font-size: 11px; color: #aaa; margin-top: 2px; }
+.tmeta { font-size: 12.5px; color: #888; }
+
+/* BADGES */
+.bdg { display: inline-flex; align-items: center; font-size: 10px; padding: 2px 7px; border-radius: 9px; font-weight: 500; white-space: nowrap; }
+.b-inquiry  { background: #E6F1FB; color: #185FA5; }
+.b-confirm  { background: #FAEEDA; color: #854F0B; }
+.b-ack      { background: #EDE9FE; color: #534AB7; }
+.b-meta     { background: #EAF3DE; color: #3B6D11; }
+.b-closed   { background: #f0efe9; color: #888; }
+
+/* EMPTY */
+.empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #ccc; gap: 8px; }
+.empty i { font-size: 28px; }
+.empty p { font-size: 12px; }
+
+/* DETAIL HEADER */
+.dh { background: #fff; border-bottom: 0.5px solid #e8e6e0; padding: 14px 18px; flex-shrink: 0; }
+.dh-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.dh-title { font-size: 15px; font-weight: 600; }
+.turnkey-title { font-size: 18px; }
+.dh-sub { font-size: 11.5px; color: #999; margin-top: 3px; }
+.dh-right { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+.dh-acts { display: flex; gap: 5px; margin-top: 11px; flex-wrap: wrap; align-items: center; }
+.btn { font-size: 11.5px; padding: 5px 11px; border-radius: 6px; border: 0.5px solid #e0dfd9; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; background: #fff; color: #444; }
+.btn:hover { opacity: 0.8; }
+.btn-confirm  { background: #1a1a18; color: #fff; border-color: #1a1a18; font-weight: 500; }
+.btn-dark     { background: #1a1a18; color: #fff; border-color: #1a1a18; font-weight: 500; }
+.btn-meta     { background: #EAF3DE; color: #3B6D11; border-color: #C0DD97; }
+.btn-close-wf { background: #FCEBEB; color: #A32D2D; border-color: #F7C1C1; }
+.btn-upload   { background: #f7f6f2; color: #555; border-style: dashed; }
+.btn-primary  { background: #1a1a18; color: #fff; border-color: #1a1a18; }
+.btn-danger   { background: #FCEBEB; color: #A32D2D; border-color: #F7C1C1; }
+.btn-icon     { padding: 5px 7px; color: #bbb; }
+.btn-close-panel { background: transparent; border: none; color: #bbb; cursor: pointer; font-size: 15px; padding: 2px 5px; }
+
+/* INNER TABS */
+.dtabbar { background: #fff; border-bottom: 0.5px solid #e8e6e0; display: flex; padding: 0 18px; flex-shrink: 0; }
+.dtab { padding: 9px 12px; font-size: 12px; color: #aaa; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -0.5px; user-select: none; white-space: nowrap; }
+.dtab:hover { color: #666; }
+.dtab.active { color: #1a1a18; border-bottom-color: #1a1a18; font-weight: 500; }
+
+/* DETAIL BODY */
+.dbody { flex: 1; overflow-y: auto; }
+.dpanel { display: none; padding: 16px 18px; }
+.dpanel.active { display: block; }
+
+/* SECTIONS */
+.sec { margin-bottom: 20px; }
+.sec-title { font-size: 11px; font-weight: 500; color: #aaa; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 0.5px solid #eeede8; display: flex; align-items: center; justify-content: space-between; }
+
+/* INFO ROWS */
+.irow { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0; font-size: 12px; border-bottom: 0.5px solid #f5f4f0; }
+.irow:last-child { border-bottom: none; }
+.ik { color: #aaa; flex-shrink: 0; min-width: 100px; }
+.iv { color: #1a1a18; text-align: right; }
+
+/* INQUIRY BOX */
+.inq-box { background: #fff; border: 0.5px solid #e8e6e0; border-radius: 8px; padding: 14px; }
+.inq-box .inq-row { display: flex; justify-content: space-between; gap: 18px; padding: 5px 0; font-size: 12px; border-bottom: 0.5px solid #eee; }
+.inq-box .inq-row:last-of-type { border-bottom: none; }
+.inq-k { color: #aaa; flex: 0 0 100px; }
+.inq-v { color: #1a1a18; font-weight: 400; text-align: right; }
+.inq-row.note-row { align-items: flex-start; border-bottom: none; }
+.inq-row.note-row .inq-v { flex: 1; text-align: left; color: #444; line-height: 1.6; }
+.inq-row.note-row.with-divider { border-bottom: 0.5px solid #eee; padding-bottom: 8px; margin-bottom: 1px; }
+
+/* CONFIRM CARDS */
+.confirm-list { display: flex; flex-direction: column; gap: 8px; }
+.confirm-card { border: 0.5px solid #e8e6e0; border-radius: 8px; background: #fff; overflow: hidden; box-shadow: none; }
+.confirm-card.latest { border-color: #e8e6e0; box-shadow: none; }
+.confirm-card-head { padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; background: #fafaf7; border-bottom: 0.5px solid #e8e6e0; cursor: pointer; }
+.confirm-card-head.latest-bg { background: #fffbf0; }
+.confirm-card-title { font-size: 12px; font-weight: 500; color: #333; display: flex; align-items: center; gap: 7px; }
+.confirm-card-body { padding: 12px 14px; }
+.confirm-card-body .cr { display: flex; justify-content: space-between; gap: 18px; padding: 4px 0; font-size: 12px; border-bottom: 0.5px solid #f5f4f0; }
+.confirm-card-body .cr:last-child { border-bottom: none; }
+.confirm-compose { display: none; background:#fff; border:0.5px solid #e8e6e0; border-radius:8px; padding:14px; margin-bottom:14px; }
+.confirm-compose.show { display: block; }
+.confirm-send-sec { margin-bottom: 36px !important; }
+.ck { color: #aaa; flex: 0 0 88px; }
+.cv { color: #333; text-align: right; }
+.cr.message-row { align-items: flex-start; }
+.cr.message-row .cv { flex: 1; text-align: left; line-height: 1.6; }
+.latest-badge { font-size: 9.5px; background: #FAEEDA; color: #854F0B; padding: 1px 6px; border-radius: 5px; }
+.old-badge    { font-size: 9.5px; background: #f0efe9; color: #999; padding: 1px 6px; border-radius: 5px; }
+
+/* FORM */
+.fg { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+.fg label { font-size: 10.5px; color: #aaa; font-weight: 500; }
+.fg input, .fg select, .fg textarea { font-size: 12px; padding: 7px 10px; border: 0.5px solid #e0dfd9; border-radius: 6px; background: #fff; color: #1a1a18; outline: none; font-family: inherit; width: 100%; }
+.fg input:focus, .fg select:focus, .fg textarea:focus { border-color: #aaa; }
+.fg textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* CONTRACT */
+.contract-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.contract-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #fff; border: 0.5px solid #e8e6e0; border-radius: 7px; }
+.contract-item i { font-size: 16px; color: #aaa; flex-shrink: 0; }
+.contract-name { font-size: 12px; font-weight: 500; color: #333; flex: 1; }
+.contract-date { font-size: 11px; color: #bbb; }
+.contract-del { background: transparent; border: none; cursor: pointer; color: #ccc; padding: 3px; font-size: 14px; }
+.contract-del:hover { color: #E24B4A; }
+
+/* CLOSE BOX */
+.close-box { background: #fff; border: 0.5px solid #e8e6e0; border-radius: 8px; padding: 0; display: none; margin-top: 10px; overflow: hidden; }
+.close-box.show { display: block; }
+.close-box-head { padding: 10px 14px; border-bottom: 0.5px solid #e8e6e0; background: #fffafa; color: #A32D2D; font-size: 12px; font-weight: 500; }
+.close-box-body { padding: 14px; }
+.close-box label { font-size: 11px; color: #aaa; font-weight: 500; display: block; margin-bottom: 6px; }
+.close-box textarea { width: 100%; font-size: 12px; padding: 7px 10px; border: 0.5px solid #e0dfd9; border-radius: 6px; background: #fff; color: #333; resize: none; height: 68px; outline: none; font-family: inherit; }
+.close-box-acts { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; }
+.close-box-acts .note { margin: 0; }
+.close-done { display: none; background: #fff; border: 0.5px solid #e8e6e0; border-radius: 8px; overflow: hidden; }
+.close-done.show { display: block; }
+.close-done-head { padding: 10px 14px; border-bottom: 0.5px solid #e8e6e0; background: #f7f6f2; color: #555; font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.close-done-body { padding: 12px 14px; }
+.close-done-label { font-size: 10.5px; color: #aaa; margin-bottom: 5px; }
+.close-done-reason { font-size: 12px; color: #333; line-height: 1.6; padding: 9px 10px; border: 0.5px solid #eeede8; border-radius: 7px; background: #fafafa; }
+.close-done-meta { font-size: 11px; color: #aaa; margin-top: 8px; }
+
+/* META BOX */
+.meta-box { background: #EAF3DE; border: 0.5px solid #C0DD97; border-radius: 8px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
+.meta-box i { font-size: 18px; color: #3B6D11; }
+.meta-box-text { font-size: 12px; color: #3B6D11; }
+.meta-box-time { font-size: 11px; color: #639922; margin-top: 2px; }
+
+/* TIMELINE */
+.tl { display: flex; flex-direction: column; position: relative; }
+.tl::before { content: ''; position: absolute; left: 3px; top: 8px; bottom: 8px; width: 0.5px; background: #e8e6e0; }
+.tl-item { display: flex; gap: 10px; padding: 7px 0; position: relative; }
+.tl-item:not(:last-child)::after { content: none; }
+.tl-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; border: none; position: relative; z-index: 1; }
+.tl-dot.blue   { background: #378ADD; }
+.tl-dot.amber  { background: #BA7517; }
+.tl-dot.purple { background: #7F77DD; }
+.tl-dot.green  { background: #639922; }
+.tl-dot.gray   { background: #ccc; }
+.tl-dot.red    { background: #E24B4A; }
+.tl-main { flex: 1; }
+.tl-text { font-size: 12px; color: #333; }
+.tl-time { font-size: 10.5px; color: #bbb; margin-top: 1px; }
+.tl .tl-item:not(:first-child) .tl-dot { background: #c9c9c4; }
+.tl .tl-item:not(:first-child) .tl-text { color: #444; font-weight: 400; }
+.tl .tl-item:first-child .tl-dot { background: rgb(233, 91, 46); }
+.tl .tl-item:first-child::after { content: ''; position: absolute; left: 3px; top: 12px; bottom: -12px; width: 0.5px; background: rgb(233, 91, 46); z-index: 0; }
+.tl .tl-item:first-child .tl-text { font-size: 13px; font-weight: 600; color: #1a1a18; }
+.tl-ref { font-size: 10.5px; color: #378ADD; cursor: pointer; margin-top: 2px; text-decoration: underline; }
+
+/* BUNDLE CONTENT LIST */
+.tk-list { display: flex; flex-direction: column; gap: 6px; }
+.tk-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: #fff; border: 0.5px solid #e8e6e0; border-radius: 7px; }
+.tk-thumb { width: 32px; height: 32px; border-radius: 4px; background: #f0efe9; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.tk-thumb i { font-size: 14px; color: #ccc; }
+.tk-name { font-size: 12px; font-weight: 500; color: #333; }
+.tk-company { font-size: 11px; color: #aaa; margin-top: 1px; }
+.tk-removed { opacity: 0.4; text-decoration: line-through; }
+
+/* DEAL CONTENT TABLES */
+.compose-box { background:#fff; border:0.5px solid #e8e6e0; border-radius:8px; padding:14px; margin-bottom:14px; }
+.content-pick-header { display:grid; grid-template-columns:minmax(180px, 1fr) 150px 140px 72px; gap:0; padding:0 10px 6px; font-size:10.5px; color:#aaa; font-weight:500; }
+.content-pick-header.inquiry { grid-template-columns:minmax(180px, 1fr) 150px 120px 150px; }
+.content-pick-header.confirm { grid-template-columns:minmax(180px, 1fr) 150px 120px 150px 72px; }
+.content-pick-table { width:100%; table-layout:fixed; border-collapse:separate; border-spacing:0; background:#fff; border:0.5px solid #e8e6e0; border-radius:8px; overflow:hidden; }
+.content-pick-table th { position:static; background:#fafaf7; padding:7px 10px; text-align:left; border-bottom:0.5px solid #e8e6e0; }
+.content-pick-table td { padding:8px 10px; }
+.content-pick-table tbody tr:not(:last-child) td { border-bottom:0.5px solid #f0efe9; }
+.content-pick-table tbody tr { cursor: default; }
+.content-pick-table tbody tr:hover { background:#fff; }
+.content-pick-table input, .content-pick-table select { width:100%; min-width:0; font-size:12px; padding:6px 8px; border:0.5px solid #e0dfd9; border-radius:6px; background:#fff; color:#1a1a18; outline:none; font-family:inherit; }
+.content-pick-table.bundle-table th:first-child, .content-pick-table.bundle-table td:first-child { width:auto; }
+.content-pick-table th:nth-child(2), .content-pick-table td:nth-child(2) { width:120px; }
+.content-pick-table.bundle-table th:nth-child(3), .content-pick-table.bundle-table td:nth-child(3) { width:88px; }
+.content-pick-table.bundle-table th:nth-child(4), .content-pick-table.bundle-table td:nth-child(4) { width:108px; }
+.content-pick-table.bundle-table th:nth-child(5), .content-pick-table.bundle-table td:nth-child(5) { width:48px; text-align:right; }
+.content-pick-table.turnkey-table th:nth-child(3), .content-pick-table.turnkey-table td:nth-child(3) { width:88px; }
+.content-pick-table.turnkey-table th:nth-child(4), .content-pick-table.turnkey-table td:nth-child(4) { width:120px; }
+.content-pick-table.turnkey-table th:nth-child(5), .content-pick-table.turnkey-table td:nth-child(5) { width:48px; text-align:right; }
+.content-pick-table .col-price { width:150px; }
+.content-pick-table .col-method { width:140px; }
+.content-pick-table .col-remove { width:72px; text-align:right; }
+.table-value { font-size:12px; color:#333; }
+.table-muted { font-size:12px; color:#999; }
+.add-content-row { padding:10px; border:0.5px dashed #ddd; border-radius:8px; background:#fff; display:flex; justify-content:center; margin-top:8px; }
+.turnkey-confirm-box .add-content-row { margin-top:-6px; }
+.money-row { display:grid; grid-template-columns:96px 1fr; gap:8px; }
+.bundle-confirm-form { display:flex; flex-direction:column; gap:14px; }
+.bundle-confirm-form .form-grid, .bundle-confirm-form .fg { margin-bottom:0; }
+.turnkey-confirm-box { display:flex; flex-direction:column; gap:14px; }
+.turnkey-confirm-compose { display:none; }
+.turnkey-confirm-compose.show { display:flex; }
+.contract-fields { margin-top:8px; }
+.turnkey-confirm-box .form-grid, .turnkey-confirm-box .fg { margin-bottom:0; }
+.form-actions { display:flex; justify-content:flex-end; gap:7px; margin-top:12px; }
+.modal-backdrop { display:none; position:fixed; inset:0; background:rgba(19,19,15,.42); z-index:100; align-items:center; justify-content:center; padding:24px; }
+.modal-backdrop.show { display:flex; }
+.modal { width:min(680px, 100%); max-height:calc(100vh - 48px); overflow:hidden; background:#fff; border-radius:10px; box-shadow:0 18px 60px rgba(0,0,0,.22); display:flex; flex-direction:column; }
+.modal-head { padding:14px 16px; border-bottom:0.5px solid #e8e6e0; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.modal-title { font-size:14px; font-weight:600; }
+.modal-body { padding:14px 16px; overflow:auto; }
+.modal-search { position:relative; margin-bottom:12px; }
+.modal-search i { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:#bbb; font-size:13px; }
+.modal-search input { width:100%; font-size:12px; padding:8px 10px 8px 30px; border:0.5px solid #e0dfd9; border-radius:8px; outline:none; background:#fafaf7; font-family:inherit; }
+.result-list { display:flex; flex-direction:column; gap:6px; }
+.result-item { display:grid; grid-template-columns:1.4fr 1fr 90px 88px; align-items:center; gap:10px; padding:9px 10px; border:0.5px solid #eeede8; border-radius:8px; }
+.result-name { font-size:12.5px; font-weight:500; }
+.result-meta { font-size:11.5px; color:#aaa; }
+.btn-added { background:#f0efe9; color:#999; cursor:default; }
+
+/* SAVEBAR */
+.savebar { background: #fff; border-top: 0.5px solid #e8e6e0; padding: 10px 18px; display: flex; justify-content: flex-end; gap: 7px; flex-shrink: 0; }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+.divider { height: 1px; background: #f0efe9; margin: 14px 0; }
+.note { font-size: 11px; color: #bbb; margin-top: 4px; }
+.view { display: none; }
+.view.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+.platform-select { font-size: 11px; padding: 3px 8px; border: 0.5px solid #e0dfd9; border-radius: 6px; background: #fff; color: #555; outline: none; cursor: pointer; font-family: inherit; height: 26px; }
+.meta-pending { background: #f7f6f2; border: 0.5px solid #e8e6e0; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+.meta-pending p { font-size: 12px; color: #aaa; line-height: 1.6; }
+.meta-granted-box { background: #EAF3DE; border: 0.5px solid #C0DD97; border-radius: 8px; padding: 14px 16px; display: flex; align-items: flex-start; gap: 12px; }
+.meta-granted-box i { font-size: 20px; color: #3B6D11; flex-shrink: 0; }
+.meta-granted-title { font-size: 12.5px; font-weight: 500; color: #3B6D11; }
+.meta-granted-time { font-size: 11px; color: #639922; margin-top: 3px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-main">shortflow</div>
+    <div class="sb-logo-sub">Admin</div>
+    <button class="sb-toggle" type="button" aria-label="네비 접기" aria-expanded="true"><i class="ti ti-chevron-left"></i></button>
+  </div>
+  <nav class="nav">
+    <div class="nav-label">메인</div>
+    <a class="ni" href="dashboard-admin.html"><i class="ti ti-home"></i> 홈</a>
+    <div class="nav-label">회원</div>
+    <a class="ni" href="member-admin.html"><i class="ti ti-users"></i> 회원 관리</a>
+    <div class="sub">
+      <a class="ni" href="member-admin.html#users">유저</a>
+      <a class="ni" href="member-admin.html#companies">회사</a>
+    </div>
+    <div class="nav-label">콘텐츠</div>
+    <a class="ni" href="content-admin-full.html"><i class="ti ti-file-text"></i> 콘텐츠 관리</a>
+    <div class="sub">
+      <a class="ni" href="content-admin-full.html#list">전체 콘텐츠</a>
+      <a class="ni" href="content-admin-full.html#revisions">수정 요청</a>
+    </div>
+    <div class="nav-label">거래</div>
+    <a class="ni active" href="workflow-admin.html"><i class="ti ti-git-branch"></i> 워크플로우</a>
+    <div class="sub">
+      <a class="ni active" href="#platform" data-workflow-tab="platform" onclick="switchMainTab('platform'); return false;">단일 거래</a>
+      <a class="ni" href="#bundle" data-workflow-tab="bundle" onclick="switchMainTab('bundle'); return false;">묶음 거래</a>
+      <a class="ni" href="#turnkey" data-workflow-tab="turnkey" onclick="switchMainTab('turnkey'); return false;">턴키 거래</a>
+    </div>
+    <a class="ni" href="turnkey-intent-admin.html"><i class="ti ti-clipboard-list"></i> 턴키 판매 의사</a>
+    <div class="nav-label">운영</div>
+    <a class="ni" href="settlement-admin.html"><i class="ti ti-receipt"></i> 정산</a>
+    <div class="sub">
+      <a class="ni" href="settlement-admin.html#contracts">계약 관리</a>
+      <a class="ni" href="settlement-admin.html#settlement">정산 처리</a>
+    </div>
+    <a class="ni" href="mail-admin.html"><i class="ti ti-mail"></i> 메일 발송</a>
+    <a class="ni" href="audit-log.html"><i class="ti ti-shield-check"></i> 관리 이력</a>
+  </nav>
+  <div class="sb-foot">
+    <div class="ava">L</div>
+    <div>
+      <div class="uname">Lee · Admin</div>
+      <div class="uemail">ops@shortflow.io</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <span class="topbar-title">워크플로우</span>
+  </div>
+
+  <!-- ════ 단일 거래 (PLATFORM) ════ -->
+  <div class="view active" id="view-platform">
+    <div class="tabbar">
+      <div class="tab active" data-tab="platform" onclick="switchMainTab('platform')">단일 거래 (PLATFORM)</div>
+      <div class="tab" data-tab="bundle" onclick="switchMainTab('bundle')">묶음 거래 (BUNDLE)</div>
+      <div class="tab" data-tab="turnkey" onclick="switchMainTab('turnkey')">턴키 거래 (TURNKEY)</div>
+    </div>
+    <div class="split">
+      <!-- LIST -->
+      <div class="lp">
+        <div class="toolbar">
+          <div class="filter-group">
+            <div class="chip on" onclick="setChip(this)">전체</div>
+            <div class="chip" onclick="setChip(this)">구매의사</div>
+            <div class="chip" onclick="setChip(this)">컨펌 발송</div>
+            <div class="chip" onclick="setChip(this)">컨펌 승인</div>
+            <div class="chip" onclick="setChip(this)">메타데이터</div>
+            <div class="chip" onclick="setChip(this)">종료</div>
+          </div>
+          <div class="filter-tools">
+            <select class="platform-select" aria-label="플랫폼사 필터">
+              <option value="">플랫폼 전체</option>
+              <option>ShortReel (US)</option>
+              <option>Viki</option>
+              <option>WeTV</option>
+              <option>iQIYI</option>
+              <option>Rakuten Viki</option>
+            </select>
+            <div class="srch"><i class="ti ti-search"></i><input placeholder="콘텐츠명 검색" /></div>
+          </div>
+        </div>
+        <div class="tscroll">
+          <table>
+            <thead><tr><th>콘텐츠</th><th>플랫폼사</th><th class="status-col">상태</th><th>최근 업데이트</th></tr></thead>
+            <tbody>
+              <tr class="sel" onclick="selectPlatform(this,0)">
+                <td>
+                  <div class="content-cell">
+                    <div class="poster poster-sm poster-p1" data-mark="TL"></div>
+                    <div><div class="tname">The Last Letter</div><div class="tsub">NextWave Studios</div></div>
+                  </div>
+                </td>
+                <td class="tmeta">ShortReel (US)</td>
+                <td><span class="bdg b-inquiry">구매의사 접수</span></td>
+                <td class="tmeta">2026.05.08</td>
+              </tr>
+              <tr onclick="selectPlatform(this,1)">
+                <td>
+                  <div class="content-cell">
+                    <div class="poster poster-sm poster-p2" data-mark="RC"></div>
+                    <div><div class="tname">Reverse Cinderella</div><div class="tsub">OneTake Media</div></div>
+                  </div>
+                </td>
+                <td class="tmeta">Viki</td>
+                <td><span class="bdg b-confirm">컨펌 발송</span></td>
+                <td class="tmeta">2026.05.07</td>
+              </tr>
+              <tr onclick="selectPlatform(this,2)">
+                <td>
+                  <div class="content-cell">
+                    <div class="poster poster-sm poster-p3" data-mark="MT"></div>
+                    <div><div class="tname">Midnight Tokyo Drift</div><div class="tsub">ShortReel (US)</div></div>
+                  </div>
+                </td>
+                <td class="tmeta">WeTV</td>
+                <td><span class="bdg b-ack">컨펌 승인</span></td>
+                <td class="tmeta">2026.05.05</td>
+              </tr>
+              <tr onclick="selectPlatform(this,3)">
+                <td>
+                  <div class="content-cell">
+                    <div class="poster poster-sm poster-p6" data-mark="ES"></div>
+                    <div><div class="tname">Echo of Spring</div><div class="tsub">NextWave Studios</div></div>
+                  </div>
+                </td>
+                <td class="tmeta">iQIYI</td>
+                <td><span class="bdg b-meta">메타데이터 부여</span></td>
+                <td class="tmeta">2026.05.01</td>
+              </tr>
+              <tr onclick="selectPlatform(this,4)">
+                <td>
+                  <div class="content-cell">
+                    <div class="poster poster-sm poster-p4" data-mark="BA"></div>
+                    <div><div class="tname">Bloom Again</div><div class="tsub">PaperLens</div></div>
+                  </div>
+                </td>
+                <td class="tmeta">Viki</td>
+                <td><span class="bdg b-closed">거래 종료</span></td>
+                <td class="tmeta">2026.04.25</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DETAIL -->
+      <div class="dp" id="dp-platform">
+        <!-- 빈 상태 -->
+        <div class="empty" id="p-empty" style="display:none"><i class="ti ti-git-branch"></i><p>워크플로우를 선택해주세요</p></div>
+
+        <!-- 상세 -->
+        <div id="p-detail" style="display:flex;flex-direction:column;height:100%">
+          <div class="dh">
+            <div class="dh-top">
+              <div class="content-detail-head">
+                <div class="poster poster-lg poster-p1" data-mark="TL"></div>
+                <div>
+                  <div class="dh-title" id="p-title">The Last Letter</div>
+                  <div class="dh-sub" id="p-sub">ShortReel (US) · PLATFORM</div>
+                </div>
+              </div>
+              <div class="dh-right">
+                <span class="bdg b-inquiry" id="p-status">구매의사 접수</span>
+                <button class="btn-close-panel"><i class="ti ti-x"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- INNER TABS -->
+          <div class="dtabbar">
+            <div class="dtab active" onclick="switchDTab(this,'pt-inquiry')">구매의사</div>
+            <div class="dtab" onclick="switchDTab(this,'pt-confirm')">컨펌 메시지</div>
+            <div class="dtab" onclick="switchDTab(this,'pt-meta')">메타데이터</div>
+            <div class="dtab" onclick="switchDTab(this,'pt-contract')">계약서</div>
+            <div class="dtab" onclick="switchDTab(this,'pt-close')">종료</div>
+            <div class="dtab" onclick="switchDTab(this,'pt-timeline')">타임라인</div>
+          </div>
+
+          <div class="dbody">
+
+            <!-- 구매의사 탭 -->
+            <div class="dpanel active" id="pt-inquiry">
+              <div class="sec">
+                <div class="sec-title">구매의사 메시지</div>
+                <div class="inq-box">
+                  <div class="inq-row"><span class="inq-k">콘텐츠</span><span class="inq-v">The Last Letter</span></div>
+                  <div class="inq-row"><span class="inq-k">희망 플랫폼</span><span class="inq-v">ShortReel (US)</span></div>
+                  <div class="inq-row"><span class="inq-k">희망 지역</span><span class="inq-v">북미 / 영어권</span></div>
+                  <div class="inq-row"><span class="inq-k">희망 계약 기간</span><span class="inq-v">2년</span></div>
+                  <div class="inq-row"><span class="inq-k">희망 가격 유형</span><span class="inq-v">MG + RS</span></div>
+                  <div class="inq-row"><span class="inq-k">희망 금액</span><span class="inq-v">$30,000</span></div>
+                  <div class="inq-row"><span class="inq-k">전송일시</span><span class="inq-v">2026.05.08 · 14:32</span></div>
+                  <div class="inq-row note-row with-divider">
+                    <span class="inq-k">비고</span>
+                    <span class="inq-v">안녕하세요. 저희 플랫폼에서 해당 콘텐츠에 큰 관심을 가지고 있습니다. 북미 독점 배포를 희망하며, 조건에 대해 협의하고 싶습니다.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 컨펌 메시지 탭 -->
+            <div class="dpanel" id="pt-confirm">
+              <div class="sec confirm-send-sec">
+                <div class="sec-title">
+                  컨펌 메시지 발송
+                  <button class="btn btn-confirm" onclick="toggleConfirmCompose(this)">
+                    <i class="ti ti-chevron-down"></i> 새 컨펌 발송
+                  </button>
+                </div>
+                <!-- 발송 폼 -->
+                <div class="confirm-compose" id="confirm-compose">
+                  <div class="form-grid">
+                    <div class="fg"><label>계약 지역</label><input placeholder="예: 북미, 영어권" /></div>
+                    <div class="fg"><label>계약 기간</label><input placeholder="예: 2년" /></div>
+                    <div class="fg"><label>가격 유형</label>
+                      <select><option>MG + RS</option><option>MG only</option><option>RS only</option><option>Flat fee</option></select>
+                    </div>
+                    <div class="fg"><label>금액</label><input placeholder="예: $35,000" /></div>
+                  </div>
+                  <div class="fg" style="margin-top:8px"><label>메시지</label><textarea placeholder="플랫폼사에 전달할 컨펌 내용을 입력하세요"></textarea></div>
+                  <div style="display:flex;justify-content:flex-end;margin-top:8px">
+                    <button class="btn btn-primary"><i class="ti ti-send"></i> 발송</button>
+                  </div>
+                </div>
+                <p class="note" style="margin-bottom:12px">구매의사 접수 또는 컨펌 승인 상태에서 발송 가능합니다. 재발송 시 재협상이 시작됩니다.</p>
+              </div>
+              <div class="sec">
+                <div class="sec-title">발송 이력</div>
+                <div class="confirm-list">
+                  <div class="confirm-card latest">
+                    <div class="confirm-card-head latest-bg" onclick="toggleCard(this)">
+                      <div class="confirm-card-title">
+                        <i class="ti ti-message-check" style="font-size:13px;color:#854F0B"></i>
+                        컨펌 #2 <span class="latest-badge">최신</span>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:6px">
+                        <span style="font-size:11px;color:#aaa">2026.05.07 · 16:00</span>
+                        <i class="ti ti-chevron-up" style="font-size:12px;color:#bbb"></i>
+                      </div>
+                    </div>
+                    <div class="confirm-card-body">
+                      <div class="cr"><span class="ck">계약 지역</span><span class="cv">북미, 영어권</span></div>
+                      <div class="cr"><span class="ck">계약 기간</span><span class="cv">2년</span></div>
+                      <div class="cr"><span class="ck">가격 유형</span><span class="cv">MG + RS</span></div>
+                      <div class="cr"><span class="ck">금액</span><span class="cv">$35,000</span></div>
+                      <div class="cr message-row"><span class="ck">메시지</span><span class="cv">조건을 재검토하여 금액을 상향 조정했습니다.</span></div>
+                    </div>
+                  </div>
+                  <div class="confirm-card">
+                    <div class="confirm-card-head" onclick="toggleCard(this)">
+                      <div class="confirm-card-title">
+                        <i class="ti ti-message" style="font-size:13px;color:#aaa"></i>
+                        컨펌 #1 <span class="old-badge">이전</span>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:6px">
+                        <span style="font-size:11px;color:#aaa">2026.05.05 · 11:30</span>
+                        <i class="ti ti-chevron-down" style="font-size:12px;color:#bbb"></i>
+                      </div>
+                    </div>
+                    <div class="confirm-card-body" style="display:none">
+                      <div class="cr"><span class="ck">계약 지역</span><span class="cv">북미</span></div>
+                      <div class="cr"><span class="ck">계약 기간</span><span class="cv">1년</span></div>
+                      <div class="cr"><span class="ck">가격 유형</span><span class="cv">MG only</span></div>
+                      <div class="cr"><span class="ck">금액</span><span class="cv">$28,000</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 메타데이터 탭 -->
+            <div class="dpanel" id="pt-meta">
+              <div class="sec">
+                <div class="sec-title">메타데이터 권한</div>
+                <!-- 미부여 상태 -->
+                <div id="meta-not-granted">
+                  <div class="meta-pending">
+                    <i class="ti ti-lock" style="font-size:28px;color:#ddd"></i>
+                    <p>아직 메타데이터 다운로드 권한이 부여되지 않았습니다.<br>컨펌 승인 상태에서만 부여 가능합니다.</p>
+                    <button class="btn btn-meta" onclick="grantMeta()" style="margin-top:4px">
+                      <i class="ti ti-lock-open"></i> 메타데이터 권한 부여
+                    </button>
+                  </div>
+                  <p class="note" style="margin-top:8px;text-align:center">권한 부여 시 플랫폼사 OWNER에게 알림 메일이 자동 발송됩니다.</p>
+                </div>
+                <!-- 부여 완료 상태 -->
+                <div id="meta-is-granted" style="display:none">
+                  <div class="meta-granted-box">
+                    <i class="ti ti-circle-check-filled"></i>
+                    <div>
+                      <div class="meta-granted-title">메타데이터 다운로드 권한 부여 완료</div>
+                      <div class="meta-granted-time" id="meta-granted-time"></div>
+                    </div>
+                  </div>
+                  <div class="divider"></div>
+                  <div class="irow"><span class="ik">다운로드 횟수</span><span class="iv">3회</span></div>
+                  <div class="irow"><span class="ik">최근 다운로드</span><span class="iv">2026.05.03 · 09:11</span></div>
+                  <div class="irow"><span class="ik">권한 부여자</span><span class="iv">Lee Admin</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 계약서 탭 -->
+            <div class="dpanel" id="pt-contract">
+              <div class="sec">
+                <div class="sec-title">
+                  계약서 파일
+                  <label style="cursor:pointer">
+                    <button class="btn btn-upload" onclick="alert('S3 presign URL 발급 → 업로드')"><i class="ti ti-upload"></i> 계약서 업로드</button>
+                  </label>
+                </div>
+                <div class="contract-list">
+                  <div class="contract-item">
+                    <i class="ti ti-file-type-pdf"></i>
+                    <div style="flex:1">
+                      <div class="contract-name">contract_ShortReel_20250507.pdf</div>
+                      <div class="contract-date">2026.05.07 · 16:30 · 2.4MB</div>
+                    </div>
+                    <button class="btn btn-icon"><i class="ti ti-download"></i></button>
+                    <button class="contract-del"><i class="ti ti-trash"></i></button>
+                  </div>
+                  <div class="contract-item">
+                    <i class="ti ti-file-type-pdf"></i>
+                    <div style="flex:1">
+                      <div class="contract-name">contract_ShortReel_draft_v1.pdf</div>
+                      <div class="contract-date">2026.05.05 · 11:00 · 1.8MB</div>
+                    </div>
+                    <button class="btn btn-icon"><i class="ti ti-download"></i></button>
+                    <button class="contract-del"><i class="ti ti-trash"></i></button>
+                  </div>
+                </div>
+                <p class="note">계약서는 관리자만 업로드/삭제할 수 있습니다.</p>
+              </div>
+            </div>
+
+            <!-- 종료 탭 -->
+            <div class="dpanel" id="pt-close">
+              <div class="sec">
+                <div class="sec-title">
+                  거래 종료
+                  <button class="btn btn-dark" onclick="toggleCloseBox('pt-close', this)">
+                    <i class="ti ti-chevron-down"></i> 거래 종료
+                  </button>
+                </div>
+                <div class="close-box" style="margin-top:0">
+                  <div class="close-box-head">거래 종료 사유 입력</div>
+                  <div class="close-box-body">
+                    <textarea id="close-reason" placeholder="예: 플랫폼사 회신 없음, 조건 불일치, 계약 진행 중단 등"></textarea>
+                    <div class="close-box-acts">
+                      <p class="note">확정하면 워크플로우 상태가 거래 종료로 변경됩니다.</p>
+                      <button class="btn btn-close-wf" onclick="closeWorkflow()">거래 종료 확정</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="close-done" id="pt-close-done"></div>
+              </div>
+            </div>
+
+            <!-- 타임라인 탭 -->
+            <div class="dpanel" id="pt-timeline">
+              <div class="sec">
+                <div class="sec-title">이벤트 타임라인</div>
+                <div class="tl">
+                  <div class="tl-item">
+                    <div class="tl-dot blue"></div>
+                    <div class="tl-main">
+                      <div class="tl-text">플랫폼이 구매의사를 전달함</div>
+                      <div class="tl-time">2026.05.08 · 14:32 · ShortReel (US)</div>
+                    </div>
+                  </div>
+                  <div class="tl-item">
+                    <div class="tl-dot amber"></div>
+                    <div class="tl-main">
+                      <div class="tl-text">관리자가 컨펌 메시지를 발송함 (재협상)</div>
+                      <div class="tl-time">2026.05.07 · 16:00 · Lee Admin</div>
+                    </div>
+                  </div>
+                  <div class="tl-item">
+                    <div class="tl-dot purple"></div>
+                    <div class="tl-main">
+                      <div class="tl-text">플랫폼이 컨펌 내용을 확인함</div>
+                      <div class="tl-time">2026.05.06 · 10:15 · ShortReel (US)</div>
+                    </div>
+                  </div>
+                  <div class="tl-item">
+                    <div class="tl-dot amber"></div>
+                    <div class="tl-main">
+                      <div class="tl-text">관리자가 컨펌 메시지를 발송함</div>
+                      <div class="tl-time">2026.05.05 · 11:30 · Lee Admin</div>
+                    </div>
+                  </div>
+                  <div class="tl-item">
+                    <div class="tl-dot blue"></div>
+                    <div class="tl-main">
+                      <div class="tl-text">플랫폼이 구매의사를 전달함</div>
+                      <div class="tl-time">2026.05.03 · 09:05 · ShortReel (US)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /dbody -->
+        </div><!-- /p-detail -->
+      </div><!-- /dp-platform -->
+    </div><!-- /split -->
+  </div><!-- /view-platform -->
+
+  <!-- ════ 묶음 거래 (BUNDLE) ════ -->
+  <div class="view" id="view-bundle">
+    <div class="tabbar">
+      <div class="tab" data-tab="platform" onclick="switchMainTab('platform')">단일 거래 (PLATFORM)</div>
+      <div class="tab active" data-tab="bundle" onclick="switchMainTab('bundle')">묶음 거래 (BUNDLE)</div>
+      <div class="tab" data-tab="turnkey" onclick="switchMainTab('turnkey')">턴키 거래 (TURNKEY)</div>
+    </div>
+    <div class="split">
+      <div class="lp">
+        <div class="toolbar">
+          <div class="filter-group">
+            <div class="chip on" onclick="setChip(this)">전체</div>
+            <div class="chip" onclick="setChip(this)">구매의사</div>
+            <div class="chip" onclick="setChip(this)">컨펌 발송</div>
+            <div class="chip" onclick="setChip(this)">컨펌 승인</div>
+            <div class="chip" onclick="setChip(this)">메타데이터</div>
+            <div class="chip" onclick="setChip(this)">종료</div>
+          </div>
+          <div class="filter-tools">
+            <select class="platform-select" aria-label="플랫폼사 필터">
+              <option value="">플랫폼 전체</option>
+              <option>WeTV</option>
+              <option>iQIYI</option>
+              <option>Viki</option>
+              <option>Rakuten Viki</option>
+            </select>
+            <div class="srch"><i class="ti ti-search"></i><input placeholder="묶음 검색" /></div>
+          </div>
+        </div>
+        <div class="tscroll">
+          <table>
+            <thead><tr><th>묶음 거래</th><th>플랫폼사</th><th class="status-col">상태</th><th>최근 업데이트</th></tr></thead>
+            <tbody>
+              <tr class="sel" onclick="selectBundle(this)">
+                <td>
+                  <div class="content-cell">
+                    <div class="poster-stack">
+                      <div class="poster poster-p1" data-mark="TL"></div>
+                      <div class="poster poster-p2" data-mark="RC"></div>
+                      <div class="poster poster-p6" data-mark="ES"></div>
+                    </div>
+                    <div><div class="tname">The Last Letter 외</div><div class="tsub">콘텐츠 4편</div></div>
+                  </div>
+                </td>
+                <td class="tmeta">WeTV</td>
+                <td><span class="bdg b-ack">컨펌 승인</span></td>
+                <td class="tmeta">2026.05.06</td>
+              </tr>
+              <tr onclick="selectBundle(this)">
+                <td>
+                  <div class="content-cell">
+                    <div class="poster-stack">
+                      <div class="poster poster-p3" data-mark="MT"></div>
+                      <div class="poster poster-p4" data-mark="BA"></div>
+                      <div class="poster poster-p5" data-mark="SS"></div>
+                    </div>
+                    <div><div class="tname">Midnight Tokyo Drift 외</div><div class="tsub">콘텐츠 6편</div></div>
+                  </div>
+                </td>
+                <td class="tmeta">iQIYI</td>
+                <td><span class="bdg b-confirm">컨펌 발송</span></td>
+                <td class="tmeta">2026.05.04</td>
+              </tr>
+              <tr onclick="selectBundle(this)">
+                <td>
+                  <div class="content-cell">
+                    <div class="poster-stack">
+                      <div class="poster poster-p2" data-mark="RC"></div>
+                      <div class="poster poster-p1" data-mark="TL"></div>
+                      <div class="poster poster-p4" data-mark="BA"></div>
+                    </div>
+                    <div><div class="tname">Reverse Cinderella 외</div><div class="tsub">콘텐츠 3편</div></div>
+                  </div>
+                </td>
+                <td class="tmeta">Viki</td>
+                <td><span class="bdg b-closed">거래 종료</span></td>
+                <td class="tmeta">2026.04.20</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 묶음 거래 상세 -->
+      <div class="dp">
+        <div id="tk-detail" style="display:flex;flex-direction:column;height:100%">
+          <div class="dh">
+            <div class="dh-top">
+              <div class="content-detail-head">
+                <div class="poster-stack">
+                  <div class="poster poster-p1" data-mark="TL"></div>
+                  <div class="poster poster-p2" data-mark="RC"></div>
+                  <div class="poster poster-p6" data-mark="ES"></div>
+                </div>
+                <div>
+                  <div class="dh-title">The Last Letter 외</div>
+                  <div class="dh-sub">WeTV · BUNDLE · 콘텐츠 4편</div>
+                </div>
+              </div>
+              <div class="dh-right">
+                <span class="bdg b-ack" id="tk-status">컨펌 승인</span>
+                <button class="btn-close-panel"><i class="ti ti-x"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="dtabbar">
+            <div class="dtab active" onclick="switchDTab(this,'tk-inquiry')">구매의사</div>
+            <div class="dtab" onclick="switchDTab(this,'tk-confirm')">컨펌 메시지</div>
+            <div class="dtab" onclick="switchDTab(this,'tk-meta')">메타데이터</div>
+            <div class="dtab" onclick="switchDTab(this,'tk-contract')">계약서</div>
+            <div class="dtab" onclick="switchDTab(this,'tk-close')">종료</div>
+            <div class="dtab" onclick="switchDTab(this,'tk-timeline')">타임라인</div>
+          </div>
+
+          <div class="dbody">
+            <!-- 묶음 거래 구매의사 -->
+            <div class="dpanel active" id="tk-inquiry">
+              <div class="sec">
+                <div class="sec-title">구매의사 메시지</div>
+                <div class="inq-box">
+                  <div class="inq-row"><span class="inq-k">공개 지역</span><span class="inq-v">중화권 전체</span></div>
+                  <div class="inq-row"><span class="inq-k">릴리즈 기간</span><span class="inq-v">2년</span></div>
+                  <div class="inq-row"><span class="inq-k">희망가격</span><span class="inq-v">USD 120,000</span></div>
+                  <div class="inq-row"><span class="inq-k">발송 일시</span><span class="inq-v">2026.05.01 · 10:00</span></div>
+                  <div class="inq-row note-row with-divider">
+                    <span class="inq-k">추가 요청사항</span>
+                    <span class="inq-v">로맨스와 복수극 중심으로 빠르게 편성 가능한 콘텐츠를 우선 검토하고 싶습니다.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="sec">
+                <div class="sec-title">콘텐츠 목록</div>
+                <table class="content-pick-table bundle-table">
+                  <colgroup>
+                    <col />
+                    <col style="width:120px" />
+                    <col style="width:88px" />
+                    <col style="width:108px" />
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th>콘텐츠 제목</th>
+                      <th>희망 가격</th>
+                      <th>권리</th>
+                      <th>정산 방식</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><div class="tname">The Last Letter</div></td>
+                      <td><span class="table-value">$35,000</span></td>
+                      <td><span class="table-value">독점</span></td>
+                      <td><span class="table-value">MG_RS</span></td>
+                    </tr>
+                    <tr>
+                      <td><div class="tname">Echo of Spring</div></td>
+                      <td><span class="table-value">$28,000</span></td>
+                      <td><span class="table-value">비독점</span></td>
+                      <td><span class="table-value">FLAT_FEE</span></td>
+                    </tr>
+                    <tr>
+                      <td><div class="tname">Midnight Tokyo Drift</div></td>
+                      <td><span class="table-muted">위임</span></td>
+                      <td><span class="table-value">비독점</span></td>
+                      <td><span class="table-value">RS</span></td>
+                    </tr>
+                    <tr>
+                      <td><div class="tname">Seven Suns</div></td>
+                      <td><span class="table-value">$22,000</span></td>
+                      <td><span class="table-value">독점</span></td>
+                      <td><span class="table-value">MG_RS</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 묶음 거래 컨펌 -->
+            <div class="dpanel" id="tk-confirm">
+              <div class="sec confirm-send-sec">
+                <div class="sec-title">
+                  컨펌 메시지 발송
+                  <button class="btn btn-confirm" onclick="toggleBundleConfirmCompose(this)">
+                    <i class="ti ti-chevron-down"></i> 새 컨펌 발송
+                  </button>
+                </div>
+                <div class="confirm-compose bundle-confirm-form" id="bundle-confirm-compose">
+                  <div class="form-grid">
+                    <div class="fg"><label>통화</label><select><option selected>USD</option><option>KRW</option></select></div>
+                    <div class="fg"><label>번들 최종 총가격</label><input value="$130,000" /></div>
+                    <div class="fg"><label>공개 지역</label><input value="중화권 전체" /></div>
+                    <div class="fg"><label>릴리즈 기간</label><input value="2년" /></div>
+                  </div>
+                  <div class="fg"><label>라이선스 권리 범위</label><input value="SVOD, AVOD, 프로모션 클립 사용권 포함" /></div>
+                  <table class="content-pick-table bundle-table">
+                    <colgroup>
+                      <col />
+                      <col style="width:120px" />
+                      <col style="width:88px" />
+                      <col style="width:108px" />
+                      <col style="width:48px" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>콘텐츠 제목</th>
+                        <th>최종 가격</th>
+                        <th>권리</th>
+                        <th>정산 방식</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><div class="tname">The Last Letter</div></td>
+                        <td><input value="40,000" aria-label="The Last Letter 최종 가격" /></td>
+                        <td><select aria-label="The Last Letter 권리"><option selected>독점</option><option>비독점</option></select></td>
+                        <td><select aria-label="The Last Letter 정산 방식"><option>RS</option><option selected>MG_RS</option><option>FLAT_FEE</option></select></td>
+                        <td class="col-remove"><button class="btn btn-icon" onclick="removePickedContent(this)"><i class="ti ti-trash"></i></button></td>
+                      </tr>
+                      <tr>
+                        <td><div class="tname">Echo of Spring</div></td>
+                        <td><input value="30,000" aria-label="Echo of Spring 최종 가격" /></td>
+                        <td><select aria-label="Echo of Spring 권리"><option>독점</option><option selected>비독점</option></select></td>
+                        <td><select aria-label="Echo of Spring 정산 방식"><option>RS</option><option>MG_RS</option><option selected>FLAT_FEE</option></select></td>
+                        <td class="col-remove"><button class="btn btn-icon" onclick="removePickedContent(this)"><i class="ti ti-trash"></i></button></td>
+                      </tr>
+                      <tr>
+                        <td><div class="tname">Midnight Tokyo Drift</div></td>
+                        <td><input value="35,000" aria-label="Midnight Tokyo Drift 최종 가격" /></td>
+                        <td><select aria-label="Midnight Tokyo Drift 권리"><option>독점</option><option selected>비독점</option></select></td>
+                        <td><select aria-label="Midnight Tokyo Drift 정산 방식"><option selected>RS</option><option>MG_RS</option><option>FLAT_FEE</option></select></td>
+                        <td class="col-remove"><button class="btn btn-icon" onclick="removePickedContent(this)"><i class="ti ti-trash"></i></button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div style="display:flex;justify-content:flex-end">
+                    <button class="btn btn-primary"><i class="ti ti-send"></i> 발송</button>
+                  </div>
+                </div>
+              </div>
+              <div class="sec">
+                <div class="sec-title">발송 이력</div>
+                <div class="confirm-list">
+                  <div class="confirm-card latest">
+                    <div class="confirm-card-head latest-bg" onclick="toggleCard(this)">
+                      <div class="confirm-card-title">
+                        <i class="ti ti-message-check" style="font-size:13px;color:#854F0B"></i>
+                        컨펌 #1 <span class="latest-badge">최신</span>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:6px">
+                        <span style="font-size:11px;color:#aaa">2026.05.09 · 10:20</span>
+                        <i class="ti ti-chevron-up" style="font-size:12px;color:#bbb"></i>
+                      </div>
+                    </div>
+                    <div class="confirm-card-body">
+                      <div class="cr"><span class="ck">통화</span><span class="cv">USD</span></div>
+                      <div class="cr"><span class="ck">번들 금액</span><span class="cv">$130,000</span></div>
+                      <div class="cr"><span class="ck">공개 지역</span><span class="cv">중화권 전체</span></div>
+                      <div class="cr"><span class="ck">릴리즈 기간</span><span class="cv">2년</span></div>
+                      <div class="cr"><span class="ck">권리 범위</span><span class="cv">SVOD, AVOD, 프로모션 클립</span></div>
+                      <div class="cr message-row"><span class="ck">메시지</span><span class="cv">선택 콘텐츠 기준으로 묶음 거래 패키지 컨펌 조건을 발송했습니다.</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 묶음 거래 메타데이터 -->
+            <div class="dpanel" id="tk-meta">
+              <div class="sec">
+                <div class="sec-title">메타데이터 권한</div>
+                <div class="meta-box">
+                  <i class="ti ti-lock-open"></i>
+                  <div>
+                    <div class="meta-box-text">메타데이터 다운로드 권한이 부여되었습니다</div>
+                    <div class="meta-box-time">2026.05.06 · 09:00 · Lee Admin</div>
+                  </div>
+                </div>
+                <div class="divider"></div>
+                <div class="irow"><span class="ik">다운로드 횟수</span><span class="iv">1회</span></div>
+                <div class="irow"><span class="ik">최근 다운로드</span><span class="ik">2026.05.06 · 11:30</span></div>
+              </div>
+            </div>
+
+            <!-- 묶음 거래 계약서 -->
+            <div class="dpanel" id="tk-contract">
+              <div class="sec">
+                <div class="sec-title">
+                  계약서 파일
+                  <button class="btn btn-upload"><i class="ti ti-upload"></i> 계약서 업로드</button>
+                </div>
+                <div class="contract-list">
+                  <div class="contract-item">
+                    <i class="ti ti-file-type-pdf"></i>
+                    <div style="flex:1">
+                      <div class="contract-name">bundle_WeTV_BD009_signed.pdf</div>
+                      <div class="contract-date">2026.05.06 · 10:00 · 3.1MB</div>
+                    </div>
+                    <button class="btn btn-icon"><i class="ti ti-download"></i></button>
+                    <button class="contract-del"><i class="ti ti-trash"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 묶음 거래 종료 -->
+            <div class="dpanel" id="tk-close">
+              <div class="sec">
+                <div class="sec-title">
+                  거래 종료
+                  <button class="btn btn-dark" onclick="toggleCloseBox('tk-close', this)">
+                    <i class="ti ti-chevron-down"></i> 거래 종료
+                  </button>
+                </div>
+                <div class="close-box" style="margin-top:0">
+                  <div class="close-box-head">거래 종료 사유 입력</div>
+                  <div class="close-box-body">
+                    <textarea id="tk-close-reason" placeholder="예: 플랫폼사 회신 없음, 조건 불일치, 묶음 거래 계약 진행 중단 등"></textarea>
+                    <div class="close-box-acts">
+                      <p class="note">확정하면 묶음 거래 워크플로우 상태가 거래 종료로 변경됩니다.</p>
+                      <button class="btn btn-close-wf" onclick="closeBundleWorkflow()">거래 종료 확정</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="close-done" id="tk-close-done"></div>
+              </div>
+            </div>
+
+            <!-- 묶음 거래 타임라인 -->
+            <div class="dpanel" id="tk-timeline">
+              <div class="sec">
+                <div class="sec-title">이벤트 타임라인</div>
+                <div class="tl">
+                  <div class="tl-item">
+                    <div class="tl-dot green"></div>
+                    <div class="tl-main">
+                      <div class="tl-text">메타데이터 다운로드 권한이 열림</div>
+                      <div class="tl-time">2026.05.06 · 09:00 · Lee Admin</div>
+                    </div>
+                  </div>
+                  <div class="tl-item">
+                    <div class="tl-dot purple"></div>
+                    <div class="tl-main">
+                      <div class="tl-text">플랫폼이 컨펌 내용을 확인함</div>
+                      <div class="tl-time">2026.05.05 · 14:00 · WeTV</div>
+                    </div>
+                  </div>
+                  <div class="tl-item">
+                    <div class="tl-dot amber"></div>
+                    <div class="tl-main">
+                      <div class="tl-text">관리자가 묶음 거래 컨펌 메시지를 발송함</div>
+                      <div class="tl-time">2026.05.04 · 11:00 · Lee Admin</div>
+                    </div>
+                  </div>
+                  <div class="tl-item">
+                    <div class="tl-dot blue"></div>
+                    <div class="tl-main">
+                      <div class="tl-text">플랫폼이 묶음 거래 구매의사를 전달함</div>
+                      <div class="tl-time">2026.05.01 · 10:00 · WeTV</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /view-bundle -->
+
+  <!-- ════ 턴키 거래 (TURNKEY) ════ -->
+  <div class="view" id="view-turnkey">
+    <div class="tabbar">
+      <div class="tab" data-tab="platform" onclick="switchMainTab('platform')">단일 거래 (PLATFORM)</div>
+      <div class="tab" data-tab="bundle" onclick="switchMainTab('bundle')">묶음 거래 (BUNDLE)</div>
+      <div class="tab active" data-tab="turnkey" onclick="switchMainTab('turnkey')">턴키 거래 (TURNKEY)</div>
+    </div>
+    <div class="split">
+      <div class="lp">
+        <div class="toolbar">
+          <div class="filter-group">
+            <div class="chip on" onclick="setChip(this)">전체</div>
+            <div class="chip" onclick="setChip(this)">구매의사</div>
+            <div class="chip" onclick="setChip(this)">컨펌 발송</div>
+            <div class="chip" onclick="setChip(this)">컨펌 승인</div>
+            <div class="chip" onclick="setChip(this)">종료</div>
+          </div>
+          <div class="srch"><i class="ti ti-search"></i><input placeholder="플랫폼사명 검색" /></div>
+        </div>
+        <div class="tscroll">
+          <table>
+            <thead><tr><th>플랫폼사</th><th>예산</th><th class="status-col">상태</th><th>날짜</th></tr></thead>
+            <tbody>
+              <tr class="sel" onclick="selectRealTurnkey(this)">
+                <td><div class="tname">WeTV</div></td>
+                <td class="tmeta">USD 150,000</td>
+                <td><span class="bdg b-inquiry">구매의사 접수</span></td>
+                <td class="tmeta">2026.05.10</td>
+              </tr>
+              <tr onclick="selectRealTurnkey(this)">
+                <td><div class="tname">iQIYI</div></td>
+                <td class="tmeta">CNY 720,000</td>
+                <td><span class="bdg b-confirm">컨펌 발송</span></td>
+                <td class="tmeta">2026.05.08</td>
+              </tr>
+              <tr onclick="selectRealTurnkey(this)">
+                <td><div class="tname">Rakuten Viki</div></td>
+                <td class="tmeta">USD 95,000</td>
+                <td><span class="bdg b-ack">컨펌 승인</span></td>
+                <td class="tmeta">2026.05.05</td>
+              </tr>
+              <tr onclick="selectRealTurnkey(this)">
+                <td><div class="tname">ShortReel (US)</div></td>
+                <td class="tmeta">KRW 80,000,000</td>
+                <td><span class="bdg b-closed">거래 종료</span></td>
+                <td class="tmeta">2026.04.28</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="dp">
+        <div id="ty-detail" style="display:flex;flex-direction:column;height:100%">
+          <div class="dh">
+            <div class="dh-top">
+              <div>
+                <div class="dh-title turnkey-title">WeTV</div>
+              </div>
+              <div class="dh-right">
+                <span class="bdg b-inquiry" id="ty-status">구매의사 접수</span>
+                <button class="btn-close-panel"><i class="ti ti-x"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="dtabbar">
+            <div class="dtab active" onclick="switchDTab(this,'ty-inquiry')">구매의사</div>
+            <div class="dtab" onclick="switchDTab(this,'ty-confirm')">컨펌 메시지</div>
+            <div class="dtab" onclick="switchDTab(this,'ty-meta')">메타데이터</div>
+            <div class="dtab" onclick="switchDTab(this,'ty-contract')">계약서</div>
+            <div class="dtab" onclick="switchDTab(this,'ty-close')">종료</div>
+            <div class="dtab" onclick="switchDTab(this,'ty-timeline')">타임라인</div>
+          </div>
+
+          <div class="dbody">
+            <div class="dpanel active" id="ty-inquiry">
+              <div class="sec">
+                <div class="sec-title">구매의사 메시지</div>
+                <div class="inq-box">
+                  <div class="inq-row"><span class="inq-k">희망 예산</span><span class="inq-v">USD 150,000</span></div>
+                  <div class="inq-row"><span class="inq-k">전송일시</span><span class="inq-v">2026.05.10 · 09:40</span></div>
+                  <div class="inq-row note-row">
+                    <span class="inq-k">메시지</span>
+                    <span class="inq-v">중화권 타깃으로 빠르게 편성 가능한 로맨스/복수극 중심의 숏폼 라인업을 제안받고 싶습니다. 특정 콘텐츠 지정 없이 예산 안에서 4~6편 구성을 희망합니다.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dpanel" id="ty-confirm">
+              <div class="sec">
+                <div class="sec-title">
+                  컨펌 메시지 발송
+                  <button class="btn btn-confirm" onclick="toggleTurnkeyConfirmCompose(this)">
+                    <i class="ti ti-chevron-down"></i> 새 컨펌 발송
+                  </button>
+                </div>
+                <div class="compose-box turnkey-confirm-box turnkey-confirm-compose" id="turnkey-confirm-compose">
+                  <table class="content-pick-table turnkey-table">
+                    <colgroup>
+                      <col />
+                      <col style="width:120px" />
+                      <col style="width:88px" />
+                      <col style="width:120px" />
+                      <col style="width:48px" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>콘텐츠명</th>
+                        <th>금액 입력</th>
+                        <th>권리</th>
+                        <th>정산방식</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><div class="tname">The Last Letter</div><div class="tsub">NextWave Studios</div></td>
+                        <td><input value="45,000" aria-label="The Last Letter 금액" /></td>
+                        <td><select aria-label="The Last Letter 권리"><option selected>독점</option><option>비독점</option></select></td>
+                        <td><select aria-label="The Last Letter 정산방식"><option>RS</option><option selected>MG+RS</option><option>Flat fee</option></select></td>
+                        <td class="col-remove"><button class="btn btn-icon" onclick="removePickedContent(this)"><i class="ti ti-trash"></i></button></td>
+                      </tr>
+                      <tr>
+                        <td><div class="tname">Echo of Spring</div><div class="tsub">NextWave Studios</div></td>
+                        <td><input value="38,000" aria-label="Echo of Spring 금액" /></td>
+                        <td><select aria-label="Echo of Spring 권리"><option>독점</option><option selected>비독점</option></select></td>
+                        <td><select aria-label="Echo of Spring 정산방식"><option>RS</option><option>MG+RS</option><option selected>Flat fee</option></select></td>
+                        <td class="col-remove"><button class="btn btn-icon" onclick="removePickedContent(this)"><i class="ti ti-trash"></i></button></td>
+                      </tr>
+                      <tr>
+                        <td><div class="tname">Reverse Cinderella</div><div class="tsub">OneTake Media</div></td>
+                        <td><input value="42,000" aria-label="Reverse Cinderella 금액" /></td>
+                        <td><select aria-label="Reverse Cinderella 권리"><option>독점</option><option selected>비독점</option></select></td>
+                        <td><select aria-label="Reverse Cinderella 정산방식"><option selected>RS</option><option>MG+RS</option><option>Flat fee</option></select></td>
+                        <td class="col-remove"><button class="btn btn-icon" onclick="removePickedContent(this)"><i class="ti ti-trash"></i></button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="add-content-row">
+                    <button class="btn btn-upload" onclick="openContentModal()"><i class="ti ti-plus"></i> 콘텐츠 추가</button>
+                  </div>
+
+                  <div class="form-grid contract-fields">
+                    <div class="fg"><label>공개 지역</label><input value="중화권 전체" /></div>
+                    <div class="fg"><label>공개 기간</label><input value="3년" /></div>
+                    <div class="fg"><label>총 계약 금액 + 통화</label><div class="money-row"><select><option selected>USD</option><option>KRW</option><option>CNY</option></select><input value="150,000" /></div></div>
+                    <div class="fg"><label>라이선스 권리 범위</label><input value="SVOD, AVOD, 프로모션 클립 사용권 포함" /></div>
+                  </div>
+                  <div class="fg"><label>추가 메모</label><textarea>플랫폼 요청 예산에 맞춰 검증된 로맨스/복수극 중심으로 구성했습니다. 일부 콘텐츠는 MG+RS 조건으로 제작사 협의가 필요합니다.</textarea></div>
+                  <div class="form-actions">
+                    <button class="btn btn-primary"><i class="ti ti-send"></i> 컨펌 발송</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sec">
+                <div class="sec-title">발송 이력</div>
+                <div class="confirm-list">
+                  <div class="confirm-card latest">
+                    <div class="confirm-card-head latest-bg" onclick="toggleCard(this)">
+                      <div class="confirm-card-title"><i class="ti ti-message-check" style="font-size:13px;color:#854F0B"></i> 컨펌 #1 <span class="latest-badge">최신</span></div>
+                      <div style="display:flex;align-items:center;gap:6px"><span style="font-size:11px;color:#aaa">2026.05.10 · 15:20</span><i class="ti ti-chevron-up" style="font-size:12px;color:#bbb"></i></div>
+                    </div>
+                    <div class="confirm-card-body">
+                      <div class="cr"><span class="ck">콘텐츠</span><span class="cv">The Last Letter 외 3편</span></div>
+                      <div class="cr"><span class="ck">공개 지역</span><span class="cv">중화권 전체</span></div>
+                      <div class="cr"><span class="ck">총 금액</span><span class="cv">USD 150,000</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dpanel" id="ty-meta">
+              <div class="sec">
+                <div class="sec-title">메타데이터 권한</div>
+                <div class="meta-box"><i class="ti ti-lock-open"></i><div><div class="meta-box-text">메타데이터 다운로드 권한이 부여되었습니다</div><div class="meta-box-time">2026.05.11 · 09:00 · Lee Admin</div></div></div>
+                <div class="divider"></div>
+                <div class="irow"><span class="ik">다운로드 횟수</span><span class="iv">2회</span></div>
+                <div class="irow"><span class="ik">최근 다운로드</span><span class="iv">2026.05.11 · 11:30</span></div>
+              </div>
+            </div>
+
+            <div class="dpanel" id="ty-contract">
+              <div class="sec">
+                <div class="sec-title">계약서 파일 <button class="btn btn-upload"><i class="ti ti-upload"></i> 계약서 업로드</button></div>
+                <div class="contract-list">
+                  <div class="contract-item">
+                    <i class="ti ti-file-type-pdf"></i>
+                    <div style="flex:1"><div class="contract-name">turnkey_WeTV_TK012_signed.pdf</div><div class="contract-date">2026.05.11 · 10:00 · 3.4MB</div></div>
+                    <button class="btn btn-icon"><i class="ti ti-download"></i></button>
+                    <button class="contract-del"><i class="ti ti-trash"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dpanel" id="ty-close">
+              <div class="sec">
+                <div class="sec-title">거래 종료 <button class="btn btn-dark" onclick="toggleCloseBox('ty-close', this)"><i class="ti ti-chevron-down"></i> 거래 종료</button></div>
+                <div class="close-box" style="margin-top:0">
+                  <div class="close-box-head">거래 종료 사유 입력</div>
+                  <div class="close-box-body">
+                    <textarea id="ty-close-reason" placeholder="예: 플랫폼사 예산 변경, 제안 콘텐츠 불일치, 계약 진행 중단 등"></textarea>
+                    <div class="close-box-acts">
+                      <p class="note">확정하면 턴키 거래 워크플로우 상태가 거래 종료로 변경됩니다.</p>
+                      <button class="btn btn-close-wf" onclick="closeRealTurnkeyWorkflow()">거래 종료 확정</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="close-done" id="ty-close-done"></div>
+              </div>
+            </div>
+
+            <div class="dpanel" id="ty-timeline">
+              <div class="sec">
+                <div class="sec-title">이벤트 타임라인</div>
+                <div class="tl">
+                  <div class="tl-item"><div class="tl-dot amber"></div><div class="tl-main"><div class="tl-text">관리자가 턴키 컨펌 메시지를 발송함</div><div class="tl-time">2026.05.10 · 15:20 · Lee Admin</div></div></div>
+                  <div class="tl-item"><div class="tl-dot blue"></div><div class="tl-main"><div class="tl-text">플랫폼이 예산 기반 구매의사를 전달함</div><div class="tl-time">2026.05.10 · 09:40 · WeTV</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /view-turnkey -->
+
+  <div class="modal-backdrop" id="content-modal" onclick="closeContentModal(event)">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="content-modal-title">
+      <div class="modal-head">
+        <div class="modal-title" id="content-modal-title">콘텐츠 검색</div>
+        <button class="btn-close-panel" onclick="closeContentModal()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-search"><i class="ti ti-search"></i><input placeholder="콘텐츠명, 제작사 검색" /></div>
+        <div class="result-list">
+          <div class="result-item"><div><div class="result-name">The Last Letter</div><div class="result-meta">NextWave Studios</div></div><div class="result-meta">NextWave Studios</div><div class="result-meta">Romance</div><button class="btn btn-added" disabled>추가됨</button></div>
+          <div class="result-item"><div><div class="result-name">Midnight Tokyo Drift</div><div class="result-meta">ShortReel (US)</div></div><div class="result-meta">ShortReel (US)</div><div class="result-meta">Action</div><button class="btn btn-primary" onclick="markAdded(this)">추가</button></div>
+          <div class="result-item"><div><div class="result-name">Bloom Again</div><div class="result-meta">PaperLens</div></div><div class="result-meta">PaperLens</div><div class="result-meta">Drama</div><button class="btn btn-primary" onclick="markAdded(this)">추가</button></div>
+          <div class="result-item"><div><div class="result-name">Seven Suns</div><div class="result-meta">BrightFrame</div></div><div class="result-meta">BrightFrame</div><div class="result-meta">Thriller</div><button class="btn btn-primary" onclick="markAdded(this)">추가</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+function switchMainTab(tab) {
+  const next = ['platform', 'bundle', 'turnkey'].includes(tab) ? tab : 'platform';
+  document.querySelectorAll('.view').forEach(view => {
+    view.classList.toggle('active', view.id === `view-${next}`);
+  });
+  document.querySelectorAll('.tabbar .tab').forEach(tabEl => {
+    tabEl.classList.toggle('active', tabEl.dataset.tab === next);
+  });
+  document.querySelectorAll('.nav a[data-workflow-tab]').forEach(link => {
+    link.classList.toggle('active', link.dataset.workflowTab === next);
+  });
+  if (location.hash.slice(1) !== next) history.replaceState(null, '', `#${next}`);
+}
+
+function switchDTab(el, panelId) {
+  const tabbar = el.closest('.dtabbar');
+  const dbody = tabbar.nextElementSibling;
+  tabbar.querySelectorAll('.dtab').forEach(t => t.classList.remove('active'));
+  dbody.querySelectorAll('.dpanel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  const panel = document.getElementById(panelId);
+  if (panel) panel.classList.add('active');
+}
+
+function setChip(el) {
+  el.closest('.toolbar').querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function closeWorkflow() {
+  const reason = document.getElementById('close-reason').value.trim();
+  if (!reason) {
+    alert('거래 종료 사유를 입력해주세요.');
+    return;
+  }
+  const st = document.getElementById('p-status');
+  st.className = 'bdg b-closed';
+  st.textContent = '거래 종료';
+  renderClosedState('pt-close', reason, '워크플로우');
+}
+
+function closeBundleWorkflow() {
+  const reason = document.getElementById('tk-close-reason').value.trim();
+  if (!reason) {
+    alert('거래 종료 사유를 입력해주세요.');
+    return;
+  }
+  const st = document.getElementById('tk-status');
+  st.className = 'bdg b-closed';
+  st.textContent = '거래 종료';
+  renderClosedState('tk-close', reason, '묶음 거래 워크플로우');
+}
+
+function closeRealTurnkeyWorkflow() {
+  const reason = document.getElementById('ty-close-reason').value.trim();
+  if (!reason) {
+    alert('거래 종료 사유를 입력해주세요.');
+    return;
+  }
+  const st = document.getElementById('ty-status');
+  st.className = 'bdg b-closed';
+  st.textContent = '거래 종료';
+  renderClosedState('ty-close', reason, '턴키 거래 워크플로우');
+}
+
+function goTurnkeyClose() {
+  const tab = document.querySelector('#view-turnkey .dtab[onclick*="ty-close"]');
+  if (tab) switchDTab(tab, 'ty-close');
+}
+
+function toggleCloseBox(panelId, btn) {
+  const panel = document.getElementById(panelId);
+  const box = panel?.querySelector('.close-box');
+  if (!box) return;
+  const icon = btn?.querySelector('i');
+  const isOpen = box.classList.toggle('show');
+  if (icon) icon.className = isOpen ? 'ti ti-chevron-up' : 'ti ti-chevron-down';
+}
+
+function renderClosedState(panelId, reason, label) {
+  const panel = document.getElementById(panelId);
+  const box = panel?.querySelector('.close-box');
+  const done = panel?.querySelector('.close-done');
+  const trigger = panel?.querySelector('.sec-title .btn');
+  if (box) box.classList.remove('show');
+  if (trigger) trigger.style.display = 'none';
+  if (done) {
+    done.classList.add('show');
+    done.innerHTML = `
+      <div class="close-done-head">
+        <span>거래 종료 완료</span>
+        <span class="bdg b-closed">거래 종료</span>
+      </div>
+      <div class="close-done-body">
+        <div class="close-done-label">종료 사유</div>
+        <div class="close-done-reason">${reason}</div>
+        <div class="close-done-meta">${label} 상태가 거래 종료로 변경되었습니다.</div>
+      </div>`;
+  }
+}
+
+function toggleCard(head) {
+  const body = head.nextElementSibling;
+  const icon = head.querySelector('.ti-chevron-up, .ti-chevron-down');
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  if (icon) {
+    icon.className = isOpen ? 'ti ti-chevron-down' : 'ti ti-chevron-up';
+    icon.style = 'font-size:12px;color:#bbb';
+  }
+}
+
+function toggleConfirmCompose(btn) {
+  const form = document.getElementById('confirm-compose');
+  const icon = btn.querySelector('i');
+  const isOpen = form.classList.toggle('show');
+  if (icon) icon.className = isOpen ? 'ti ti-chevron-up' : 'ti ti-chevron-down';
+}
+
+function toggleBundleConfirmCompose(btn) {
+  const form = document.getElementById('bundle-confirm-compose');
+  const icon = btn.querySelector('i');
+  const isOpen = form.classList.toggle('show');
+  if (icon) icon.className = isOpen ? 'ti ti-chevron-up' : 'ti ti-chevron-down';
+}
+
+function toggleTurnkeyConfirmCompose(btn) {
+  const form = document.getElementById('turnkey-confirm-compose');
+  const icon = btn.querySelector('i');
+  const isOpen = form.classList.toggle('show');
+  if (icon) icon.className = isOpen ? 'ti ti-chevron-up' : 'ti ti-chevron-down';
+}
+
+function selectPlatform(tr, idx) {
+  document.querySelectorAll('#view-platform tbody tr').forEach(r => r.classList.remove('sel'));
+  tr.classList.add('sel');
+}
+
+function selectBundle(tr) {
+  document.querySelectorAll('#view-bundle tbody tr').forEach(r => r.classList.remove('sel'));
+  tr.classList.add('sel');
+}
+
+function selectRealTurnkey(tr) {
+  document.querySelectorAll('#view-turnkey .lp tbody tr').forEach(r => r.classList.remove('sel'));
+  tr.classList.add('sel');
+}
+
+function grantMeta() {
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const label = (now.getMonth()+1) + '월 ' + now.getDate() + '일 · ' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ' · Lee Admin';
+  document.getElementById('meta-granted-time').textContent = label;
+  document.getElementById('meta-not-granted').style.display = 'none';
+  document.getElementById('meta-is-granted').style.display = 'block';
+  const st = document.getElementById('p-status');
+  if (st) { st.className = 'bdg b-meta'; st.textContent = '메타데이터 부여'; }
+}
+function openContentModal() {
+  document.getElementById('content-modal')?.classList.add('show');
+}
+
+function closeContentModal(event) {
+  if (event && !event.target.classList.contains('modal-backdrop')) return;
+  document.getElementById('content-modal')?.classList.remove('show');
+}
+
+function markAdded(btn) {
+  btn.textContent = '추가됨';
+  btn.className = 'btn btn-added';
+  btn.disabled = true;
+}
+
+function removePickedContent(btn) {
+  btn.closest('tr')?.remove();
+}
+
+if (['platform', 'bundle', 'turnkey'].includes(location.hash.slice(1))) {
+  switchMainTab(location.hash.slice(1));
+}
+</script>
+</body>
+</html>

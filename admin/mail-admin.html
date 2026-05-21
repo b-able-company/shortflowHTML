@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>메일 발송 — Shortflow Admin</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+<link rel="stylesheet" href="admin-common.css" />
+<script src="admin-common.js" defer></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5f4f0; display: flex; height: 100vh; overflow: hidden; font-size: 13px; color: #1a1a18; }
+
+/* SIDEBAR */
+.sb { width: 210px; min-width: 210px; background: #13130f; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
+.sb-logo { padding: 16px 16px 12px; border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+.sb-logo-main { color: #fff; font-size: 14px; font-weight: 600; }
+.sb-logo-sub { font-size: 9px; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 1px; }
+.nav { flex: 1; overflow-y: auto; padding: 6px 0; }
+.nav-label { font-size: 9px; color: rgba(255,255,255,0.22); letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 16px 3px; }
+.ni { display: flex; align-items: center; gap: 7px; padding: 6px 16px; font-size: 12.5px; color: rgba(255,255,255,0.42); cursor: pointer; border-left: 2px solid transparent; }
+.ni:hover { color: rgba(255,255,255,0.7); }
+.ni.active { color: #fff; border-left-color: #fff; background: rgba(255,255,255,0.04); }
+.ni i { font-size: 13px; flex-shrink: 0; }
+.ni-badge { margin-left: auto; font-size: 10px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 1px 6px; border-radius: 10px; }
+.ni-badge.hot { background: #fff; color: #13130f; }
+.sub .ni { padding-left: 36px; font-size: 12px; color: rgba(255,255,255,0.32); }
+.sub .ni:hover { color: rgba(255,255,255,0.6); }
+.sub .ni.active { color: #fff; }
+.sb-foot { padding: 10px 16px; border-top: 0.5px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 9px; }
+.ava { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 10px; color: #fff; font-weight: 500; flex-shrink: 0; }
+.uname { font-size: 11px; color: #fff; font-weight: 500; }
+.uemail { font-size: 10px; color: rgba(255,255,255,0.28); margin-top: 1px; }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+.topbar { height: 46px; background: #fff; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; padding: 0 18px; flex-shrink: 0; }
+.topbar-title { font-size: 14px; font-weight: 600; }
+
+/* BODY */
+.body { flex: 1; overflow-y: auto; padding: 20px 24px; display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 16px; align-items: start; }
+.mail-compose { min-width: 0; }
+.mail-history { min-width: 0; max-height: calc(100vh - 86px); display: flex; flex-direction: column; }
+.mail-history .card-head { flex-shrink: 0; }
+
+/* CARD */
+.card { background: #fff; border: 0.5px solid #e8e6e0; border-radius: 10px; overflow: hidden; }
+.card-head { padding: 14px 18px; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; justify-content: space-between; }
+.card-title { font-size: 13px; font-weight: 600; color: #1a1a18; display: flex; align-items: center; gap: 7px; }
+.card-title i { font-size: 15px; color: #aaa; }
+.card-body { padding: 16px 18px; }
+
+/* STEP BADGE */
+.step { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: #1a1a18; color: #fff; font-size: 10.5px; font-weight: 600; flex-shrink: 0; }
+.step.done { background: #639922; }
+.step.inactive { background: #e0dfd9; color: #aaa; }
+
+/* CONTENT SEARCH */
+.content-search-wrap { position: relative; margin-bottom: 12px; }
+.content-search-wrap i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #bbb; pointer-events: none; }
+.content-search { width: 100%; font-size: 12.5px; padding: 9px 12px 9px 32px; border: 0.5px solid #e0dfd9; border-radius: 8px; background: #f7f6f2; color: #1a1a18; outline: none; font-family: inherit; }
+.content-search:focus { border-color: #aaa; background: #fff; }
+
+/* CONTENT LIST */
+.content-list { display: flex; flex-direction: column; gap: 4px; max-height: 220px; overflow-y: auto; }
+.content-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 0.5px solid #e8e6e0; border-radius: 7px; cursor: pointer; transition: border-color 0.1s; }
+.content-item:hover { border-color: #bbb; background: #fafaf7; }
+.content-item.selected { border-color: #1a1a18; background: #f5f4f0; }
+.ci-thumb { width: 36px; height: 36px; border-radius: 5px; background: #f0efe9; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ci-thumb i { font-size: 16px; color: #ccc; }
+.ci-name { font-size: 12.5px; font-weight: 500; color: #1a1a18; }
+.ci-company { font-size: 11px; color: #aaa; margin-top: 1px; }
+.ci-check { margin-left: auto; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #e0dfd9; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.content-item.selected .ci-check { background: #1a1a18; border-color: #1a1a18; }
+.content-item.selected .ci-check::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #fff; }
+
+/* SELECTED CONTENT PREVIEW */
+.selected-preview { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #f5f4f0; border-radius: 8px; border: 0.5px solid #e0dfd9; }
+.sp-thumb { width: 40px; height: 40px; border-radius: 6px; background: #e8e6e0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.sp-thumb i { font-size: 18px; color: #aaa; }
+.sp-name { font-size: 13px; font-weight: 500; }
+.sp-company { font-size: 11px; color: #aaa; margin-top: 2px; }
+.sp-change { margin-left: auto; font-size: 11.5px; color: #888; cursor: pointer; text-decoration: underline; }
+
+/* PLATFORM CHECKBOXES */
+.platform-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.platform-item { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 0.5px solid #e8e6e0; border-radius: 8px; cursor: pointer; user-select: none; }
+.platform-item:hover { border-color: #bbb; }
+.platform-item.checked { border: 1.5px solid #aaa79f; background: #f7f6f2; }
+.platform-item.checked .pi-box { background: #77746d; border-color: #77746d; }
+.platform-item.checked .pi-box i { display: flex; }
+.pi-box { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid #d5d4ce; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.pi-box i { font-size: 11px; color: #fff; display: none; }
+.pi-name { font-size: 12px; font-weight: 500; color: #333; }
+.pi-type { font-size: 10px; color: #bbb; margin-top: 1px; }
+.pi-sent { font-size: 9.5px; background: #EAF3DE; color: #3B6D11; padding: 1px 5px; border-radius: 4px; margin-left: auto; white-space: nowrap; }
+
+/* SEND BUTTON AREA */
+.send-area { display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: #fff; border-top: 0.5px solid #e8e6e0; }
+.selected-count { font-size: 12px; color: #888; }
+.selected-count strong { color: #1a1a18; }
+.btn-send { font-size: 12.5px; padding: 8px 18px; border-radius: 7px; border: none; background: #1a1a18; color: #fff; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; font-weight: 500; margin-left: auto; }
+.btn-send:hover { opacity: 0.85; }
+.btn-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* SEND SUCCESS */
+.send-success { display: none; align-items: center; gap: 10px; padding: 12px 16px; background: #EAF3DE; border: 0.5px solid #C0DD97; border-radius: 8px; }
+.send-success.show { display: flex; }
+.send-success i { font-size: 18px; color: #3B6D11; flex-shrink: 0; }
+.send-success-text { font-size: 12px; color: #3B6D11; font-weight: 500; }
+.send-success-sub { font-size: 11px; color: #639922; margin-top: 2px; }
+
+.hist-list { padding: 8px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+.hist-card { border: 0.5px solid #e8e6e0; border-radius: 8px; padding: 10px; background: #fff; }
+.hist-card:hover { background: #fafaf7; }
+.hist-top { display: flex; gap: 10px; align-items: flex-start; }
+.hist-main { min-width: 0; flex: 1; }
+.hist-content { font-size: 12.5px; font-weight: 500; color: #1a1a18; }
+.hist-company { font-size: 11px; color: #aaa; margin-top: 1px; }
+.hist-platforms { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
+.hist-ptag { font-size: 10.5px; background: #f0efe9; color: #666; padding: 2px 7px; border-radius: 5px; }
+.hist-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; padding-top: 8px; border-top: 0.5px solid #f5f4f0; }
+.hist-date { font-size: 11.5px; color: #aaa; white-space: nowrap; }
+
+@media (max-width: 1120px) {
+  .body { grid-template-columns: 1fr; }
+  .mail-history { max-height: none; }
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+.note { font-size: 11px; color: #bbb; margin-top: 6px; }
+.divider { height: 1px; background: #f0efe9; margin: 14px 0; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-main">shortflow</div>
+    <div class="sb-logo-sub">Admin</div>
+    <button class="sb-toggle" type="button" aria-label="네비 접기" aria-expanded="true"><i class="ti ti-chevron-left"></i></button>
+  </div>
+  <nav class="nav">
+    <div class="nav-label">메인</div>
+    <a class="ni" href="dashboard-admin.html"><i class="ti ti-home"></i> 홈</a>
+    <div class="nav-label">회원</div>
+    <a class="ni" href="member-admin.html"><i class="ti ti-users"></i> 회원 관리</a>
+    <div class="sub">
+      <a class="ni" href="member-admin.html#users">유저</a>
+      <a class="ni" href="member-admin.html#companies">회사</a>
+    </div>
+    <div class="nav-label">콘텐츠</div>
+    <a class="ni" href="content-admin-full.html"><i class="ti ti-file-text"></i> 콘텐츠 관리</a>
+    <div class="sub">
+      <a class="ni" href="content-admin-full.html#list">전체 콘텐츠</a>
+      <a class="ni" href="content-admin-full.html#revisions">수정 요청</a>
+    </div>
+    <div class="nav-label">거래</div>
+    <a class="ni" href="workflow-admin.html"><i class="ti ti-git-branch"></i> 워크플로우</a>
+    <div class="sub">
+      <a class="ni" href="workflow-admin.html#platform">단일 거래</a>
+      <a class="ni" href="workflow-admin.html#bundle">묶음 거래</a>
+      <a class="ni" href="workflow-admin.html#turnkey">턴키 거래</a>
+    </div>
+    <a class="ni" href="turnkey-intent-admin.html"><i class="ti ti-clipboard-list"></i> 턴키 판매 의사</a>
+    <div class="nav-label">운영</div>
+    <a class="ni" href="settlement-admin.html"><i class="ti ti-receipt"></i> 정산</a>
+    <div class="sub">
+      <a class="ni" href="settlement-admin.html#contracts">계약 관리</a>
+      <a class="ni" href="settlement-admin.html#settlement">정산 처리</a>
+    </div>
+    <a class="ni active" href="mail-admin.html"><i class="ti ti-mail"></i> 메일 발송</a>
+    <a class="ni" href="audit-log.html"><i class="ti ti-shield-check"></i> 관리 이력</a>
+  </nav>
+  <div class="sb-foot">
+    <div class="ava">L</div>
+    <div>
+      <div class="uname">Lee · Admin</div>
+      <div class="uemail">ops@shortflow.io</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <span class="topbar-title">메일 발송</span>
+  </div>
+
+  <div class="body">
+
+    <!-- STEP 1+2: 콘텐츠 선택 + 플랫폼 선택 (하나의 카드로) -->
+    <div class="card mail-compose">
+      <div class="card-head">
+        <div class="card-title">
+          <i class="ti ti-send"></i>
+          콘텐츠 제안 메일 발송
+        </div>
+      </div>
+
+      <!-- 콘텐츠 선택 섹션 -->
+      <div class="card-body" style="border-bottom: 0.5px solid #f0efe9">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <div class="step" id="step1-badge">1</div>
+          <span style="font-size:12px;font-weight:500;color:#333">콘텐츠 선택</span>
+        </div>
+
+        <!-- 선택 전: 검색 + 목록 -->
+        <div id="content-select-area">
+          <div class="content-search-wrap">
+            <i class="ti ti-search"></i>
+            <input class="content-search" placeholder="콘텐츠명 또는 제작사명으로 검색" oninput="filterContents(this.value)" />
+          </div>
+          <div class="content-list" id="content-list"></div>
+        </div>
+
+        <!-- 선택 후: 선택된 콘텐츠 프리뷰 -->
+        <div id="content-selected-area" style="display:none">
+          <div class="selected-preview">
+            <div class="sp-thumb"><i class="ti ti-movie"></i></div>
+            <div>
+              <div class="sp-name" id="sp-name"></div>
+              <div class="sp-company" id="sp-company"></div>
+            </div>
+            <span class="sp-change" onclick="changeContent()">변경</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 플랫폼 선택 섹션 -->
+      <div class="card-body" id="platform-section" style="border-bottom:0.5px solid #f0efe9;opacity:0.4;pointer-events:none">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <div class="step inactive" id="step2-badge">2</div>
+          <span style="font-size:12px;font-weight:500;color:#333">발송할 플랫폼사 선택</span>
+          <span style="font-size:11px;color:#bbb;margin-left:4px">복수 선택 가능</span>
+        </div>
+        <div class="platform-grid" id="platform-grid"></div>
+        <p class="note" style="margin-top:10px">이미 발송된 플랫폼사는 <span style="background:#EAF3DE;color:#3B6D11;font-size:9.5px;padding:1px 5px;border-radius:4px">발송 완료</span> 표시됩니다. 재발송도 가능합니다.</p>
+      </div>
+
+      <!-- 발송 버튼 -->
+      <div class="send-area">
+        <div class="selected-count" id="selected-count" style="display:none">
+          <strong id="count-num">0</strong>개 플랫폼사 선택됨
+        </div>
+        <button class="btn-send" id="send-btn" disabled onclick="sendMail()">
+          <i class="ti ti-send"></i> 메일 발송
+        </button>
+      </div>
+
+      <!-- 발송 완료 -->
+      <div class="send-success" id="send-success" style="margin:0 18px 16px">
+        <i class="ti ti-circle-check-filled"></i>
+        <div>
+          <div class="send-success-text" id="send-success-text"></div>
+          <div class="send-success-sub" id="send-success-sub"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 발송 이력 -->
+    <div class="card mail-history">
+      <div class="card-head">
+        <div class="card-title">
+          <i class="ti ti-history"></i>
+          최근 발송 이력
+        </div>
+      </div>
+      <div class="hist-list" id="history-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const contents = [
+  { id:1, title:'The Last Letter', company:'NextWave Studios', poster:'poster-p1', mark:'TL' },
+  { id:2, title:'Reverse Cinderella', company:'OneTake Media', poster:'poster-p2', mark:'RC' },
+  { id:3, title:'Midnight Tokyo Drift', company:'ShortReel (US)', poster:'poster-p3', mark:'MT' },
+  { id:4, title:'Echo of Spring', company:'NextWave Studios', poster:'poster-p6', mark:'ES' },
+  { id:5, title:'Bloom Again', company:'PaperLens', poster:'poster-p4', mark:'BA' },
+  { id:6, title:'Seven Suns', company:'BrightFrame', poster:'poster-p5', mark:'SS' },
+];
+
+const platforms = [
+  { id:1, name:'ShortReel (US)', type:'PLATFORM' },
+  { id:2, name:'Viki', type:'PLATFORM' },
+  { id:3, name:'WeTV', type:'PLATFORM' },
+  { id:4, name:'iQIYI', type:'PLATFORM' },
+  { id:5, name:'Rakuten Viki', type:'PLATFORM' },
+  { id:6, name:'드라마박스', type:'PLATFORM' },
+];
+
+// 콘텐츠별 이미 발송된 플랫폼
+const sentHistory = {
+  1: [1, 2], // The Last Letter → ShortReel, Viki
+  3: [3],    // Midnight Tokyo Drift → WeTV
+};
+
+const history = [
+  { content:'The Last Letter', company:'NextWave Studios', platforms:['ShortReel (US)','Viki'], date:'2026.05.08 15:20', sender:'Lee Admin' },
+  { content:'Midnight Tokyo Drift', company:'ShortReel (US)', platforms:['WeTV'], date:'2026.05.07 11:00', sender:'Lee Admin' },
+  { content:'Echo of Spring', company:'NextWave Studios', platforms:['Viki','iQIYI','Rakuten Viki'], date:'2026.05.02 09:30', sender:'Lee Admin' },
+  { content:'Reverse Cinderella', company:'OneTake Media', platforms:['ShortReel (US)'], date:'2026.04.28 14:10', sender:'Lee Admin' },
+];
+
+let selectedContentId = null;
+let checkedPlatforms = new Set();
+let searchQuery = '';
+
+function renderContents() {
+  const list = document.getElementById('content-list');
+  const filtered = contents.filter(c =>
+    !searchQuery || c.title.includes(searchQuery) || c.company.includes(searchQuery)
+  );
+  list.innerHTML = filtered.map(c => `
+    <div class="content-item ${selectedContentId === c.id ? 'selected' : ''}" onclick="selectContent(${c.id})">
+      <div class="poster poster-sm ${c.poster}" data-mark="${c.mark}"></div>
+      <div>
+        <div class="ci-name">${c.title}</div>
+        <div class="ci-company">${c.company}</div>
+      </div>
+      <div class="ci-check"></div>
+    </div>`).join('');
+}
+
+function filterContents(val) {
+  searchQuery = val;
+  renderContents();
+}
+
+function selectContent(id) {
+  selectedContentId = id;
+  checkedPlatforms.clear();
+  const c = contents.find(x => x.id === id);
+
+  // 콘텐츠 선택 영역 토글
+  document.getElementById('content-select-area').style.display = 'none';
+  document.getElementById('content-selected-area').style.display = 'block';
+  document.getElementById('sp-name').textContent = c.title;
+  document.getElementById('sp-company').textContent = c.company;
+  document.querySelector('.selected-preview .sp-thumb').outerHTML = `<div class="sp-thumb poster ${c.poster}" data-mark="${c.mark}"></div>`;
+  document.getElementById('step1-badge').classList.add('done');
+
+  // 플랫폼 섹션 활성화
+  const ps = document.getElementById('platform-section');
+  ps.style.opacity = '1';
+  ps.style.pointerEvents = '';
+  document.getElementById('step2-badge').className = 'step';
+
+  renderPlatforms();
+  updateSendBtn();
+}
+
+function changeContent() {
+  document.getElementById('content-select-area').style.display = 'block';
+  document.getElementById('content-selected-area').style.display = 'none';
+  document.getElementById('step1-badge').classList.remove('done');
+  const ps = document.getElementById('platform-section');
+  ps.style.opacity = '0.4';
+  ps.style.pointerEvents = 'none';
+  document.getElementById('step2-badge').className = 'step inactive';
+  selectedContentId = null;
+  const thumb = document.querySelector('.selected-preview .sp-thumb');
+  if (thumb) thumb.outerHTML = '<div class="sp-thumb"><i class="ti ti-movie"></i></div>';
+  checkedPlatforms.clear();
+  updateSendBtn();
+  renderContents();
+}
+
+function renderPlatforms() {
+  const sent = sentHistory[selectedContentId] || [];
+  const grid = document.getElementById('platform-grid');
+  grid.innerHTML = platforms.map(p => {
+    const isSent = sent.includes(p.id);
+    const isChecked = checkedPlatforms.has(p.id);
+    return `
+      <div class="platform-item ${isChecked ? 'checked' : ''}" onclick="togglePlatform(${p.id})">
+        <div class="pi-box"><i class="ti ti-check"></i></div>
+        <div>
+          <div class="pi-name">${p.name}</div>
+          <div class="pi-type">${p.type}</div>
+        </div>
+        ${isSent ? '<span class="pi-sent">발송 완료</span>' : ''}
+      </div>`;
+  }).join('');
+}
+
+function togglePlatform(id) {
+  if (checkedPlatforms.has(id)) checkedPlatforms.delete(id);
+  else checkedPlatforms.add(id);
+  renderPlatforms();
+  updateSendBtn();
+}
+
+function updateSendBtn() {
+  const btn = document.getElementById('send-btn');
+  const cnt = document.getElementById('selected-count');
+  const num = document.getElementById('count-num');
+  const n = checkedPlatforms.size;
+  btn.disabled = n === 0;
+  cnt.style.display = n > 0 ? '' : 'none';
+  num.textContent = n;
+}
+
+function sendMail() {
+  const c = contents.find(x => x.id === selectedContentId);
+  const names = [...checkedPlatforms].map(id => platforms.find(p => p.id === id).name);
+
+  const successEl = document.getElementById('send-success');
+  document.getElementById('send-success-text').textContent = `"${c.title}" 제안 메일을 ${names.length}개 플랫폼사에 발송했습니다`;
+  document.getElementById('send-success-sub').textContent = names.join(', ');
+  successEl.classList.add('show');
+
+  // 이력에 추가
+  const now = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  const dateStr = `${now.getFullYear()}.${pad(now.getMonth()+1)}.${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  history.unshift({ content: c.title, company: c.company, platforms: names, date: dateStr, sender: 'Lee Admin' });
+  renderHistory();
+
+  // 발송 완료 처리
+  if (!sentHistory[selectedContentId]) sentHistory[selectedContentId] = [];
+  checkedPlatforms.forEach(id => {
+    if (!sentHistory[selectedContentId].includes(id)) sentHistory[selectedContentId].push(id);
+  });
+  checkedPlatforms.clear();
+  renderPlatforms();
+  updateSendBtn();
+}
+
+function renderHistory() {
+  const list = document.getElementById('history-list');
+  list.innerHTML = history.map(h => {
+    const c = contents.find(x => x.title === h.content) || {};
+    return `
+    <div class="hist-card">
+      <div class="hist-top">
+        <div>
+          <div class="poster poster-sm ${c.poster || 'poster-p1'}" data-mark="${c.mark || h.content.slice(0, 2).toUpperCase()}"></div>
+        </div>
+        <div class="hist-main">
+          <div class="hist-content">${h.content}</div>
+          <div class="hist-company">${h.company}</div>
+          <div class="hist-platforms">
+            ${h.platforms.map(p => `<span class="hist-ptag">${p}</span>`).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="hist-meta">
+        <span class="hist-date">${h.date}</span>
+        <span class="hist-date">${h.sender}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+renderContents();
+renderHistory();
+</script>
+</body>
+</html>
