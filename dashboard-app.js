@@ -4,6 +4,12 @@
   const { renderShell } = window.ShortflowNav;
   const { renderWorkflowView } = window.ShortflowWorkflow;
   const { renderMessagesView } = window.ShortflowMessages;
+  const dashboardTabs = new Set(['workflow', 'messages']);
+
+  function syncTabFromUrl() {
+    const tab = new URLSearchParams(window.location.search).get('tab');
+    if (dashboardTabs.has(tab)) appState.tab = tab;
+  }
 
   function render() {
     const view = appState.tab === 'messages'
@@ -15,7 +21,10 @@
   root.addEventListener('click', event => {
     const tabButton = event.target.closest('[data-tab]');
     if (tabButton) {
+      if (!dashboardTabs.has(tabButton.dataset.tab)) return;
+      event.preventDefault();
       appState.tab = tabButton.dataset.tab;
+      window.history.replaceState(null, '', `shortflow-dashboard.html?tab=${appState.tab}`);
       render();
       return;
     }
@@ -46,5 +55,6 @@
     }
   });
 
+  syncTabFromUrl();
   render();
 })();

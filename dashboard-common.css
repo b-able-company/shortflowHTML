@@ -166,6 +166,11 @@ button {
   font-weight: 600;
 }
 
+.user.active {
+  color: var(--orange);
+  font-weight: 700;
+}
+
 .sub-nav-inner {
   height: 38px;
   display: flex;
@@ -173,7 +178,8 @@ button {
   gap: 36px;
 }
 
-.sub-nav button {
+.sub-nav button,
+.sub-nav a {
   position: relative;
   height: 38px;
   display: flex;
@@ -182,13 +188,16 @@ button {
   font-size: 14px;
   font-weight: 600;
   color: var(--ink-faint);
+  text-decoration: none;
 }
 
-.sub-nav button.active {
+.sub-nav button.active,
+.sub-nav a.active {
   color: var(--ink);
 }
 
-.sub-nav button.active::after {
+.sub-nav button.active::after,
+.sub-nav a.active::after {
   content: "";
   position: absolute;
   left: 0;

@@ -1,14 +1,14 @@
 (function () {
   const primaryNavItems = [
     { id: 'content', label: '콘텐츠', href: 'content-list.html' },
-    { id: 'concierge', label: 'IP 컨시어지', href: 'concierge.html' },
+    { id: 'concierge', label: '컨시어지', href: 'concierge.html' },
     { id: 'dashboard', label: '대시보드', href: 'shortflow-dashboard.html' },
     { id: 'guide', label: '이용가이드', href: '#' },
   ];
 
   const dashboardTabs = [
-    { id: 'workflow', label: '워크플로우' },
-    { id: 'messages', label: '문의함' },
+    { id: 'workflow', label: '워크플로우', href: 'shortflow-dashboard.html?tab=workflow' },
+    { id: 'messages', label: '문의함', href: 'shortflow-dashboard.html?tab=messages' },
   ];
 
   const icons = {
@@ -34,7 +34,7 @@
             <a class="icon-action cart" href="cart.html" aria-label="카트">${icons.cart}</a>
             <button class="icon-action" aria-label="테마">${icons.moon}</button>
             <button class="lang">한국어</button>
-            <span class="user">Reelio</span>
+            <a class="user ${currentPage === 'mypage' ? 'active' : ''}" href="owner.html" ${currentPage === 'mypage' ? 'aria-current="page"' : ''}>Reelio</a>
             <button class="logout">로그아웃</button>
           </div>
         </div>
@@ -47,7 +47,7 @@
       <div class="sub-nav">
         <div class="sub-nav-inner">
           ${dashboardTabs.map(tab => `
-            <button class="${tab.id === activeTab ? 'active' : ''}" data-tab="${tab.id}">${tab.label}</button>
+            <a class="${tab.id === activeTab ? 'active' : ''}" href="${tab.href}" data-tab="${tab.id}" ${tab.id === activeTab ? 'aria-current="page"' : ''}>${tab.label}</a>
           `).join('')}
         </div>
       </div>
