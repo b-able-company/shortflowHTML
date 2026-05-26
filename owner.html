@@ -583,9 +583,151 @@
       font-size: 11.5px;
     }
 
+    .credit-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .credit-summary {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.8fr) minmax(0, 1fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .credit-balance-card,
+    .credit-note {
+      min-height: 96px;
+      border: 1px solid var(--owner-line);
+      border-radius: 8px;
+      background: var(--owner-soft);
+      padding: 16px;
+    }
+
+    .credit-balance-card span,
+    .credit-note span {
+      display: block;
+      color: var(--owner-muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .credit-balance-card strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--owner-ink);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .credit-balance-card small,
+    .credit-note p {
+      display: block;
+      margin: 8px 0 0;
+      color: var(--owner-muted);
+      font-size: 11.5px;
+      line-height: 1.55;
+    }
+
+    .credit-ledger {
+      border: 1px solid var(--owner-line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .credit-ledger-head,
+    .credit-ledger-row {
+      display: grid;
+      grid-template-columns: minmax(132px, 0.9fr) minmax(64px, 0.45fr) minmax(180px, 1.6fr) minmax(74px, 0.45fr);
+      gap: 14px;
+      align-items: center;
+    }
+
+    .credit-ledger-head {
+      padding: 11px 16px;
+      background: var(--owner-soft);
+      color: var(--owner-faint);
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .credit-ledger-row {
+      min-height: 36px;
+      padding: 6px 16px;
+      border-top: 1px solid var(--line-soft);
+      font-size: 12px;
+    }
+
+    .credit-ledger-head span:last-child {
+      text-align: right;
+    }
+
+    .credit-date,
+    .credit-delta {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11.5px;
+    }
+
+    .credit-date {
+      color: var(--owner-muted);
+    }
+
+    .credit-type {
+      width: fit-content;
+      padding: 3px 7px;
+      border-radius: 6px;
+      background: var(--owner-soft);
+      color: var(--owner-muted);
+      font-size: 10.5px;
+      font-weight: 700;
+    }
+
+    .credit-type.use {
+      background: #f5f5f1;
+      color: #61646b;
+    }
+
+    .credit-type.charge {
+      background: #edf7f0;
+      color: #2e7a47;
+    }
+
+    .credit-type.refund {
+      background: var(--owner-orange-soft);
+      color: var(--owner-orange);
+    }
+
+    .credit-reason {
+      color: var(--owner-ink);
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .credit-delta {
+      text-align: right;
+      font-weight: 700;
+    }
+
+    .credit-delta.plus {
+      color: #2e7a47;
+    }
+
+    .credit-delta.minus {
+      color: var(--owner-orange);
+    }
+
     @media (max-width: 900px) {
       .owner-layout,
-      .invite-body {
+      .invite-body,
+      .credit-summary {
         grid-template-columns: 1fr;
       }
 
@@ -605,6 +747,19 @@
       }
 
       .joined {
+        text-align: left;
+      }
+
+      .credit-ledger-head {
+        display: none;
+      }
+
+      .credit-ledger-row {
+        grid-template-columns: 1fr;
+        gap: 7px;
+      }
+
+      .credit-delta {
         text-align: left;
       }
     }
@@ -648,10 +803,23 @@
       { id: 'u7', name: '오세훈', email: 'sehun.oh@reelio.co', role: 'MEMBER', permission: 'READ', joined: '2026-05-10', pending: true },
     ];
 
+    const creditInfo = {
+      balance: 18,
+      updatedAt: '2026-05-26 09:20',
+      history: [
+        { id: 'cr1', date: '2026-05-26 09:20', type: '사용', reason: '대본분석 사용', delta: -1 },
+        { id: 'cr2', date: '2026-05-25 17:42', type: '환불', reason: '대본분석 실패 환불', delta: 1 },
+        { id: 'cr3', date: '2026-05-25 17:40', type: '사용', reason: '대본분석 사용', delta: -1 },
+        { id: 'cr4', date: '2026-05-24 10:15', type: '충전', reason: '관리자 충전', delta: 5 },
+        { id: 'cr5', date: '2026-05-23 14:08', type: '사용', reason: '대본분석 사용', delta: -1 },
+      ],
+    };
+
     const tabs = [
       { id: 'account', label: '회원정보', icon: 'user', ownerOnly: false },
       { id: 'password', label: '비밀번호 변경', icon: 'lock', ownerOnly: false },
       { id: 'info', label: '회사 정보', icon: 'building', ownerOnly: false },
+      { id: 'credits', label: '크레딧', icon: 'credit', ownerOnly: false },
       { id: 'members', label: '멤버 권한', icon: 'users', ownerOnly: true },
       { id: 'invite', label: '초대 코드', icon: 'key', ownerOnly: true },
     ];
@@ -678,6 +846,7 @@
         user: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
         lock: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
         building: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h2M9 13h2M9 17h2M13 13h2M13 17h2"/></svg>',
+        credit: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/></svg>',
         users: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
         key: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 2l-2 2m-7.6 7.6a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>',
       };
@@ -831,6 +1000,63 @@
       `;
     }
 
+    function creditTypeClass(type) {
+      return {
+        '사용': 'use',
+        '충전': 'charge',
+        '환불': 'refund',
+      }[type] || '';
+    }
+
+    function formatCreditDelta(delta) {
+      return `${delta > 0 ? '+' : ''}${delta}`;
+    }
+
+    function renderCreditRow(item) {
+      const deltaClass = item.delta > 0 ? 'plus' : 'minus';
+      return `
+        <div class="credit-ledger-row">
+          <span class="credit-date">${escapeHtml(item.date)}</span>
+          <span class="credit-type ${creditTypeClass(item.type)}">${escapeHtml(item.type)}</span>
+          <span class="credit-reason">${escapeHtml(item.reason)}</span>
+          <span class="credit-delta ${deltaClass}">${formatCreditDelta(item.delta)}</span>
+        </div>
+      `;
+    }
+
+    function renderCreditsPanel() {
+      return `
+        <section class="owner-panel">
+          <header class="panel-head">
+            <span class="panel-dot"></span>
+            <strong class="panel-title">크레딧</strong>
+          </header>
+          <div class="credit-body">
+            <div class="credit-summary">
+              <div class="credit-balance-card">
+                <span>남은 크레딧</span>
+                <strong>${creditInfo.balance}</strong>
+                <small>마지막 업데이트 ${escapeHtml(creditInfo.updatedAt)}</small>
+              </div>
+              <div class="credit-note">
+                <span>사용 기준</span>
+                <p>대본분석 1회 실행 시 크레딧 1개가 차감됩니다.<br>실패한 분석은 자동 환불되며, 충전과 조정은 관리자 처리 후 내역에 반영됩니다.</p>
+              </div>
+            </div>
+            <div class="credit-ledger" aria-label="크레딧 사용내역">
+              <div class="credit-ledger-head">
+                <span>일시</span>
+                <span>유형</span>
+                <span>사유</span>
+                <span>변동</span>
+              </div>
+              ${creditInfo.history.map(renderCreditRow).join('')}
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
     function permissionPill(value) {
       return `<span class="permission-pill ${value === 'WRITE' ? 'write' : ''}">${value}</span>`;
     }
@@ -926,6 +1152,7 @@
         account: renderAccountPanel,
         password: renderPasswordPanel,
         info: renderInfoPanel,
+        credits: renderCreditsPanel,
         members: renderMembersPanel,
         invite: renderInvitePanel,
       };
