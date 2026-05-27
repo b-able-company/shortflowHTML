@@ -15,7 +15,11 @@
     const view = appState.tab === 'messages'
       ? renderMessagesView(appState)
       : renderWorkflowView(appState);
-    root.innerHTML = renderShell(view, { activeTab: appState.tab });
+    root.innerHTML = renderShell(view, {
+      activePage: 'platform-dashboard',
+      activeTab: appState.tab,
+      dashboardKind: 'platform',
+    });
   }
 
   root.addEventListener('click', event => {

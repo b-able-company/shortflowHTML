@@ -2,13 +2,19 @@
   const primaryNavItems = [
     { id: 'content', label: '콘텐츠', href: 'content-list.html' },
     { id: 'concierge', label: '컨시어지', href: 'concierge.html' },
-    { id: 'dashboard', label: '대시보드', href: 'shortflow-dashboard.html' },
+    { id: 'platform-dashboard', label: '플랫폼 대시보드', href: 'shortflow-dashboard.html', aliases: ['dashboard'] },
+    { id: 'producer-dashboard', label: '제작사 대시보드', href: 'producer-dashboard.html' },
     { id: 'guide', label: '이용가이드', href: '#' },
   ];
 
-  const dashboardTabs = [
+  const platformDashboardTabs = [
     { id: 'workflow', label: '워크플로우', href: 'shortflow-dashboard.html?tab=workflow' },
     { id: 'messages', label: '문의함', href: 'shortflow-dashboard.html?tab=messages' },
+  ];
+
+  const producerDashboardTabs = [
+    { id: 'workflow', label: '워크플로우', href: 'producer-dashboard.html?tab=workflow' },
+    { id: 'settlement', label: '정산 대시보드', href: 'settlement.html' },
   ];
 
   const icons = {
@@ -18,16 +24,19 @@
   };
 
   function renderTopNav(activePage) {
-    const currentPage = activePage || 'dashboard';
+    const currentPage = activePage || 'platform-dashboard';
 
     return `
       <header class="top-nav">
         <div class="nav-inner">
           <div class="brand"><span>short</span><b>flow</b></div>
           <nav class="primary-nav" aria-label="주 메뉴">
-            ${primaryNavItems.map(item => `
-              <a class="${item.id === currentPage ? 'active' : ''}" href="${item.href}" ${item.id === currentPage ? 'aria-current="page"' : ''}>${item.label}</a>
-            `).join('')}
+            ${primaryNavItems.map(item => {
+              const active = item.id === currentPage || (item.aliases || []).includes(currentPage);
+              return `
+                <a class="${active ? 'active' : ''}" href="${item.href}" ${active ? 'aria-current="page"' : ''}>${item.label}</a>
+              `;
+            }).join('')}
           </nav>
           <div class="nav-actions">
             <button class="icon-action" aria-label="알림">${icons.bell}</button>
@@ -42,7 +51,12 @@
     `;
   }
 
-  function renderDashboardSubNav(activeTab) {
+  function dashboardTabsFor(kind) {
+    return kind === 'producer' ? producerDashboardTabs : platformDashboardTabs;
+  }
+
+  function renderDashboardSubNav(activeTab, kind) {
+    const dashboardTabs = dashboardTabsFor(kind);
     return `
       <div class="sub-nav">
         <div class="sub-nav-inner">
@@ -56,10 +70,10 @@
 
   function renderShell(contentHtml, options) {
     const config = options || {};
-    const activePage = config.activePage || 'dashboard';
+    const activePage = config.activePage || 'platform-dashboard';
     const subNavHtml = config.showDashboardSubNav === false
       ? ''
-      : renderDashboardSubNav(config.activeTab);
+      : renderDashboardSubNav(config.activeTab, config.dashboardKind);
 
     return `
       ${renderTopNav(activePage)}
@@ -90,7 +104,7 @@
 
     if (!node) {
       node = document.createElement('div');
-      node.setAttribute('data-shortflow-nav', config.active || 'dashboard');
+      node.setAttribute('data-shortflow-nav', config.active || 'platform-dashboard');
       document.body.prepend(node);
     }
 
