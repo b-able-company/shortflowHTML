@@ -109,10 +109,9 @@ td { padding: 9px 12px; vertical-align: middle; }
 .dpanel { display: none; padding: 16px 18px; }
 .dpanel.active { display: block; }
 
-/* FORM */
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .form-grid.g3 { grid-template-columns: 1fr 1fr 1fr; }
-.fg { display: flex; flex-direction: column; gap: 4px; }
+.fg { display: flex; flex-direction: column; gap: 6px; }
 .fg label { font-size: 10px; color: #b4b2aa; font-weight: 500; }
 .fg input, .fg select { font-size: 12px; padding: 7px 10px; border: 0.5px solid #e0dfd9; border-radius: 6px; background: #fff; color: #1a1a18; outline: none; font-family: inherit; width: 100%; }
 .fg input:focus, .fg select:focus { border-color: #aaa; }
@@ -122,13 +121,13 @@ td { padding: 9px 12px; vertical-align: middle; }
 .contract-form-section { border: 0.5px solid #eeede8; border-radius: 8px; background: #fff; padding: 13px 14px 14px; margin-bottom: 14px; }
 .contract-form-section:last-child { margin-bottom: 0; }
 .form-subtitle { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 11px; padding-bottom: 7px; border-bottom: 0.5px solid #f0efe9; font-size: 12px; font-weight: 600; color: #333; }
-.data-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.data-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .data-panel-actions { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 12px; }
 .data-list-title { font-size: 11px; color: #777; font-weight: 600; margin-bottom: 8px; }
 .data-list { margin-bottom: 16px; }
 .data-record { border-bottom: 0.5px solid #f0efe9; }
 .data-record:last-child { border-bottom: none; }
-.data-summary { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; align-items: center; padding: 12px 0; }
+.data-summary { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; align-items: center; padding: 12px 0; }
 .data-summary.with-action { grid-template-columns: repeat(5, minmax(0, 1fr)) auto; }
 .data-point-label { font-size: 10.5px; color: #aaa; margin-bottom: 4px; }
 .data-point-value { font-size: 12.5px; color: #1a1a18; font-weight: 600; font-family: monospace; }
@@ -472,6 +471,8 @@ td { padding: 9px 12px; vertical-align: middle; }
 .status-scheduled { background: #FAEEDA; color: #854F0B; }
 .status-ready { background: #E8F1EA; color: #1F5A33; }
 .status-completed { background: #EAF3DE; color: #3B6D11; }
+.ops-detail-btn { font-size: 11px; padding: 4px 8px; border-radius: 6px; border: 0.5px solid #e0dfd9; background: #fff; color: #555; cursor: pointer; font-family: inherit; white-space: nowrap; }
+.ops-detail-btn:hover { border-color: #bbb; color: #1a1a18; }
 .ops-empty { padding: 32px 20px; text-align: center; color: #bbb; font-size: 12px; }
 .ops-footer { padding: 12px 16px; border-top: 0.5px solid #e8e6e0; display: flex; align-items: center; gap: 12px; background: #fafaf7; }
 .ops-footer-label { font-size: 12px; color: #444; }
@@ -914,9 +915,9 @@ td { padding: 9px 12px; vertical-align: middle; }
           <div class="ops-section-title">정산 진행중 <span class="ops-section-count" id="progress-count">0</span></div>
         </div>
         <div class="ops-table-scroll">
-          <table class="ops-table dense">
-            <colgroup><col style="width:150px"><col style="width:126px"><col style="width:128px"><col style="width:82px"><col style="width:84px"><col style="width:116px"><col style="width:58px"><col style="width:82px"><col style="width:74px"><col style="width:76px"><col style="width:106px"><col style="width:96px"><col style="width:72px"><col style="width:96px"><col style="width:112px"><col style="width:96px"><col style="width:116px"><col style="width:120px"><col style="width:104px"></colgroup>
-            <thead><tr><th>콘텐츠</th><th class="right">제작사</th><th class="right">플랫폼사</th><th class="center">계약타입</th><th class="right">발생월</th><th class="right">플랫폼 지급액</th><th class="right">통화</th><th class="right">계약금 퍼센트</th><th class="right">RS 비율</th><th class="right">원천세 비율</th><th class="right">원천세 금액</th><th class="right">송금 수수료</th><th class="right">환율</th><th class="right">환전 수수료</th><th class="right">실제 입금액</th><th class="right">비에이블 수수료율</th><th class="right">비에이블 수수료 금액</th><th class="right">제작사 정산액</th><th class="center">상태</th></tr></thead>
+          <table class="ops-table">
+            <colgroup><col><col style="width:130px"><col style="width:78px"><col style="width:150px"><col style="width:128px"><col style="width:112px"><col style="width:110px"></colgroup>
+            <thead><tr><th>제작사</th><th class="right">정산 기준월</th><th class="right">항목 수</th><th class="right">제작사 정산액</th><th class="right">관리자</th><th class="center">상태</th><th class="center">상세</th></tr></thead>
             <tbody id="progress-tbody"></tbody>
           </table>
         </div>
@@ -933,16 +934,16 @@ td { padding: 9px 12px; vertical-align: middle; }
     </div>
     <div class="ops-layout">
       <div class="ops-filterbar">
-        <select class="ops-select" id="complete-studio-filter" onchange="renderSettlementOps()"></select>
+        <select class="ops-select" id="complete-studio-filter" onchange="changeCompleteStudioFilter()"></select>
       </div>
       <div class="ops-section">
         <div class="ops-section-head">
           <div class="ops-section-title">완료 처리 대기 <span class="ops-section-count" id="ready-count">0</span></div>
         </div>
         <div class="ops-table-scroll">
-          <table class="ops-table dense">
-            <colgroup><col style="width:34px"><col style="width:150px"><col style="width:126px"><col style="width:128px"><col style="width:82px"><col style="width:84px"><col style="width:116px"><col style="width:58px"><col style="width:82px"><col style="width:74px"><col style="width:76px"><col style="width:106px"><col style="width:96px"><col style="width:72px"><col style="width:96px"><col style="width:112px"><col style="width:96px"><col style="width:116px"><col style="width:120px"><col style="width:94px"></colgroup>
-            <thead><tr><th></th><th>콘텐츠</th><th class="right">제작사</th><th class="right">플랫폼사</th><th class="center">계약타입</th><th class="right">발생월</th><th class="right">플랫폼 지급액</th><th class="right">통화</th><th class="right">계약금 퍼센트</th><th class="right">RS 비율</th><th class="right">원천세 비율</th><th class="right">원천세 금액</th><th class="right">송금 수수료</th><th class="right">환율</th><th class="right">환전 수수료</th><th class="right">실제 입금액</th><th class="right">비에이블 수수료율</th><th class="right">비에이블 수수료 금액</th><th class="right">제작사 정산액</th><th class="center">상태</th></tr></thead>
+          <table class="ops-table">
+            <colgroup><col style="width:34px"><col><col style="width:130px"><col style="width:78px"><col style="width:150px"><col style="width:112px"><col style="width:110px"></colgroup>
+            <thead><tr><th></th><th>제작사</th><th class="right">정산 기준월</th><th class="right">항목 수</th><th class="right">제작사 정산액</th><th class="center">상태</th><th class="center">상세</th></tr></thead>
             <tbody id="ready-tbody"></tbody>
           </table>
         </div>
@@ -958,9 +959,9 @@ td { padding: 9px 12px; vertical-align: middle; }
           <div class="ops-section-title">정산 완료 내역 <span class="ops-section-count" id="completed-count">0</span></div>
         </div>
         <div class="ops-table-scroll">
-          <table class="ops-table dense">
-            <colgroup><col style="width:150px"><col style="width:126px"><col style="width:128px"><col style="width:82px"><col style="width:84px"><col style="width:116px"><col style="width:58px"><col style="width:82px"><col style="width:74px"><col style="width:76px"><col style="width:106px"><col style="width:96px"><col style="width:72px"><col style="width:96px"><col style="width:112px"><col style="width:96px"><col style="width:116px"><col style="width:120px"><col style="width:104px"><col style="width:120px"><col style="width:94px"></colgroup>
-            <thead><tr><th>콘텐츠</th><th class="right">제작사</th><th class="right">플랫폼사</th><th class="center">계약타입</th><th class="right">발생월</th><th class="right">플랫폼 지급액</th><th class="right">통화</th><th class="right">계약금 퍼센트</th><th class="right">RS 비율</th><th class="right">원천세 비율</th><th class="right">원천세 금액</th><th class="right">송금 수수료</th><th class="right">환율</th><th class="right">환전 수수료</th><th class="right">실제 입금액</th><th class="right">비에이블 수수료율</th><th class="right">비에이블 수수료 금액</th><th class="right">제작사 정산액</th><th class="right">완료 처리일</th><th class="right">처리한 관리자</th><th class="center">상태</th></tr></thead>
+          <table class="ops-table">
+            <colgroup><col><col style="width:130px"><col style="width:78px"><col style="width:150px"><col style="width:112px"><col style="width:128px"><col style="width:112px"><col style="width:110px"></colgroup>
+            <thead><tr><th>제작사</th><th class="right">정산 기준월</th><th class="right">항목 수</th><th class="right">제작사 정산액</th><th class="right">완료 처리일</th><th class="right">처리한 관리자</th><th class="center">상태</th><th class="center">상세</th></tr></thead>
             <tbody id="completed-tbody"></tbody>
           </table>
         </div>
@@ -985,7 +986,6 @@ td { padding: 9px 12px; vertical-align: middle; }
       </div>
       <div class="settlement-modal-body" id="settlement-modal-body"></div>
       <div class="settlement-modal-foot">
-        <button class="btn btn-primary" onclick="closeSettlementDetailModal()">확인했습니다</button>
       </div>
     </div>
   </div>
@@ -1723,6 +1723,52 @@ function applyCompleteFilters(rows) {
   );
 }
 
+function groupIdFor(studio, period) {
+  return `${studio}__${period}`.replace(/[^a-zA-Z0-9_-]/g, '_');
+}
+
+function settlementAdminForRows(rows) {
+  return rows.find((row) => row.completedBy)?.completedBy || rows.find((row) => row.scheduledBy)?.scheduledBy || 'Lee · Admin';
+}
+
+function groupSettlementRows(rows) {
+  const groups = new Map();
+  rows.forEach((row) => {
+    const key = `${row.studio}||${row.period}`;
+    if (!groups.has(key)) {
+      groups.set(key, {
+        id: groupIdFor(row.studio, row.period),
+        studio: row.studio,
+        period: row.period,
+        status: row.status,
+        rows: [],
+        amount: 0,
+        completedAt: row.completedAt || '',
+        admin: settlementAdminForRows([row])
+      });
+    }
+    const group = groups.get(key);
+    group.rows.push(row);
+    group.amount += row.amount;
+    group.completedAt = group.completedAt || row.completedAt || '';
+    group.admin = settlementAdminForRows(group.rows);
+  });
+  return Array.from(groups.values());
+}
+
+function findSettlementGroup(source, groupId) {
+  const rows = source === 'ready'
+    ? opsReadyRows
+    : source === 'completed'
+      ? opsCompletedRows
+      : opsProgressRows;
+  return groupSettlementRows(rows).find((group) => group.id === groupId);
+}
+
+function groupDetailButton(source, group) {
+  return `<button class="ops-detail-btn" onclick="openSettlementGroupModal('${source}','${group.id}')">상세내역 보기</button>`;
+}
+
 function renderDraftRows() {
   const studio = processStudioFilter();
   const rows = studio === '제작사 전체'
@@ -1747,60 +1793,62 @@ function renderDraftRows() {
 }
 
 function renderProgressRows() {
-  const rows = opsProgressRows.filter((row) => row.status === 'SCHEDULED');
-  document.getElementById('progress-count').textContent = rows.length;
-  document.getElementById('progress-tbody').innerHTML = rows.length ? rows.map((row) => `
+  const groups = groupSettlementRows(opsProgressRows.filter((row) => row.status === 'SCHEDULED'));
+  document.getElementById('progress-count').textContent = groups.length;
+  document.getElementById('progress-tbody').innerHTML = groups.length ? groups.map((group) => `
     <tr>
-      <td>${opsContentCell(row)}</td>
-      <td class="right ops-muted">${row.studio}</td>
-      <td class="right ops-muted">${row.platform}</td>
-      <td class="center">${typeBadge(row.type)}</td>
-      ${opsPaymentCells(row)}
-      <td class="center">${statusBadge(row.status)}</td>
-    </tr>`).join('') : emptyRow(19, '확인 대기중인 정산이 없습니다');
+      <td><strong>${group.studio}</strong></td>
+      <td class="right ops-muted ops-mono">${group.period}</td>
+      <td class="right ops-mono">${group.rows.length}건</td>
+      <td class="right ops-amount">${formatWon(group.amount)}</td>
+      <td class="right ops-muted">${group.admin}</td>
+      <td class="center">${statusBadge(group.status)}</td>
+      <td class="center">${groupDetailButton('progress', group)}</td>
+    </tr>`).join('') : emptyRow(7, '확인 대기중인 정산이 없습니다');
 }
 
 function renderReadyRows() {
-  const rows = applyCompleteFilters(opsReadyRows);
-  document.getElementById('ready-count').textContent = rows.length;
-  document.getElementById('ready-tbody').innerHTML = rows.length ? rows.map((row) => `
+  const groups = groupSettlementRows(applyCompleteFilters(opsReadyRows));
+  document.getElementById('ready-count').textContent = groups.length;
+  document.getElementById('ready-tbody').innerHTML = groups.length ? groups.map((group) => `
     <tr>
-      <td><input class="ops-check" type="checkbox" ${selectedReadyRows[row.id] ? 'checked' : ''} onchange="toggleOpsSelection('ready','${row.id}',this.checked)" /></td>
-      <td>${opsContentCell(row)}</td>
-      <td class="right ops-muted">${row.studio}</td>
-      <td class="right ops-muted">${row.platform}</td>
-      <td class="center">${typeBadge(row.type)}</td>
-      ${opsPaymentCells(row)}
+      <td><input class="ops-check" type="checkbox" ${selectedReadyRows[group.id] ? 'checked' : ''} onchange="toggleOpsSelection('ready','${group.id}',this.checked)" /></td>
+      <td><strong>${group.studio}</strong></td>
+      <td class="right ops-muted ops-mono">${group.period}</td>
+      <td class="right ops-mono">${group.rows.length}건</td>
+      <td class="right ops-amount">${formatWon(group.amount)}</td>
       <td class="center">${statusBadge('READY')}</td>
-    </tr>`).join('') : emptyRow(20, '완료 처리 대상이 없습니다');
-  const selected = opsReadyRows.filter((row) => selectedReadyRows[row.id]);
+      <td class="center">${groupDetailButton('ready', group)}</td>
+    </tr>`).join('') : emptyRow(7, '완료 처리 대상이 없습니다');
+  const selectedGroups = groups.filter((group) => selectedReadyRows[group.id]);
+  const selected = selectedGroups.flatMap((group) => group.rows);
   const sum = selected.reduce((total, row) => total + row.amount, 0);
-  document.getElementById('ready-selected-count').textContent = selected.length;
+  document.getElementById('ready-selected-count').textContent = selectedGroups.length;
   document.getElementById('ready-selected-sum').textContent = selected.length ? `· 합계 ${formatWon(sum)}` : '';
-  document.getElementById('complete-selected-btn').disabled = selected.length === 0;
+  document.getElementById('complete-selected-btn').disabled = selectedGroups.length === 0;
 }
 
 function renderCompletedRows() {
-  const rows = opsCompletedRows;
-  const totalPages = Math.max(1, Math.ceil(rows.length / completedPageSize));
+  const groups = groupSettlementRows(opsCompletedRows);
+  const totalPages = Math.max(1, Math.ceil(groups.length / completedPageSize));
   if (completedPage > totalPages) completedPage = totalPages;
-  const pageRows = rows.slice((completedPage - 1) * completedPageSize, completedPage * completedPageSize);
-  document.getElementById('completed-count').textContent = rows.length;
-  document.getElementById('completed-tbody').innerHTML = pageRows.length ? pageRows.map((row) => `
+  const pageGroups = groups.slice((completedPage - 1) * completedPageSize, completedPage * completedPageSize);
+  document.getElementById('completed-count').textContent = groups.length;
+  document.getElementById('completed-tbody').innerHTML = pageGroups.length ? pageGroups.map((group) => `
     <tr>
-      <td>${opsContentCell(row)}</td>
-      <td class="right ops-muted">${row.studio}</td>
-      <td class="right ops-muted">${row.platform}</td>
-      <td class="center">${typeBadge(row.type)}</td>
-      ${opsPaymentCells(row)}
-      <td class="right ops-muted ops-mono">${row.completedAt || '—'}</td>
-      <td class="right ops-muted">${row.completedBy || '—'}</td>
-      <td class="center">${statusBadge(row.status)}</td>
-    </tr>`).join('') : emptyRow(21, '완료된 정산이 없습니다');
-  const start = rows.length ? (completedPage - 1) * completedPageSize + 1 : 0;
-  const end = Math.min(completedPage * completedPageSize, rows.length);
-  document.getElementById('completed-pagebar').innerHTML = rows.length ? `
-    <span class="ops-footer-sum">${start}-${end} / ${rows.length}</span>
+      <td><strong>${group.studio}</strong></td>
+      <td class="right ops-muted ops-mono">${group.period}</td>
+      <td class="right ops-mono">${group.rows.length}건</td>
+      <td class="right ops-amount">${formatWon(group.amount)}</td>
+      <td class="right ops-muted ops-mono">${group.completedAt || '—'}</td>
+      <td class="right ops-muted">${group.admin}</td>
+      <td class="center">${statusBadge('COMPLETED')}</td>
+      <td class="center">${groupDetailButton('completed', group)}</td>
+    </tr>`).join('') : emptyRow(8, '완료된 정산이 없습니다');
+  const start = groups.length ? (completedPage - 1) * completedPageSize + 1 : 0;
+  const end = Math.min(completedPage * completedPageSize, groups.length);
+  document.getElementById('completed-pagebar').innerHTML = groups.length ? `
+    <span class="ops-footer-sum">${start}-${end} / ${groups.length}</span>
     <div class="ops-spacer"></div>
     <button class="page-btn" ${completedPage === 1 ? 'disabled' : ''} onclick="setCompletedPage(${completedPage - 1})">이전</button>
     ${Array.from({ length: totalPages }).map((_, i) => `<button class="page-btn ${completedPage === i + 1 ? 'active' : ''}" onclick="setCompletedPage(${i + 1})">${i + 1}</button>`).join('')}
@@ -1818,6 +1866,11 @@ function renderSettlementOps() {
 
 function changeProcessStudioFilter() {
   selectedDraftRows = {};
+  renderSettlementOps();
+}
+
+function changeCompleteStudioFilter() {
+  selectedReadyRows = {};
   renderSettlementOps();
 }
 
@@ -1914,9 +1967,11 @@ function confirmProcessSelectedDrafts() {
 }
 
 function completeSelectedReady() {
-  const moving = opsReadyRows.filter((row) => selectedReadyRows[row.id]);
+  const movingGroups = groupSettlementRows(opsReadyRows).filter((group) => selectedReadyRows[group.id]);
+  const movingIds = new Set(movingGroups.flatMap((group) => group.rows.map((row) => row.id)));
+  const moving = opsReadyRows.filter((row) => movingIds.has(row.id));
   if (!moving.length) return;
-  opsReadyRows = opsReadyRows.filter((row) => !selectedReadyRows[row.id]);
+  opsReadyRows = opsReadyRows.filter((row) => !movingIds.has(row.id));
   opsCompletedRows = moving.map((row) => ({ ...row, status: 'COMPLETED', completedAt: '2025-04-08', completedBy: 'Lee · Admin' })).concat(opsCompletedRows);
   selectedReadyRows = {};
   completedPage = 1;
@@ -1973,6 +2028,81 @@ function openSettlementDetailModal(id) {
       </div>
     </div>
   `).join('');
+  document.getElementById('settlement-detail-modal').classList.add('show');
+}
+
+function settlementGroupDetailTable(rows) {
+  const detailRows = rows.map(reviewDetailForRow);
+  const totalProducer = detailRows.reduce((sum, row) => sum + row.amount, 0);
+  return `
+    <div class="process-review-table-wrap">
+      <table class="process-review-table" style="min-width:1800px">
+        <thead>
+          <tr>
+            <th class="text-cell">콘텐츠</th>
+            <th class="text-cell">플랫폼사</th>
+            <th>계약타입</th>
+            <th>발생월</th>
+            <th>플랫폼 지급액</th>
+            <th>통화</th>
+            <th>계약금 %</th>
+            <th>RS 비율</th>
+            <th>원천세 비율</th>
+            <th>원천세 금액</th>
+            <th>송금 수수료</th>
+            <th>환율</th>
+            <th>환전 수수료</th>
+            <th>실제 입금액</th>
+            <th>비에이블 수수료율</th>
+            <th>비에이블 수수료 금액</th>
+            <th>제작사 정산액</th>
+            <th>상태</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${detailRows.map((row) => `
+            <tr>
+              <td class="text-cell">${row.title}</td>
+              <td class="text-cell">${row.platform}</td>
+              <td>${row.type}</td>
+              <td>${row.period}</td>
+              <td>${formatCurrencyAmount(row.platformPayOriginal, row.currency)}</td>
+              <td>${row.currency}</td>
+              <td>${row.depositRate}</td>
+              <td>${row.rsRate}</td>
+              <td>${row.whtRate}</td>
+              <td>${formatWon(row.wht)}</td>
+              <td>${formatWon(row.wireFee)}</td>
+              <td>${row.fxRate.toLocaleString('ko-KR')}</td>
+              <td>${formatWon(row.fxFee)}</td>
+              <td>${formatWon(row.krwIn)}</td>
+              <td>${row.bableRate}</td>
+              <td>${formatWon(row.bableFee)}</td>
+              <td class="producer-pay">${formatWon(row.amount)}</td>
+              <td>${statusBadge(row.status)}</td>
+            </tr>
+          `).join('')}
+          <tr class="subtotal-row">
+            <td class="text-cell" colspan="16">제작사 정산액 합계</td>
+            <td class="producer-pay">${formatWon(totalProducer)}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function openSettlementGroupModal(source, groupId) {
+  const group = findSettlementGroup(source, groupId);
+  if (!group) return;
+  const total = group.rows.reduce((sum, row) => sum + row.amount, 0);
+  document.getElementById('settlement-modal-poster').style.background = posterColor(group.id);
+  document.getElementById('settlement-modal-poster').textContent = posterInitials(group.studio);
+  document.getElementById('settlement-modal-title').textContent = `${group.studio} 정산 상세`;
+  document.getElementById('settlement-modal-sub').innerHTML = `정산 기준월 <span class="ops-mono">${group.period}</span> · ${group.rows.length}건 · ${settlementAdminForRows(group.rows)}`;
+  document.getElementById('settlement-modal-amount').textContent = formatWon(total);
+  document.getElementById('settlement-modal-body').innerHTML = settlementGroupDetailTable(group.rows);
   document.getElementById('settlement-detail-modal').classList.add('show');
 }
 
