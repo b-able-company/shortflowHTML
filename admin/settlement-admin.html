@@ -118,6 +118,8 @@ td { padding: 9px 12px; vertical-align: middle; }
 .fg input[readonly] { background: #f7f6f2; color: #aaa; }
 .fg input:disabled, .fg select:disabled { background: #f7f6f2; color: #bbb; cursor: not-allowed; }
 .fg-span-2 { grid-column: span 2; }
+.amount-currency-field { display: grid; grid-template-columns: minmax(0, 1fr) 76px; gap: 6px; }
+.amount-currency-field select { min-width: 76px; }
 .contract-form-section { border: 0.5px solid #eeede8; border-radius: 8px; background: #fff; padding: 13px 14px 14px; margin-bottom: 14px; }
 .contract-form-section:last-child { margin-bottom: 0; }
 .form-subtitle { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 11px; padding-bottom: 7px; border-bottom: 0.5px solid #f0efe9; font-size: 12px; font-weight: 600; color: #333; }
@@ -690,13 +692,15 @@ td { padding: 9px 12px; vertical-align: middle; }
                       </select>
                     </div>
                     <div class="fg"><label>RS 비율 %</label><input id="new-rs-rate" type="number" min="0" max="100" step="0.1" placeholder="RS / MG+RS 선택 시 입력" disabled /></div>
+                    <div class="fg"><label>계약 금액</label><input id="new-contract-amount" type="number" disabled placeholder="MG, Flat Fee만 해당" /></div>
                   </div>
                 </div>
                 <div class="contract-form-section">
                   <div class="form-subtitle">일정</div>
                   <div class="form-grid">
-                    <div class="fg"><label>릴리즈 일자</label><input type="date" /></div>
-                    <div class="fg"><label>기간 (개월)</label><input type="number" min="1" step="1" placeholder="예: 12" /></div>
+                    <div class="fg"><label>릴리즈 일자</label><input id="new-release-date" type="date" /></div>
+                    <div class="fg"><label>릴리즈 만료일</label><input id="new-release-end-date" type="date" /></div>
+                    <div class="fg"><label>기간 (개월)</label><input id="new-term-months" type="number" min="1" step="1" placeholder="예: 12" /></div>
                   </div>
                 </div>
               </div>
@@ -758,12 +762,14 @@ td { padding: 9px 12px; vertical-align: middle; }
                       </select>
                     </div>
                     <div class="fg"><label>RS 비율 %</label><input id="cd-rs-rate" type="number" min="0" max="100" step="0.1" /></div>
+                    <div class="fg"><label>계약 금액</label><input id="cd-contract-amount" type="number" disabled placeholder="MG, Flat Fee만 해당" /></div>
                   </div>
                 </div>
                 <div class="contract-form-section">
                   <div class="form-subtitle">일정</div>
                   <div class="form-grid">
                     <div class="fg"><label>릴리즈 일자</label><input id="cd-release-date" type="date" /></div>
+                    <div class="fg"><label>릴리즈 만료일</label><input id="cd-release-end-date" type="date" /></div>
                     <div class="fg"><label>기간 (개월)</label><input id="cd-term-months" type="number" min="1" step="1" /></div>
                   </div>
                 </div>
@@ -782,9 +788,8 @@ td { padding: 9px 12px; vertical-align: middle; }
                       <div class="form-subtitle">플랫폼 지급</div>
                       <div class="data-grid">
                         <div class="fg"><label>발생월</label><input id="flat-month" type="month" value="2025-04" /></div>
-                        <div class="fg"><label>플랫폼 지급액</label><input id="flat-platform-amount" type="number" value="15000" /></div>
-                        <div class="fg"><label>통화</label><select><option>USD</option><option>KRW</option></select></div>
-                        <div class="fg"><label>계약금 %</label><input type="number" value="100" /></div>
+                        <div class="fg"><label>플랫폼 입금일</label><input id="flat-paid-date" type="date" value="2025-05-10" /></div>
+                        <div class="fg"><label>플랫폼 지급액</label><div class="amount-currency-field"><input id="flat-platform-amount" type="number" value="15000" /><select><option>USD</option><option>KRW</option></select></div></div>
                       </div>
                     </div>
                     <div class="contract-form-section">
@@ -824,9 +829,8 @@ td { padding: 9px 12px; vertical-align: middle; }
                       <div class="form-subtitle">플랫폼 지급</div>
                       <div class="data-grid">
                         <div class="fg"><label>발생월</label><input id="mg-month" type="month" value="2025-04" /></div>
-                        <div class="fg"><label>플랫폼 지급액</label><input id="mg-platform-amount" type="number" value="30000" /></div>
-                        <div class="fg"><label>통화</label><select><option>USD</option><option>KRW</option></select></div>
-                        <div class="fg"><label>계약금 %</label><input type="number" value="50" /></div>
+                        <div class="fg"><label>플랫폼 입금일</label><input id="mg-paid-date" type="date" value="2025-05-10" /></div>
+                        <div class="fg"><label>플랫폼 지급액</label><div class="amount-currency-field"><input id="mg-platform-amount" type="number" value="30000" /><select><option>USD</option><option>KRW</option></select></div></div>
                       </div>
                     </div>
                     <div class="contract-form-section">
@@ -898,8 +902,8 @@ td { padding: 9px 12px; vertical-align: middle; }
         </div>
         <div class="ops-table-scroll">
           <table class="ops-table dense">
-            <colgroup><col style="width:34px"><col style="width:150px"><col style="width:126px"><col style="width:128px"><col style="width:82px"><col style="width:84px"><col style="width:116px"><col style="width:58px"><col style="width:82px"><col style="width:74px"><col style="width:76px"><col style="width:106px"><col style="width:96px"><col style="width:72px"><col style="width:96px"><col style="width:112px"><col style="width:96px"><col style="width:116px"><col style="width:120px"><col style="width:94px"></colgroup>
-            <thead><tr><th></th><th>콘텐츠</th><th class="right">제작사</th><th class="right">플랫폼사</th><th class="center">계약타입</th><th class="right">발생월</th><th class="right">플랫폼 지급액</th><th class="right">통화</th><th class="right">계약금 퍼센트</th><th class="right">RS 비율</th><th class="right">원천세 비율</th><th class="right">원천세 금액</th><th class="right">송금 수수료</th><th class="right">환율</th><th class="right">환전 수수료</th><th class="right">실제 입금액</th><th class="right">비에이블 수수료율</th><th class="right">비에이블 수수료 금액</th><th class="right">제작사 정산액</th><th class="center">상태</th></tr></thead>
+            <colgroup><col style="width:34px"><col style="width:150px"><col style="width:126px"><col style="width:128px"><col style="width:82px"><col style="width:84px"><col style="width:104px"><col style="width:116px"><col style="width:74px"><col style="width:76px"><col style="width:106px"><col style="width:96px"><col style="width:72px"><col style="width:96px"><col style="width:112px"><col style="width:96px"><col style="width:116px"><col style="width:120px"><col style="width:94px"></colgroup>
+            <thead><tr><th></th><th>콘텐츠</th><th class="right">제작사</th><th class="right">플랫폼사</th><th class="center">계약타입</th><th class="right">발생월</th><th class="right">플랫폼 입금일</th><th class="right">플랫폼 지급액</th><th class="right">RS 비율</th><th class="right">원천세 비율</th><th class="right">원천세 금액</th><th class="right">송금 수수료</th><th class="right">환율</th><th class="right">환전 수수료</th><th class="right">실제 입금액</th><th class="right">비에이블 수수료율</th><th class="right">비에이블 수수료 금액</th><th class="right">제작사 정산액</th><th class="center">상태</th></tr></thead>
             <tbody id="draft-tbody"></tbody>
           </table>
         </div>
@@ -1009,23 +1013,27 @@ td { padding: 9px 12px; vertical-align: middle; }
           <p class="process-review-section-meta">플랫폼별 지급 및 공제 기준</p>
         </div>
         <div class="process-review-table-wrap">
-          <table class="process-review-table">
+          <table class="process-review-table" style="min-width:1900px">
             <thead>
               <tr>
                 <th class="text-cell">콘텐츠</th>
-                <th class="text-cell">플랫폼</th>
-                <th>발생월/분기</th>
+                <th>제작사</th>
+                <th>플랫폼사</th>
+                <th>계약타입</th>
+                <th>발생월</th>
+                <th>플랫폼 입금일</th>
                 <th>플랫폼 지급액</th>
-                <th>계약금 %</th>
+                <th>RS 비율</th>
                 <th>원천세 비율</th>
                 <th>원천세 금액</th>
                 <th>송금 수수료</th>
                 <th>환율</th>
                 <th>환전 수수료</th>
                 <th>실제 입금액</th>
-                <th>Bable 수수료율</th>
-                <th>Bable 수수료 금액</th>
+                <th>비에이블 수수료율</th>
+                <th>비에이블 수수료 금액</th>
                 <th>제작사 정산액</th>
+                <th>상태</th>
               </tr>
             </thead>
             <tbody id="process-review-rows"></tbody>
@@ -1120,18 +1128,27 @@ function syncNewContractContent() {
 function syncNewContractType() {
   const type = document.getElementById('new-contract-type').value;
   const rsRate = document.getElementById('new-rs-rate');
+  const contractAmount = document.getElementById('new-contract-amount');
   const hasRs = type === 'RS' || type === 'MG_RS';
+  const isFlatOrMg = type === 'FLAT_FEE' || type === 'MG_RS';
   rsRate.disabled = !hasRs;
   if (!hasRs) rsRate.value = '';
+  contractAmount.disabled = !isFlatOrMg;
+  if (!isFlatOrMg) contractAmount.value = '';
 }
 
 function syncDetailContractType() {
   const type = document.getElementById('cd-contract-type').value;
   const rsRate = document.getElementById('cd-rs-rate');
+  const contractAmount = document.getElementById('cd-contract-amount');
   const hasRs = type === 'RS' || type === 'MG_RS';
+  const isFlatOrMg = type === 'FLAT_FEE' || type === 'MG_RS';
   rsRate.disabled = !contractInfoEditing || !hasRs;
   rsRate.readOnly = !contractInfoEditing;
+  contractAmount.disabled = !contractInfoEditing || !isFlatOrMg;
+  contractAmount.readOnly = !contractInfoEditing;
   if (!hasRs) rsRate.value = '';
+  if (!isFlatOrMg) contractAmount.value = '';
   configureContractDataTabs(type);
   if (hasRs && document.getElementById('rs-quarter-list') && !document.getElementById('rs-quarter-list').children.length) {
     addQuarterRow();
@@ -1191,6 +1208,7 @@ function saveContractInfo() {
   contract.type = type;
   contract.exclusive = document.getElementById('cd-exclusive').value;
   contract.rsRate = type === 'RS' || type === 'MG_RS' ? Number(document.getElementById('cd-rs-rate').value) || null : null;
+  contract.contractAmount = type === 'FLAT_FEE' || type === 'MG_RS' ? Number(document.getElementById('cd-contract-amount').value) || null : null;
   contract.date = document.getElementById('cd-release-date').value;
   contract.termMonths = Number(document.getElementById('cd-term-months').value) || '';
   const headerSub = document.querySelector('#cd-title .dh-sub');
@@ -1214,6 +1232,7 @@ function defaultSettlementData(contract, kind) {
   const status = contract.id % 2 === 0 ? '완료' : '예정';
   return {
     month: '2025-04',
+    paidDate: platformAmount ? '2025-05-10' : '',
     platformAmount: platformAmount ? String(platformAmount) : '',
     depositAmount: platformAmount ? String(deposit) : '',
     producerAmount: platformAmount ? String(producer) : '',
@@ -1261,12 +1280,14 @@ function setSettlementDataMode(kind, mode) {
 function syncSettlementSummary(kind, persist = true) {
   const month = document.getElementById(`${kind}-month`)?.value || '—';
   const platformAmount = document.getElementById(`${kind}-platform-amount`)?.value || '';
+  const paidDate = document.getElementById(`${kind}-paid-date`)?.value || '';
   const depositAmount = document.getElementById(`${kind}-deposit-amount`)?.value || '';
   const producerAmount = document.getElementById(`${kind}-producer-amount`)?.value || '';
   const status = document.getElementById(`${kind}-settlement-status`)?.value || '예정';
   const state = settlementDataState[`${selId}:${kind}`];
   if (state && persist) {
     state.month = month;
+    state.paidDate = paidDate;
     state.platformAmount = platformAmount;
     state.depositAmount = depositAmount;
     state.producerAmount = producerAmount;
@@ -1285,6 +1306,8 @@ function fillSettlementDataForm(kind, data) {
     select.selectedIndex = selected >= 0 ? selected : 0;
   });
   document.getElementById(`${kind}-month`).value = data.month || '';
+  const paidDate = document.getElementById(`${kind}-paid-date`);
+  if (paidDate) paidDate.value = data.paidDate || '';
   document.getElementById(`${kind}-platform-amount`).value = data.platformAmount || '';
   document.getElementById(`${kind}-deposit-amount`).value = data.depositAmount || '';
   document.getElementById(`${kind}-producer-amount`).value = data.producerAmount || '';
@@ -1395,12 +1418,12 @@ function saveRsQuarter(btn) {
   const inputs = card.querySelectorAll('.data-edit-body input');
   const year = inputs[0]?.value || '—';
   const quarter = card.querySelector('.data-edit-body select')?.value || '—';
-  const platformAmount = inputs[1]?.value || '';
-  const rsRate = inputs[2]?.value || '';
+  const paidDate = inputs[1]?.value || '';
+  const platformAmount = inputs[2]?.value || '';
   const producerAmount = inputs[11]?.value || '';
   const list = document.getElementById('rs-quarter-list');
   const slot = document.getElementById('rs-create-slot');
-  const savedRow = quarterRowTemplate(0, year, quarter, rsRate, false, platformAmount, producerAmount);
+  const savedRow = quarterRowTemplate(0, year, quarter, false, platformAmount, producerAmount, paidDate);
   if (list) list.insertAdjacentHTML('afterbegin', savedRow);
   if (slot) slot.innerHTML = '';
 }
@@ -1410,11 +1433,12 @@ function collapseDataForms() {
   document.querySelectorAll('#contract-detail .data-summary.with-action .btn').forEach((btn) => setToggleButtonLabel(btn, false));
 }
 
-function quarterRowTemplate(index, year = '2025', quarter = 'Q1', rsRate = '', isNew = false, platformAmountValue = '4840', producerAmountValue = '5537220') {
+function quarterRowTemplate(index, year = '2025', quarter = 'Q1', isNew = false, platformAmountValue = '4840', producerAmountValue = '5537220', paidDateValue = '2025-05-10') {
   const readonlyAttr = isNew ? '' : ' readonly';
   const disabledAttr = isNew ? '' : ' disabled';
   const platformAmount = isNew ? '' : platformAmountValue;
   const producerAmount = isNew ? '' : producerAmountValue;
+  const paidDate = isNew ? '' : paidDateValue;
   const periodLabel = `${year} ${quarter}`;
   const producerLabel = producerAmount ? `₩${Number(producerAmount).toLocaleString('ko-KR')}` : '—';
   const actions = isNew
@@ -1448,9 +1472,8 @@ function quarterRowTemplate(index, year = '2025', quarter = 'Q1', rsRate = '', i
             <div class="data-grid">
               <div class="fg"><label>발생 연도</label><input type="number" value="${isNew ? '' : year}"${readonlyAttr} /></div>
               <div class="fg"><label>발생 분기</label><select${disabledAttr}><option ${quarter === 'Q1' ? 'selected' : ''}>Q1</option><option ${quarter === 'Q2' ? 'selected' : ''}>Q2</option><option ${quarter === 'Q3' ? 'selected' : ''}>Q3</option><option ${quarter === 'Q4' ? 'selected' : ''}>Q4</option></select></div>
-              <div class="fg"><label>플랫폼 지급액</label><input type="number" value="${platformAmount}"${readonlyAttr} /></div>
-              <div class="fg"><label>통화</label><select${disabledAttr}><option>USD</option><option>KRW</option></select></div>
-              <div class="fg"><label>RS 비율 %</label><input type="number" min="0" max="100" step="0.1" value="${rsRate}"${readonlyAttr} /></div>
+              <div class="fg"><label>플랫폼 입금일</label><input type="date" value="${paidDate}"${readonlyAttr} /></div>
+              <div class="fg"><label>플랫폼 지급액</label><div class="amount-currency-field"><input type="number" value="${platformAmount}"${readonlyAttr} /><select${disabledAttr}><option>USD</option><option>KRW</option></select></div></div>
             </div>
           </div>
           <div class="contract-form-section">
@@ -1485,8 +1508,8 @@ function renderRsQuarterRows(contract) {
   if (!list) return;
   if (slot) slot.innerHTML = '';
   list.innerHTML =
-    quarterRowTemplate(1, '2025', 'Q1', contract.rsRate ?? '') +
-    quarterRowTemplate(2, '2025', 'Q2', contract.rsRate ?? '');
+    quarterRowTemplate(1, '2025', 'Q1') +
+    quarterRowTemplate(2, '2025', 'Q2');
 }
 
 function addQuarterRow(isNew = false) {
@@ -1494,12 +1517,11 @@ function addQuarterRow(isNew = false) {
   if (!target) return;
   const list = document.getElementById('rs-quarter-list');
   const next = list.children.length + 1;
-  const rsRate = document.getElementById('cd-rs-rate')?.value || '';
   if (isNew) {
-    target.innerHTML = quarterRowTemplate(next, '2025', 'Q1', rsRate, true);
+    target.innerHTML = quarterRowTemplate(next, '2025', 'Q1', true);
     return;
   }
-  target.insertAdjacentHTML('beforeend', quarterRowTemplate(next, '2025', 'Q1', rsRate));
+  target.insertAdjacentHTML('beforeend', quarterRowTemplate(next, '2025', 'Q1'));
 }
 
 function resetNewContractForm() {
@@ -1562,6 +1584,7 @@ function selectContract(id) {
   document.getElementById('cd-contract-type').value = c.type || 'FLAT_FEE';
   document.getElementById('cd-exclusive').value = c.exclusive || 'exclusive';
   document.getElementById('cd-rs-rate').value = c.rsRate ?? '';
+  document.getElementById('cd-contract-amount').value = c.contractAmount ?? '';
   document.getElementById('cd-release-date').value = c.date || '';
   document.getElementById('cd-term-months').value = c.termMonths || '';
   contractInfoEditing = false;
@@ -1673,9 +1696,8 @@ function opsPaymentCells(row) {
   const detail = reviewDetailForRow(row);
   return `
     <td class="right ops-muted ops-mono">${detail.period}</td>
+    <td class="right ops-muted ops-mono">${detail.platformPaidAt}</td>
     <td class="right ops-mono">${formatCurrencyAmount(detail.platformPayOriginal, detail.currency)}</td>
-    <td class="right ops-muted ops-mono">${detail.currency}</td>
-    <td class="right ops-muted ops-mono">${detail.depositRate}</td>
     <td class="right ops-muted ops-mono">${detail.rsRate}</td>
     <td class="right ops-muted ops-mono">${detail.whtRate}</td>
     <td class="right ops-mono">${formatWon(detail.wht)}</td>
@@ -1898,8 +1920,8 @@ function reviewDetailForRow(row) {
   const currency = row.currency || 'USD';
   const platformPay = krwIn + wht + wireFee + fxFee;
   const platformPayOriginal = Math.round(platformPay / fxRate);
-  const depositRate = row.type === 'Flat Fee' ? '100%' : row.type === 'MG+RS' ? '50%' : '—';
-  return { ...row, platformPay, platformPayOriginal, currency, depositRate, rsRate: rsRateForRow(row), whtRate: '10%', wht, wireFee, fxRate, fxFee, krwIn, bableRate: '7%', bableFee };
+  const platformPaidAt = row.platformPaidAt || '2025-05-10';
+  return { ...row, platformPay, platformPayOriginal, platformPaidAt, currency, rsRate: rsRateForRow(row), whtRate: '10%', wht, wireFee, fxRate, fxFee, krwIn, bableRate: '7%', bableFee };
 }
 
 function renderProcessReviewRows(rows) {
@@ -1907,10 +1929,13 @@ function renderProcessReviewRows(rows) {
   const body = detailRows.map((row) => `
     <tr>
       <td class="text-cell">${row.title}</td>
-      <td class="text-cell">${row.platform}</td>
+      <td>${row.studio}</td>
+      <td>${row.platform}</td>
+      <td>${row.type}</td>
       <td>${row.period}</td>
-      <td>${formatWon(row.platformPay)}</td>
-      <td>${row.depositRate}</td>
+      <td>${row.platformPaidAt}</td>
+      <td>${formatCurrencyAmount(row.platformPayOriginal, row.currency)}</td>
+      <td>${row.rsRate}</td>
       <td>${row.whtRate}</td>
       <td>${formatWon(row.wht)}</td>
       <td>${formatWon(row.wireFee)}</td>
@@ -1920,6 +1945,7 @@ function renderProcessReviewRows(rows) {
       <td>${row.bableRate}</td>
       <td>${formatWon(row.bableFee)}</td>
       <td class="producer-pay">${formatWon(row.amount)}</td>
+      <td>${statusBadge(row.status)}</td>
     </tr>
   `).join('');
   const totalKrwIn = detailRows.reduce((sum, row) => sum + row.krwIn, 0);
@@ -1927,13 +1953,14 @@ function renderProcessReviewRows(rows) {
   const totalProducer = detailRows.reduce((sum, row) => sum + row.amount, 0);
   document.getElementById('process-review-rows').innerHTML = `${body}
     <tr class="subtotal-row">
-      <td class="text-cell" colspan="3">전체 합계</td>
+      <td class="text-cell" colspan="7">전체 합계</td>
       <td></td>
-      <td colspan="6"></td>
+      <td colspan="5"></td>
       <td>${formatWon(totalKrwIn)}</td>
       <td></td>
       <td>${formatWon(totalBable)}</td>
       <td class="producer-pay">${formatWon(totalProducer)}</td>
+      <td></td>
     </tr>
   `;
 }
@@ -2043,9 +2070,8 @@ function settlementGroupDetailTable(rows) {
             <th class="text-cell">플랫폼사</th>
             <th>계약타입</th>
             <th>발생월</th>
+            <th>플랫폼 입금일</th>
             <th>플랫폼 지급액</th>
-            <th>통화</th>
-            <th>계약금 %</th>
             <th>RS 비율</th>
             <th>원천세 비율</th>
             <th>원천세 금액</th>
@@ -2066,9 +2092,8 @@ function settlementGroupDetailTable(rows) {
               <td class="text-cell">${row.platform}</td>
               <td>${row.type}</td>
               <td>${row.period}</td>
+              <td>${row.platformPaidAt}</td>
               <td>${formatCurrencyAmount(row.platformPayOriginal, row.currency)}</td>
-              <td>${row.currency}</td>
-              <td>${row.depositRate}</td>
               <td>${row.rsRate}</td>
               <td>${row.whtRate}</td>
               <td>${formatWon(row.wht)}</td>
@@ -2083,7 +2108,7 @@ function settlementGroupDetailTable(rows) {
             </tr>
           `).join('')}
           <tr class="subtotal-row">
-            <td class="text-cell" colspan="16">제작사 정산액 합계</td>
+            <td class="text-cell" colspan="15">제작사 정산액 합계</td>
             <td class="producer-pay">${formatWon(totalProducer)}</td>
             <td></td>
           </tr>
