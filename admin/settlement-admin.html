@@ -93,6 +93,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 .dh-acts { display: flex; gap: 5px; margin-top: 11px; flex-wrap: wrap; }
 .btn { font-size: 11.5px; padding: 5px 11px; border-radius: 6px; border: 0.5px solid #e0dfd9; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; background: #fff; color: #444; }
 .btn:hover { opacity: 0.8; }
+.btn:disabled { opacity: 0.38; cursor: not-allowed; }
 .btn-primary { background: #1a1a18; color: #fff; border-color: #1a1a18; }
 .btn-del { background: #fff; color: #ccc; }
 .btn-close-panel { background: transparent; border: none; color: #bbb; cursor: pointer; font-size: 15px; padding: 2px 5px; }
@@ -109,13 +110,240 @@ td { padding: 9px 12px; vertical-align: middle; }
 .dpanel.active { display: block; }
 
 /* FORM */
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .form-grid.g3 { grid-template-columns: 1fr 1fr 1fr; }
 .fg { display: flex; flex-direction: column; gap: 4px; }
-.fg label { font-size: 10.5px; color: #aaa; font-weight: 500; }
+.fg label { font-size: 10px; color: #b4b2aa; font-weight: 500; }
 .fg input, .fg select { font-size: 12px; padding: 7px 10px; border: 0.5px solid #e0dfd9; border-radius: 6px; background: #fff; color: #1a1a18; outline: none; font-family: inherit; width: 100%; }
 .fg input:focus, .fg select:focus { border-color: #aaa; }
 .fg input[readonly] { background: #f7f6f2; color: #aaa; }
+.fg input:disabled, .fg select:disabled { background: #f7f6f2; color: #bbb; cursor: not-allowed; }
+.fg-span-2 { grid-column: span 2; }
+.contract-form-section { border: 0.5px solid #eeede8; border-radius: 8px; background: #fff; padding: 13px 14px 14px; margin-bottom: 14px; }
+.contract-form-section:last-child { margin-bottom: 0; }
+.form-subtitle { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 11px; padding-bottom: 7px; border-bottom: 0.5px solid #f0efe9; font-size: 12px; font-weight: 600; color: #333; }
+.data-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.data-panel-actions { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 12px; }
+.data-list-title { font-size: 11px; color: #777; font-weight: 600; margin-bottom: 8px; }
+.data-list { margin-bottom: 16px; }
+.data-record { border-bottom: 0.5px solid #f0efe9; }
+.data-record:last-child { border-bottom: none; }
+.data-summary { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; align-items: center; padding: 12px 0; }
+.data-summary.with-action { grid-template-columns: repeat(5, minmax(0, 1fr)) auto; }
+.data-point-label { font-size: 10.5px; color: #aaa; margin-bottom: 4px; }
+.data-point-value { font-size: 12.5px; color: #1a1a18; font-weight: 600; font-family: monospace; }
+.data-point-value.text { font-family: inherit; }
+.data-edit-body { display: none; padding: 14px 0 2px; border-top: 0.5px solid #f0efe9; }
+.data-edit-body.open { display: block; }
+.data-record > .data-edit-body:first-child { border-top: none; padding-top: 0; }
+.data-edit-body .contract-form-section { margin-bottom: 12px; }
+.data-list.data-read-mode .data-edit-body.open { padding-top: 0; }
+.data-list.data-read-mode .contract-form-section { padding-bottom: 6px; }
+.data-list.data-read-mode .data-grid { gap: 14px 18px; }
+.data-list.data-read-mode .fg {
+  gap: 5px;
+  padding-bottom: 10px;
+  border-bottom: 0.5px solid #f2f1ed;
+}
+.data-list.data-read-mode .fg:nth-last-child(-n+3) { border-bottom: none; }
+.data-list.data-read-mode .fg input,
+.data-list.data-read-mode .fg select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border-color: transparent;
+  border-radius: 0;
+  color: #1a1a18;
+  opacity: 1;
+  -webkit-text-fill-color: #1a1a18;
+  padding-left: 0;
+  padding-right: 0;
+  pointer-events: none;
+}
+.data-list.data-read-mode .fg select { background-image: none; }
+.rs-create-slot { margin-bottom: 14px; }
+.rs-create-slot .rs-quarter-card {
+  border: 0.5px solid #dedbd1;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+}
+.rs-create-head {
+  min-height: 42px;
+  padding: 9px 12px;
+  border-bottom: 0.5px solid #eceae3;
+  background: #fbfaf7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.rs-create-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1a1a18;
+}
+.rs-create-slot .rs-quarter-detail {
+  border-top: none;
+}
+.rs-table-head,
+.rs-summary-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) minmax(140px, 1fr) minmax(80px, 0.55fr) 24px;
+  align-items: center;
+  column-gap: 12px;
+}
+.rs-table-head {
+  padding: 7px 12px;
+  border: 0.5px solid #e8e6e0;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  background: #f7f6f2;
+  font-size: 10px;
+  font-weight: 500;
+  color: #aaa;
+}
+.rs-table-list {
+  border: 0.5px solid #e8e6e0;
+  border-radius: 0 0 8px 8px;
+  overflow: visible;
+  background: #fff;
+}
+.rs-table-list .data-record { border-bottom: none; }
+.rs-quarter-card {
+  border-bottom: 0.5px solid #f0efe9;
+  background: #fff;
+  transition: background 0.15s;
+}
+.rs-quarter-card:last-child { border-bottom: none; border-radius: 0 0 8px 8px; }
+.rs-quarter-card.expanded {
+  background: #fbfaf7;
+  box-shadow: inset 0 1px 0 #f0efe9, inset 0 -1px 0 #f0efe9;
+}
+.rs-quarter-card.expanded + .rs-quarter-card { box-shadow: inset 0 1px 0 #f0efe9; }
+.data-summary.with-action.rs-summary-row {
+  min-height: 38px;
+  padding: 8px 12px;
+  grid-template-columns: minmax(120px, 1fr) minmax(140px, 1fr) minmax(80px, 0.55fr) 24px;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.rs-summary-row:hover,
+.rs-quarter-card.expanded .rs-summary-row { background: #fbfaf7; }
+.rs-summary-row .data-point-value { font-size: 12px; font-weight: 500; }
+.rs-summary-action { justify-self: end; color: #aaa; line-height: 1; }
+.rs-summary-action i { font-size: 15px; transition: transform 0.15s; }
+.rs-quarter-card.expanded .rs-summary-action i { transform: rotate(180deg); }
+.rs-quarter-card .data-edit-body {
+  padding: 0 12px 12px;
+  border-top: none;
+}
+.rs-quarter-card .data-edit-body.open {
+  display: block;
+  animation: rsExpand 0.16s ease-out;
+}
+.rs-quarter-detail {
+  border-top: 0.5px solid #eceae3;
+  padding-top: 12px;
+}
+.rs-quarter-detail .contract-form-section {
+  margin-bottom: 10px;
+  padding: 0 0 10px;
+  border: none;
+  border-bottom: 0.5px solid #efede7;
+  border-radius: 0;
+  background: transparent;
+}
+.rs-quarter-detail .contract-form-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.rs-quarter-detail .form-subtitle {
+  margin-bottom: 8px;
+  padding-bottom: 0;
+  border-bottom: none;
+  color: #777;
+  font-size: 11px;
+}
+.rs-quarter-card.rs-read-mode .data-grid { gap: 14px 18px; }
+.rs-quarter-card.rs-read-mode .fg {
+  gap: 5px;
+  padding-bottom: 10px;
+  border-bottom: 0.5px solid #f2f1ed;
+}
+.rs-quarter-card.rs-read-mode .fg:nth-last-child(-n+3) { border-bottom: none; }
+.rs-quarter-card.rs-read-mode:not(.rs-editing) .fg input,
+.rs-quarter-card.rs-read-mode:not(.rs-editing) .fg select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border-color: transparent;
+  border-radius: 0;
+  color: #1a1a18;
+  opacity: 1;
+  -webkit-text-fill-color: #1a1a18;
+  padding-left: 0;
+  padding-right: 0;
+  pointer-events: none;
+}
+.rs-quarter-card.rs-read-mode:not(.rs-editing) .fg select { background-image: none; }
+.rs-quarter-card.rs-editing {
+  background: #fff;
+  box-shadow: inset 0 0 0 1px #d9d6cb;
+}
+.rs-quarter-card.rs-editing .contract-form-section { background: transparent; }
+.rs-quarter-card.rs-editing .fg { border-bottom: none; padding-bottom: 0; }
+.rs-quarter-card.rs-editing .fg input,
+.rs-quarter-card.rs-editing .fg select {
+  appearance: auto;
+  -webkit-appearance: auto;
+  background: #fff;
+  border-color: #d8d5ca;
+  border-radius: 6px;
+  padding: 7px 10px;
+  pointer-events: auto;
+}
+.rs-quarter-card.rs-editing .fg input:read-only {
+  background: #f7f6f2;
+  color: #aaa;
+  pointer-events: none;
+}
+.rs-quarter-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.rs-delete-btn { color: #A32D2D; border-color: #ead7d7; }
+@keyframes rsExpand {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.contract-info-read-mode .form-grid { gap: 14px 18px; }
+.contract-info-read-mode .fg {
+  gap: 5px;
+  padding-bottom: 10px;
+  border-bottom: 0.5px solid #f2f1ed;
+}
+.contract-info-read-mode .form-grid .fg:nth-last-child(-n+2) { border-bottom: none; }
+.contract-info-read-mode .fg input,
+.contract-info-read-mode .fg select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border-color: transparent;
+  border-radius: 0;
+  color: #1a1a18;
+  opacity: 1;
+  -webkit-text-fill-color: #1a1a18;
+  padding-left: 0;
+  padding-right: 0;
+  pointer-events: none;
+}
+.contract-info-read-mode .fg select { background-image: none; }
+.quarter-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
 
 /* SECTION */
 .sec { margin-bottom: 18px; }
@@ -187,6 +415,113 @@ td { padding: 9px 12px; vertical-align: middle; }
 .complete-sub { font-size: 11px; color: #639922; margin-top: 3px; }
 .quarter-note { font-size: 11px; color: #854F0B; background: #FAEEDA; border-radius: 6px; padding: 6px 10px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
 
+/* COMPLETED SETTLEMENTS */
+.completed-layout { flex: 1; overflow-y: auto; padding: 20px 24px; background: #f5f4f0; }
+.completed-card { background: #fff; border: 0.5px solid #e8e6e0; border-radius: 10px; overflow: hidden; }
+.completed-head { padding: 14px 16px; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.completed-title { font-size: 13px; font-weight: 600; color: #1a1a18; }
+.completed-sub { font-size: 11.5px; color: #aaa; margin-top: 3px; }
+.completed-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.completed-table thead th { background: #f7f6f2; padding: 8px 14px; text-align: right; font-size: 10px; font-weight: 500; color: #aaa; border-bottom: 0.5px solid #e8e6e0; }
+.completed-table thead th:first-child,
+.completed-table tbody td:first-child { text-align: left; }
+.completed-table tbody td { padding: 11px 14px; border-bottom: 0.5px solid #f0efe9; text-align: right; font-size: 12px; color: #1a1a18; }
+.completed-table tbody tr:last-child td { border-bottom: none; }
+.completed-amount { font-family: monospace; font-weight: 600; }
+.completed-note { font-size: 11px; color: #aaa; }
+
+/* SETTLEMENT OPERATIONS */
+.ops-layout { flex: 1; overflow-y: auto; padding: 20px 24px; background: #f5f4f0; }
+.ops-filterbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.ops-select { height: 30px; min-width: 150px; font-size: 12px; padding: 5px 28px 5px 10px; border: 0.5px solid #e0dfd9; border-radius: 7px; background: #fff; color: #333; outline: none; font-family: inherit; }
+.ops-section { background: #fff; border: 0.5px solid #e8e6e0; border-radius: 10px; overflow: hidden; margin-bottom: 16px; }
+.ops-section-head { padding: 13px 16px; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ops-section-title { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #1a1a18; }
+.ops-section-count { min-width: 20px; height: 20px; border-radius: 10px; background: #f0efe9; color: #777; font-size: 11px; display: inline-flex; align-items: center; justify-content: center; padding: 0 7px; font-family: monospace; }
+.ops-table-scroll { overflow-x: auto; }
+.ops-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.ops-table thead th { position: static; background: #f7f6f2; padding: 7px 12px; border-bottom: 0.5px solid #e8e6e0; color: #aaa; font-size: 10px; font-weight: 500; text-align: left; }
+.ops-table thead th.right { text-align: right; }
+.ops-table thead th.center { text-align: center; }
+.ops-table tbody tr { cursor: default; border-bottom: 0.5px solid #f0efe9; }
+.ops-table tbody tr:last-child { border-bottom: none; }
+.ops-table tbody tr:hover { background: #fafaf7; }
+.ops-table td { padding: 10px 12px; font-size: 12px; color: #1a1a18; vertical-align: middle; }
+.ops-table td.right { text-align: right; }
+.ops-table td.center { text-align: center; }
+.ops-table.dense { min-width: 2060px; table-layout: auto; }
+.ops-table.dense thead th { padding: 6px 8px; font-size: 9.5px; white-space: nowrap; }
+.ops-table.dense td { padding: 7px 8px; font-size: 11px; white-space: nowrap; }
+.ops-table.dense .ops-title { max-width: 145px; font-size: 11.5px; }
+.ops-table.dense .ops-muted { font-size: 10.8px; }
+.ops-table.dense .ops-amount { font-size: 11px; }
+.ops-table.dense .ops-poster { width: 26px; height: 26px; border-radius: 5px; font-size: 9px; }
+.ops-check { width: 14px; height: 14px; accent-color: #1a1a18; cursor: pointer; }
+.ops-content { display: flex; align-items: center; min-width: 0; }
+.ops-poster { width: 32px; height: 32px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 10px; font-weight: 600; font-family: monospace; }
+.ops-title { font-size: 12.5px; font-weight: 500; color: #1a1a18; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ops-muted { color: #888; font-size: 12px; }
+.ops-mono { font-family: monospace; font-variant-numeric: tabular-nums; }
+.ops-amount { font-family: monospace; font-weight: 600; font-size: 12.5px; }
+.type-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px; font-size: 10.5px; font-weight: 600; font-family: monospace; white-space: nowrap; }
+.type-mgrs { background: #EFF1FB; color: #3245A6; }
+.type-rs { background: #E8F1EA; color: #1F5A33; }
+.type-flat { background: #F4ECDD; color: #7A5616; }
+.status-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; font-size: 10.5px; font-weight: 600; white-space: nowrap; }
+.status-draft { background: #f0efe9; color: #777; }
+.status-scheduled { background: #FAEEDA; color: #854F0B; }
+.status-ready { background: #E8F1EA; color: #1F5A33; }
+.status-completed { background: #EAF3DE; color: #3B6D11; }
+.ops-empty { padding: 32px 20px; text-align: center; color: #bbb; font-size: 12px; }
+.ops-footer { padding: 12px 16px; border-top: 0.5px solid #e8e6e0; display: flex; align-items: center; gap: 12px; background: #fafaf7; }
+.ops-footer-label { font-size: 12px; color: #444; }
+.ops-footer-sum { font-size: 12px; color: #888; font-family: monospace; }
+.ops-spacer { flex: 1; }
+.ops-pagebar { padding: 11px 16px; border-top: 0.5px solid #e8e6e0; display: flex; align-items: center; gap: 6px; background: #fafaf7; }
+.page-btn { min-width: 28px; height: 28px; padding: 0 9px; border-radius: 6px; border: 0.5px solid #e0dfd9; background: #fff; color: #555; font-size: 11.5px; cursor: pointer; font-family: inherit; }
+.page-btn.active { background: #1a1a18; border-color: #1a1a18; color: #fff; }
+.page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.settlement-modal { position: fixed; inset: 0; z-index: 80; display: none; align-items: center; justify-content: center; padding: 32px; background: rgba(15,17,21,0.45); }
+.settlement-modal.show { display: flex; }
+.settlement-modal-panel { width: min(920px, 100%); max-height: calc(100vh - 64px); background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
+.settlement-modal-head { padding: 16px 20px; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; gap: 12px; }
+.settlement-modal-title { font-size: 16px; font-weight: 700; color: #1a1a18; }
+.settlement-modal-sub { font-size: 12px; color: #888; margin-top: 3px; }
+.settlement-modal-amount { margin-left: auto; text-align: right; }
+.settlement-modal-label { font-size: 10.5px; color: #aaa; font-family: monospace; letter-spacing: 0.04em; text-transform: uppercase; }
+.settlement-modal-value { font-size: 17px; font-weight: 700; font-family: monospace; margin-top: 3px; }
+.settlement-modal-close { width: 30px; height: 30px; border-radius: 6px; border: none; background: #f5f4ee; color: #888; cursor: pointer; }
+.settlement-modal-body { padding: 18px 20px; overflow: auto; background: #fafaf7; }
+.settlement-detail-card { background: #fff; border: 0.5px solid #e8e6e0; border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
+.settlement-detail-head { padding: 11px 13px; border-bottom: 0.5px solid #f0efe9; font-size: 12px; font-weight: 600; color: #333; }
+.settlement-detail-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; }
+.settlement-detail-item { padding: 10px 13px; border-right: 0.5px solid #f0efe9; border-bottom: 0.5px solid #f5f4f0; }
+.settlement-detail-item:nth-child(3n) { border-right: none; }
+.settlement-detail-k { font-size: 10.5px; color: #aaa; margin-bottom: 4px; }
+.settlement-detail-v { font-size: 12.5px; color: #1a1a18; font-weight: 500; }
+.settlement-modal-foot { padding: 12px 20px; border-top: 0.5px solid #e8e6e0; display: flex; justify-content: flex-end; background: #fff; }
+.process-review-panel { width: min(1180px, 100%); }
+.process-review-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
+.process-review-card { background: #fff; border: 0.5px solid #e8e6e0; border-radius: 8px; padding: 11px 12px; }
+.process-review-k { font-size: 10.5px; color: #aaa; margin-bottom: 5px; }
+.process-review-v { font-size: 14px; color: #1a1a18; font-weight: 700; font-family: monospace; }
+.process-review-section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.process-review-section-title { margin: 0; font-size: 12.5px; font-weight: 600; color: #1a1a18; }
+.process-review-section-meta { margin: 0; font-size: 11px; color: #aaa; }
+.process-review-table-wrap { background: #fff; border: 0.5px solid #e8e6e0; border-radius: 8px; overflow: auto; }
+.process-review-table { min-width: 1320px; width: 100%; border-collapse: collapse; }
+.process-review-table th,
+.process-review-table td { padding: 10px 11px; border-bottom: 0.5px solid #f0efe9; white-space: nowrap; font-size: 11.5px; vertical-align: middle; }
+.process-review-table thead th { position: static; background: #f7f6f2; color: #aaa; font-size: 10px; font-weight: 600; text-align: right; }
+.process-review-table thead th.text-cell,
+.process-review-table td.text-cell { text-align: left; font-family: inherit; }
+.process-review-table td { text-align: right; font-family: monospace; font-variant-numeric: tabular-nums; color: #1a1a18; }
+.process-review-table .producer-pay { font-weight: 700; color: #1a1a18; }
+.process-review-table .subtotal-row td { background: #fafaf7; font-weight: 700; border-bottom: none; }
+.process-review-foot-note { margin-right: auto; font-size: 11.5px; color: #888; }
+.process-review-actions { display: flex; align-items: center; gap: 8px; }
+
 /* SAVEBAR */
 .savebar { background: #fff; border-top: 0.5px solid #e8e6e0; padding: 10px 18px; display: flex; justify-content: flex-end; gap: 7px; flex-shrink: 0; }
 .savebar .danger-left { margin-right: auto; color: #A32D2D; border-color: #ead7d7; }
@@ -235,8 +570,9 @@ td { padding: 9px 12px; vertical-align: middle; }
     <div class="nav-label">운영</div>
     <a class="ni active" href="settlement-admin.html"><i class="ti ti-receipt"></i> 정산</a>
     <div class="sub">
-      <a class="ni active" href="#contracts" onclick="switchTab('contracts'); return false;">계약 관리</a>
-      <a class="ni" href="#settlement" onclick="switchTab('settlement'); return false;">정산 처리</a>
+      <a class="ni active" href="#contracts" onclick="switchTab('contracts'); return false;">계약관리</a>
+      <a class="ni" href="#settlement" onclick="switchTab('settlement'); return false;">정산처리</a>
+      <a class="ni" href="#completed" onclick="switchTab('completed'); return false;">정산완료</a>
     </div>
     <a class="ni" href="mail-admin.html"><i class="ti ti-mail"></i> 메일 발송</a>
     <a class="ni" href="audit-log.html"><i class="ti ti-shield-check"></i> 관리 이력</a>
@@ -259,8 +595,9 @@ td { padding: 9px 12px; vertical-align: middle; }
   <!-- ════ 계약 관리 ════ -->
   <div class="view active" id="view-contracts">
     <div class="tabbar">
-      <div class="tab active" onclick="switchTab('contracts')">계약 관리</div>
-      <div class="tab" onclick="switchTab('settlement')">정산 처리</div>
+      <div class="tab active" onclick="switchTab('contracts')">계약관리</div>
+      <div class="tab" onclick="switchTab('settlement')">정산처리</div>
+      <div class="tab" onclick="switchTab('completed')">정산완료</div>
     </div>
     <div class="split">
       <!-- 계약 목록 -->
@@ -311,22 +648,54 @@ td { padding: 9px 12px; vertical-align: middle; }
           <div class="dbody">
             <div class="dpanel active">
               <div class="sec">
-                <div class="sec-title">계약 기본 정보</div>
-                <div class="form-grid">
-                  <div class="fg"><label>콘텐츠 선택 *</label>
-                    <select><option value="">콘텐츠 검색/선택</option><option>The Last Letter (NextWave Studios)</option><option>Reverse Cinderella (OneTake Media)</option><option>Midnight Tokyo Drift (ShortReel)</option></select>
+                <div class="contract-form-section">
+                  <div class="form-subtitle">대상 선택</div>
+                  <div class="form-grid">
+                    <div class="fg"><label>제작사 선택 *</label>
+                      <select id="new-company" onchange="syncNewContractContent()">
+                        <option value="">제작사 선택</option>
+                        <option value="1">NextWave Studios</option>
+                        <option value="2">OneTake Media</option>
+                        <option value="3">PaperLens</option>
+                        <option value="4">BrightFrame</option>
+                      </select>
+                    </div>
+                    <div class="fg"><label>콘텐츠 선택 *</label>
+                      <select id="new-content" disabled>
+                        <option value="">제작사를 먼저 선택하세요</option>
+                      </select>
+                    </div>
+                    <div class="fg"><label>플랫폼사 선택 *</label>
+                      <select><option value="">플랫폼사 선택</option><option>ShortReel (US)</option><option>Viki</option><option>WeTV</option><option>iQIYI</option></select>
+                    </div>
+                    <div class="fg"><label>유통 권역</label><input type="text" placeholder="예: 글로벌, 아시아, 북미" /></div>
                   </div>
-                  <div class="fg"><label>플랫폼사 선택 *</label>
-                    <select><option value="">플랫폼사 선택</option><option>ShortReel (US)</option><option>Viki</option><option>WeTV</option><option>iQIYI</option></select>
-                  </div>
-                  <div class="fg"><label>출시일 <span style="font-size:10px;color:#bbb;font-weight:400">(선택 · 나중에 수정 가능)</span></label><input type="date" /></div>
                 </div>
-              </div>
-              <div class="sec">
-                <div class="sec-title">MG 정보 <span class="sec-title-right">MG 금액과 MG 발생 월은 함께 입력하거나 둘 다 비워야 합니다</span></div>
-                <div class="form-grid">
-                  <div class="fg"><label>MG 금액 (USD)</label><input type="number" placeholder="예: 30000" /></div>
-                  <div class="fg"><label>MG 발생 월 (YYYY-MM)</label><input type="month" /></div>
+                <div class="contract-form-section">
+                  <div class="form-subtitle">계약 조건</div>
+                  <div class="form-grid">
+                    <div class="fg"><label>계약 타입</label>
+                      <select id="new-contract-type" onchange="syncNewContractType()">
+                        <option value="FLAT_FEE">Flat Fee</option>
+                        <option value="MG_RS">MG+RS</option>
+                        <option value="RS">RS</option>
+                      </select>
+                    </div>
+                    <div class="fg"><label>독점 여부</label>
+                      <select id="new-exclusive">
+                        <option value="exclusive">독점</option>
+                        <option value="non-exclusive">비독점</option>
+                      </select>
+                    </div>
+                    <div class="fg"><label>RS 비율 %</label><input id="new-rs-rate" type="number" min="0" max="100" step="0.1" placeholder="RS / MG+RS 선택 시 입력" disabled /></div>
+                  </div>
+                </div>
+                <div class="contract-form-section">
+                  <div class="form-subtitle">일정</div>
+                  <div class="form-grid">
+                    <div class="fg"><label>릴리즈 일자</label><input type="date" /></div>
+                    <div class="fg"><label>기간 (개월)</label><input type="number" min="1" step="1" placeholder="예: 12" /></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -349,10 +718,11 @@ td { padding: 9px 12px; vertical-align: middle; }
             </div>
           </div>
 
-          <div class="dtabbar">
-            <div class="dtab active" onclick="switchDTab(this,'ct-info')">계약 정보</div>
-            <div class="dtab" onclick="switchDTab(this,'ct-rs')">RS 데이터</div>
-            <div class="dtab" onclick="switchDTab(this,'ct-perf')">퍼포먼스</div>
+          <div class="dtabbar" id="contract-data-tabs">
+            <div class="dtab active" data-panel="ct-info" onclick="switchDTab(this,'ct-info')">계약 정보</div>
+            <div class="dtab" data-panel="ct-flat" data-type="FLAT_FEE" onclick="switchDTab(this,'ct-flat')">Flat Fee 데이터</div>
+            <div class="dtab" data-panel="ct-mg" data-type="MG_RS" onclick="switchDTab(this,'ct-mg')">MG 데이터</div>
+            <div class="dtab" data-panel="ct-rs" data-type="MG_RS RS" onclick="switchDTab(this,'ct-rs')">RS 데이터</div>
           </div>
 
           <div class="dbody">
@@ -360,120 +730,147 @@ td { padding: 9px 12px; vertical-align: middle; }
             <!-- 계약 정보 탭 -->
             <div class="dpanel active" id="ct-info">
               <div class="sec">
-                <div class="sec-title">계약 기본 정보</div>
-                <div class="form-grid">
-                  <div class="fg"><label>콘텐츠</label><input value="The Last Letter" readonly /></div>
-                  <div class="fg"><label>플랫폼사</label><input value="ShortReel (US)" readonly /></div>
-                  <div class="fg"><label>제작사</label><input value="NextWave Studios" readonly /></div>
-                  <div class="fg"><label>출시일</label><input type="date" value="2024-05-10" /></div>
+                <div class="contract-form-section">
+                  <div class="form-subtitle">대상 정보</div>
+                  <div class="form-grid">
+                    <div class="fg"><label>제작사</label><input id="cd-company" readonly /></div>
+                    <div class="fg"><label>콘텐츠</label><input id="cd-content-input" readonly /></div>
+                    <div class="fg"><label>플랫폼사</label><input id="cd-platform" readonly /></div>
+                    <div class="fg"><label>유통 권역</label><input id="cd-region" type="text" /></div>
+                  </div>
+                </div>
+                <div class="contract-form-section">
+                  <div class="form-subtitle">계약 조건</div>
+                  <div class="form-grid">
+                    <div class="fg"><label>계약 타입</label>
+                      <select id="cd-contract-type" onchange="syncDetailContractType()">
+                        <option value="FLAT_FEE">Flat Fee</option>
+                        <option value="MG_RS">MG+RS</option>
+                        <option value="RS">RS</option>
+                      </select>
+                    </div>
+                    <div class="fg"><label>독점 여부</label>
+                      <select id="cd-exclusive">
+                        <option value="exclusive">독점</option>
+                        <option value="non-exclusive">비독점</option>
+                      </select>
+                    </div>
+                    <div class="fg"><label>RS 비율 %</label><input id="cd-rs-rate" type="number" min="0" max="100" step="0.1" /></div>
+                  </div>
+                </div>
+                <div class="contract-form-section">
+                  <div class="form-subtitle">일정</div>
+                  <div class="form-grid">
+                    <div class="fg"><label>릴리즈 일자</label><input id="cd-release-date" type="date" /></div>
+                    <div class="fg"><label>기간 (개월)</label><input id="cd-term-months" type="number" min="1" step="1" /></div>
+                  </div>
                 </div>
               </div>
-              <div class="sec">
-                <div class="sec-title">MG 정보 <span class="sec-title-right">둘 다 입력하거나 둘 다 비워야 합니다</span></div>
-                <div class="form-grid">
-                  <div class="fg"><label>MG 금액 (USD)</label><input type="number" value="30000" /></div>
-                  <div class="fg"><label>MG 발생 월</label><input type="month" value="2024-05" /></div>
+            </div>
+
+            <!-- Flat Fee 데이터 탭 -->
+            <div class="dpanel" id="ct-flat">
+              <div class="data-panel-actions">
+                <button id="flat-data-action" class="btn" onclick="handleSettlementDataAction('flat')">수정</button>
+              </div>
+              <div id="flat-data-list" class="data-list">
+                <div id="flat-data-record" class="data-record">
+                  <div id="flat-edit" class="data-edit-body">
+                    <div class="contract-form-section">
+                      <div class="form-subtitle">플랫폼 지급</div>
+                      <div class="data-grid">
+                        <div class="fg"><label>발생월</label><input id="flat-month" type="month" value="2025-04" /></div>
+                        <div class="fg"><label>플랫폼 지급액</label><input id="flat-platform-amount" type="number" value="15000" /></div>
+                        <div class="fg"><label>통화</label><select><option>USD</option><option>KRW</option></select></div>
+                        <div class="fg"><label>계약금 %</label><input type="number" value="100" /></div>
+                      </div>
+                    </div>
+                    <div class="contract-form-section">
+                      <div class="form-subtitle">공제 내역</div>
+                      <div class="data-grid">
+                        <div class="fg"><label>원천세 비율</label><input type="number" value="10" /></div>
+                        <div class="fg"><label>원천세 금액</label><input type="number" value="1500" /></div>
+                        <div class="fg"><label>송금 수수료</label><input type="number" value="35" /></div>
+                        <div class="fg"><label>환율</label><input type="number" value="1380" /></div>
+                        <div class="fg"><label>환전 수수료</label><input type="number" value="8000" /></div>
+                        <div class="fg"><label>실제 입금액(원)</label><input id="flat-deposit-amount" type="number" value="18457000" /></div>
+                      </div>
+                    </div>
+                    <div class="contract-form-section">
+                      <div class="form-subtitle">정산</div>
+                      <div class="data-grid">
+                        <div class="fg"><label>Bable 수수료율</label><input type="number" value="7" /></div>
+                        <div class="fg"><label>Bable 수수료 금액</label><input type="number" value="1291990" /></div>
+                        <div class="fg"><label>제작사 정산액</label><input id="flat-producer-amount" type="number" value="17165010" /></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- MG 데이터 탭 -->
+            <div class="dpanel" id="ct-mg">
+              <div class="data-panel-actions">
+                <button id="mg-data-action" class="btn" onclick="handleSettlementDataAction('mg')">수정</button>
+              </div>
+              <div id="mg-data-list" class="data-list">
+                <div id="mg-data-record" class="data-record">
+                  <div id="mg-edit" class="data-edit-body">
+                    <div class="contract-form-section">
+                      <div class="form-subtitle">플랫폼 지급</div>
+                      <div class="data-grid">
+                        <div class="fg"><label>발생월</label><input id="mg-month" type="month" value="2025-04" /></div>
+                        <div class="fg"><label>플랫폼 지급액</label><input id="mg-platform-amount" type="number" value="30000" /></div>
+                        <div class="fg"><label>통화</label><select><option>USD</option><option>KRW</option></select></div>
+                        <div class="fg"><label>계약금 %</label><input type="number" value="50" /></div>
+                      </div>
+                    </div>
+                    <div class="contract-form-section">
+                      <div class="form-subtitle">공제 내역</div>
+                      <div class="data-grid">
+                        <div class="fg"><label>원천세 비율</label><input type="number" value="10" /></div>
+                        <div class="fg"><label>원천세 금액</label><input type="number" value="3000" /></div>
+                        <div class="fg"><label>송금 수수료</label><input type="number" value="35" /></div>
+                        <div class="fg"><label>환율</label><input type="number" value="1380" /></div>
+                        <div class="fg"><label>환전 수수료</label><input type="number" value="8000" /></div>
+                        <div class="fg"><label>실제 입금액(원)</label><input id="mg-deposit-amount" type="number" value="37207000" /></div>
+                      </div>
+                    </div>
+                    <div class="contract-form-section">
+                      <div class="form-subtitle">정산</div>
+                      <div class="data-grid">
+                        <div class="fg"><label>Bable 수수료율</label><input type="number" value="7" /></div>
+                        <div class="fg"><label>Bable 수수료 금액</label><input type="number" value="2604490" /></div>
+                        <div class="fg"><label>제작사 정산액</label><input id="mg-producer-amount" type="number" value="34602510" /></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
             <!-- RS 데이터 탭 -->
             <div class="dpanel" id="ct-rs">
-              <div class="sec">
-                <div class="sec-title">
-                  월별 RS 데이터
-                  <span class="sec-title-right">RS는 분기 다음 달 정산 (4·7·10·1월)</span>
-                </div>
-                <table class="rs-table">
-                  <thead>
-                    <tr>
-                      <th>연월</th>
-                      <th>RS 금액 (USD)</th>
-                      <th style="text-align:right">액션</th>
-                    </tr>
-                  </thead>
-                  <tbody id="rs-tbody">
-                    <tr>
-                      <td>2025-04</td>
-                      <td class="amt">$1,840</td>
-                      <td class="act">
-                        <button class="btn" style="font-size:10.5px;padding:3px 7px" onclick="editRs(this)"><i class="ti ti-edit"></i></button>
-                        <button class="btn btn-del" style="font-size:10.5px;padding:3px 7px"><i class="ti ti-trash"></i></button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>2025-02</td>
-                      <td class="amt">$1,620</td>
-                      <td class="act">
-                        <button class="btn" style="font-size:10.5px;padding:3px 7px" onclick="editRs(this)"><i class="ti ti-edit"></i></button>
-                        <button class="btn btn-del" style="font-size:10.5px;padding:3px 7px"><i class="ti ti-trash"></i></button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>2025-01</td>
-                      <td class="amt">$1,380</td>
-                      <td class="act">
-                        <button class="btn" style="font-size:10.5px;padding:3px 7px" onclick="editRs(this)"><i class="ti ti-edit"></i></button>
-                        <button class="btn btn-del" style="font-size:10.5px;padding:3px 7px"><i class="ti ti-trash"></i></button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>2024-12</td>
-                      <td class="amt">$2,100</td>
-                      <td class="act">
-                        <button class="btn" style="font-size:10.5px;padding:3px 7px" onclick="editRs(this)"><i class="ti ti-edit"></i></button>
-                        <button class="btn btn-del" style="font-size:10.5px;padding:3px 7px"><i class="ti ti-trash"></i></button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>2024-11</td>
-                      <td class="amt">$980</td>
-                      <td class="act">
-                        <button class="btn" style="font-size:10.5px;padding:3px 7px" onclick="editRs(this)"><i class="ti ti-edit"></i></button>
-                        <button class="btn btn-del" style="font-size:10.5px;padding:3px 7px"><i class="ti ti-trash"></i></button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <!-- RS 추가 인라인 폼 -->
-                <div class="rs-inline-form" id="rs-add-form">
-                  <input class="w-month" type="month" placeholder="연월" id="rs-month" />
-                  <input class="w-amt" type="number" placeholder="금액 (USD)" id="rs-amount" />
-                  <button class="btn btn-primary" style="font-size:11.5px" onclick="addRs()"><i class="ti ti-plus"></i> 추가</button>
-                  <button class="btn" style="font-size:11.5px" onclick="cancelAddRs()">취소</button>
-                </div>
-                <button class="btn" style="font-size:11.5px;margin-top:8px" onclick="showAddRs()" id="rs-add-btn"><i class="ti ti-plus"></i> RS 데이터 추가</button>
+              <div class="data-panel-actions">
+                <button class="btn btn-primary" onclick="addQuarterRow(true)"><i class="ti ti-plus"></i> 생성</button>
               </div>
-              <div class="sec">
-                <div class="sec-title">RS 합계</div>
-                <div class="irow"><span class="ik">누적 RS</span><span class="iv">$7,920</span></div>
-                <div class="irow"><span class="ik">기지급 RS</span><span class="iv">$5,500</span></div>
-                <div class="irow"><span class="ik">미지급 RS</span><span class="iv" style="color:#854F0B">$2,420</span></div>
+              <div id="rs-create-slot" class="rs-create-slot"></div>
+              <div class="data-list-title">등록된 RS 데이터</div>
+              <div class="rs-table-head">
+                <div>발생분기</div>
+                <div>제작사 정산액</div>
+                <div>정산상태</div>
+                <div></div>
               </div>
-            </div>
-
-            <!-- 퍼포먼스 탭 -->
-            <div class="dpanel" id="ct-perf">
-              <div class="sec">
-                <div class="sec-title">
-                  플랫폼 퍼포먼스 데이터
-                  <span class="sec-title-right">마지막 업데이트 2026.04.29</span>
-                </div>
-                <p class="note" style="margin-bottom:12px">플랫폼사에서 받은 조회수, 팔로우수 등 퍼포먼스 데이터를 입력합니다.</p>
-                <div class="form-grid g3">
-                  <div class="fg"><label>조회수 (누적)</label><input type="number" placeholder="—" value="18420000" /></div>
-                  <div class="fg"><label>팔로우수 (누적)</label><input type="number" placeholder="—" value="241000" /></div>
-                  <div class="fg"><label>좋아요수 (누적)</label><input type="number" placeholder="—" value="3180000" /></div>
-                  <div class="fg"><label>광고수 (누적)</label><input type="number" placeholder="—" /></div>
-                </div>
-              </div>
+              <div id="rs-quarter-list" class="data-list rs-table-list"></div>
             </div>
 
           </div>
-          <div class="savebar">
+          <div class="savebar" id="contract-info-savebar">
             <button class="btn danger-left" onclick="deleteContract()"><i class="ti ti-trash"></i> 계약 삭제</button>
             <button class="btn" onclick="closeDetail()">닫기</button>
-            <button class="btn btn-primary"><i class="ti ti-device-floppy"></i> 저장</button>
+            <button class="btn btn-primary" id="contract-info-action" onclick="handleContractInfoAction()"><i class="ti ti-edit"></i> 수정</button>
           </div>
         </div>
       </div>
@@ -483,185 +880,161 @@ td { padding: 9px 12px; vertical-align: middle; }
   <!-- ════ 정산 처리 ════ -->
   <div class="view" id="view-settlement">
     <div class="tabbar">
-      <div class="tab" onclick="switchTab('contracts')">계약 관리</div>
-      <div class="tab active" onclick="switchTab('settlement')">정산 처리</div>
+      <div class="tab" onclick="switchTab('contracts')">계약관리</div>
+      <div class="tab active" onclick="switchTab('settlement')">정산처리</div>
+      <div class="tab" onclick="switchTab('completed')">정산완료</div>
     </div>
-
-    <div style="flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:16px;background:#f5f4f0">
-
-      <!-- 연월 선택 -->
-      <div style="background:#fff;border:0.5px solid #e8e6e0;border-radius:10px;padding:16px 18px">
-        <div style="font-size:12px;font-weight:500;color:#aaa;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:10px">정산 연월 선택</div>
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <input type="month" value="2025-04" id="settlement-month" style="font-size:13px;padding:7px 12px;border:0.5px solid #e0dfd9;border-radius:7px;background:#fff;color:#1a1a18;outline:none;font-family:inherit" />
-          <button class="btn btn-primary" onclick="loadPreview()"><i class="ti ti-search"></i> 미리보기 조회</button>
-          <div style="font-size:11.5px;color:#aaa;margin-left:4px">RS는 분기 다음 달(4·7·10·1월)에 포함됩니다</div>
+    <div class="ops-layout">
+      <div class="ops-filterbar">
+        <select class="ops-select" id="process-studio-filter" onchange="changeProcessStudioFilter()"></select>
+      </div>
+      <div class="ops-section">
+        <div class="ops-section-head">
+          <div class="ops-section-title">정산 예정 처리 <span class="ops-section-count" id="draft-count">0</span></div>
+        </div>
+        <div class="ops-table-scroll">
+          <table class="ops-table dense">
+            <colgroup><col style="width:34px"><col style="width:150px"><col style="width:126px"><col style="width:128px"><col style="width:82px"><col style="width:84px"><col style="width:116px"><col style="width:58px"><col style="width:82px"><col style="width:74px"><col style="width:76px"><col style="width:106px"><col style="width:96px"><col style="width:72px"><col style="width:96px"><col style="width:112px"><col style="width:96px"><col style="width:116px"><col style="width:120px"><col style="width:94px"></colgroup>
+            <thead><tr><th></th><th>콘텐츠</th><th class="right">제작사</th><th class="right">플랫폼사</th><th class="center">계약타입</th><th class="right">발생월</th><th class="right">플랫폼 지급액</th><th class="right">통화</th><th class="right">계약금 퍼센트</th><th class="right">RS 비율</th><th class="right">원천세 비율</th><th class="right">원천세 금액</th><th class="right">송금 수수료</th><th class="right">환율</th><th class="right">환전 수수료</th><th class="right">실제 입금액</th><th class="right">비에이블 수수료율</th><th class="right">비에이블 수수료 금액</th><th class="right">제작사 정산액</th><th class="center">상태</th></tr></thead>
+            <tbody id="draft-tbody"></tbody>
+          </table>
+        </div>
+        <div class="ops-footer">
+          <span class="ops-footer-label"><span class="ops-mono" id="draft-selected-count">0</span>건 선택됨</span>
+          <span class="ops-footer-sum" id="draft-selected-sum"></span>
+          <div class="ops-spacer"></div>
+          <button class="btn btn-primary" id="process-selected-btn" onclick="processSelectedDrafts()" disabled>정산 예정 처리</button>
         </div>
       </div>
-
-      <!-- 분기달 안내 -->
-      <div class="quarter-note" id="quarter-note">
-        <i class="ti ti-info-circle"></i>
-        2025년 4월 정산에는 1~3월치 RS와 3월 발생 MG가 함께 포함됩니다.
+      <div class="ops-section">
+        <div class="ops-section-head">
+          <div class="ops-section-title">정산 진행중 <span class="ops-section-count" id="progress-count">0</span></div>
+        </div>
+        <div class="ops-table-scroll">
+          <table class="ops-table dense">
+            <colgroup><col style="width:150px"><col style="width:126px"><col style="width:128px"><col style="width:82px"><col style="width:84px"><col style="width:116px"><col style="width:58px"><col style="width:82px"><col style="width:74px"><col style="width:76px"><col style="width:106px"><col style="width:96px"><col style="width:72px"><col style="width:96px"><col style="width:112px"><col style="width:96px"><col style="width:116px"><col style="width:120px"><col style="width:104px"></colgroup>
+            <thead><tr><th>콘텐츠</th><th class="right">제작사</th><th class="right">플랫폼사</th><th class="center">계약타입</th><th class="right">발생월</th><th class="right">플랫폼 지급액</th><th class="right">통화</th><th class="right">계약금 퍼센트</th><th class="right">RS 비율</th><th class="right">원천세 비율</th><th class="right">원천세 금액</th><th class="right">송금 수수료</th><th class="right">환율</th><th class="right">환전 수수료</th><th class="right">실제 입금액</th><th class="right">비에이블 수수료율</th><th class="right">비에이블 수수료 금액</th><th class="right">제작사 정산액</th><th class="center">상태</th></tr></thead>
+            <tbody id="progress-tbody"></tbody>
+          </table>
+        </div>
       </div>
+    </div>
+  </div>
 
-      <!-- 정산 완료 확인 -->
-      <div class="complete-box" id="complete-box">
-        <i class="ti ti-circle-check-filled"></i>
+  <!-- ════ 정산 완료 ════ -->
+  <div class="view" id="view-completed">
+    <div class="tabbar">
+      <div class="tab" onclick="switchTab('contracts')">계약관리</div>
+      <div class="tab" onclick="switchTab('settlement')">정산처리</div>
+      <div class="tab active" onclick="switchTab('completed')">정산완료</div>
+    </div>
+    <div class="ops-layout">
+      <div class="ops-filterbar">
+        <select class="ops-select" id="complete-studio-filter" onchange="renderSettlementOps()"></select>
+      </div>
+      <div class="ops-section">
+        <div class="ops-section-head">
+          <div class="ops-section-title">완료 처리 대기 <span class="ops-section-count" id="ready-count">0</span></div>
+        </div>
+        <div class="ops-table-scroll">
+          <table class="ops-table dense">
+            <colgroup><col style="width:34px"><col style="width:150px"><col style="width:126px"><col style="width:128px"><col style="width:82px"><col style="width:84px"><col style="width:116px"><col style="width:58px"><col style="width:82px"><col style="width:74px"><col style="width:76px"><col style="width:106px"><col style="width:96px"><col style="width:72px"><col style="width:96px"><col style="width:112px"><col style="width:96px"><col style="width:116px"><col style="width:120px"><col style="width:94px"></colgroup>
+            <thead><tr><th></th><th>콘텐츠</th><th class="right">제작사</th><th class="right">플랫폼사</th><th class="center">계약타입</th><th class="right">발생월</th><th class="right">플랫폼 지급액</th><th class="right">통화</th><th class="right">계약금 퍼센트</th><th class="right">RS 비율</th><th class="right">원천세 비율</th><th class="right">원천세 금액</th><th class="right">송금 수수료</th><th class="right">환율</th><th class="right">환전 수수료</th><th class="right">실제 입금액</th><th class="right">비에이블 수수료율</th><th class="right">비에이블 수수료 금액</th><th class="right">제작사 정산액</th><th class="center">상태</th></tr></thead>
+            <tbody id="ready-tbody"></tbody>
+          </table>
+        </div>
+        <div class="ops-footer">
+          <span class="ops-footer-label"><span class="ops-mono" id="ready-selected-count">0</span>건 선택됨</span>
+          <span class="ops-footer-sum" id="ready-selected-sum"></span>
+          <div class="ops-spacer"></div>
+          <button class="btn btn-primary" id="complete-selected-btn" onclick="completeSelectedReady()" disabled>정산 완료 처리</button>
+        </div>
+      </div>
+      <div class="ops-section">
+        <div class="ops-section-head">
+          <div class="ops-section-title">정산 완료 내역 <span class="ops-section-count" id="completed-count">0</span></div>
+        </div>
+        <div class="ops-table-scroll">
+          <table class="ops-table dense">
+            <colgroup><col style="width:150px"><col style="width:126px"><col style="width:128px"><col style="width:82px"><col style="width:84px"><col style="width:116px"><col style="width:58px"><col style="width:82px"><col style="width:74px"><col style="width:76px"><col style="width:106px"><col style="width:96px"><col style="width:72px"><col style="width:96px"><col style="width:112px"><col style="width:96px"><col style="width:116px"><col style="width:120px"><col style="width:104px"><col style="width:120px"><col style="width:94px"></colgroup>
+            <thead><tr><th>콘텐츠</th><th class="right">제작사</th><th class="right">플랫폼사</th><th class="center">계약타입</th><th class="right">발생월</th><th class="right">플랫폼 지급액</th><th class="right">통화</th><th class="right">계약금 퍼센트</th><th class="right">RS 비율</th><th class="right">원천세 비율</th><th class="right">원천세 금액</th><th class="right">송금 수수료</th><th class="right">환율</th><th class="right">환전 수수료</th><th class="right">실제 입금액</th><th class="right">비에이블 수수료율</th><th class="right">비에이블 수수료 금액</th><th class="right">제작사 정산액</th><th class="right">완료 처리일</th><th class="right">처리한 관리자</th><th class="center">상태</th></tr></thead>
+            <tbody id="completed-tbody"></tbody>
+          </table>
+        </div>
+        <div class="ops-pagebar" id="completed-pagebar"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="settlement-modal" id="settlement-detail-modal" onclick="closeSettlementDetailModal()">
+    <div class="settlement-modal-panel" onclick="event.stopPropagation()">
+      <div class="settlement-modal-head">
+        <div class="ops-poster" id="settlement-modal-poster"></div>
         <div>
-          <div class="complete-title">2025년 4월 정산이 완료 처리되었습니다</div>
-          <div class="complete-sub" id="complete-time"></div>
+          <div class="settlement-modal-title" id="settlement-modal-title"></div>
+          <div class="settlement-modal-sub" id="settlement-modal-sub"></div>
+        </div>
+        <div class="settlement-modal-amount">
+          <div class="settlement-modal-label">제작사 정산액</div>
+          <div class="settlement-modal-value" id="settlement-modal-amount"></div>
+        </div>
+        <button class="settlement-modal-close" onclick="closeSettlementDetailModal()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="settlement-modal-body" id="settlement-modal-body"></div>
+      <div class="settlement-modal-foot">
+        <button class="btn btn-primary" onclick="closeSettlementDetailModal()">확인했습니다</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="settlement-modal" id="process-review-modal" onclick="closeProcessReviewModal()">
+    <div class="settlement-modal-panel process-review-panel" onclick="event.stopPropagation()">
+      <div class="settlement-modal-head">
+        <div>
+          <div class="settlement-modal-title">정산 예정 처리 최종 검토</div>
+          <div class="settlement-modal-sub" id="process-review-sub"></div>
         </div>
       </div>
-
-      <!-- 미리보기 결과 -->
-      <div id="preview-result" style="display:none">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <div style="font-size:13px;font-weight:600;color:#1a1a18">2025년 4월 정산 대상 제작사</div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <div style="font-size:12px;color:#aaa">총 <strong style="color:#1a1a18">3</strong>개 제작사</div>
-            <button class="btn btn-primary" onclick="completeSettlement()"><i class="ti ti-check"></i> 정산 완료 처리</button>
-          </div>
+      <div class="settlement-modal-body">
+        <div class="process-review-summary">
+          <div class="process-review-card"><div class="process-review-k">처리 대상</div><div class="process-review-v" id="process-review-count">0건</div></div>
+          <div class="process-review-card"><div class="process-review-k">제작사</div><div class="process-review-v" id="process-review-studio" style="font-family:inherit"></div></div>
+          <div class="process-review-card"><div class="process-review-k">제작사 정산액 합계</div><div class="process-review-v" id="process-review-total">₩ 0</div></div>
         </div>
-
-        <!-- 제작사 1 -->
-        <div class="preview-box">
-          <div class="preview-box-head">
-            <div>
-              <div class="preview-box-title">NextWave Studios</div>
-              <div style="font-size:11px;color:#aaa;margin-top:2px">콘텐츠 2편 · RS + MG</div>
-            </div>
-            <span class="bdg b-scheduled">SCHEDULED</span>
-          </div>
-          <div class="preview-box-body">
-            <div>
-              <table class="rs-table">
-                <colgroup><col class="c-content"><col class="c-platform"><col class="c-month"><col class="c-month"><col class="c-month"><col class="c-subtotal"><col class="c-mg"><col class="c-total"></colgroup>
-                <thead><tr><th>콘텐츠</th><th>플랫폼</th><th>1월</th><th>2월</th><th>3월</th><th>RS 소계</th><th>MG</th><th>지급 예정</th></tr></thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <div class="content-cell">
-                        <div class="poster poster-sm poster-p1" data-mark="TL"></div>
-                        <div><div class="tname">The Last Letter</div></div>
-                      </div>
-                    </td>
-                    <td><span class="platform-pill">ShortReel</span></td>
-                    <td class="amt">$1,380</td><td class="amt">$1,620</td><td class="amt">$1,840</td>
-                    <td class="amt">$4,840</td><td class="amt">$30,000</td>
-                    <td class="amt" style="color:#3B6D11">$34,840</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="content-cell">
-                        <div class="poster poster-sm poster-p6" data-mark="ES"></div>
-                        <div><div class="tname">Echo of Spring</div></div>
-                      </div>
-                    </td>
-                    <td><span class="platform-pill">Viki</span></td>
-                    <td class="amt">—</td><td class="amt">—</td><td class="amt">—</td>
-                    <td class="amt" style="color:#aaa">$0</td><td class="amt" style="color:#aaa">—</td>
-                    <td class="amt" style="color:#aaa">$0</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="preview-summary">
-              <div class="summary-grid">
-                <div class="summary-item"><div class="summary-label">RS 합계</div><div class="summary-value">$4,840</div></div>
-                <div class="summary-item"><div class="summary-label">MG 합계</div><div class="summary-value">$30,000</div></div>
-                <div class="summary-item total"><div class="summary-label">지급 예정</div><div class="summary-value">$34,840</div></div>
-              </div>
-            </div>
-          </div>
+        <div class="process-review-section-head">
+          <p class="process-review-section-title">상세 내역</p>
+          <p class="process-review-section-meta">플랫폼별 지급 및 공제 기준</p>
         </div>
-
-        <!-- 제작사 2 -->
-        <div class="preview-box">
-          <div class="preview-box-head">
-            <div>
-              <div class="preview-box-title">OneTake Media</div>
-              <div style="font-size:11px;color:#aaa;margin-top:2px">콘텐츠 1편 · RS만</div>
-            </div>
-            <span class="bdg b-scheduled">SCHEDULED</span>
-          </div>
-          <div class="preview-box-body">
-            <div>
-              <table class="rs-table">
-                <colgroup><col class="c-content"><col class="c-platform"><col class="c-month"><col class="c-month"><col class="c-month"><col class="c-subtotal"><col class="c-mg"><col class="c-total"></colgroup>
-                <thead><tr><th>콘텐츠</th><th>플랫폼</th><th>1월</th><th>2월</th><th>3월</th><th>RS 소계</th><th>MG</th><th>지급 예정</th></tr></thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <div class="content-cell">
-                        <div class="poster poster-sm poster-p2" data-mark="RC"></div>
-                        <div><div class="tname">Reverse Cinderella</div></div>
-                      </div>
-                    </td>
-                    <td><span class="platform-pill">iQIYI</span></td>
-                    <td class="amt">$620</td><td class="amt">$700</td><td class="amt">$780</td>
-                    <td class="amt">$2,100</td><td class="amt" style="color:#aaa">—</td>
-                    <td class="amt" style="color:#3B6D11">$2,100</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="preview-summary">
-              <div class="summary-grid">
-                <div class="summary-item"><div class="summary-label">RS 합계</div><div class="summary-value">$2,100</div></div>
-                <div class="summary-item"><div class="summary-label">MG 합계</div><div class="summary-value" style="color:#aaa">—</div></div>
-                <div class="summary-item total"><div class="summary-label">지급 예정</div><div class="summary-value">$2,100</div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 제작사 3 -->
-        <div class="preview-box">
-          <div class="preview-box-head">
-            <div>
-              <div class="preview-box-title">PaperLens</div>
-              <div style="font-size:11px;color:#aaa;margin-top:2px">콘텐츠 1편 · MG만</div>
-            </div>
-            <span class="bdg b-scheduled">SCHEDULED</span>
-          </div>
-          <div class="preview-box-body">
-            <div>
-              <table class="rs-table">
-                <colgroup><col class="c-content"><col class="c-platform"><col class="c-month"><col class="c-month"><col class="c-month"><col class="c-subtotal"><col class="c-mg"><col class="c-total"></colgroup>
-                <thead><tr><th>콘텐츠</th><th>플랫폼</th><th>1월</th><th>2월</th><th>3월</th><th>RS 소계</th><th>MG</th><th>지급 예정</th></tr></thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <div class="content-cell">
-                        <div class="poster poster-sm poster-p4" data-mark="BA"></div>
-                        <div><div class="tname">Bloom Again</div></div>
-                      </div>
-                    </td>
-                    <td><span class="platform-pill">Viki</span></td>
-                    <td class="amt">—</td><td class="amt">—</td><td class="amt">—</td>
-                    <td class="amt" style="color:#aaa">$0</td>
-                    <td class="amt">$15,000</td>
-                    <td class="amt" style="color:#3B6D11">$15,000</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="preview-summary">
-              <div class="summary-grid">
-                <div class="summary-item"><div class="summary-label">RS 합계</div><div class="summary-value" style="color:#aaa">$0</div></div>
-                <div class="summary-item"><div class="summary-label">MG 합계</div><div class="summary-value">$15,000</div></div>
-                <div class="summary-item total"><div class="summary-label">지급 예정</div><div class="summary-value">$15,000</div></div>
-              </div>
-            </div>
-          </div>
+        <div class="process-review-table-wrap">
+          <table class="process-review-table">
+            <thead>
+              <tr>
+                <th class="text-cell">콘텐츠</th>
+                <th class="text-cell">플랫폼</th>
+                <th>발생월/분기</th>
+                <th>플랫폼 지급액</th>
+                <th>계약금 %</th>
+                <th>원천세 비율</th>
+                <th>원천세 금액</th>
+                <th>송금 수수료</th>
+                <th>환율</th>
+                <th>환전 수수료</th>
+                <th>실제 입금액</th>
+                <th>Bable 수수료율</th>
+                <th>Bable 수수료 금액</th>
+                <th>제작사 정산액</th>
+              </tr>
+            </thead>
+            <tbody id="process-review-rows"></tbody>
+          </table>
         </div>
       </div>
-
-      <!-- 미리보기 전 안내 -->
-      <div id="preview-empty" style="background:#fff;border:0.5px solid #e8e6e0;border-radius:10px;padding:32px;display:flex;flex-direction:column;align-items:center;gap:8px;color:#ccc">
-        <i class="ti ti-calendar-search" style="font-size:28px"></i>
-        <p style="font-size:12px">연월을 선택하고 미리보기를 조회하세요</p>
+      <div class="settlement-modal-foot">
+        <div class="process-review-foot-note">검토 후 선택한 건을 제작사 확인 대기 상태로 이동합니다.</div>
+        <div class="process-review-actions">
+          <button class="btn" onclick="closeProcessReviewModal()">닫기</button>
+          <button class="btn btn-primary" onclick="confirmProcessSelectedDrafts()">정산 예정 처리</button>
+        </div>
       </div>
     </div>
   </div>
@@ -670,17 +1043,466 @@ td { padding: 9px 12px; vertical-align: middle; }
 
 <script>
 const contracts = [
-  { id:1, content:'The Last Letter', poster:'poster-p1', mark:'TL', platform:'ShortReel (US)', company:'NextWave Studios', companyId:1, date:'2024-05-10', mg:'$30,000' },
-  { id:2, content:'The Last Letter', poster:'poster-p1', mark:'TL', platform:'Viki', company:'NextWave Studios', companyId:1, date:'2024-06-01', mg:'—' },
-  { id:3, content:'Echo of Spring', poster:'poster-p6', mark:'ES', platform:'WeTV', company:'NextWave Studios', companyId:1, date:'2024-07-15', mg:'$20,000' },
-  { id:4, content:'Reverse Cinderella', poster:'poster-p2', mark:'RC', platform:'iQIYI', company:'OneTake Media', companyId:2, date:'2024-08-01', mg:'—' },
-  { id:5, content:'Bloom Again', poster:'poster-p4', mark:'BA', platform:'Viki', company:'PaperLens', companyId:3, date:'2024-09-10', mg:'$15,000' },
-  { id:6, content:'Seven Suns', poster:'poster-p5', mark:'SS', platform:'ShortReel (US)', company:'BrightFrame', companyId:4, date:'2024-10-01', mg:'—' },
+  { id:1, content:'The Last Letter', poster:'poster-p1', mark:'TL', platform:'ShortReel (US)', company:'NextWave Studios', companyId:1, date:'2024-05-10', type:'MG_RS', exclusive:'exclusive', rsRate:35, region:'글로벌', termMonths:24, mg:'$30,000' },
+  { id:2, content:'The Last Letter', poster:'poster-p1', mark:'TL', platform:'Viki', company:'NextWave Studios', companyId:1, date:'2024-06-01', type:'RS', exclusive:'non-exclusive', rsRate:30, region:'아시아', termMonths:18, mg:'—' },
+  { id:3, content:'Echo of Spring', poster:'poster-p6', mark:'ES', platform:'WeTV', company:'NextWave Studios', companyId:1, date:'2024-07-15', type:'FLAT_FEE', exclusive:'exclusive', rsRate:null, region:'중화권', termMonths:12, mg:'—' },
+  { id:4, content:'Reverse Cinderella', poster:'poster-p2', mark:'RC', platform:'iQIYI', company:'OneTake Media', companyId:2, date:'2024-08-01', type:'RS', exclusive:'non-exclusive', rsRate:28, region:'아시아', termMonths:24, mg:'—' },
+  { id:5, content:'Bloom Again', poster:'poster-p4', mark:'BA', platform:'Viki', company:'PaperLens', companyId:3, date:'2024-09-10', type:'FLAT_FEE', exclusive:'exclusive', rsRate:null, region:'북미', termMonths:12, mg:'$15,000' },
+  { id:6, content:'Seven Suns', poster:'poster-p5', mark:'SS', platform:'ShortReel (US)', company:'BrightFrame', companyId:4, date:'2024-10-01', type:'MG_RS', exclusive:'exclusive', rsRate:32, region:'글로벌', termMonths:36, mg:'—' },
 ];
 
 let selId = null;
 let filterCo = '';
 let filterQ = '';
+let contractInfoEditing = false;
+const settlementDataState = {};
+
+const companyContents = {
+  '1': ['The Last Letter', 'Echo of Spring'],
+  '2': ['Reverse Cinderella', 'Midnight Tokyo Drift'],
+  '3': ['Bloom Again'],
+  '4': ['Seven Suns']
+};
+
+const opsStudios = ['NextWave Studios', 'BrightFrame', 'OneTake Media', 'ReelHouse Inc.', 'PaperLens', 'Crescendo Pictures'];
+const opsTypes = ['MG+RS', 'RS', 'Flat Fee'];
+let opsDraftRows = [
+  { id:'d1', title:'The Last Letter', studio:'NextWave Studios', platform:'ShortReel (US)', type:'MG+RS', period:'2025-04', amount:32400000, status:'DRAFT' },
+  { id:'d2', title:'Echo of Spring', studio:'NextWave Studios', platform:'WeTV', type:'RS', period:'2025-Q1', amount:8120000, status:'DRAFT' },
+  { id:'d3', title:'Reverse Cinderella', studio:'OneTake Media', platform:'iQIYI', type:'RS', period:'2025-Q1', amount:14750000, status:'DRAFT' },
+  { id:'d4', title:'Bloom Again', studio:'PaperLens', platform:'Viki', type:'MG+RS', period:'2025-04', amount:22300000, status:'DRAFT' },
+  { id:'d5', title:'Seven Suns', studio:'BrightFrame', platform:'ShortReel (US)', type:'Flat Fee', period:'2025-04', amount:18000000, status:'DRAFT' },
+  { id:'d6', title:'Midnight Tokyo Drift', studio:'BrightFrame', platform:'FlexTV (JP)', type:'RS', period:'2025-Q1', amount:4820000, status:'DRAFT' },
+  { id:'d7', title:'Heiress in Disguise', studio:'ReelHouse Inc.', platform:'KuaiKan Drama', type:'MG+RS', period:'2025-04', amount:28900000, status:'DRAFT' }
+];
+let opsProgressRows = [
+  { id:'s1', title:'Boss Next Door', studio:'PaperLens', platform:'DramaBox (US)', type:'MG+RS', period:'2025-03', amount:26400000, status:'SCHEDULED' },
+  { id:'s2', title:'Ghost Wedding', studio:'Crescendo Pictures', platform:'ShortReel (US)', type:'RS', period:'2025-Q1', amount:6320000, status:'SCHEDULED' },
+  { id:'s3', title:'CEO Pretends to be Poor', studio:'OneTake Media', platform:'Viki', type:'RS', period:'2025-Q1', amount:11180000, status:'SCHEDULED' }
+];
+let opsReadyRows = [
+  { id:'r1', title:'My Fake Fiance', studio:'BrightFrame', platform:'WeTV', type:'MG+RS', period:'2025-03', amount:19800000, status:'READY' },
+  { id:'r2', title:'The Tycoon Secret Son', studio:'ReelHouse Inc.', platform:'iQIYI', type:'RS', period:'2025-Q1', amount:12640000, status:'READY' },
+  { id:'r3', title:'Twin Brothers Trouble', studio:'NextWave Studios', platform:'FlexTV (JP)', type:'Flat Fee', period:'2025-03', amount:15000000, status:'READY' },
+  { id:'r4', title:'Reborn as the Villainess', studio:'OneTake Media', platform:'KuaiKan Drama', type:'RS', period:'2025-Q1', amount:9240000, status:'READY' }
+];
+let opsCompletedRows = [
+  { id:'c1', title:'Boss Next Door', studio:'PaperLens', platform:'DramaBox (US)', type:'MG+RS', period:'2025-02', amount:24800000, status:'COMPLETED', completedAt:'2025-03-12', completedBy:'Lee · Admin' },
+  { id:'c2', title:'Ghost Wedding', studio:'Crescendo Pictures', platform:'ShortReel (US)', type:'RS', period:'2024-Q4', amount:7120000, status:'COMPLETED', completedAt:'2025-02-08', completedBy:'Park · Admin' },
+  { id:'c3', title:'CEO Pretends to be Poor', studio:'OneTake Media', platform:'Viki', type:'RS', period:'2024-Q4', amount:10220000, status:'COMPLETED', completedAt:'2025-02-08', completedBy:'Park · Admin' },
+  { id:'c4', title:'Married First, Love Later', studio:'NextWave Studios', platform:'ShortReel (US)', type:'MG+RS', period:'2025-02', amount:31400000, status:'COMPLETED', completedAt:'2025-03-12', completedBy:'Lee · Admin' },
+  { id:'c5', title:'Reborn as the Villainess', studio:'OneTake Media', platform:'iQIYI', type:'RS', period:'2024-Q4', amount:8640000, status:'COMPLETED', completedAt:'2025-02-08', completedBy:'Park · Admin' },
+  { id:'c6', title:'Bloom Again', studio:'PaperLens', platform:'Viki', type:'MG+RS', period:'2025-02', amount:21900000, status:'COMPLETED', completedAt:'2025-03-12', completedBy:'Lee · Admin' },
+  { id:'c7', title:'Seven Suns', studio:'BrightFrame', platform:'ShortReel (US)', type:'Flat Fee', period:'2025-02', amount:18000000, status:'COMPLETED', completedAt:'2025-03-04', completedBy:'Lee · Admin' },
+  { id:'c8', title:'The Last Letter', studio:'NextWave Studios', platform:'ShortReel (US)', type:'MG+RS', period:'2025-02', amount:29800000, status:'COMPLETED', completedAt:'2025-03-12', completedBy:'Lee · Admin' },
+  { id:'c9', title:'Echo of Spring', studio:'NextWave Studios', platform:'WeTV', type:'RS', period:'2024-Q4', amount:7380000, status:'COMPLETED', completedAt:'2025-02-08', completedBy:'Park · Admin' },
+  { id:'c10', title:'Reverse Cinderella', studio:'OneTake Media', platform:'iQIYI', type:'RS', period:'2024-Q4', amount:13220000, status:'COMPLETED', completedAt:'2025-02-08', completedBy:'Park · Admin' }
+];
+let selectedDraftRows = {};
+let selectedReadyRows = {};
+let processReviewRows = [];
+let completedPage = 1;
+const completedPageSize = 8;
+
+function syncNewContractContent() {
+  const companyId = document.getElementById('new-company').value;
+  const contentSelect = document.getElementById('new-content');
+  const items = companyContents[companyId] || [];
+  contentSelect.disabled = items.length === 0;
+  contentSelect.innerHTML = items.length
+    ? '<option value="">콘텐츠 선택</option>' + items.map((title) => `<option>${title}</option>`).join('')
+    : '<option value="">제작사를 먼저 선택하세요</option>';
+}
+
+function syncNewContractType() {
+  const type = document.getElementById('new-contract-type').value;
+  const rsRate = document.getElementById('new-rs-rate');
+  const hasRs = type === 'RS' || type === 'MG_RS';
+  rsRate.disabled = !hasRs;
+  if (!hasRs) rsRate.value = '';
+}
+
+function syncDetailContractType() {
+  const type = document.getElementById('cd-contract-type').value;
+  const rsRate = document.getElementById('cd-rs-rate');
+  const hasRs = type === 'RS' || type === 'MG_RS';
+  rsRate.disabled = !contractInfoEditing || !hasRs;
+  rsRate.readOnly = !contractInfoEditing;
+  if (!hasRs) rsRate.value = '';
+  configureContractDataTabs(type);
+  if (hasRs && document.getElementById('rs-quarter-list') && !document.getElementById('rs-quarter-list').children.length) {
+    addQuarterRow();
+  }
+}
+
+function configureContractDataTabs(type) {
+  const tabbar = document.getElementById('contract-data-tabs');
+  if (!tabbar) return;
+  tabbar.querySelectorAll('.dtab').forEach((tab) => {
+    const types = tab.dataset.type ? tab.dataset.type.split(' ') : [];
+    tab.style.display = types.length === 0 || types.includes(type) ? '' : 'none';
+  });
+  const active = tabbar.querySelector('.dtab.active');
+  if (active && active.style.display === 'none') {
+    switchDTab(tabbar.querySelector('[data-panel="ct-info"]'), 'ct-info');
+  }
+}
+
+function parseMoneyNumber(value) {
+  const num = Number(String(value ?? '').replace(/[^\d.-]/g, ''));
+  return Number.isFinite(num) ? num : 0;
+}
+
+function setContractInfoEditMode(isEditing) {
+  contractInfoEditing = isEditing;
+  const panel = document.getElementById('ct-info');
+  const button = document.getElementById('contract-info-action');
+  const lockedIds = ['cd-company', 'cd-content-input', 'cd-platform'];
+  const editableIds = ['cd-region', 'cd-contract-type', 'cd-exclusive', 'cd-rs-rate', 'cd-release-date', 'cd-term-months'];
+
+  panel?.classList.toggle('contract-info-read-mode', !isEditing);
+  lockedIds.forEach((id) => {
+    const field = document.getElementById(id);
+    if (field) field.readOnly = true;
+  });
+  editableIds.forEach((id) => {
+    const field = document.getElementById(id);
+    if (!field) return;
+    if (field.tagName === 'SELECT') {
+      field.disabled = !isEditing;
+    } else {
+      field.readOnly = !isEditing;
+    }
+  });
+  syncDetailContractType();
+  if (button) {
+    button.innerHTML = isEditing ? '<i class="ti ti-device-floppy"></i> 저장' : '<i class="ti ti-edit"></i> 수정';
+  }
+}
+
+function saveContractInfo() {
+  const contract = contracts.find((item) => item.id === selId);
+  if (!contract) return;
+  const type = document.getElementById('cd-contract-type').value;
+  contract.region = document.getElementById('cd-region').value;
+  contract.type = type;
+  contract.exclusive = document.getElementById('cd-exclusive').value;
+  contract.rsRate = type === 'RS' || type === 'MG_RS' ? Number(document.getElementById('cd-rs-rate').value) || null : null;
+  contract.date = document.getElementById('cd-release-date').value;
+  contract.termMonths = Number(document.getElementById('cd-term-months').value) || '';
+  const headerSub = document.querySelector('#cd-title .dh-sub');
+  if (headerSub) headerSub.textContent = `${contract.company} · ${contract.platform} · 출시일 ${contract.date || '—'}`;
+  renderTable();
+}
+
+function handleContractInfoAction() {
+  if (!contractInfoEditing) {
+    setContractInfoEditMode(true);
+    return;
+  }
+  saveContractInfo();
+  setContractInfoEditMode(false);
+}
+
+function defaultSettlementData(contract, kind) {
+  const platformAmount = parseMoneyNumber(contract?.mg);
+  const deposit = kind === 'mg' ? 37207000 : 18457000;
+  const producer = kind === 'mg' ? 34602510 : 17165010;
+  return {
+    month: '2025-04',
+    platformAmount: platformAmount ? String(platformAmount) : '',
+    depositAmount: platformAmount ? String(deposit) : '',
+    producerAmount: platformAmount ? String(producer) : '',
+    hasData: !!platformAmount
+  };
+}
+
+function getSettlementData(contract, kind) {
+  const key = `${contract.id}:${kind}`;
+  if (!settlementDataState[key]) settlementDataState[key] = defaultSettlementData(contract, kind);
+  return settlementDataState[key];
+}
+
+function setSettlementFieldsReadonly(kind, readonly) {
+  const body = document.getElementById(`${kind}-edit`);
+  if (!body) return;
+  body.querySelectorAll('input').forEach((input) => {
+    input.readOnly = readonly;
+  });
+  body.querySelectorAll('select').forEach((select) => {
+    select.disabled = readonly;
+  });
+}
+
+function setSettlementDataMode(kind, mode) {
+  const button = document.getElementById(`${kind}-data-action`);
+  const body = document.getElementById(`${kind}-edit`);
+  const list = document.getElementById(`${kind}-data-list`);
+  const state = settlementDataState[`${selId}:${kind}`];
+  if (!button || !body || !list || !state) return;
+
+  state.mode = mode;
+  const hasData = state.hasData;
+  const isEditing = mode === 'edit' || mode === 'create';
+
+  button.textContent = hasData || isEditing ? (isEditing ? '저장' : '수정') : '생성';
+  button.classList.toggle('btn-primary', isEditing || !hasData);
+  list.classList.toggle('data-read-mode', hasData && !isEditing);
+  list.style.display = hasData || isEditing ? '' : 'none';
+  body.classList.toggle('open', hasData || isEditing);
+  setSettlementFieldsReadonly(kind, !isEditing);
+}
+
+function syncSettlementSummary(kind, persist = true) {
+  const month = document.getElementById(`${kind}-month`)?.value || '—';
+  const platformAmount = document.getElementById(`${kind}-platform-amount`)?.value || '';
+  const depositAmount = document.getElementById(`${kind}-deposit-amount`)?.value || '';
+  const producerAmount = document.getElementById(`${kind}-producer-amount`)?.value || '';
+  const state = settlementDataState[`${selId}:${kind}`];
+  if (state && persist) {
+    state.month = month;
+    state.platformAmount = platformAmount;
+    state.depositAmount = depositAmount;
+    state.producerAmount = producerAmount;
+    state.hasData = true;
+  }
+}
+
+function fillSettlementDataForm(kind, data) {
+  const body = document.getElementById(`${kind}-edit`);
+  body?.querySelectorAll('input').forEach((input) => {
+    input.value = data.hasData ? input.defaultValue : '';
+  });
+  body?.querySelectorAll('select').forEach((select) => {
+    const selected = Array.from(select.options).findIndex((option) => option.defaultSelected);
+    select.selectedIndex = selected >= 0 ? selected : 0;
+  });
+  document.getElementById(`${kind}-month`).value = data.month || '';
+  document.getElementById(`${kind}-platform-amount`).value = data.platformAmount || '';
+  document.getElementById(`${kind}-deposit-amount`).value = data.depositAmount || '';
+  document.getElementById(`${kind}-producer-amount`).value = data.producerAmount || '';
+  syncSettlementSummary(kind, false);
+}
+
+function renderSettlementDataPanel(contract, kind) {
+  const data = getSettlementData(contract, kind);
+  fillSettlementDataForm(kind, data);
+  setSettlementDataMode(kind, data.hasData ? 'read' : 'empty');
+}
+
+function handleSettlementDataAction(kind) {
+  if (!selId) return;
+  const state = settlementDataState[`${selId}:${kind}`];
+  if (!state) return;
+  if (state.mode === 'read') {
+    setSettlementDataMode(kind, 'edit');
+    return;
+  }
+  if (state.mode === 'empty') {
+    setSettlementDataMode(kind, 'create');
+    return;
+  }
+  syncSettlementSummary(kind);
+  setSettlementDataMode(kind, 'read');
+}
+
+function setToggleButtonLabel(btn, isOpen) {
+  btn.textContent = isOpen ? '닫기' : '수정';
+}
+
+function toggleDataForm(btn, targetId) {
+  const target = document.getElementById(targetId);
+  if (!target) return;
+  target.classList.toggle('open');
+  setToggleButtonLabel(btn, target.classList.contains('open'));
+}
+
+function toggleNextDataForm(btn) {
+  const card = btn.closest('.rs-quarter-card');
+  const target = card?.querySelector('.data-edit-body');
+  if (!target) return;
+  target.classList.toggle('open');
+  setToggleButtonLabel(btn, target.classList.contains('open'));
+}
+
+function toggleRsQuarter(summary) {
+  const card = summary.closest('.rs-quarter-card');
+  const target = card?.querySelector('.data-edit-body');
+  if (!target || card.classList.contains('rs-create-mode')) return;
+  target.classList.toggle('open');
+  card.classList.toggle('expanded', target.classList.contains('open'));
+}
+
+function setRsCardReadonly(card, readonly) {
+  card.querySelectorAll('.data-edit-body input').forEach((input) => {
+    input.readOnly = readonly;
+  });
+  card.querySelectorAll('.data-edit-body select').forEach((select) => {
+    select.disabled = readonly;
+  });
+  card.querySelectorAll('.rs-status-input').forEach((input) => {
+    input.readOnly = true;
+  });
+}
+
+function updateRsQuarterSummary(card) {
+  const inputs = card.querySelectorAll('.data-edit-body input');
+  const year = inputs[0]?.value || '—';
+  const quarter = card.querySelector('.data-edit-body select')?.value || '—';
+  const producerAmount = inputs[11]?.value || '';
+  const period = card.querySelector('.rs-summary-period');
+  const producer = card.querySelector('.rs-summary-producer');
+  if (period) period.textContent = `${year} ${quarter}`;
+  if (producer) producer.textContent = producerAmount ? `₩${Number(producerAmount).toLocaleString('ko-KR')}` : '—';
+}
+
+function handleRsQuarterAction(btn) {
+  const card = btn.closest('.rs-quarter-card');
+  if (!card) return;
+  const isEditing = card.classList.contains('rs-editing');
+  if (!isEditing) {
+    card.classList.add('rs-editing');
+    setRsCardReadonly(card, false);
+    btn.textContent = '저장';
+    btn.classList.add('btn-primary');
+    return;
+  }
+  updateRsQuarterSummary(card);
+  card.classList.remove('rs-editing');
+  setRsCardReadonly(card, true);
+  btn.textContent = '수정';
+  btn.classList.remove('btn-primary');
+}
+
+function deleteRsQuarter(btn) {
+  const card = btn.closest('.rs-quarter-card');
+  if (!card) return;
+  card.remove();
+}
+
+function saveRsQuarter(btn) {
+  const card = btn.closest('.rs-quarter-card');
+  if (!card) return;
+  const inputs = card.querySelectorAll('.data-edit-body input');
+  const year = inputs[0]?.value || '—';
+  const quarter = card.querySelector('.data-edit-body select')?.value || '—';
+  const platformAmount = inputs[1]?.value || '';
+  const rsRate = inputs[2]?.value || '';
+  const producerAmount = inputs[11]?.value || '';
+  const list = document.getElementById('rs-quarter-list');
+  const slot = document.getElementById('rs-create-slot');
+  const savedRow = quarterRowTemplate(0, year, quarter, rsRate, false, platformAmount, producerAmount);
+  if (list) list.insertAdjacentHTML('afterbegin', savedRow);
+  if (slot) slot.innerHTML = '';
+}
+
+function collapseDataForms() {
+  document.querySelectorAll('#contract-detail .data-edit-body').forEach((body) => body.classList.remove('open'));
+  document.querySelectorAll('#contract-detail .data-summary.with-action .btn').forEach((btn) => setToggleButtonLabel(btn, false));
+}
+
+function quarterRowTemplate(index, year = '2025', quarter = 'Q1', rsRate = '', isNew = false, platformAmountValue = '4840', producerAmountValue = '5537220') {
+  const readonlyAttr = isNew ? '' : ' readonly';
+  const disabledAttr = isNew ? '' : ' disabled';
+  const platformAmount = isNew ? '' : platformAmountValue;
+  const producerAmount = isNew ? '' : producerAmountValue;
+  const periodLabel = `${year} ${quarter}`;
+  const producerLabel = producerAmount ? `₩${Number(producerAmount).toLocaleString('ko-KR')}` : '—';
+  const actions = isNew
+    ? ''
+    : `<div class="rs-quarter-actions">
+          <button class="btn" onclick="handleRsQuarterAction(this)">수정</button>
+          <button class="btn rs-delete-btn" onclick="deleteRsQuarter(this)">삭제</button>
+        </div>`
+  const summary = isNew
+    ? `<div class="rs-create-head">
+        <div class="rs-create-title">신규 RS 데이터 입력</div>
+        <div class="rs-quarter-actions">
+          <button class="btn btn-primary" onclick="saveRsQuarter(this)">저장</button>
+          <button class="btn" onclick="this.closest('.rs-quarter-card').remove()">취소</button>
+        </div>
+      </div>`
+    : `<div class="data-summary with-action rs-summary-row" onclick="toggleRsQuarter(this)">
+        <div class="data-point-value rs-summary-period">${periodLabel}</div>
+        <div class="data-point-value rs-summary-producer">${producerLabel}</div>
+        <div><span class="bdg b-scheduled">예정</span></div>
+        <div class="rs-summary-action"><i class="ti ti-chevron-down"></i></div>
+      </div>`;
+  return `
+    <div class="data-record rs-quarter-card ${isNew ? 'rs-create-mode' : 'rs-read-mode'}">
+      ${summary}
+      <div class="data-edit-body ${isNew ? 'open' : ''}">
+        <div class="rs-quarter-detail">
+          ${actions}
+          <div class="contract-form-section">
+            <div class="form-subtitle">플랫폼 지급</div>
+            <div class="data-grid">
+              <div class="fg"><label>발생 연도</label><input type="number" value="${isNew ? '' : year}"${readonlyAttr} /></div>
+              <div class="fg"><label>발생 분기</label><select${disabledAttr}><option ${quarter === 'Q1' ? 'selected' : ''}>Q1</option><option ${quarter === 'Q2' ? 'selected' : ''}>Q2</option><option ${quarter === 'Q3' ? 'selected' : ''}>Q3</option><option ${quarter === 'Q4' ? 'selected' : ''}>Q4</option></select></div>
+              <div class="fg"><label>플랫폼 지급액</label><input type="number" value="${platformAmount}"${readonlyAttr} /></div>
+              <div class="fg"><label>통화</label><select${disabledAttr}><option>USD</option><option>KRW</option></select></div>
+              <div class="fg"><label>RS 비율 %</label><input type="number" min="0" max="100" step="0.1" value="${rsRate}"${readonlyAttr} /></div>
+            </div>
+          </div>
+          <div class="contract-form-section">
+            <div class="form-subtitle">공제 내역</div>
+            <div class="data-grid">
+              <div class="fg"><label>원천세 비율</label><input type="number" value="${isNew ? '' : '10'}"${readonlyAttr} /></div>
+              <div class="fg"><label>원천세 금액</label><input type="number" value="${isNew ? '' : '484'}"${readonlyAttr} /></div>
+              <div class="fg"><label>송금 수수료</label><input type="number" value="${isNew ? '' : '35'}"${readonlyAttr} /></div>
+              <div class="fg"><label>환율</label><input type="number" value="${isNew ? '' : '1380'}"${readonlyAttr} /></div>
+              <div class="fg"><label>환전 수수료</label><input type="number" value="${isNew ? '' : '8000'}"${readonlyAttr} /></div>
+              <div class="fg"><label>실제 입금액(원)</label><input type="number" value="${isNew ? '' : '5954000'}"${readonlyAttr} /></div>
+            </div>
+          </div>
+          <div class="contract-form-section">
+            <div class="form-subtitle">정산</div>
+            <div class="data-grid">
+              <div class="fg"><label>Bable 수수료율</label><input type="number" value="${isNew ? '' : '7'}"${readonlyAttr} /></div>
+              <div class="fg"><label>Bable 수수료 금액</label><input type="number" value="${isNew ? '' : '416780'}"${readonlyAttr} /></div>
+              <div class="fg"><label>제작사 정산액</label><input type="number" value="${producerAmount}"${readonlyAttr} /></div>
+              <div class="fg"><label>정산 상태</label><input class="rs-status-input" readonly value="예정" /></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderRsQuarterRows(contract) {
+  const list = document.getElementById('rs-quarter-list');
+  const slot = document.getElementById('rs-create-slot');
+  if (!list) return;
+  if (slot) slot.innerHTML = '';
+  list.innerHTML =
+    quarterRowTemplate(1, '2025', 'Q1', contract.rsRate ?? '') +
+    quarterRowTemplate(2, '2025', 'Q2', contract.rsRate ?? '');
+}
+
+function addQuarterRow(isNew = false) {
+  const target = isNew ? document.getElementById('rs-create-slot') : document.getElementById('rs-quarter-list');
+  if (!target) return;
+  const list = document.getElementById('rs-quarter-list');
+  const next = list.children.length + 1;
+  const rsRate = document.getElementById('cd-rs-rate')?.value || '';
+  if (isNew) {
+    target.innerHTML = quarterRowTemplate(next, '2025', 'Q1', rsRate, true);
+    return;
+  }
+  target.insertAdjacentHTML('beforeend', quarterRowTemplate(next, '2025', 'Q1', rsRate));
+}
+
+function resetNewContractForm() {
+  const company = document.getElementById('new-company');
+  if (!company) return;
+  company.value = '';
+  syncNewContractContent();
+  document.getElementById('new-contract-type').value = 'FLAT_FEE';
+  document.getElementById('new-exclusive').value = 'exclusive';
+  syncNewContractType();
+  document.getElementById('new-rs-rate').value = '';
+}
 
 function renderTable() {
   const tbody = document.getElementById('contract-tbody');
@@ -723,15 +1545,28 @@ function selectContract(id) {
       </div>
     </div>`;
   document.getElementById('cd-sub').textContent = '';
-  // reset tabs
-  document.querySelectorAll('#contract-detail .dtab').forEach((t,i) => t.classList.toggle('active', i===0));
-  document.querySelectorAll('#contract-detail .dpanel').forEach((p,i) => p.classList.toggle('active', i===0));
-  document.getElementById('rs-add-form').style.display = 'none';
-  document.getElementById('rs-add-btn').style.display = '';
+  document.getElementById('cd-company').value = c.company;
+  document.getElementById('cd-content-input').value = c.content;
+  document.getElementById('cd-platform').value = c.platform;
+  document.getElementById('cd-region').value = c.region || '';
+  document.getElementById('cd-contract-type').value = c.type || 'FLAT_FEE';
+  document.getElementById('cd-exclusive').value = c.exclusive || 'exclusive';
+  document.getElementById('cd-rs-rate').value = c.rsRate ?? '';
+  document.getElementById('cd-release-date').value = c.date || '';
+  document.getElementById('cd-term-months').value = c.termMonths || '';
+  contractInfoEditing = false;
+  renderRsQuarterRows(c);
+  syncDetailContractType();
+  setContractInfoEditMode(false);
+  collapseDataForms();
+  renderSettlementDataPanel(c, 'flat');
+  renderSettlementDataPanel(c, 'mg');
+  switchDTab(document.querySelector('#contract-data-tabs [data-panel="ct-info"]'), 'ct-info');
 }
 
 function closeDetail() {
   selId = null;
+  contractInfoEditing = false;
   renderTable();
   document.getElementById('contract-empty').style.display = '';
   document.getElementById('contract-detail').style.display = 'none';
@@ -750,9 +1585,11 @@ function deleteContract() {
 
 function showNewContract() {
   selId = null;
+  contractInfoEditing = false;
   renderTable();
   document.getElementById('contract-empty').style.display = 'none';
   document.getElementById('contract-detail').style.display = 'none';
+  resetNewContractForm();
   document.getElementById('contract-new').style.display = 'flex';
 }
 
@@ -771,113 +1608,393 @@ function filterSearch(v) {
   renderTable();
 }
 
+function formatWon(amount) {
+  return `₩ ${Number(amount || 0).toLocaleString('ko-KR')}`;
+}
+
+function formatCurrencyAmount(amount, currency) {
+  const symbols = { USD: '$', JPY: '¥', CNY: '¥', KRW: '₩' };
+  return `${symbols[currency] || currency} ${Number(amount || 0).toLocaleString('ko-KR')}`;
+}
+
+function posterInitials(title) {
+  return String(title || '').split(/\s+/).map((word) => word[0]).slice(0, 2).join('').toUpperCase();
+}
+
+function posterColor(id) {
+  const colors = ['#3D4A5C', '#5E4434', '#3D5C45', '#5C3D4A', '#4A3D5C', '#5C5234'];
+  const code = String(id || '').split('').reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+  return colors[code % colors.length];
+}
+
+function typeBadge(type) {
+  const cls = type === 'MG+RS' ? 'type-mgrs' : type === 'Flat Fee' ? 'type-flat' : 'type-rs';
+  return `<span class="type-badge ${cls}">${type}</span>`;
+}
+
+function statusBadge(status) {
+  const labels = { DRAFT:'대기', SCHEDULED:'확인 대기', READY:'완료 대기', COMPLETED:'완료' };
+  const cls = status === 'SCHEDULED' ? 'status-scheduled' : status === 'READY' ? 'status-ready' : status === 'COMPLETED' ? 'status-completed' : 'status-draft';
+  return `<span class="status-badge ${cls}">${labels[status] || status}</span>`;
+}
+
+function opsContentCell(row, includeStatus = false) {
+  return `
+    <div class="ops-content">
+      <div style="min-width:0">
+        <div class="ops-title">${row.title}</div>
+        ${includeStatus ? `<div style="margin-top:3px">${statusBadge(row.status)}</div>` : ''}
+      </div>
+    </div>`;
+}
+
+function rsRateForRow(row) {
+  if (row.type !== 'RS') return '—';
+  const rates = [28, 30, 35];
+  const code = String(row.id || '').split('').reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+  return `${rates[code % rates.length]}%`;
+}
+
+function opsPaymentCells(row) {
+  const detail = reviewDetailForRow(row);
+  return `
+    <td class="right ops-muted ops-mono">${detail.period}</td>
+    <td class="right ops-mono">${formatCurrencyAmount(detail.platformPayOriginal, detail.currency)}</td>
+    <td class="right ops-muted ops-mono">${detail.currency}</td>
+    <td class="right ops-muted ops-mono">${detail.depositRate}</td>
+    <td class="right ops-muted ops-mono">${detail.rsRate}</td>
+    <td class="right ops-muted ops-mono">${detail.whtRate}</td>
+    <td class="right ops-mono">${formatWon(detail.wht)}</td>
+    <td class="right ops-mono">${formatWon(detail.wireFee)}</td>
+    <td class="right ops-mono">${detail.fxRate.toLocaleString('ko-KR')}</td>
+    <td class="right ops-mono">${formatWon(detail.fxFee)}</td>
+    <td class="right ops-mono">${formatWon(detail.krwIn)}</td>
+    <td class="right ops-muted ops-mono">${detail.bableRate}</td>
+    <td class="right ops-mono">${formatWon(detail.bableFee)}</td>
+    <td class="right ops-amount">${formatWon(detail.amount)}</td>
+  `;
+}
+
+function emptyRow(colspan, text) {
+  return `<tr><td colspan="${colspan}"><div class="ops-empty">${text}</div></td></tr>`;
+}
+
+function setOptions(selectId, options) {
+  const select = document.getElementById(selectId);
+  if (!select) return;
+  const current = select.value;
+  select.innerHTML = options.map((option) => `<option>${option}</option>`).join('');
+  if (options.includes(current)) select.value = current;
+}
+
+function initSettlementOpsFilters() {
+  setOptions('process-studio-filter', ['제작사 전체', ...opsStudios]);
+  setOptions('complete-studio-filter', ['제작사 전체', ...opsStudios]);
+}
+
+function processStudioFilter() {
+  return document.getElementById('process-studio-filter')?.value || '제작사 전체';
+}
+
+function completeFilters() {
+  return {
+    studio: document.getElementById('complete-studio-filter')?.value || '제작사 전체'
+  };
+}
+
+function applyCompleteFilters(rows) {
+  const filters = completeFilters();
+  return rows.filter((row) =>
+    filters.studio === '제작사 전체' || row.studio === filters.studio
+  );
+}
+
+function renderDraftRows() {
+  const studio = processStudioFilter();
+  const rows = studio === '제작사 전체'
+    ? []
+    : opsDraftRows.filter((row) => row.studio === studio);
+  document.getElementById('draft-count').textContent = rows.length;
+  document.getElementById('draft-tbody').innerHTML = rows.length ? rows.map((row) => `
+    <tr>
+      <td><input class="ops-check" type="checkbox" ${selectedDraftRows[row.id] ? 'checked' : ''} onchange="toggleOpsSelection('draft','${row.id}',this.checked)" /></td>
+      <td>${opsContentCell(row)}</td>
+      <td class="right ops-muted">${row.studio}</td>
+      <td class="right ops-muted">${row.platform}</td>
+      <td class="center">${typeBadge(row.type)}</td>
+      ${opsPaymentCells(row)}
+      <td class="center">${statusBadge(row.status)}</td>
+    </tr>`).join('') : emptyRow(20, studio === '제작사 전체' ? '제작사를 선택하면 정산 예정 처리 대상이 표시됩니다' : '처리할 정산 대상이 없습니다');
+  const selected = opsDraftRows.filter((row) => selectedDraftRows[row.id]);
+  const sum = selected.reduce((total, row) => total + row.amount, 0);
+  document.getElementById('draft-selected-count').textContent = selected.length;
+  document.getElementById('draft-selected-sum').textContent = selected.length ? `· 합계 ${formatWon(sum)}` : '';
+  document.getElementById('process-selected-btn').disabled = selected.length === 0;
+}
+
+function renderProgressRows() {
+  const rows = opsProgressRows.filter((row) => row.status === 'SCHEDULED');
+  document.getElementById('progress-count').textContent = rows.length;
+  document.getElementById('progress-tbody').innerHTML = rows.length ? rows.map((row) => `
+    <tr>
+      <td>${opsContentCell(row)}</td>
+      <td class="right ops-muted">${row.studio}</td>
+      <td class="right ops-muted">${row.platform}</td>
+      <td class="center">${typeBadge(row.type)}</td>
+      ${opsPaymentCells(row)}
+      <td class="center">${statusBadge(row.status)}</td>
+    </tr>`).join('') : emptyRow(19, '확인 대기중인 정산이 없습니다');
+}
+
+function renderReadyRows() {
+  const rows = applyCompleteFilters(opsReadyRows);
+  document.getElementById('ready-count').textContent = rows.length;
+  document.getElementById('ready-tbody').innerHTML = rows.length ? rows.map((row) => `
+    <tr>
+      <td><input class="ops-check" type="checkbox" ${selectedReadyRows[row.id] ? 'checked' : ''} onchange="toggleOpsSelection('ready','${row.id}',this.checked)" /></td>
+      <td>${opsContentCell(row)}</td>
+      <td class="right ops-muted">${row.studio}</td>
+      <td class="right ops-muted">${row.platform}</td>
+      <td class="center">${typeBadge(row.type)}</td>
+      ${opsPaymentCells(row)}
+      <td class="center">${statusBadge('READY')}</td>
+    </tr>`).join('') : emptyRow(20, '완료 처리 대상이 없습니다');
+  const selected = opsReadyRows.filter((row) => selectedReadyRows[row.id]);
+  const sum = selected.reduce((total, row) => total + row.amount, 0);
+  document.getElementById('ready-selected-count').textContent = selected.length;
+  document.getElementById('ready-selected-sum').textContent = selected.length ? `· 합계 ${formatWon(sum)}` : '';
+  document.getElementById('complete-selected-btn').disabled = selected.length === 0;
+}
+
+function renderCompletedRows() {
+  const rows = opsCompletedRows;
+  const totalPages = Math.max(1, Math.ceil(rows.length / completedPageSize));
+  if (completedPage > totalPages) completedPage = totalPages;
+  const pageRows = rows.slice((completedPage - 1) * completedPageSize, completedPage * completedPageSize);
+  document.getElementById('completed-count').textContent = rows.length;
+  document.getElementById('completed-tbody').innerHTML = pageRows.length ? pageRows.map((row) => `
+    <tr>
+      <td>${opsContentCell(row)}</td>
+      <td class="right ops-muted">${row.studio}</td>
+      <td class="right ops-muted">${row.platform}</td>
+      <td class="center">${typeBadge(row.type)}</td>
+      ${opsPaymentCells(row)}
+      <td class="right ops-muted ops-mono">${row.completedAt || '—'}</td>
+      <td class="right ops-muted">${row.completedBy || '—'}</td>
+      <td class="center">${statusBadge(row.status)}</td>
+    </tr>`).join('') : emptyRow(21, '완료된 정산이 없습니다');
+  const start = rows.length ? (completedPage - 1) * completedPageSize + 1 : 0;
+  const end = Math.min(completedPage * completedPageSize, rows.length);
+  document.getElementById('completed-pagebar').innerHTML = rows.length ? `
+    <span class="ops-footer-sum">${start}-${end} / ${rows.length}</span>
+    <div class="ops-spacer"></div>
+    <button class="page-btn" ${completedPage === 1 ? 'disabled' : ''} onclick="setCompletedPage(${completedPage - 1})">이전</button>
+    ${Array.from({ length: totalPages }).map((_, i) => `<button class="page-btn ${completedPage === i + 1 ? 'active' : ''}" onclick="setCompletedPage(${i + 1})">${i + 1}</button>`).join('')}
+    <button class="page-btn" ${completedPage === totalPages ? 'disabled' : ''} onclick="setCompletedPage(${completedPage + 1})">다음</button>
+  ` : '';
+}
+
+function renderSettlementOps() {
+  initSettlementOpsFilters();
+  renderDraftRows();
+  renderProgressRows();
+  renderReadyRows();
+  renderCompletedRows();
+}
+
+function changeProcessStudioFilter() {
+  selectedDraftRows = {};
+  renderSettlementOps();
+}
+
+function toggleOpsSelection(group, id, checked) {
+  const target = group === 'ready' ? selectedReadyRows : selectedDraftRows;
+  target[id] = checked;
+  renderSettlementOps();
+}
+
+function processSelectedDrafts() {
+  const moving = opsDraftRows.filter((row) => selectedDraftRows[row.id]);
+  if (!moving.length) return;
+  const studios = Array.from(new Set(moving.map((row) => row.studio)));
+  if (studios.length !== 1) return;
+  openProcessReviewModal(moving);
+}
+
+function reviewDetailForRow(row) {
+  const krwIn = Math.round(row.amount / 0.93);
+  const bableFee = krwIn - row.amount;
+  const wht = Math.round(krwIn * 0.1);
+  const wireFee = 35000;
+  const fxFee = 8000;
+  const fxRate = 1380;
+  const currency = row.currency || 'USD';
+  const platformPay = krwIn + wht + wireFee + fxFee;
+  const platformPayOriginal = Math.round(platformPay / fxRate);
+  const depositRate = row.type === 'Flat Fee' ? '100%' : row.type === 'MG+RS' ? '50%' : '—';
+  return { ...row, platformPay, platformPayOriginal, currency, depositRate, rsRate: rsRateForRow(row), whtRate: '10%', wht, wireFee, fxRate, fxFee, krwIn, bableRate: '7%', bableFee };
+}
+
+function renderProcessReviewRows(rows) {
+  const detailRows = rows.map(reviewDetailForRow);
+  const body = detailRows.map((row) => `
+    <tr>
+      <td class="text-cell">${row.title}</td>
+      <td class="text-cell">${row.platform}</td>
+      <td>${row.period}</td>
+      <td>${formatWon(row.platformPay)}</td>
+      <td>${row.depositRate}</td>
+      <td>${row.whtRate}</td>
+      <td>${formatWon(row.wht)}</td>
+      <td>${formatWon(row.wireFee)}</td>
+      <td>${row.fxRate.toLocaleString('ko-KR')}</td>
+      <td>${formatWon(row.fxFee)}</td>
+      <td>${formatWon(row.krwIn)}</td>
+      <td>${row.bableRate}</td>
+      <td>${formatWon(row.bableFee)}</td>
+      <td class="producer-pay">${formatWon(row.amount)}</td>
+    </tr>
+  `).join('');
+  const totalKrwIn = detailRows.reduce((sum, row) => sum + row.krwIn, 0);
+  const totalBable = detailRows.reduce((sum, row) => sum + row.bableFee, 0);
+  const totalProducer = detailRows.reduce((sum, row) => sum + row.amount, 0);
+  document.getElementById('process-review-rows').innerHTML = `${body}
+    <tr class="subtotal-row">
+      <td class="text-cell" colspan="3">전체 합계</td>
+      <td></td>
+      <td colspan="6"></td>
+      <td>${formatWon(totalKrwIn)}</td>
+      <td></td>
+      <td>${formatWon(totalBable)}</td>
+      <td class="producer-pay">${formatWon(totalProducer)}</td>
+    </tr>
+  `;
+}
+
+function openProcessReviewModal(rows) {
+  processReviewRows = rows;
+  const studio = rows[0]?.studio || '';
+  const total = rows.reduce((sum, row) => sum + row.amount, 0);
+  document.getElementById('process-review-sub').textContent = `${studio} · ${rows.length}건을 제작사 확인 대기 상태로 이동합니다`;
+  document.getElementById('process-review-count').textContent = `${rows.length}건`;
+  document.getElementById('process-review-studio').textContent = studio;
+  document.getElementById('process-review-total').textContent = formatWon(total);
+  renderProcessReviewRows(rows);
+  document.getElementById('process-review-modal').classList.add('show');
+}
+
+function closeProcessReviewModal() {
+  processReviewRows = [];
+  document.getElementById('process-review-modal').classList.remove('show');
+}
+
+function confirmProcessSelectedDrafts() {
+  const movingIds = new Set(processReviewRows.map((row) => row.id));
+  if (!movingIds.size) return;
+  const moving = opsDraftRows.filter((row) => movingIds.has(row.id));
+  opsDraftRows = opsDraftRows.filter((row) => !movingIds.has(row.id));
+  opsProgressRows = moving.map((row) => ({ ...row, status: 'SCHEDULED' })).concat(opsProgressRows);
+  selectedDraftRows = {};
+  closeProcessReviewModal();
+  renderSettlementOps();
+}
+
+function completeSelectedReady() {
+  const moving = opsReadyRows.filter((row) => selectedReadyRows[row.id]);
+  if (!moving.length) return;
+  opsReadyRows = opsReadyRows.filter((row) => !selectedReadyRows[row.id]);
+  opsCompletedRows = moving.map((row) => ({ ...row, status: 'COMPLETED', completedAt: '2025-04-08', completedBy: 'Lee · Admin' })).concat(opsCompletedRows);
+  selectedReadyRows = {};
+  completedPage = 1;
+  renderSettlementOps();
+}
+
+function setCompletedPage(page) {
+  completedPage = page;
+  renderSettlementOps();
+}
+
+function findOpsRow(id) {
+  return [...opsDraftRows, ...opsProgressRows, ...opsReadyRows, ...opsCompletedRows].find((row) => row.id === id);
+}
+
+function settlementDetailSections(row) {
+  const platformPay = Math.round(row.amount / 0.93);
+  const fee = platformPay - row.amount;
+  const tax = Math.round(platformPay * 0.1);
+  const wire = 35000;
+  const fxFee = 8000;
+  const actual = platformPay - tax - wire - fxFee;
+  return [
+    ['계약 정보', [
+      ['제작사', row.studio], ['플랫폼사', row.platform], ['계약 타입', row.type],
+      ['발생 월·분기', row.period], ['정산 상태', statusBadge(row.status)], ['콘텐츠', row.title]
+    ]],
+    ['정산 데이터', [
+      ['플랫폼 지급액', formatWon(platformPay)], ['원천세 금액', formatWon(tax)], ['송금 수수료', formatWon(wire)],
+      ['환전 수수료', formatWon(fxFee)], ['실제 입금액', formatWon(actual)], ['Bable 수수료', formatWon(fee)],
+      ['제작사 정산액', formatWon(row.amount)], ['완료 처리일', row.completedAt || '—'], ['처리 관리자', row.completedBy || '—']
+    ]]
+  ];
+}
+
+function openSettlementDetailModal(id) {
+  const row = findOpsRow(id);
+  if (!row) return;
+  document.getElementById('settlement-modal-poster').style.background = posterColor(row.id);
+  document.getElementById('settlement-modal-poster').textContent = posterInitials(row.title);
+  document.getElementById('settlement-modal-title').textContent = row.title;
+  document.getElementById('settlement-modal-sub').innerHTML = `${row.studio} · ${row.platform} · 발생 <span class="ops-mono">${row.period}</span>`;
+  document.getElementById('settlement-modal-amount').textContent = formatWon(row.amount);
+  document.getElementById('settlement-modal-body').innerHTML = settlementDetailSections(row).map(([title, items]) => `
+    <div class="settlement-detail-card">
+      <div class="settlement-detail-head">${title}</div>
+      <div class="settlement-detail-grid">
+        ${items.map(([key, value]) => `
+          <div class="settlement-detail-item">
+            <div class="settlement-detail-k">${key}</div>
+            <div class="settlement-detail-v">${value}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('settlement-detail-modal').classList.add('show');
+}
+
+function closeSettlementDetailModal() {
+  document.getElementById('settlement-detail-modal').classList.remove('show');
+}
+
 function switchDTab(el, panelId) {
   const tabbar = el.closest('.dtabbar');
   const dbody = tabbar.nextElementSibling;
+  const savebar = document.getElementById('contract-info-savebar');
   tabbar.querySelectorAll('.dtab').forEach(t => t.classList.remove('active'));
   dbody.querySelectorAll('.dpanel').forEach(p => p.classList.remove('active'));
   el.classList.add('active');
   document.getElementById(panelId).classList.add('active');
+  if (savebar) savebar.style.display = panelId === 'ct-info' ? '' : 'none';
 }
 
 function switchTab(tab) {
-  const isContracts = tab === 'contracts';
-  document.getElementById('view-contracts').classList.toggle('active', isContracts);
-  document.getElementById('view-settlement').classList.toggle('active', !isContracts);
-  document.querySelectorAll('.nav a[href="#contracts"], .nav a[href="#settlement"]').forEach((n,i) => n.classList.toggle('active', isContracts ? i===0 : i===1));
-}
-
-function showAddRs() {
-  document.getElementById('rs-add-form').style.display = 'flex';
-  document.getElementById('rs-add-btn').style.display = 'none';
-}
-
-function cancelAddRs() {
-  document.getElementById('rs-add-form').style.display = 'none';
-  document.getElementById('rs-add-btn').style.display = '';
-}
-
-function addRs() {
-  const month = document.getElementById('rs-month').value;
-  const amount = document.getElementById('rs-amount').value;
-  if (!month || !amount) { alert('연월과 금액을 모두 입력해주세요.'); return; }
-  const tbody = document.getElementById('rs-tbody');
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td>${month}</td>
-    <td class="amt">$${parseInt(amount).toLocaleString()}</td>
-    <td class="act">
-      <button class="btn" style="font-size:10.5px;padding:3px 7px" onclick="editRs(this)"><i class="ti ti-edit"></i></button>
-      <button class="btn btn-del" style="font-size:10.5px;padding:3px 7px" onclick="this.closest('tr').remove()"><i class="ti ti-trash"></i></button>
-    </td>`;
-  tbody.insertBefore(tr, tbody.firstChild);
-  document.getElementById('rs-month').value = '';
-  document.getElementById('rs-amount').value = '';
-  cancelAddRs();
-}
-
-function editRs(btn) {
-  const tr = btn.closest('tr');
-  const cells = tr.querySelectorAll('td');
-  const month = cells[0].textContent;
-  const amount = cells[1].textContent.replace(/[$,]/g,'');
-  tr.innerHTML = `
-    <td><input type="month" value="${month}" style="font-size:12px;padding:3px 6px;border:0.5px solid #e0dfd9;border-radius:4px;width:110px" /></td>
-    <td><input type="number" value="${amount}" style="font-size:12px;padding:3px 6px;border:0.5px solid #e0dfd9;border-radius:4px;width:90px" /></td>
-    <td class="act">
-      <button class="btn btn-primary" style="font-size:10.5px;padding:3px 7px" onclick="saveRsRow(this)">저장</button>
-      <button class="btn" style="font-size:10.5px;padding:3px 7px" onclick="cancelRsRow(this,'${month}','${amount}')">취소</button>
-    </td>`;
-}
-
-function saveRsRow(btn) {
-  const tr = btn.closest('tr');
-  const inputs = tr.querySelectorAll('input');
-  const m = inputs[0].value;
-  const a = inputs[1].value;
-  tr.innerHTML = `
-    <td>${m}</td>
-    <td class="amt">$${parseInt(a).toLocaleString()}</td>
-    <td class="act">
-      <button class="btn" style="font-size:10.5px;padding:3px 7px" onclick="editRs(this)"><i class="ti ti-edit"></i></button>
-      <button class="btn btn-del" style="font-size:10.5px;padding:3px 7px" onclick="this.closest('tr').remove()"><i class="ti ti-trash"></i></button>
-    </td>`;
-}
-
-function cancelRsRow(btn, month, amount) {
-  const tr = btn.closest('tr');
-  tr.innerHTML = `
-    <td>${month}</td>
-    <td class="amt">$${parseInt(amount).toLocaleString()}</td>
-    <td class="act">
-      <button class="btn" style="font-size:10.5px;padding:3px 7px" onclick="editRs(this)"><i class="ti ti-edit"></i></button>
-      <button class="btn btn-del" style="font-size:10.5px;padding:3px 7px" onclick="this.closest('tr').remove()"><i class="ti ti-trash"></i></button>
-    </td>`;
-}
-
-function loadPreview() {
-  document.getElementById('preview-empty').style.display = 'none';
-  document.getElementById('preview-result').style.display = 'block';
-  document.getElementById('complete-box').classList.remove('show');
-}
-
-function completeSettlement() {
-  const now = new Date();
-  const pad = n => String(n).padStart(2,'0');
-  const label = `처리 완료: ${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())} · Lee Admin`;
-  document.getElementById('complete-time').textContent = label;
-  document.getElementById('complete-box').classList.add('show');
-  document.querySelectorAll('.preview-box .bdg').forEach(b => {
-    b.className = 'bdg b-completed';
-    b.textContent = 'COMPLETED';
+  const validTabs = ['contracts', 'settlement', 'completed'];
+  const nextTab = validTabs.includes(tab) ? tab : 'contracts';
+  document.getElementById('view-contracts').classList.toggle('active', nextTab === 'contracts');
+  document.getElementById('view-settlement').classList.toggle('active', nextTab === 'settlement');
+  document.getElementById('view-completed').classList.toggle('active', nextTab === 'completed');
+  document.querySelectorAll('.nav a[href="#contracts"], .nav a[href="#settlement"], .nav a[href="#completed"]').forEach((n) => {
+    n.classList.toggle('active', n.getAttribute('href') === `#${nextTab}`);
   });
-  document.querySelector('#preview-result button.btn-primary').disabled = true;
-  document.querySelector('#preview-result button.btn-primary').style.opacity = '0.4';
+  document.querySelectorAll('.tabbar .tab').forEach((t) => {
+    t.classList.toggle('active', t.getAttribute('onclick') === `switchTab('${nextTab}')`);
+  });
+  location.hash = nextTab;
 }
 
 renderTable();
-document.getElementById('rs-add-form').style.display = 'none';
-if (['contracts', 'settlement'].includes(location.hash.slice(1))) {
+renderSettlementOps();
+if (['contracts', 'settlement', 'completed'].includes(location.hash.slice(1))) {
   switchTab(location.hash.slice(1));
 }
 </script>

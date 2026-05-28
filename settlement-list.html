@@ -220,6 +220,21 @@
       letter-spacing: -0.3px;
     }
 
+    .content-search {
+      width: 260px;
+      max-width: 100%;
+      border: 0.5px solid var(--border-color);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 14px;
+      outline: none;
+      background: #fff;
+    }
+
+    .content-search:focus {
+      border-color: var(--primary-blue);
+    }
+
     .section-copy {
       margin: 6px 0 0;
       color: var(--text-secondary);
@@ -232,6 +247,17 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
+    }
+
+    .empty-card {
+      grid-column: 1 / -1;
+      padding: 28px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 14px;
+      border: 0.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: #fff;
     }
 
     .content-card {
@@ -809,6 +835,17 @@
       font-family: 'Geist', 'Pretendard', system-ui, sans-serif;
     }
 
+    .detail-content-link {
+      color: inherit;
+      font-weight: inherit;
+      text-decoration: none;
+    }
+
+    .detail-content-link:hover {
+      color: inherit;
+      text-decoration: none;
+    }
+
     .settlement-detail-table td.producer-pay {
       font-weight: 700;
       color: var(--text-primary);
@@ -879,6 +916,7 @@
       .notice-btn { font-size: 13px; padding: 9px 13px; }
       .notice-right-amount { font-size: 30px; }
       .content-title { font-size: 18px; }
+      .content-search { width: 100%; }
       .content-grid { grid-template-columns: 1fr; }
       .content-card {
         grid-template-columns: 48px minmax(0, 1fr) 24px;
@@ -915,6 +953,7 @@
         <div>
           <h2 class="content-title">내 콘텐츠 리스트</h2>
         </div>
+        <input id="contentSearchInput" class="content-search" type="search" placeholder="콘텐츠명 검색" oninput="filterContents(this.value)" />
       </div>
       <div id="contentGrid" class="content-grid"></div>
     </section>
@@ -960,7 +999,6 @@
           </div>
           <p id="settlementModalSubtitle" class="modal-subtitle">콘텐츠 3건 · 플랫폼 정산 4건</p>
         </div>
-        <button type="button" class="modal-close" onclick="closeSettlementNotice()">닫기</button>
       </div>
       <div class="modal-body">
         <p id="settlementDoneDate" class="detail-done-date"></p>
@@ -1015,6 +1053,7 @@
     ];
 
     let currentSettlementStatus = 'SCHEDULED'; // SCHEDULED | CONFIRMED | COMPLETED | NONE
+    let contentSearchTerm = '';
 
     const currentSettlement = {
       monthLabel: '2025년 4월',
@@ -1219,7 +1258,9 @@
     }
 
     function sortedContents() {
-      return [...contents].sort((a, b) => b.amount - a.amount);
+      return [...contents]
+        .filter((item) => item.title.toLowerCase().includes(contentSearchTerm.toLowerCase()))
+        .sort((a, b) => b.amount - a.amount);
     }
 
     function platformLabel(platforms) {
@@ -1231,7 +1272,7 @@
     function renderContentGrid() {
       const list = sortedContents();
       const grid = document.getElementById('contentGrid');
-      grid.innerHTML = list.map(item => `
+      grid.innerHTML = list.length ? list.map(item => `
         <article class="content-card" onclick="goDetail()">
           <div class="poster" style="background:${item.poster};"></div>
           <div>
@@ -1243,7 +1284,12 @@
           </div>
           <div class="card-arrow" aria-hidden="true">›</div>
         </article>
-      `).join('');
+      `).join('') : '<div class="empty-card">검색 결과가 없습니다.</div>';
+    }
+
+    function filterContents(value) {
+      contentSearchTerm = value.trim();
+      renderContentGrid();
     }
 
     function goDetail() {
@@ -1299,7 +1345,7 @@
       const body = Object.entries(groups).map(([content, contentRows]) => {
         return contentRows.map((r, idx) => `
           <tr>
-            <td class="text-cell">${idx === 0 ? r.content : ''}</td>
+            <td class="text-cell">${idx === 0 ? `<a class="detail-content-link" href="settlement.html">${r.content}</a>` : ''}</td>
             <td class="text-cell">${r.platform}</td>
             <td>${r.period}</td>
             <td>${formatMoney(r.platformPay)}</td>
