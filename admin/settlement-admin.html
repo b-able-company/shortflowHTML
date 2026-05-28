@@ -619,7 +619,8 @@ td { padding: 9px 12px; vertical-align: middle; }
               <tr>
                 <th>콘텐츠</th>
                 <th>플랫폼사</th>
-                <th>출시일</th>
+                <th>계약 타입</th>
+                <th>릴리즈 일자</th>
               </tr>
             </thead>
             <tbody id="contract-tbody"></tbody>
@@ -802,6 +803,7 @@ td { padding: 9px 12px; vertical-align: middle; }
                         <div class="fg"><label>Bable 수수료율</label><input type="number" value="7" /></div>
                         <div class="fg"><label>Bable 수수료 금액</label><input type="number" value="1291990" /></div>
                         <div class="fg"><label>제작사 정산액</label><input id="flat-producer-amount" type="number" value="17165010" /></div>
+                        <div class="fg"><label>정산 상태</label><select id="flat-settlement-status"><option>예정</option><option>완료</option></select></div>
                       </div>
                     </div>
                   </div>
@@ -843,6 +845,7 @@ td { padding: 9px 12px; vertical-align: middle; }
                         <div class="fg"><label>Bable 수수료율</label><input type="number" value="7" /></div>
                         <div class="fg"><label>Bable 수수료 금액</label><input type="number" value="2604490" /></div>
                         <div class="fg"><label>제작사 정산액</label><input id="mg-producer-amount" type="number" value="34602510" /></div>
+                        <div class="fg"><label>정산 상태</label><select id="mg-settlement-status"><option>예정</option><option>완료</option></select></div>
                       </div>
                     </div>
                   </div>
@@ -1191,7 +1194,7 @@ function saveContractInfo() {
   contract.date = document.getElementById('cd-release-date').value;
   contract.termMonths = Number(document.getElementById('cd-term-months').value) || '';
   const headerSub = document.querySelector('#cd-title .dh-sub');
-  if (headerSub) headerSub.textContent = `${contract.company} · ${contract.platform} · 출시일 ${contract.date || '—'}`;
+  if (headerSub) headerSub.textContent = `${contract.company} · ${contract.platform} · 릴리즈 일자 ${contract.date || '—'}`;
   renderTable();
 }
 
@@ -1208,11 +1211,13 @@ function defaultSettlementData(contract, kind) {
   const platformAmount = parseMoneyNumber(contract?.mg);
   const deposit = kind === 'mg' ? 37207000 : 18457000;
   const producer = kind === 'mg' ? 34602510 : 17165010;
+  const status = contract.id % 2 === 0 ? '완료' : '예정';
   return {
     month: '2025-04',
     platformAmount: platformAmount ? String(platformAmount) : '',
     depositAmount: platformAmount ? String(deposit) : '',
     producerAmount: platformAmount ? String(producer) : '',
+    status: platformAmount ? status : '예정',
     hasData: !!platformAmount
   };
 }
@@ -1258,12 +1263,14 @@ function syncSettlementSummary(kind, persist = true) {
   const platformAmount = document.getElementById(`${kind}-platform-amount`)?.value || '';
   const depositAmount = document.getElementById(`${kind}-deposit-amount`)?.value || '';
   const producerAmount = document.getElementById(`${kind}-producer-amount`)?.value || '';
+  const status = document.getElementById(`${kind}-settlement-status`)?.value || '예정';
   const state = settlementDataState[`${selId}:${kind}`];
   if (state && persist) {
     state.month = month;
     state.platformAmount = platformAmount;
     state.depositAmount = depositAmount;
     state.producerAmount = producerAmount;
+    state.status = status;
     state.hasData = true;
   }
 }
@@ -1281,6 +1288,8 @@ function fillSettlementDataForm(kind, data) {
   document.getElementById(`${kind}-platform-amount`).value = data.platformAmount || '';
   document.getElementById(`${kind}-deposit-amount`).value = data.depositAmount || '';
   document.getElementById(`${kind}-producer-amount`).value = data.producerAmount || '';
+  const status = document.getElementById(`${kind}-settlement-status`);
+  if (status) status.value = data.status || '예정';
   syncSettlementSummary(kind, false);
 }
 
@@ -1521,7 +1530,8 @@ function renderTable() {
           <div><div class="tname">${c.content}</div><div class="tsub">${c.company}</div></div>
         </div>
       </td>
-      <td><span class="platform-pill">${c.platform}</span></td>
+      <td class="tmeta">${c.platform}</td>
+      <td>${typeBadge(contractTypeLabel(c.type))}</td>
       <td class="tmeta">${c.date || '—'}</td>`;
     tr.onclick = () => selectContract(c.id);
     tbody.appendChild(tr);
@@ -1541,7 +1551,7 @@ function selectContract(id) {
       <div class="poster poster-lg ${c.poster}" data-mark="${c.mark}"></div>
       <div>
         <div class="dh-title-text">${c.content}</div>
-        <div class="dh-sub">${c.company} · ${c.platform} · 출시일 ${c.date || '—'}</div>
+        <div class="dh-sub">${c.company} · ${c.platform} · 릴리즈 일자 ${c.date || '—'}</div>
       </div>
     </div>`;
   document.getElementById('cd-sub').textContent = '';
@@ -1606,6 +1616,10 @@ function filterCompany() {
 function filterSearch(v) {
   filterQ = v;
   renderTable();
+}
+
+function contractTypeLabel(type) {
+  return type === 'MG_RS' ? 'MG+RS' : type === 'FLAT_FEE' ? 'Flat Fee' : 'RS';
 }
 
 function formatWon(amount) {
