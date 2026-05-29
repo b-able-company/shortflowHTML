@@ -669,10 +669,8 @@ td { padding: 9px 12px; vertical-align: middle; }
                         <option value="">제작사를 먼저 선택하세요</option>
                       </select>
                     </div>
-                    <div class="fg"><label>플랫폼사 선택 *</label>
-                      <select><option value="">플랫폼사 선택</option><option>ShortReel (US)</option><option>Viki</option><option>WeTV</option><option>iQIYI</option></select>
-                    </div>
-                    <div class="fg"><label>유통 권역</label><input type="text" placeholder="예: 글로벌, 아시아, 북미" /></div>
+                    <div class="fg"><label>플랫폼사 *</label><input id="new-platform" type="text" placeholder="예: ShortReel (US)" /></div>
+                    <div class="fg"><label>유통 권역</label><input id="new-region" type="text" placeholder="예: 글로벌, 아시아, 북미" /></div>
                   </div>
                 </div>
                 <div class="contract-form-section">
@@ -708,7 +706,7 @@ td { padding: 9px 12px; vertical-align: middle; }
           </div>
           <div class="savebar">
             <button class="btn" onclick="closeNew()">취소</button>
-            <button class="btn btn-primary"><i class="ti ti-device-floppy"></i> 계약 생성</button>
+            <button class="btn btn-primary" onclick="createContract()"><i class="ti ti-device-floppy"></i> 계약 생성</button>
           </div>
         </div>
 
@@ -1177,8 +1175,8 @@ function setContractInfoEditMode(isEditing) {
   contractInfoEditing = isEditing;
   const panel = document.getElementById('ct-info');
   const button = document.getElementById('contract-info-action');
-  const lockedIds = ['cd-company', 'cd-content-input', 'cd-platform'];
-  const editableIds = ['cd-region', 'cd-contract-type', 'cd-exclusive', 'cd-rs-rate', 'cd-release-date', 'cd-term-months'];
+  const lockedIds = ['cd-company', 'cd-content-input'];
+  const editableIds = ['cd-platform', 'cd-region', 'cd-contract-type', 'cd-exclusive', 'cd-rs-rate', 'cd-release-date', 'cd-term-months'];
 
   panel?.classList.toggle('contract-info-read-mode', !isEditing);
   lockedIds.forEach((id) => {
@@ -1204,6 +1202,7 @@ function saveContractInfo() {
   const contract = contracts.find((item) => item.id === selId);
   if (!contract) return;
   const type = document.getElementById('cd-contract-type').value;
+  contract.platform = document.getElementById('cd-platform').value.trim() || '—';
   contract.region = document.getElementById('cd-region').value;
   contract.type = type;
   contract.exclusive = document.getElementById('cd-exclusive').value;
@@ -1529,10 +1528,53 @@ function resetNewContractForm() {
   if (!company) return;
   company.value = '';
   syncNewContractContent();
+  document.getElementById('new-platform').value = '';
+  document.getElementById('new-region').value = '';
   document.getElementById('new-contract-type').value = 'FLAT_FEE';
   document.getElementById('new-exclusive').value = 'exclusive';
   syncNewContractType();
   document.getElementById('new-rs-rate').value = '';
+  document.getElementById('new-contract-amount').value = '';
+  document.getElementById('new-release-date').value = '';
+  document.getElementById('new-release-end-date').value = '';
+  document.getElementById('new-term-months').value = '';
+}
+
+function createContract() {
+  const companySelect = document.getElementById('new-company');
+  const contentSelect = document.getElementById('new-content');
+  const platform = document.getElementById('new-platform').value.trim();
+  if (!companySelect.value || !contentSelect.value || !platform) {
+    alert('제작사, 콘텐츠, 플랫폼사를 입력해 주세요.');
+    return;
+  }
+  const type = document.getElementById('new-contract-type').value;
+  const contractAmount = Number(document.getElementById('new-contract-amount').value) || null;
+  const nextId = Math.max(0, ...contracts.map((item) => Number(item.id) || 0)) + 1;
+  const content = contentSelect.value;
+  const newContract = {
+    id: nextId,
+    content,
+    poster: `poster-p${(nextId % 6) + 1}`,
+    mark: posterInitials(content),
+    platform,
+    company: companySelect.options[companySelect.selectedIndex]?.textContent || '',
+    companyId: Number(companySelect.value),
+    date: document.getElementById('new-release-date').value,
+    type,
+    exclusive: document.getElementById('new-exclusive').value,
+    rsRate: type === 'RS' || type === 'MG_RS' ? Number(document.getElementById('new-rs-rate').value) || null : null,
+    region: document.getElementById('new-region').value,
+    termMonths: Number(document.getElementById('new-term-months').value) || '',
+    contractAmount: type === 'FLAT_FEE' || type === 'MG_RS' ? contractAmount : null,
+    mg: type === 'FLAT_FEE' || type === 'MG_RS'
+      ? (contractAmount ? `$${contractAmount.toLocaleString('en-US')}` : '—')
+      : '—'
+  };
+  contracts.unshift(newContract);
+  document.getElementById('contract-new').style.display = 'none';
+  renderTable();
+  selectContract(newContract.id);
 }
 
 function renderTable() {
