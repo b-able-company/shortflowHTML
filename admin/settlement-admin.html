@@ -89,7 +89,11 @@ td { padding: 9px 12px; vertical-align: middle; }
 .dh { background: #fff; border-bottom: 0.5px solid #e8e6e0; padding: 14px 18px; flex-shrink: 0; }
 .dh-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
 .dh-title { font-size: 15px; font-weight: 600; }
+.dh-copy { min-height: 75px; display: flex; flex-direction: column; }
 .dh-sub { font-size: 11.5px; color: #999; margin-top: 3px; }
+.dh-platform-row { margin-top: auto; padding-top: 4px; font-size: 11.5px; }
+.dh-platform { display: inline-flex; align-items: center; padding: 1px 6px; border: 0.5px solid #e2e0d8; border-radius: 999px; background: #fafaf7; color: #333; font-weight: 500; line-height: 16px; vertical-align: baseline; }
+.dh-release { color: #aaa; }
 .dh-acts { display: flex; gap: 5px; margin-top: 11px; flex-wrap: wrap; }
 .btn { font-size: 11.5px; padding: 5px 11px; border-radius: 6px; border: 0.5px solid #e0dfd9; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; background: #fff; color: #444; }
 .btn:hover { opacity: 0.8; }
@@ -250,23 +254,20 @@ td { padding: 9px 12px; vertical-align: middle; }
 }
 .rs-quarter-detail .contract-form-section {
   margin-bottom: 10px;
-  padding: 0 0 10px;
-  border: none;
-  border-bottom: 0.5px solid #efede7;
-  border-radius: 0;
-  background: transparent;
+  padding: 13px 14px 14px;
+  border: 0.5px solid #eeede8;
+  border-radius: 8px;
+  background: #fff;
 }
 .rs-quarter-detail .contract-form-section:last-child {
   margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
 }
 .rs-quarter-detail .form-subtitle {
-  margin-bottom: 8px;
-  padding-bottom: 0;
-  border-bottom: none;
-  color: #777;
-  font-size: 11px;
+  margin-bottom: 11px;
+  padding-bottom: 7px;
+  border-bottom: 0.5px solid #f0efe9;
+  color: #333;
+  font-size: 12px;
 }
 .rs-quarter-card.rs-read-mode .data-grid { gap: 14px 18px; }
 .rs-quarter-card.rs-read-mode .fg {
@@ -294,7 +295,7 @@ td { padding: 9px 12px; vertical-align: middle; }
   background: #fff;
   box-shadow: inset 0 0 0 1px #d9d6cb;
 }
-.rs-quarter-card.rs-editing .contract-form-section { background: transparent; }
+.rs-quarter-card.rs-editing .contract-form-section { background: #fff; }
 .rs-quarter-card.rs-editing .fg { border-bottom: none; padding-bottom: 0; }
 .rs-quarter-card.rs-editing .fg input,
 .rs-quarter-card.rs-editing .fg select {
@@ -380,13 +381,9 @@ td { padding: 9px 12px; vertical-align: middle; }
 .rs-inline-form input.w-month { width: 90px; }
 .rs-inline-form input.w-amt { width: 100px; }
 
-/* PERF TABLE */
-.perf-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.perf-table thead th { background: #f7f6f2; padding: 6px 10px; text-align: right; font-size: 10px; font-weight: 500; color: #aaa; border-bottom: 0.5px solid #e8e6e0; }
-.perf-table thead th:first-child { text-align: left; }
-.perf-table tbody td { padding: 8px 10px; border-bottom: 0.5px solid #f5f4f0; text-align: right; font-family: monospace; font-size: 12px; color: #1a1a18; }
-.perf-table tbody td:first-child { text-align: left; font-family: inherit; font-weight: 500; }
-.perf-table .null-val { color: #ccc; }
+/* PERF FORM */
+.perf-form-grid input { text-align: right; font-family: monospace; font-variant-numeric: tabular-nums; }
+.perf-note { margin-top: 12px; padding-top: 10px; border-top: 0.5px solid #f0efe9; font-size: 11px; color: #999; line-height: 1.5; }
 
 /* SETTLEMENT COMPLETE AREA */
 .preview-box { background: #fff; border: 0.5px solid #e8e6e0; border-radius: 8px; overflow: hidden; margin-bottom: 12px; }
@@ -727,6 +724,7 @@ td { padding: 9px 12px; vertical-align: middle; }
             <div class="dtab" data-panel="ct-flat" data-type="FLAT_FEE" onclick="switchDTab(this,'ct-flat')">Flat Fee 데이터</div>
             <div class="dtab" data-panel="ct-mg" data-type="MG_RS" onclick="switchDTab(this,'ct-mg')">MG 데이터</div>
             <div class="dtab" data-panel="ct-rs" data-type="MG_RS RS" onclick="switchDTab(this,'ct-rs')">RS 데이터</div>
+            <div class="dtab" data-panel="ct-performance" onclick="switchDTab(this,'ct-performance')">퍼포먼스</div>
           </div>
 
           <div class="dbody">
@@ -870,6 +868,23 @@ td { padding: 9px 12px; vertical-align: middle; }
                 <div></div>
               </div>
               <div id="rs-quarter-list" class="data-list rs-table-list"></div>
+            </div>
+
+            <!-- 퍼포먼스 데이터 탭 -->
+            <div class="dpanel" id="ct-performance">
+              <div class="data-panel-actions">
+                <button id="performance-data-action" class="btn" onclick="handlePerformanceDataAction()">수정</button>
+              </div>
+              <div class="contract-form-section">
+                <div class="form-grid perf-form-grid">
+                  <div class="fg"><label>조회수</label><input id="performance-views" type="number" min="0" step="1" /></div>
+                  <div class="fg"><label>팔로우수</label><input id="performance-follows" type="number" min="0" step="1" /></div>
+                  <div class="fg"><label>좋아요수</label><input id="performance-likes" type="number" min="0" step="1" /></div>
+                  <div class="fg"><label>광고수</label><input id="performance-ads" type="number" min="0" step="1" /></div>
+                  <div class="fg"><label>최근 입력 날짜</label><input id="performance-updated-at" type="date" /></div>
+                </div>
+                <div class="perf-note">모든 지표는 누적값 기준입니다.</div>
+              </div>
             </div>
 
           </div>
@@ -1065,6 +1080,7 @@ let filterCo = '';
 let filterQ = '';
 let contractInfoEditing = false;
 const settlementDataState = {};
+const performanceDataState = {};
 
 const companyContents = {
   '1': ['The Last Letter', 'Echo of Spring'],
@@ -1210,8 +1226,14 @@ function saveContractInfo() {
   contract.contractAmount = type === 'FLAT_FEE' || type === 'MG_RS' ? Number(document.getElementById('cd-contract-amount').value) || null : null;
   contract.date = document.getElementById('cd-release-date').value;
   contract.termMonths = Number(document.getElementById('cd-term-months').value) || '';
-  const headerSub = document.querySelector('#cd-title .dh-sub');
-  if (headerSub) headerSub.textContent = `${contract.company} · ${contract.platform} · 릴리즈 일자 ${contract.date || '—'}`;
+  const headerCompany = document.getElementById('detail-company-name');
+  const headerPlatform = document.getElementById('detail-platform-name');
+  const headerRelease = document.getElementById('detail-release-date');
+  if (headerCompany) headerCompany.textContent = contract.company || '—';
+  if (headerPlatform) headerPlatform.textContent = contract.platform || '—';
+  if (headerRelease) headerRelease.textContent = contract.date || '—';
+  getPerformanceData(contract);
+  fillPerformanceForm(contract);
   renderTable();
 }
 
@@ -1335,6 +1357,75 @@ function handleSettlementDataAction(kind) {
   }
   syncSettlementSummary(kind);
   setSettlementDataMode(kind, 'read');
+}
+
+function defaultPerformanceData(contract) {
+  return {
+    views: '',
+    follows: '',
+    likes: '',
+    ads: '',
+    updatedAt: '',
+    mode: 'edit'
+  };
+}
+
+function getPerformanceData(contract) {
+  if (!contract) return null;
+  const key = String(contract.id);
+  if (!performanceDataState[key]) performanceDataState[key] = defaultPerformanceData(contract);
+  return performanceDataState[key];
+}
+
+function setPerformanceReadonly(readonly) {
+  document.querySelectorAll('#ct-performance input').forEach((input) => {
+    input.readOnly = readonly;
+  });
+}
+
+function fillPerformanceForm(contract) {
+  const data = getPerformanceData(contract);
+  if (!data) return;
+  document.getElementById('performance-views').value = data.views || '';
+  document.getElementById('performance-follows').value = data.follows || '';
+  document.getElementById('performance-likes').value = data.likes || '';
+  document.getElementById('performance-ads').value = data.ads || '';
+  document.getElementById('performance-updated-at').value = data.updatedAt || '';
+  setPerformanceMode(data.mode || 'edit');
+}
+
+function setPerformanceMode(mode) {
+  const data = performanceDataState[String(selId)];
+  const button = document.getElementById('performance-data-action');
+  if (data) data.mode = mode;
+  const editing = mode === 'edit';
+  setPerformanceReadonly(!editing);
+  if (button) {
+    button.innerHTML = editing ? '<i class="ti ti-device-floppy"></i> 저장' : '<i class="ti ti-edit"></i> 수정';
+    button.classList.toggle('btn-primary', editing);
+  }
+}
+
+function syncPerformanceData() {
+  const data = performanceDataState[String(selId)];
+  if (!data) return;
+  data.views = document.getElementById('performance-views')?.value || '';
+  data.follows = document.getElementById('performance-follows')?.value || '';
+  data.likes = document.getElementById('performance-likes')?.value || '';
+  data.ads = document.getElementById('performance-ads')?.value || '';
+  data.updatedAt = document.getElementById('performance-updated-at')?.value || '';
+}
+
+function handlePerformanceDataAction() {
+  if (!selId) return;
+  const data = performanceDataState[String(selId)];
+  if (!data) return;
+  if (data.mode !== 'edit') {
+    setPerformanceMode('edit');
+    return;
+  }
+  syncPerformanceData();
+  setPerformanceMode('read');
 }
 
 function setToggleButtonLabel(btn, isOpen) {
@@ -1572,6 +1663,7 @@ function createContract() {
       : '—'
   };
   contracts.unshift(newContract);
+  performanceDataState[String(nextId)] = defaultPerformanceData(newContract);
   document.getElementById('contract-new').style.display = 'none';
   renderTable();
   selectContract(newContract.id);
@@ -1613,9 +1705,16 @@ function selectContract(id) {
   document.getElementById('cd-title').innerHTML = `
     <div class="content-detail-head">
       <div class="poster poster-lg ${c.poster}" data-mark="${c.mark}"></div>
-      <div>
+      <div class="dh-copy">
         <div class="dh-title-text">${c.content}</div>
-        <div class="dh-sub">${c.company} · ${c.platform} · 릴리즈 일자 ${c.date || '—'}</div>
+        <div class="dh-sub">
+          <span id="detail-company-name">${c.company}</span>
+          ·
+          <span class="dh-release">릴리즈 일자 <span id="detail-release-date">${c.date || '—'}</span></span>
+        </div>
+        <div class="dh-platform-row">
+          <span class="dh-platform" id="detail-platform-name">${c.platform}</span>
+        </div>
       </div>
     </div>`;
   document.getElementById('cd-sub').textContent = '';
@@ -1636,6 +1735,7 @@ function selectContract(id) {
   collapseDataForms();
   renderSettlementDataPanel(c, 'flat');
   renderSettlementDataPanel(c, 'mg');
+  fillPerformanceForm(c);
   switchDTab(document.querySelector('#contract-data-tabs [data-panel="ct-info"]'), 'ct-info');
 }
 
@@ -1654,6 +1754,7 @@ function deleteContract() {
   if (!ok) return;
   const idx = contracts.findIndex(x => x.id === selId);
   if (idx >= 0) contracts.splice(idx, 1);
+  delete performanceDataState[String(selId)];
   closeDetail();
   renderTable();
 }

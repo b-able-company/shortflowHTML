@@ -14,7 +14,8 @@
 
   const producerDashboardTabs = [
     { id: 'workflow', label: '워크플로우', href: 'producer-dashboard.html?tab=workflow' },
-    { id: 'settlement', label: '정산 대시보드', href: 'settlement-list.html' },
+    { id: 'settlement', label: '정산', href: 'settlement-list.html' },
+    { id: 'performance', label: '퍼포먼스', href: 'performance.html' },
   ];
 
   const icons = {

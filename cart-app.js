@@ -70,7 +70,6 @@
     const allChecked = state.selected.size === items.length;
     const mixed = state.selected.size > 0 && !allChecked;
     const isBundle = state.selected.size >= 2;
-    const pillClass = isBundle ? "is-bundle" : state.selected.size === 1 ? "is-single" : "";
     const proposalRoute = isBundle ? "proposal-bundle" : "proposal-single";
 
     const cards = items.map((item) => `
@@ -118,13 +117,9 @@
             <div class="cart-list">${cards}</div>
           </div>
           <aside class="panel summary">
-            <div class="summary__eyebrow">제안 요약</div>
-            <div class="summary__count">
-              <div>
-                <strong>${state.selected.size}</strong>
-                <span class="muted">편 선택</span>
-                <span class="pill ${pillClass}">${isBundle ? "묶음 제안" : state.selected.size === 1 ? "단일 제안" : "미선택"}</span>
-              </div>
+            <div class="summary__head">
+              <h2>선택한 콘텐츠</h2>
+              <span>${state.selected.size}편</span>
             </div>
             <div class="selected-list">${selectedList}</div>
             <div class="summary__line"></div>

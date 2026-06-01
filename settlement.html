@@ -34893,7 +34893,8 @@ function ContentHeader({ t = BASE_TOKENS }) {
     }[kind];
     return (
       <div style={{
-        background: palette.bg,
+        background: t.surface,
+        border: `0.5px solid ${t.line}`,
         borderRadius: 12,
         padding: '14px 18px',
         flex: 1, minWidth: 0,
