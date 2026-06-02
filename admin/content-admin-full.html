@@ -542,6 +542,14 @@ td { padding: 9px 12px; vertical-align: middle; }
                         <option>한국어 (KO)</option><option>영어 (EN)</option><option>중국어 (ZH)</option>
                       </select>
                     </div>
+                    <div class="fg"><label>라이센스 형태</label>
+                      <select id="b-license-type">
+                        <option value="독점">독점</option>
+                        <option value="비독점">비독점</option>
+                        <option value="둘 다 선택">둘 다 선택</option>
+                      </select>
+                    </div>
+                    <div class="fg"><label>라이센스 지역</label><input id="b-license-region" placeholder="예: 전세계, 중국본토 제외" /></div>
                   </div>
                 </div>
 
@@ -1156,6 +1164,8 @@ function selectContent(id) {
   document.getElementById('b-start-point').value = c.startPoint || '';
   document.getElementById('b-drive-url').value = c.driveFolderUrl || '';
   setSelectByText('b-lang', c.lang);
+  document.getElementById('b-license-type').value = c.licenseType || (c.exclusive ? '독점' : '비독점');
+  document.getElementById('b-license-region').value = c.licenseRegion || '';
   setSelectByText('b-rating', c.rating);
   setSelectByText('b-type', c.type);
   document.getElementById('b-media-category').value = c.mediaCategory || '';
@@ -1302,6 +1312,8 @@ function saveContentTab(tab) {
     c.runtime = Number(document.getElementById('b-runtime').value) || '';
     c.totalRuntime = Number(document.getElementById('b-total-runtime').value) || '';
     c.lang = selectedText('b-lang');
+    c.licenseType = document.getElementById('b-license-type').value;
+    c.licenseRegion = document.getElementById('b-license-region').value.trim();
     c.rating = selectedText('b-rating');
     c.type = selectedText('b-type').replace(/\s*\(.+\)/, '');
     c.mediaCategory = document.getElementById('b-media-category').value;
