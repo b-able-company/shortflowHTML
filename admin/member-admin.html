@@ -121,6 +121,20 @@ td { padding: 9px 12px; vertical-align: middle; }
 .irow:last-child { border-bottom: none; }
 .ik { color: #aaa; flex-shrink: 0; min-width: 80px; }
 .iv { color: #1a1a18; text-align: right; }
+.edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.fg { display: flex; flex-direction: column; gap: 4px; }
+.fg.full { grid-column: 1 / -1; }
+.fg label { font-size: 10px; color: #b4b2aa; font-weight: 500; }
+.fg input, .fg select { font-size: 12px; padding: 7px 10px; border: 0.5px solid #e0dfd9; border-radius: 6px; background: #fff; color: #1a1a18; outline: none; font-family: inherit; width: 100%; }
+.fg input:focus, .fg select:focus { border-color: #aaa; }
+.fg input[readonly] { background: #f7f6f2; color: #aaa; }
+.detail-savebar { margin-top: auto; background: #fff; border-top: 0.5px solid #e8e6e0; padding: 10px 18px; display: flex; justify-content: flex-end; gap: 7px; flex-shrink: 0; }
+.detail-savebar .btn { min-height: 32px; border-radius: 9px; padding: 0 14px; font-weight: 600; letter-spacing: -0.01em; transition: background 0.16s, border-color 0.16s, color 0.16s, box-shadow 0.16s, transform 0.16s; }
+.detail-savebar .btn:hover { opacity: 1; transform: translateY(-1px); }
+.detail-savebar .danger-left { margin-right: auto; border-color: rgba(255,59,48,0.18); background: rgba(255,59,48,0.08); color: #ff3b30; }
+.detail-savebar .danger-left:hover { border-color: rgba(255,59,48,0.24); background: rgba(255,59,48,0.12); }
+.detail-savebar .btn-save { border-color: transparent; background: #007aff; color: #fff; box-shadow: 0 2px 6px rgba(0,122,255,0.22); }
+.detail-savebar .btn-save:hover { background: #006ee6; box-shadow: 0 3px 8px rgba(0,122,255,0.26); }
 
 /* USER LIST IN COMPANY */
 .user-list { display: flex; flex-direction: column; gap: 6px; }
@@ -286,18 +300,35 @@ td { padding: 9px 12px; vertical-align: middle; }
           <div class="dbody">
             <div class="sec">
               <div class="sec-title">기본 정보</div>
-              <div class="irow"><span class="ik">이름</span><span class="iv" id="ud-info-name"></span></div>
-              <div class="irow"><span class="ik">이메일</span><span class="iv" id="ud-info-email"></span></div>
-              <div class="irow"><span class="ik">전화번호</span><span class="iv" id="ud-info-phone"></span></div>
-              <div class="irow"><span class="ik">역할</span><span class="iv" id="ud-info-role"></span></div>
-              <div class="irow"><span class="ik">권한 레벨</span><span class="iv" id="ud-info-perm"></span></div>
-              <div class="irow"><span class="ik">소속 회사</span><span class="iv" id="ud-info-company"></span></div>
-              <div class="irow"><span class="ik">가입일</span><span class="iv" id="ud-info-date"></span></div>
+              <div class="edit-grid">
+                <div class="fg"><label>이름</label><input id="ud-edit-name" /></div>
+                <div class="fg"><label>이메일</label><input id="ud-edit-email" type="email" /></div>
+                <div class="fg"><label>전화번호</label><input id="ud-edit-phone" /></div>
+                <div class="fg"><label>역할</label>
+                  <select id="ud-edit-role">
+                    <option value="PRODUCTION">PRODUCTION</option>
+                    <option value="PLATFORM">PLATFORM</option>
+                  </select>
+                </div>
+                <div class="fg"><label>권한 레벨</label>
+                  <select id="ud-edit-perm">
+                    <option value="OWNER">OWNER</option>
+                    <option value="WRITE">WRITE</option>
+                    <option value="READ">READ</option>
+                  </select>
+                </div>
+                <div class="fg"><label>소속 회사</label><select id="ud-edit-company"></select></div>
+                <div class="fg"><label>가입일</label><input id="ud-edit-date" readonly /></div>
+              </div>
             </div>
             <div class="sec" id="ud-reject-sec" style="display:none">
               <div class="sec-title">거절 사유</div>
               <div style="font-size:12px;color:#A32D2D;background:#FCEBEB;border-radius:7px;padding:10px 12px" id="ud-reject-reason"></div>
             </div>
+          </div>
+          <div class="detail-savebar">
+            <button class="btn danger-left" onclick="deleteUser()">삭제하기</button>
+            <button class="btn btn-save" onclick="saveUserDetail()">저장</button>
           </div>
         </div>
       </div>
@@ -360,10 +391,17 @@ td { padding: 9px 12px; vertical-align: middle; }
             <!-- 회사 기본 정보 -->
             <div class="sec">
               <div class="sec-title">회사 정보</div>
-              <div class="irow"><span class="ik">회사명</span><span class="iv" id="cd-info-name"></span></div>
-              <div class="irow"><span class="ik">이메일</span><span class="iv" id="cd-info-email"></span></div>
-              <div class="irow"><span class="ik">유형</span><span class="iv" id="cd-info-type"></span></div>
-              <div class="irow"><span class="ik">등록일</span><span class="iv" id="cd-info-date"></span></div>
+              <div class="edit-grid">
+                <div class="fg"><label>회사명</label><input id="cd-edit-name" /></div>
+                <div class="fg"><label>이메일</label><input id="cd-edit-email" type="email" /></div>
+                <div class="fg"><label>유형</label>
+                  <select id="cd-edit-type">
+                    <option value="PRODUCTION">PRODUCTION</option>
+                    <option value="PLATFORM">PLATFORM</option>
+                  </select>
+                </div>
+                <div class="fg"><label>등록일</label><input id="cd-edit-date" readonly /></div>
+              </div>
             </div>
 
             <!-- 소속 유저 -->
@@ -430,6 +468,10 @@ td { padding: 9px 12px; vertical-align: middle; }
             </div>
 
           </div>
+          <div class="detail-savebar">
+            <button class="btn danger-left" onclick="deleteCompany()">삭제하기</button>
+            <button class="btn btn-save" onclick="saveCompanyDetail()">저장</button>
+          </div>
         </div>
       </div>
     </div>
@@ -468,11 +510,13 @@ const creditHistory = [
 ];
 
 const sc = { PENDING:'b-pending', APPROVED:'b-approved', REJECTED:'b-rejected', INACTIVE:'b-inactive' };
+let selectedUserId = null;
+let selectedCompanyId = null;
 
 function renderUsers() {
   const tbody = document.getElementById('user-tbody');
   tbody.innerHTML = users.map(u => `
-    <tr onclick="selectUser(${u.id})">
+    <tr class="${u.id === selectedUserId ? 'sel' : ''}" onclick="selectUser(${u.id})">
       <td><div class="tname">${u.name}</div><div class="tsub">${u.email}</div></td>
       <td class="tmeta">${u.company}</td>
       <td><span class="plain-meta">${u.role}</span></td>
@@ -482,29 +526,29 @@ function renderUsers() {
 }
 
 function selectUser(id) {
-  document.querySelectorAll('#user-tbody tr').forEach(r => r.classList.remove('sel'));
-  event.currentTarget.classList.add('sel');
+  selectedUserId = id;
+  renderUsers();
   const u = users.find(x => x.id === id);
 
   document.getElementById('ud-name').textContent = u.name;
   document.getElementById('ud-email').textContent = u.email;
   const st = document.getElementById('ud-status');
   st.className = `bdg ${sc[u.status]}`; st.textContent = u.status;
-  document.getElementById('ud-info-name').textContent = u.name;
-  document.getElementById('ud-info-email').textContent = u.email;
-  document.getElementById('ud-info-phone').textContent = u.phone;
-  document.getElementById('ud-info-role').innerHTML = `<span class="plain-meta">${u.role}</span>`;
-  document.getElementById('ud-info-perm').innerHTML = `<span class="plain-meta subtle">${u.perm}</span>`;
-  document.getElementById('ud-info-company').textContent = u.company;
-  document.getElementById('ud-info-date').textContent = u.date;
+  document.getElementById('ud-edit-name').value = u.name;
+  document.getElementById('ud-edit-email').value = u.email;
+  document.getElementById('ud-edit-phone').value = u.phone;
+  document.getElementById('ud-edit-role').value = u.role;
+  document.getElementById('ud-edit-perm').value = u.perm;
+  document.getElementById('ud-edit-company').innerHTML = `<option value="" ${u.companyId ? '' : 'selected'}>회사 없음</option>`
+    + companies.map(c => `<option value="${c.id}" ${c.id === u.companyId ? 'selected' : ''}>${c.name}</option>`).join('');
+  document.getElementById('ud-edit-date').value = u.date;
 
   const acts = document.getElementById('ud-acts');
   const isPending = u.status === 'PENDING';
-  acts.innerHTML = `<button class="btn btn-edit" onclick="openUserEdit(${u.id})"><i class="ti ti-edit"></i> 정보 수정</button>`
-    + (isPending
+  acts.innerHTML = isPending
     ? `<button class="btn btn-approve" onclick="approveUser(${u.id})"><i class="ti ti-check"></i> 승인</button>
        <button class="btn btn-reject" onclick="document.getElementById('user-rr-box').classList.add('show')"><i class="ti ti-x"></i> 거절</button>`
-    : `<span style="font-size:11.5px;color:#bbb">이미 처리된 유저입니다</span>`);
+    : `<span style="font-size:11.5px;color:#bbb">이미 처리된 유저입니다</span>`;
 
   const rjSec = document.getElementById('ud-reject-sec');
   if (u.rejectReason) {
@@ -526,6 +570,8 @@ function approveUser(id) {
 }
 
 function closeUserDetail() {
+  selectedUserId = null;
+  renderUsers();
   document.getElementById('user-empty').style.display = '';
   document.getElementById('user-detail').style.display = 'none';
 }
@@ -533,7 +579,7 @@ function closeUserDetail() {
 function renderCompanies() {
   const tbody = document.getElementById('company-tbody');
   tbody.innerHTML = companies.map(c => `
-    <tr onclick="selectCompany(${c.id})">
+    <tr class="${c.id === selectedCompanyId ? 'sel' : ''}" onclick="selectCompany(${c.id})">
       <td><div class="tname">${c.name}</div></td>
       <td><span class="plain-meta">${c.type}</span></td>
       <td class="tmeta">${c.users.length}명</td>
@@ -543,19 +589,19 @@ function renderCompanies() {
 }
 
 function selectCompany(id) {
-  document.querySelectorAll('#company-tbody tr').forEach(r => r.classList.remove('sel'));
-  event.currentTarget.classList.add('sel');
+  selectedCompanyId = id;
+  renderCompanies();
   const c = companies.find(x => x.id === id);
 
   document.getElementById('cd-name').textContent = c.name;
   document.getElementById('cd-sub').textContent = `${c.type} · ${c.email}`;
   const st = document.getElementById('cd-status');
   st.className = `bdg ${sc[c.status]}`; st.textContent = c.status;
-  document.getElementById('cd-info-name').textContent = c.name;
-  document.getElementById('cd-info-email').textContent = c.email;
-  document.getElementById('cd-info-type').innerHTML = `<span class="plain-meta">${c.type}</span>`;
-  document.getElementById('cd-info-date').textContent = c.date;
-  document.getElementById('cd-acts').innerHTML = `<button class="btn btn-edit" onclick="openCompanyEdit(${c.id})"><i class="ti ti-edit"></i> 정보 수정</button>`;
+  document.getElementById('cd-edit-name').value = c.name;
+  document.getElementById('cd-edit-email').value = c.email;
+  document.getElementById('cd-edit-type').value = c.type;
+  document.getElementById('cd-edit-date').value = c.date;
+  document.getElementById('cd-acts').innerHTML = '';
 
   // 소속 유저
   document.getElementById('cd-user-count').textContent = `${c.users.length}명`;
@@ -586,18 +632,84 @@ function selectCompany(id) {
 }
 
 function closeCompanyDetail() {
+  selectedCompanyId = null;
+  renderCompanies();
   document.getElementById('company-empty').style.display = '';
   document.getElementById('company-detail').style.display = 'none';
 }
 
-function openUserEdit(id) {
-  const u = users.find(x => x.id === id);
-  alert(`${u.name} 회원 정보 수정 화면은 다음 단계에서 연결하면 됩니다.`);
+function saveUserDetail() {
+  if (!selectedUserId) return;
+  const u = users.find(x => x.id === selectedUserId);
+  if (!u) return;
+  const companyValue = document.getElementById('ud-edit-company').value;
+  const companyId = companyValue ? Number(companyValue) : null;
+  const company = companies.find(c => c.id === companyId);
+  u.name = document.getElementById('ud-edit-name').value.trim() || u.name;
+  u.email = document.getElementById('ud-edit-email').value.trim() || u.email;
+  u.phone = document.getElementById('ud-edit-phone').value.trim();
+  u.role = document.getElementById('ud-edit-role').value;
+  u.perm = document.getElementById('ud-edit-perm').value;
+  u.companyId = companyId;
+  u.company = company ? company.name : '';
+  companies.forEach(c => {
+    c.users = c.users.filter(userId => userId !== u.id);
+  });
+  if (company && !company.users.includes(u.id)) company.users.push(u.id);
+  renderCompanies();
+  selectUser(u.id);
+  if (selectedCompanyId) selectCompany(selectedCompanyId);
+  alert('유저 정보가 저장되었습니다.');
 }
 
-function openCompanyEdit(id) {
-  const c = companies.find(x => x.id === id);
-  alert(`${c.name} 회사 정보 수정 화면은 다음 단계에서 연결하면 됩니다.`);
+function deleteUser() {
+  if (!selectedUserId) return;
+  const u = users.find(x => x.id === selectedUserId);
+  if (!u) return;
+  if (!confirm(`${u.name} 유저를 삭제할까요?`)) return;
+  const index = users.findIndex(x => x.id === selectedUserId);
+  if (index >= 0) users.splice(index, 1);
+  companies.forEach(c => {
+    c.users = c.users.filter(userId => userId !== selectedUserId);
+  });
+  closeUserDetail();
+  renderCompanies();
+  if (selectedCompanyId) selectCompany(selectedCompanyId);
+}
+
+function saveCompanyDetail() {
+  if (!selectedCompanyId) return;
+  const c = companies.find(x => x.id === selectedCompanyId);
+  if (!c) return;
+  c.name = document.getElementById('cd-edit-name').value.trim() || c.name;
+  c.email = document.getElementById('cd-edit-email').value.trim() || c.email;
+  c.type = document.getElementById('cd-edit-type').value;
+  users.forEach(u => {
+    if (u.companyId === c.id) {
+      u.company = c.name;
+      u.role = c.type;
+    }
+  });
+  renderUsers();
+  selectCompany(c.id);
+  alert('회사 정보가 저장되었습니다.');
+}
+
+function deleteCompany() {
+  if (!selectedCompanyId) return;
+  const c = companies.find(x => x.id === selectedCompanyId);
+  if (!c) return;
+  if (!confirm(`${c.name} 회사를 삭제할까요?`)) return;
+  const index = companies.findIndex(x => x.id === selectedCompanyId);
+  if (index >= 0) companies.splice(index, 1);
+  users.forEach(u => {
+    if (u.companyId === selectedCompanyId) {
+      u.companyId = null;
+      u.company = '';
+    }
+  });
+  closeCompanyDetail();
+  renderUsers();
 }
 
 function renderCreditHistory() {

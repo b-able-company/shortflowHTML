@@ -178,6 +178,99 @@ button {
   gap: 36px;
 }
 
+.content-footer {
+  margin-top: 72px;
+  padding: 34px 0 38px;
+  border-top: 1px solid #e5e7eb;
+  background: #fafafa;
+  color: #8a9099;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.footer-inner {
+  width: min(var(--max), calc(100vw - 48px));
+  margin: 0 auto;
+}
+
+.footer-top {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 34px;
+}
+
+.footer-brand {
+  color: #111827;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.footer-brand b {
+  color: var(--orange);
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.footer-links a {
+  color: #111827;
+  text-decoration: none;
+}
+
+.footer-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 22px;
+  margin-left: auto;
+  border: 1px solid #111827;
+  border-radius: 8px;
+  background: #111827;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.footer-cta:hover {
+  border-color: var(--orange);
+  background: var(--orange);
+  color: #fff;
+}
+
+.footer-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 14px;
+  max-width: 820px;
+}
+
+.footer-info span {
+  white-space: nowrap;
+}
+
+.footer-divider {
+  height: 1px;
+  margin: 32px 0 22px;
+  background: #e5e7eb;
+}
+
+.footer-copy {
+  color: #8a9099;
+  font-size: 13px;
+}
+
 .sub-nav button,
 .sub-nav a {
   position: relative;
@@ -867,7 +960,8 @@ button {
 @media (max-width: 860px) {
   .nav-inner,
   .sub-nav-inner,
-  .main {
+  .main,
+  .footer-inner {
     width: min(100vw - 32px, var(--max));
   }
 
@@ -886,5 +980,29 @@ button {
   .dashboard-grid,
   .messages-grid {
     grid-template-columns: 1fr;
+  }
+
+  .content-footer {
+    margin-top: 56px;
+  }
+
+  .footer-top {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .footer-links {
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .footer-cta {
+    margin-left: 0;
+  }
+
+  .footer-info span {
+    white-space: normal;
   }
 }

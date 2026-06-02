@@ -2,6 +2,7 @@
   const app = document.getElementById("app");
   const items = window.CART_ITEMS;
   const platformName = window.PLATFORM_NAME;
+  const DEFAULT_DISTRIBUTION = "독점";
   const state = {
     selected: new Set([items[0].id, items[1].id]),
     lastProposalKind: "bundle",
@@ -124,7 +125,7 @@
             <div class="selected-list">${selectedList}</div>
             <div class="summary__line"></div>
             <button class="button button--primary button--full" data-action="go-proposal" data-route="${proposalRoute}" ${state.selected.size === 0 ? "disabled" : ""}>
-              ${icons.send} ${proposalLabel()}
+              ${proposalLabel()}
             </button>
             <div class="turnkey-card">
               <div class="turnkey-card__title">콘텐츠 구성이 필요하신가요?</div>
@@ -183,6 +184,32 @@
     `;
   }
 
+  function proposalPricingFields(priceName, priceValue, rsName, rsValue = "") {
+    return `
+      <div class="settlement-fields" data-settlement-fields>
+        <div class="field settlement-field settlement-field--amount" data-settlement-field="amount">
+          <label>제안 금액 <span class="required">*</span></label>
+          <div class="price-control">${toggle("currency", ["USD", "KRW"], "USD")}${textInput(priceName, priceValue, "$", "USD")}</div>
+        </div>
+        <div class="field settlement-field settlement-field--rs rs-rate-field" data-settlement-field="rs">
+          <label>RS비율 <span class="required">*</span></label>
+          ${textInput(rsName, rsValue, "", "%")}
+        </div>
+      </div>
+    `;
+  }
+
+  function bundlePricingFields(itemId, priceValue, rsValue = "") {
+    return `
+      <div class="settlement-field settlement-field--amount" data-settlement-field="amount">
+        ${textInput(`price-${itemId}`, priceValue, "$", "USD")}
+      </div>
+      <div class="settlement-field settlement-field--rs rs-rate-field" data-settlement-field="rs">
+        ${textInput(`rsRate-${itemId}`, rsValue, "", "%")}
+      </div>
+    `;
+  }
+
   function placeholderInput(name, placeholder) {
     return `
       <div class="input-wrap">
@@ -217,7 +244,7 @@
 
   function selectInput(name, options, active, disabledOptions = []) {
     return `
-      <select class="select-input" name="${name}">
+      <select class="select-input" name="${name}" autocomplete="off">
         ${options.map((option) => `
           <option value="${option}" ${option === active ? "selected" : ""} ${disabledOptions.includes(option) ? "disabled" : ""}>${option}</option>
         `).join("")}
@@ -251,14 +278,11 @@
             <div class="item-genres">${item.genres.join(" · ")}</div>
           </div>
         </section>
-        <section class="form-card">
+        <section class="form-card proposal-card">
           <form class="form-stack" data-form="single">
             <div class="condition-grid">
-              <div class="field field--wide">
-                <label>제안 금액 <span class="required">*</span></label>
-                <div class="price-control">${toggle("currency", ["USD", "KRW"], "USD")}${textInput("amount", "50,000", "$", "USD")}</div>
-              </div>
-              ${field("배포 유형", selectInput("distribution", window.DISTRIBUTION_OPTIONS, "독점"), true)}
+              <div class="field--wide">${proposalPricingFields("amount", "", "rsRate")}</div>
+              ${field("배포 유형", selectInput("distribution", window.DISTRIBUTION_OPTIONS, DEFAULT_DISTRIBUTION), true)}
               ${field("정산 방식", selectInput("settlement", window.SETTLEMENT_OPTIONS, "MG + RS", ["RS"]), true)}
               <div class="field field--wide">
                 <label>공개 지역 <span class="required">*</span></label>
@@ -274,9 +298,9 @@
               <textarea class="textarea" placeholder="플랫폼에 추가로 전달할 내용이 있다면 작성해주세요."></textarea>
             </div>
           </form>
+          ${footer("single")}
         </section>
       </main>
-      ${footer("single")}
     `);
   }
 
@@ -300,18 +324,18 @@
             <div class="item-meta">${item.type} · ${item.episodes}화</div>
           </div>
         </div>
-        <div class="bundle-item__controls">
-          ${textInput(`price-${item.id}`, prices[index], "$", "USD")}
+        <div class="bundle-item__controls settlement-fields" data-settlement-fields>
           ${selectInput(`exclusive-${item.id}`, window.EXCLUSIVITY_OPTIONS, "독점")}
           ${selectInput(`settlement-${item.id}`, window.SETTLEMENT_OPTIONS, "MG + RS", ["RS"])}
+          ${bundlePricingFields(item.id, prices[index])}
         </div>
       </article>
     `).join("");
 
     return shell(`
-      <main class="container narrow">
+      <main class="container bundle-container">
         ${breadcrumb()}
-        <section class="form-card">
+        <section class="form-card proposal-card">
           <form class="form-stack" data-form="bundle">
             <div class="grid-price">
               ${field("화폐 단위", toggle("currency", ["USD", "KRW"], "USD"), true)}
@@ -328,9 +352,10 @@
               <div class="bundle-setting-group">
                 <div class="bundle-setting-head">
                   <span>콘텐츠</span>
-                  <span>개별 희망 가격</span>
                   <span>독점 여부</span>
                   <span>정산 방식</span>
+                  <span>제안 금액</span>
+                  <span>RS비율</span>
                 </div>
                 <div class="bundle-items">${bundleItems}</div>
                 <div class="bundle-total">
@@ -352,9 +377,9 @@
               <textarea class="textarea" placeholder="묶음 제안에 대한 보충 설명, 우선 노출 요청 등 자유롭게 작성해주세요."></textarea>
             </div>
           </form>
+          ${footer("bundle")}
         </section>
       </main>
-      ${footer("bundle")}
     `);
   }
 
@@ -392,11 +417,11 @@
   function footer(kind) {
     const label = kind === "turnkey" ? "컨시어지 요청 보내기" : "제안 보내기";
     return `
-      <div class="footer-bar">
+      <div class="footer-bar ${kind === "bundle" ? "footer-bar--bundle" : ""}">
         <div class="footer-bar__inner">
           <button class="button button--ghost js-route" data-route="cart">장바구니로 돌아가기</button>
           <div class="footer-bar__spacer">
-            <button class="button button--primary" data-action="submit-proposal" data-kind="${kind}">${icons.send} ${label}</button>
+            <button class="button button--primary" data-action="submit-proposal" data-kind="${kind}">${label}</button>
           </div>
         </div>
       </div>
@@ -468,6 +493,8 @@
     else if (route === "turnkey-request") app.innerHTML = turnkeyRequestPage();
     else if (route === "success") app.innerHTML = successPage();
     else app.innerHTML = cartPage();
+    syncAllSettlementAvailability();
+    updateAllSettlementFields();
   }
 
   app.addEventListener("click", (event) => {
@@ -530,28 +557,28 @@
         input.closest(".input-wrap")?.classList.toggle("is-disabled", disabled);
       });
       form?.querySelector(".bundle-price-note")?.classList.toggle("is-managed", disabled);
+      updateAllSettlementFields();
     }
   });
 
   app.addEventListener("change", (event) => {
     const name = event.target.name;
+    if (name === "settlement" || name.startsWith("settlement-")) {
+      const scope = name === "settlement"
+        ? event.target.closest("form")
+        : event.target.closest(".bundle-item");
+      updateSettlementFields(scope, event.target.value);
+      return;
+    }
+
     if (name !== "distribution" && !name.startsWith("exclusive-")) return;
 
     const scope = name === "distribution"
       ? event.target.closest("form")
       : event.target.closest(".bundle-item");
-    const settlement = name === "distribution"
-      ? scope?.querySelector('select[name="settlement"]')
-      : scope?.querySelector('select[name^="settlement-"]');
+    const settlement = syncSettlementAvailability(scope, event.target.value);
     if (!settlement) return;
-
-    const rsOption = Array.from(settlement.options).find((option) => option.value === "RS");
-    if (!rsOption) return;
-
-    rsOption.disabled = event.target.value === "독점";
-    if (rsOption.disabled && settlement.value === "RS") {
-      settlement.value = "MG + RS";
-    }
+    updateSettlementFields(scope, settlement.value);
   });
 
   app.addEventListener("click", (event) => {
@@ -574,10 +601,68 @@
       node.textContent = symbol;
     });
     form.querySelectorAll(".input-suffix").forEach((node) => {
+      if (node.closest(".rs-rate-field")) return;
       node.textContent = currency;
     });
     form.querySelectorAll(".currency-total").forEach((node) => {
       node.textContent = `${symbol} ${money(node.dataset.amount)}`;
+    });
+  }
+
+  function updateSettlementFields(scope, settlementValue) {
+    const fields = scope?.querySelector("[data-settlement-fields]");
+    if (!fields) return;
+
+    const amountField = fields.querySelector('[data-settlement-field="amount"]');
+    const rsField = fields.querySelector('[data-settlement-field="rs"]');
+    const managedPricing = Boolean(scope?.closest("form")?.querySelector('[data-action="toggle-admin-pricing"]')?.checked);
+    const enableAmount = settlementValue !== "RS" && !managedPricing;
+    const enableRs = settlementValue === "RS" || settlementValue === "MG + RS";
+
+    function setFieldEnabled(field, enabled) {
+      field?.classList.toggle("is-disabled", !enabled);
+      field?.querySelectorAll("input").forEach((input) => {
+        input.disabled = !enabled;
+        input.closest(".input-wrap")?.classList.toggle("is-disabled", !enabled);
+      });
+    }
+
+    fields.classList.toggle("is-mg-rs", enableAmount && enableRs);
+    fields.classList.toggle("is-rs-only", !enableAmount && enableRs);
+    fields.classList.toggle("is-amount-only", enableAmount && !enableRs);
+    setFieldEnabled(amountField, enableAmount);
+    setFieldEnabled(rsField, enableRs);
+  }
+
+  function updateAllSettlementFields() {
+    app.querySelectorAll('select[name="settlement"], select[name^="settlement-"]').forEach((settlement) => {
+      const scope = settlement.name === "settlement"
+        ? settlement.closest("form")
+        : settlement.closest(".bundle-item");
+      updateSettlementFields(scope, settlement.value);
+    });
+  }
+
+  function syncSettlementAvailability(scope, exclusivityValue) {
+    const settlement = scope?.querySelector('select[name="settlement"], select[name^="settlement-"]');
+    if (!settlement) return null;
+
+    const rsOption = Array.from(settlement.options).find((option) => option.value === "RS");
+    if (!rsOption) return settlement;
+
+    rsOption.disabled = exclusivityValue === "독점";
+    if (rsOption.disabled && settlement.value === "RS") {
+      settlement.value = "MG + RS";
+    }
+    return settlement;
+  }
+
+  function syncAllSettlementAvailability() {
+    app.querySelectorAll('select[name="distribution"], select[name^="exclusive-"]').forEach((exclusivity) => {
+      const scope = exclusivity.name === "distribution"
+        ? exclusivity.closest("form")
+        : exclusivity.closest(".bundle-item");
+      syncSettlementAvailability(scope, exclusivity.value);
     });
   }
 

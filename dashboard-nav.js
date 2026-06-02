@@ -69,6 +69,35 @@
     `;
   }
 
+  function renderFooter() {
+    return `
+      <footer class="content-footer">
+        <div class="footer-inner">
+          <div class="footer-top">
+            <a class="footer-brand" href="content-list.html"><span>short</span><b>flow</b></a>
+            <nav class="footer-links" aria-label="푸터 링크">
+              <a href="#">개인정보 처리방침</a>
+              <a href="#">이용약관</a>
+            </nav>
+            <a class="footer-cta" href="concierge.html">온보딩 문의하기</a>
+          </div>
+          <div class="footer-info">
+            <span>(주) 비에이블컴퍼니</span>
+            <span>|</span>
+            <span>대표이사 강다혜</span>
+            <span>|</span>
+            <span>주소: 서울시 강남구 테헤란로 123, 6층</span>
+            <span>|</span>
+            <span>Tel: 070-5151-1827</span>
+            <span>고객문의: shortflow@bable-company.com</span>
+          </div>
+          <div class="footer-divider"></div>
+          <div class="footer-copy">© 2026. b.able company all rights reserved.</div>
+        </div>
+      </footer>
+    `;
+  }
+
   function renderShell(contentHtml, options) {
     const config = options || {};
     const activePage = config.activePage || 'platform-dashboard';
@@ -80,6 +109,7 @@
       ${renderTopNav(activePage)}
       ${subNavHtml}
       <main class="main">${contentHtml}</main>
+      ${renderFooter()}
     `;
   }
 
@@ -98,6 +128,11 @@
     node.innerHTML = renderTopNav(activePage);
   }
 
+  function mountFooter() {
+    if (document.querySelector('.content-footer')) return;
+    document.body.insertAdjacentHTML('beforeend', renderFooter());
+  }
+
   function mount(options) {
     const config = options || {};
     const target = config.target || '[data-shortflow-nav]';
@@ -110,12 +145,14 @@
     }
 
     mountTopNav(node, config.active || node.dataset.shortflowNav || 'dashboard');
+    mountFooter();
   }
 
   function mountDeclarativeNavs() {
     document.querySelectorAll('[data-shortflow-nav]').forEach(node => {
       mountTopNav(node, node.dataset.shortflowNav);
     });
+    mountFooter();
     
     // Add admin toggle button to top-right corner
     addAdminToggleButton();
@@ -142,8 +179,10 @@
   window.ShortflowNav = {
     renderTopNav,
     renderDashboardSubNav,
+    renderFooter,
     renderShell,
     mountTopNav,
+    mountFooter,
     mount,
   };
 })();

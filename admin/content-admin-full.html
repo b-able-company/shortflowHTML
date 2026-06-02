@@ -106,6 +106,40 @@ td { padding: 9px 12px; vertical-align: middle; }
 .btn-save    { background: #1a1a18; color: #fff; border-color: #1a1a18; }
 .btn-cancel  { background: #fff; color: #666; }
 .btn-upload  { background: #f7f6f2; color: #555; border-style: dashed; }
+.savebar .btn {
+  min-height: 32px;
+  border-radius: 9px;
+  padding: 0 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: background 0.16s, border-color 0.16s, color 0.16s, box-shadow 0.16s, transform 0.16s;
+}
+.savebar .btn:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+.savebar .danger-left {
+  margin-right: auto;
+  border-color: rgba(255, 59, 48, 0.18);
+  background: rgba(255, 59, 48, 0.08);
+  color: #ff3b30;
+  box-shadow: none;
+}
+.savebar .danger-left:hover {
+  border-color: rgba(255, 59, 48, 0.24);
+  background: rgba(255, 59, 48, 0.12);
+  box-shadow: none;
+}
+.savebar .btn-save {
+  border-color: transparent;
+  background: #007aff;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 122, 255, 0.22);
+}
+.savebar .btn-save:hover {
+  background: #006ee6;
+  box-shadow: 0 3px 8px rgba(0, 122, 255, 0.26);
+}
 
 /* ── DETAIL INNER TABS ── */
 .dtabbar { background: #fff; border-bottom: 0.5px solid #e8e6e0; display: flex; padding: 0 18px; flex-shrink: 0; }
@@ -222,9 +256,12 @@ td { padding: 9px 12px; vertical-align: middle; }
 .release-list { border: 0.5px solid #e8e6e0; border-radius: 8px; overflow: hidden; background: #fff; }
 .release-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-bottom: 0.5px solid #f5f4f0; }
 .release-row:last-child { border-bottom: none; }
+.release-row.editing { background: #fafaf7; align-items: flex-end; }
 .release-main { flex: 1; min-width: 0; }
 .release-name { font-size: 12.5px; font-weight: 500; color: #1a1a18; }
 .release-meta { font-size: 11px; color: #aaa; margin-top: 2px; }
+.release-edit-grid { flex: 1; min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) 150px; gap: 10px; }
+.release-edit-grid .fg { gap: 4px; }
 .release-type { font-size: 10.5px; padding: 2px 7px; border-radius: 999px; white-space: nowrap; background: #f0efe9; color: #666; }
 .release-type.internal { background: #E6F1FB; color: #185FA5; }
 .release-actions { display: flex; align-items: center; gap: 5px; }
@@ -548,6 +585,27 @@ td { padding: 9px 12px; vertical-align: middle; }
                     <div class="fg"><label>콘텐츠 유형</label>
                       <select id="b-type"><option>오리지널 (ORIGINAL)</option><option>리메이크 (REMAKE)</option></select>
                     </div>
+                    <div class="fg"><label>미디어 카테고리</label>
+                      <select id="b-media-category">
+                        <option value="">선택 없음</option>
+                        <option value="DRAMA">DRAMA (드라마)</option>
+                        <option value="ANIMATION">ANIMATION (애니메이션)</option>
+                      </select>
+                    </div>
+                    <div class="fg"><label>공동제작</label>
+                      <select id="b-coproduction">
+                        <option value="">선택 없음</option>
+                        <option value="SOLO">SOLO (단독제작)</option>
+                        <option value="JOINT">JOINT (공동제작)</option>
+                        <option value="AGENCY">AGENCY (대행)</option>
+                      </select>
+                    </div>
+                    <div class="fg"><label>독점 여부</label>
+                      <select id="b-exclusive">
+                        <option value="false">비독점</option>
+                        <option value="true">독점</option>
+                      </select>
+                    </div>
                     <div class="fg"><label>제작 상태</label>
                       <select id="b-pstatus">
                         <option>기획 중 (PLANNING)</option><option>제작 중 (IN_PRODUCTION)</option><option>심의 중 (IN_REVIEW)</option><option>제작 완료 (COMPLETED)</option>
@@ -586,7 +644,7 @@ td { padding: 9px 12px; vertical-align: middle; }
                 <div class="form-section">
                   <div class="form-section-title">제작진 및 출시</div>
                   <div class="form-grid">
-                    <div class="fg"><label>출시일 <span class="req">*</span></label><input type="date" /></div>
+                    <div class="fg"><label>출시일 <span class="req">*</span></label><input type="text" value="" /></div>
                     <div class="fg"><label>감독</label><input placeholder="감독 이름" /></div>
                     <div class="fg"><label>작가</label><input placeholder="작가 이름" /></div>
                     <div class="fg"><label>출연 배우</label><input placeholder="주요 배우 (쉼표 구분)" /></div>
@@ -771,10 +829,11 @@ td { padding: 9px 12px; vertical-align: middle; }
 
           </div><!-- /dbody -->
 
-          <div class="savebar edit-only">
-            <button class="btn btn-cancel" onclick="setContentEditMode(false)">취소</button>
-            <button class="btn btn-save" onclick="setContentEditMode(false)"><i class="ti ti-device-floppy"></i> 저장</button>
+          <div class="savebar edit-only" id="content-savebar">
+            <button class="btn danger-left" onclick="deleteContent()">삭제하기</button>
+            <button class="btn btn-save" id="content-save-action" onclick="saveActiveContentTab()">기본 정보 저장</button>
           </div>
+
         </div><!-- /dp-detail -->
       </div><!-- /dp -->
     </div><!-- /split contents -->
@@ -946,7 +1005,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 const contents = [
   { id:1, title:'The Last Letter', origTitle:'마지막 편지', company:'NextWave Studios', genre:'드라마, 로맨스', year:'2024', status:'PENDING', date:'2026.05.08',
     poster:'poster-p1',
-    lang:'한국어', eps:16, runtime:12, totalRuntime:192, startPoint:1, rating:'15세 이상', type:'오리지널', pstatus:'제작 완료',
+    lang:'한국어', eps:16, runtime:12, totalRuntime:192, startPoint:1, rating:'15세 이상', type:'오리지널', mediaCategory:'DRAMA', coProduction:'SOLO', exclusive:false, pstatus:'제작 완료',
     driveFolderUrl:'https://drive.google.com/drive/folders/last-letter', rejectReason:'',
     bookmarks:['ShortReel (US)','Viki'],
     timeline:[
@@ -958,7 +1017,7 @@ const contents = [
   },
   { id:2, title:'Reverse Cinderella', origTitle:'역신데렐라', company:'OneTake Media', genre:'로맨스', year:'2024', status:'PENDING', date:'2026.05.07',
     poster:'poster-p2',
-    lang:'한국어', eps:20, runtime:10, totalRuntime:200, startPoint:1, rating:'전체 관람가', type:'오리지널', pstatus:'제작 완료',
+    lang:'한국어', eps:20, runtime:10, totalRuntime:200, startPoint:1, rating:'전체 관람가', type:'오리지널', mediaCategory:'DRAMA', coProduction:'AGENCY', exclusive:false, pstatus:'제작 완료',
     driveFolderUrl:'https://drive.google.com/drive/folders/reverse-cinderella', rejectReason:'',
     bookmarks:['WeTV'],
     timeline:[{dot:'blue',text:'제작사가 등록 신청함',time:'2026.05.07 · 11:00'}],
@@ -966,7 +1025,7 @@ const contents = [
   },
   { id:3, title:'Midnight Tokyo Drift', origTitle:'Midnight Tokyo Drift', company:'ShortReel (US)', genre:'액션', year:'2023', status:'APPROVED', date:'2026.05.01',
     poster:'poster-p3',
-    lang:'일본어', eps:12, runtime:8, totalRuntime:96, startPoint:1, rating:'15세 이상', type:'오리지널', pstatus:'제작 완료',
+    lang:'일본어', eps:12, runtime:8, totalRuntime:96, startPoint:1, rating:'15세 이상', type:'오리지널', mediaCategory:'DRAMA', coProduction:'JOINT', exclusive:true, pstatus:'제작 완료',
     driveFolderUrl:'https://drive.google.com/drive/folders/tokyo-drift', rejectReason:'',
     bookmarks:['Viki','iQIYI','WeTV'],
     timeline:[
@@ -977,7 +1036,7 @@ const contents = [
   },
   { id:4, title:'Bloom Again', origTitle:'다시 피다', company:'PaperLens', genre:'드라마', year:'2024', status:'REJECTED', date:'2026.04.29',
     poster:'poster-p4',
-    lang:'한국어', eps:10, runtime:14, totalRuntime:140, startPoint:1, rating:'12세 이상', type:'리메이크', pstatus:'제작 완료',
+    lang:'한국어', eps:10, runtime:14, totalRuntime:140, startPoint:1, rating:'12세 이상', type:'리메이크', mediaCategory:'DRAMA', coProduction:'SOLO', exclusive:false, pstatus:'제작 완료',
     driveFolderUrl:'', rejectReason:'캐릭터 설명이 부족합니다. 주요 인물 소개를 보완해주세요.',
     bookmarks:[],
     timeline:[
@@ -988,7 +1047,7 @@ const contents = [
   },
   { id:5, title:'Seven Suns', origTitle:'일곱 개의 태양', company:'BrightFrame', genre:'SF', year:'2023', status:'DRAFT', date:'2026.04.25',
     poster:'poster-p5',
-    lang:'한국어', eps:8, runtime:18, totalRuntime:144, startPoint:1, rating:'전체 관람가', type:'오리지널', pstatus:'제작 중',
+    lang:'한국어', eps:8, runtime:18, totalRuntime:144, startPoint:1, rating:'전체 관람가', type:'오리지널', mediaCategory:'ANIMATION', coProduction:'SOLO', exclusive:false, pstatus:'제작 중',
     driveFolderUrl:'', rejectReason:'',
     bookmarks:[],
     timeline:[{dot:'gray',text:'초안 저장됨',time:'2026.04.25 · 09:00'}],
@@ -996,7 +1055,7 @@ const contents = [
   },
   { id:6, title:'Echo of Spring', origTitle:'봄의 메아리', company:'NextWave Studios', genre:'멜로', year:'2024', status:'APPROVED', date:'2026.04.20',
     poster:'poster-p6',
-    lang:'한국어', eps:18, runtime:11, totalRuntime:198, startPoint:1, rating:'전체 관람가', type:'오리지널', pstatus:'제작 완료',
+    lang:'한국어', eps:18, runtime:11, totalRuntime:198, startPoint:1, rating:'전체 관람가', type:'오리지널', mediaCategory:'DRAMA', coProduction:'JOINT', exclusive:true, pstatus:'제작 완료',
     driveFolderUrl:'https://drive.google.com/drive/folders/echo-spring', rejectReason:'',
     bookmarks:['Viki','WeTV'],
     timeline:[
@@ -1010,6 +1069,17 @@ const contents = [
 const sc = {DRAFT:'b-draft',PENDING:'b-pending',APPROVED:'b-approved',REJECTED:'b-rejected'};
 let selId = null;
 let releaseSeq = 10;
+let editingReleaseId = null;
+
+const contentTabLabels = {
+  'tab-basic': { key: 'basic', label: '기본 정보' },
+  'tab-trans': { key: 'trans', label: '번역 데이터' },
+  'tab-image': { key: 'image', label: '이미지' },
+  'tab-video': { key: 'video', label: '영상' },
+  'tab-material': { key: 'material', label: '자료' },
+  'tab-release': { key: 'release', label: '릴리즈' },
+  'tab-extra': { key: 'extra', label: '부가 정보' },
+};
 
 const releaseHistories = {
   1: [
@@ -1073,9 +1143,7 @@ function selectContent(id) {
   const isPending = c.status === 'PENDING';
   document.getElementById('d-acts').innerHTML = `
     ${isPending ? `<button class="btn btn-approve"><i class="ti ti-check"></i> 승인</button>` : ''}
-    ${isPending ? `<button class="btn btn-reject" onclick="showReject()"><i class="ti ti-x"></i> 거절</button>` : ''}
-    <button class="btn btn-edit" id="content-edit-btn" onclick="setContentEditMode(true)"><i class="ti ti-edit"></i> 수정</button>
-    <button class="btn btn-del"><i class="ti ti-trash"></i></button>`;
+    ${isPending ? `<button class="btn btn-reject" onclick="showReject()"><i class="ti ti-x"></i> 거절</button>` : ''}`;
 
   // basic
   document.getElementById('b-origtitle').value = c.origTitle;
@@ -1090,6 +1158,9 @@ function selectContent(id) {
   setSelectByText('b-lang', c.lang);
   setSelectByText('b-rating', c.rating);
   setSelectByText('b-type', c.type);
+  document.getElementById('b-media-category').value = c.mediaCategory || '';
+  document.getElementById('b-coproduction').value = c.coProduction || '';
+  document.getElementById('b-exclusive').value = String(Boolean(c.exclusive));
   setSelectByText('b-pstatus', c.pstatus);
   document.getElementById('b-reject').value = c.rejectReason || '';
   document.getElementById('approval-section').style.display = c.rejectReason ? '' : 'none';
@@ -1116,16 +1187,18 @@ function selectContent(id) {
     : '<div class="extra-empty">발송 이력 없음</div>';
 
   hideReleaseForm();
+  editingReleaseId = null;
   renderReleaseHistory();
 
   document.getElementById('dp-empty').style.display = 'none';
   const dd = document.getElementById('dp-detail');
   dd.style.display = 'flex';
-  setContentEditMode(false);
+  setContentEditMode(true);
 
   // reset to first tab
   document.querySelectorAll('.dtab').forEach((t,i)=>t.classList.toggle('active',i===0));
   document.querySelectorAll('.dpanel').forEach((p,i)=>p.classList.toggle('active',i===0));
+  syncContentSavebar('tab-basic');
   document.getElementById('rr-box').classList.remove('show');
 }
 
@@ -1136,11 +1209,22 @@ function closeDetail() {
   document.getElementById('dp-detail').style.display = 'none';
 }
 
+function deleteContent() {
+  if (!selId) return;
+  const c = contents.find(x => x.id === selId);
+  if (!c) return;
+  if (!confirm(`${c.title} 콘텐츠를 삭제할까요?`)) return;
+  const index = contents.findIndex(x => x.id === selId);
+  if (index >= 0) contents.splice(index, 1);
+  delete releaseHistories[selId];
+  closeDetail();
+}
+
 function setContentEditMode(isEditing) {
   const detail = document.getElementById('dp-detail');
   if (!detail) return;
-  detail.classList.toggle('editing', isEditing);
-  detail.classList.toggle('read-mode', !isEditing);
+  detail.classList.toggle('editing', true);
+  detail.classList.remove('read-mode');
   syncContentSavebar();
   detail.querySelectorAll('.fg input, .fg select, .fg textarea').forEach(el => {
     if (el.id === 'b-company' || el.id === 'b-reject') {
@@ -1148,11 +1232,8 @@ function setContentEditMode(isEditing) {
       el.disabled = false;
       return;
     }
-    el.disabled = !isEditing;
+    el.disabled = false;
   });
-  const editBtn = document.getElementById('content-edit-btn');
-  if (editBtn) editBtn.style.display = isEditing ? 'none' : '';
-  if (!isEditing) hideReleaseForm();
 }
 
 function switchDTab(el, panelId) {
@@ -1167,7 +1248,12 @@ function syncContentSavebar(panelId) {
   const detail = document.getElementById('dp-detail');
   if (!detail) return;
   const activePanelId = panelId || document.querySelector('.dpanel.active')?.id;
-  detail.classList.toggle('no-savebar', activePanelId === 'tab-extra');
+  detail.classList.remove('no-savebar');
+  const action = document.getElementById('content-save-action');
+  const tab = contentTabLabels[activePanelId] || contentTabLabels['tab-basic'];
+  if (action) {
+    action.textContent = `${tab.label} 저장`;
+  }
 }
 
 function setSelectByText(id, value) {
@@ -1187,7 +1273,6 @@ function setGenreChips(genreText) {
 }
 
 function toggleGenreMenu() {
-  if (document.getElementById('dp-detail')?.classList.contains('read-mode')) return;
   document.getElementById('b-genre')?.classList.toggle('open');
 }
 
@@ -1195,6 +1280,57 @@ function updateGenreSummary() {
   const selected = [...document.querySelectorAll('#b-genre input[type="checkbox"]:checked')].map(input => input.value);
   const trigger = document.querySelector('#b-genre .multi-select-trigger');
   if (trigger) trigger.textContent = selected.length ? selected.join(', ') : '선택 없음';
+}
+
+function selectedText(id) {
+  const select = document.getElementById(id);
+  return select?.selectedOptions?.[0]?.textContent || '';
+}
+
+function saveContentTab(tab) {
+  if (!selId) return;
+  const c = contents.find(x => x.id === selId);
+  if (!c) return;
+
+  if (tab === 'basic') {
+    const genres = [...document.querySelectorAll('#b-genre input[type="checkbox"]:checked')].map(input => input.value);
+    c.origTitle = document.getElementById('b-origtitle').value.trim();
+    c.year = document.getElementById('b-year').value.trim();
+    c.genre = genres.join(', ');
+    c.eps = Number(document.getElementById('b-eps').value) || '';
+    c.startPoint = Number(document.getElementById('b-start-point').value) || '';
+    c.runtime = Number(document.getElementById('b-runtime').value) || '';
+    c.totalRuntime = Number(document.getElementById('b-total-runtime').value) || '';
+    c.lang = selectedText('b-lang');
+    c.rating = selectedText('b-rating');
+    c.type = selectedText('b-type').replace(/\s*\(.+\)/, '');
+    c.mediaCategory = document.getElementById('b-media-category').value;
+    c.coProduction = document.getElementById('b-coproduction').value;
+    c.exclusive = document.getElementById('b-exclusive').value === 'true';
+    c.pstatus = selectedText('b-pstatus').replace(/\s*\(.+\)/, '');
+    document.getElementById('d-sub').textContent = `${c.company} · ${c.genre || '장르 없음'} · ${c.year}`;
+    renderTable();
+  }
+
+  if (tab === 'material') {
+    c.driveFolderUrl = document.getElementById('b-drive-url').value.trim();
+  }
+
+  const labels = {
+    basic: '기본 정보',
+    trans: '번역 데이터',
+    image: '이미지',
+    video: '영상',
+    material: '자료',
+    release: '릴리즈',
+    extra: '부가 정보',
+  };
+  alert(`${labels[tab] || '탭'}가 저장되었습니다.`);
+}
+
+function saveActiveContentTab() {
+  const activePanelId = document.querySelector('#dp-detail .dpanel.active')?.id || 'tab-basic';
+  saveContentTab(contentTabLabels[activePanelId]?.key || 'basic');
 }
 
 function openDriveFolder() {
@@ -1221,21 +1357,41 @@ function renderReleaseHistory() {
   if (!list || !selId) return;
   const rows = getCurrentReleaseList();
   list.innerHTML = rows.length ? rows.map(r => `
-    <div class="release-row">
-      <div class="release-main">
-        <div class="release-name">${r.platformName}</div>
-        <div class="release-meta">content_release_history #${r.id}</div>
+    ${editingReleaseId === r.id ? `
+      <div class="release-row editing">
+        <div class="release-edit-grid">
+          <div class="fg"><label>플랫폼명</label><input id="release-edit-platform-${r.id}" value="${r.platformName}" /></div>
+          <div class="fg"><label>구분</label>
+            <select id="release-edit-internal-${r.id}">
+              <option value="true" ${r.isInternal ? 'selected' : ''}>내부 플랫폼</option>
+              <option value="false" ${!r.isInternal ? 'selected' : ''}>외부 플랫폼</option>
+            </select>
+          </div>
+        </div>
+        <div class="release-actions">
+          <button class="btn btn-save" onclick="saveInlineReleaseHistory(${r.id})"><i class="ti ti-device-floppy"></i> 저장</button>
+          <button class="btn" onclick="cancelInlineReleaseEdit()">취소</button>
+        </div>
       </div>
-      <span class="release-type ${r.isInternal ? 'internal' : ''}">${r.isInternal ? '내부' : '외부'}</span>
-      <div class="release-actions">
-        <button class="btn btn-icon" onclick="editReleaseHistory(${r.id})" title="수정"><i class="ti ti-edit"></i></button>
-        <button class="btn btn-icon" onclick="deleteReleaseHistory(${r.id})" title="삭제"><i class="ti ti-trash"></i></button>
+    ` : `
+      <div class="release-row">
+        <div class="release-main">
+          <div class="release-name">${r.platformName}</div>
+          <div class="release-meta">content_release_history #${r.id}</div>
+        </div>
+        <span class="release-type ${r.isInternal ? 'internal' : ''}">${r.isInternal ? '내부' : '외부'}</span>
+        <div class="release-actions">
+          <button class="btn btn-icon" onclick="editReleaseHistory(${r.id})" title="수정"><i class="ti ti-edit"></i></button>
+          <button class="btn btn-icon" onclick="deleteReleaseHistory(${r.id})" title="삭제"><i class="ti ti-trash"></i></button>
+        </div>
       </div>
-    </div>
+    `}
   `).join('') : '<div class="release-empty">등록된 릴리즈 플랫폼이 없습니다</div>';
 }
 
 function showReleaseForm(release) {
+  editingReleaseId = null;
+  renderReleaseHistory();
   document.getElementById('release-form').classList.add('show');
   document.getElementById('release-id').value = release ? release.id : '';
   document.getElementById('release-platform').value = release ? release.platformName : '';
@@ -1270,16 +1426,39 @@ function saveReleaseHistory() {
   } else {
     rows.push({ id: ++releaseSeq, platformName, isInternal });
   }
+  editingReleaseId = null;
   hideReleaseForm();
   renderReleaseHistory();
 }
 
 function editReleaseHistory(id) {
+  hideReleaseForm();
+  editingReleaseId = id;
+  renderReleaseHistory();
+  setTimeout(() => document.getElementById(`release-edit-platform-${id}`)?.focus(), 0);
+}
+
+function cancelInlineReleaseEdit() {
+  editingReleaseId = null;
+  renderReleaseHistory();
+}
+
+function saveInlineReleaseHistory(id) {
   const row = getCurrentReleaseList().find(r => r.id === id);
-  if (row) showReleaseForm(row);
+  if (!row) return;
+  const platformName = document.getElementById(`release-edit-platform-${id}`).value.trim();
+  if (!platformName) {
+    alert('플랫폼명을 입력해주세요.');
+    return;
+  }
+  row.platformName = platformName;
+  row.isInternal = document.getElementById(`release-edit-internal-${id}`).value === 'true';
+  editingReleaseId = null;
+  renderReleaseHistory();
 }
 
 function deleteReleaseHistory(id) {
+  if (editingReleaseId === id) editingReleaseId = null;
   releaseHistories[selId] = getCurrentReleaseList().filter(r => r.id !== id);
   hideReleaseForm();
   renderReleaseHistory();
