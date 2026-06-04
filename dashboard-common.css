@@ -244,8 +244,8 @@ button {
 }
 
 .footer-cta:hover {
-  border-color: var(--orange);
-  background: var(--orange);
+  border-color: #111827;
+  background: #111827;
   color: #fff;
 }
 

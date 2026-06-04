@@ -130,7 +130,7 @@
             <div class="turnkey-card">
               <div class="turnkey-card__title">콘텐츠 구성이 필요하신가요?</div>
               <p>예산과 요청사항을 보내면 담당자가 콘텐츠를 구성해 제안드려요.</p>
-              <button class="button button--ghost button--full js-route" data-route="turnkey-request">컨시어지 요청하기</button>
+              <button class="button button--ghost button--full" data-action="go-concierge-buy">컨시어지 요청하기</button>
             </div>
           </aside>
         </section>
@@ -157,7 +157,7 @@
           </div>
           <div class="empty-actions">
             <button class="button button--ghost js-route" data-route="cart">콘텐츠 둘러보기</button>
-            <button class="button button--primary js-route" data-route="turnkey-request">컨시어지 요청하기</button>
+            <button class="button button--primary" data-action="go-concierge-buy">컨시어지 요청하기</button>
           </div>
         </section>
       </main>
@@ -415,7 +415,7 @@
   }
 
   function footer(kind) {
-    const label = kind === "turnkey" ? "컨시어지 요청 보내기" : "제안 보내기";
+    const label = kind === "turnkey" ? "신청하기" : "제안 보내기";
     return `
       <div class="footer-bar ${kind === "bundle" ? "footer-bar--bundle" : ""}">
         <div class="footer-bar__inner">
@@ -534,6 +534,10 @@
 
     if (action === "go-proposal" && state.selected.size > 0) {
       routeTo(actionTarget.dataset.route);
+    }
+
+    if (action === "go-concierge-buy") {
+      window.location.href = "concierge.html#buy";
     }
 
     if (action === "submit-proposal") {
