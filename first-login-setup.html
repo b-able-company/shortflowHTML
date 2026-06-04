@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>첫 로그인 설정 | shortflow</title>
+  <style>
+    :root {
+      --bg: #fff;
+      --surface: #fff;
+      --line: #e5e2dc;
+      --line-strong: #d2cec7;
+      --ink: #111318;
+      --muted: #656a73;
+      --faint: #9aa0aa;
+      --orange: #e85d2c;
+      --orange-dark: #c7471d;
+      --orange-soft: #fff1ec;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard", system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      display: grid;
+      place-items: center;
+      padding: 32px 20px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .setup-topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      height: 72px;
+      padding: 24px 34px 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .brand b {
+      color: var(--orange);
+    }
+
+    .top-temp-link {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      z-index: 11;
+      min-height: 36px;
+      padding: 0 14px;
+      border-radius: 9px;
+      background: var(--orange);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateX(-50%);
+      font-size: 12.5px;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+      box-shadow: 0 10px 24px rgba(232, 93, 44, 0.22);
+    }
+
+    .language-button {
+      height: 36px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .setup-card {
+      width: min(500px, 100%);
+      padding: 48px 40px 42px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+    }
+
+    .setup-head {
+      margin-bottom: 36px;
+    }
+
+    .setup-head h1 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+
+    .setup-head p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .form-stack {
+      display: grid;
+      gap: 32px;
+    }
+
+    .section {
+      display: grid;
+      gap: 20px;
+    }
+
+    .password-confirm-field {
+      margin-top: -12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 12px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .field-hint {
+      margin-top: -4px;
+      color: var(--faint);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    input {
+      width: 100%;
+      height: 44px;
+      padding: 0 13px;
+      border: 1px solid var(--line-strong);
+      border-radius: 9px;
+      background: #fff;
+      color: var(--ink);
+      outline: 0;
+      transition: border-color 0.16s, box-shadow 0.16s, background 0.16s;
+    }
+
+    input:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(232, 93, 44, 0.13);
+    }
+
+    input:disabled {
+      background: #fafafa;
+      color: var(--faint);
+      cursor: not-allowed;
+    }
+
+    .small-btn,
+    .primary-btn {
+      min-height: 44px;
+      border-radius: 9px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    .small-btn {
+      min-width: 96px;
+      padding: 0 14px;
+      border: 1px solid #d7d9de;
+      background: #fff;
+      color: var(--ink);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .small-btn:hover {
+      border-color: var(--line-strong);
+      background: #fafaf7;
+    }
+
+    .small-btn.is-pressed {
+      border-color: var(--line-strong);
+      background: #eef0f2;
+      color: var(--muted);
+    }
+
+    .small-btn:disabled {
+      border-color: var(--line);
+      background: #fafaf7;
+      color: var(--faint);
+      cursor: default;
+    }
+
+    .primary-btn {
+      width: 100%;
+      background: var(--orange);
+      color: #fff;
+    }
+
+    .primary-btn:hover {
+      background: var(--orange-dark);
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--line);
+    }
+
+    .status {
+      min-height: 18px;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.45;
+    }
+
+    .status:empty {
+      display: none;
+    }
+
+    .email-status {
+      margin-top: -12px;
+    }
+
+    .password-status {
+      margin-top: -8px;
+    }
+
+    .status.is-ok {
+      color: #176935;
+      font-weight: 800;
+    }
+
+    .status.is-error {
+      color: var(--orange-dark);
+      font-weight: 800;
+    }
+
+    .code-field {
+      display: none;
+      margin-top: -6px;
+    }
+
+    .code-field.is-visible {
+      display: grid;
+    }
+
+    .actions {
+      display: grid;
+      gap: 10px;
+      padding-top: 10px;
+    }
+
+    @media (max-width: 560px) {
+      .setup-topbar {
+        height: 64px;
+        padding: 18px 20px 0;
+      }
+
+      .top-temp-link {
+        top: 64px;
+      }
+
+      .setup-card {
+        padding: 38px 24px 32px;
+      }
+
+      .input-row {
+        grid-template-columns: 1fr;
+      }
+
+      .small-btn {
+        width: 100%;
+      }
+    }
+</style>
+</head>
+<body>
+  <header class="setup-topbar">
+    <div class="brand"><span>short</span><b>flow</b></div>
+    <a class="top-temp-link" href="content-list.html">콘텐츠 리스트로 돌아가기 임시버튼</a>
+    <button class="language-button" type="button" aria-label="언어 선택">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/>
+        <path d="M8 1.5C5.5 4 5.5 12 8 14.5M8 1.5C10.5 4 10.5 12 8 14.5M1.5 8h13" stroke="currentColor" stroke-width="1.3"/>
+      </svg>
+      <span>한국어</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </header>
+  <main class="setup-card">
+    <header class="setup-head">
+      <h1>최초 계정 설정</h1>
+      <p>사용할 이메일과 비밀번호를 입력하여 계정 설정을 완료해주세요.</p>
+    </header>
+
+    <form class="form-stack" id="setupForm">
+      <section class="section">
+        <div class="field">
+          <label for="email">새 이메일</label>
+          <div class="input-row">
+            <input id="email" name="email" type="email" value="" placeholder="name@company.com" autocomplete="email" required>
+            <button class="small-btn" type="button" id="sendCodeBtn">인증하기</button>
+          </div>
+        </div>
+        <div class="field code-field" id="codeField">
+          <div class="input-row">
+            <input id="code" name="code" type="text" inputmode="numeric" maxlength="6" placeholder="123456" autocomplete="one-time-code">
+            <button class="small-btn" type="button" id="verifyCodeBtn">확인하기</button>
+          </div>
+        </div>
+        <div class="status email-status" id="emailStatus">이메일 입력 후 인증을 진행해주세요.</div>
+      </section>
+
+      <div class="divider"></div>
+
+      <section class="section">
+        <div class="field">
+          <label for="password">새 비밀번호</label>
+          <input id="password" name="password" type="password" placeholder="새 비밀번호를 입력해주세요" autocomplete="new-password" required>
+          <p class="field-hint">영문, 숫자를 포함해 8자 이상으로 만들어주세요.</p>
+        </div>
+        <div class="field password-confirm-field">
+          <label for="passwordConfirm">새 비밀번호 확인</label>
+          <input id="passwordConfirm" name="passwordConfirm" type="password" placeholder="한 번 더 입력해주세요" autocomplete="new-password" required>
+        </div>
+        <div class="status password-status" id="passwordStatus"></div>
+      </section>
+
+      <div class="actions">
+        <button class="primary-btn" type="submit">확인</button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    const MOCK_CODE = '123456';
+    const form = document.getElementById('setupForm');
+    const emailInput = document.getElementById('email');
+    const codeInput = document.getElementById('code');
+    const passwordInput = document.getElementById('password');
+    const passwordConfirmInput = document.getElementById('passwordConfirm');
+    const sendCodeBtn = document.getElementById('sendCodeBtn');
+    const verifyCodeBtn = document.getElementById('verifyCodeBtn');
+    const codeField = document.getElementById('codeField');
+    const emailStatus = document.getElementById('emailStatus');
+    const passwordStatus = document.getElementById('passwordStatus');
+
+    let emailVerified = false;
+    let verifiedEmail = '';
+
+    function setStatus(target, message, type) {
+      target.textContent = message;
+      target.classList.toggle('is-ok', type === 'ok');
+      target.classList.toggle('is-error', type === 'error');
+    }
+
+    function setEmailStatus(message, type) {
+      setStatus(emailStatus, message, type);
+    }
+
+    function setPasswordStatus(message, type) {
+      setStatus(passwordStatus, message, type);
+    }
+
+    sendCodeBtn.addEventListener('click', () => {
+      const email = emailInput.value.trim();
+      if (!email || !emailInput.checkValidity()) {
+        setEmailStatus('올바른 이메일을 입력해주세요.', 'error');
+        emailInput.focus();
+        return;
+      }
+
+      emailVerified = false;
+      verifiedEmail = '';
+      codeField.classList.add('is-visible');
+      sendCodeBtn.classList.add('is-pressed');
+      codeInput.value = '';
+      codeInput.focus();
+      setEmailStatus('인증코드를 전송했습니다.', '');
+    });
+
+    verifyCodeBtn.addEventListener('click', () => {
+      if (codeInput.value.trim() !== MOCK_CODE) {
+        setEmailStatus('인증코드가 일치하지 않습니다.', 'error');
+        codeInput.focus();
+        return;
+      }
+
+      emailVerified = true;
+      verifiedEmail = emailInput.value.trim();
+      emailInput.disabled = true;
+      sendCodeBtn.disabled = true;
+      codeInput.disabled = true;
+      verifyCodeBtn.disabled = true;
+      codeField.classList.remove('is-visible');
+      setEmailStatus('✓ 인증 완료', 'ok');
+    });
+
+    emailInput.addEventListener('input', () => {
+      if (emailInput.value.trim() !== verifiedEmail) {
+        emailVerified = false;
+        if (sendCodeBtn.disabled) sendCodeBtn.disabled = false;
+        sendCodeBtn.classList.remove('is-pressed');
+      }
+    });
+
+    function validatePassword(options = {}) {
+      const password = passwordInput.value;
+      const passwordConfirm = passwordConfirmInput.value;
+      const silentWhenEmpty = options.silentWhenEmpty;
+
+      if (!password && !passwordConfirm) {
+        setPasswordStatus('', '');
+        return false;
+      }
+
+      if (!password || !passwordConfirm) {
+        if (!silentWhenEmpty) setPasswordStatus('새 비밀번호와 확인 값을 모두 입력해주세요.', 'error');
+        return false;
+      }
+
+      if (password.length < 8) {
+        setPasswordStatus('비밀번호는 8자 이상 입력해주세요.', 'error');
+        return false;
+      }
+
+      if (password !== passwordConfirm) {
+        setPasswordStatus('새 비밀번호와 확인 값이 일치하지 않습니다.', 'error');
+        return false;
+      }
+
+      setPasswordStatus('✓ 비밀번호 확인 완료', 'ok');
+      return true;
+    }
+
+    passwordInput.addEventListener('input', () => validatePassword({ silentWhenEmpty: true }));
+    passwordConfirmInput.addEventListener('input', () => validatePassword({ silentWhenEmpty: true }));
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      if (!emailVerified) {
+        setEmailStatus('이메일 인증을 완료해주세요.', 'error');
+        return;
+      }
+
+      if (!validatePassword()) {
+        const focusTarget = !passwordInput.value || passwordInput.value.length < 8
+          ? passwordInput
+          : passwordConfirmInput;
+        focusTarget.focus();
+        return;
+      }
+
+      alert('첫 로그인 설정이 적용되었습니다.');
+      window.location.href = 'content-list.html';
+    });
+  </script>
+</body>
+</html>

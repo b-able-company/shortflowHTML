@@ -45,7 +45,7 @@
             <button class="icon-action" aria-label="테마">${icons.moon}</button>
             <button class="lang">한국어</button>
             <a class="user ${currentPage === 'mypage' ? 'active' : ''}" href="owner.html" ${currentPage === 'mypage' ? 'aria-current="page"' : ''}>Reelio</a>
-            <button class="logout">로그아웃</button>
+            <a class="logout" href="login/login.html">로그아웃</a>
           </div>
         </div>
       </header>
@@ -154,16 +154,22 @@
     });
     mountFooter();
     
-    // Add admin toggle button to top-right corner
-    addAdminToggleButton();
+    // Add temporary shortcut buttons to top-right corner
+    addUtilityShortcutButtons();
   }
 
-  function addAdminToggleButton() {
-    // Check if button already exists
-    if (document.querySelector('.admin-toggle')) return;
-    
+  function addUtilityShortcutButtons() {
+    if (document.querySelector('.first-login-toggle') || document.querySelector('.admin-toggle')) return;
+
+    const firstLoginButton = document.createElement('a');
+    firstLoginButton.className = 'utility-toggle first-login-toggle';
+    firstLoginButton.href = 'first-login-setup.html';
+    firstLoginButton.setAttribute('aria-label', '첫 로그인 설정');
+    firstLoginButton.textContent = '첫로그인';
+    document.body.appendChild(firstLoginButton);
+
     const adminButton = document.createElement('a');
-    adminButton.className = 'admin-toggle';
+    adminButton.className = 'utility-toggle admin-toggle';
     adminButton.href = 'admin/index.html';
     adminButton.setAttribute('aria-label', '관리자');
     adminButton.textContent = 'ADMIN 화면 보기';

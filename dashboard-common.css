@@ -59,11 +59,10 @@ button {
   gap: 30px;
 }
 
-/* Admin toggle button (fixed top-right corner) */
-.admin-toggle {
+/* Temporary shortcut buttons (fixed top-right corner) */
+.utility-toggle {
   position: fixed;
   top: 14px;
-  right: 14px;
   z-index: 9999;
   display: inline-flex;
   align-items: center;
@@ -82,10 +81,24 @@ button {
   transition: all 0.2s ease;
 }
 
-.admin-toggle:focus,
-.admin-toggle:hover {
+.admin-toggle {
+  right: 14px;
+}
+
+.first-login-toggle {
+  right: 150px;
+  background: var(--orange);
+}
+
+.utility-toggle:focus,
+.utility-toggle:hover {
   background: #2a2a26;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.first-login-toggle:focus,
+.first-login-toggle:hover {
+  background: #c7471d;
 }
 
 .brand {
