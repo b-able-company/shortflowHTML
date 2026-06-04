@@ -54,10 +54,39 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 
 /* TOOLBAR */
 .toolbar { background: #fff; border-bottom: 0.5px solid #e8e6e0; padding: 8px 14px; display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
+.lp > .toolbar { border-bottom: none; }
 .srch { position: relative; display: flex; align-items: center; }
 .srch i { position: absolute; left: 7px; font-size: 12px; color: #bbb; pointer-events: none; }
 .srch input { font-size: 11.5px; padding: 4px 8px 4px 25px; border: 0.5px solid #e0dfd9; border-radius: 7px; background: #f7f6f2; width: 160px; outline: none; color: #1a1a18; }
-.psel { font-size: 11px; padding: 3px 8px; border: 0.5px solid #e0dfd9; border-radius: 6px; background: #fff; color: #555; outline: none; cursor: pointer; font-family: inherit; height: 26px; }
+.psel {
+  appearance: none;
+  -webkit-appearance: none;
+  font-size: 11px;
+  padding: 3px 28px 3px 8px;
+  border: 0.5px solid #e0dfd9;
+  border-radius: 6px;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 3.5 5 6.5 8 3.5' fill='none' stroke='%23777268' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px 10px;
+  color: #555;
+  outline: none;
+  cursor: pointer;
+  font-family: inherit;
+  height: 26px;
+}
+.psel.is-filtered {
+  border-color: #e0dfd9;
+  background-color: #ecebe6;
+  color: #1a1a18;
+  font-weight: 600;
+}
+.filter-chip-row { display: none; align-items: center; gap: 6px; flex-wrap: wrap; padding: 0 14px 8px; background: #fff; }
+.filter-chip-row.show { display: flex; }
+.filter-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 24px; padding: 3px 7px 3px 9px; border-radius: 999px; border: 0.5px solid #ddd9cf; background: #fafaf7; color: #45423a; font-size: 11px; font-weight: 500; }
+.filter-chip button { width: 16px; height: 16px; border-radius: 50%; border: none; background: #eeeae1; color: #777268; cursor: pointer; line-height: 16px; font-size: 11px; display: inline-flex; align-items: center; justify-content: center; }
+.filter-chip button:hover { background: #ded9cf; color: #1a1a18; }
 .tbtn { font-size: 11.5px; padding: 5px 10px; border-radius: 6px; border: 0.5px solid #e0dfd9; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; background: #fff; color: #444; margin-left: auto; }
 .tbtn-primary { background: #1a1a18; color: #fff; border-color: #1a1a18; }
 
@@ -122,8 +151,11 @@ td { padding: 9px 12px; vertical-align: middle; }
 .fg input[readonly] { background: #f7f6f2; color: #aaa; }
 .fg input:disabled, .fg select:disabled { background: #f7f6f2; color: #bbb; cursor: not-allowed; }
 .fg-span-2 { grid-column: span 2; }
-.amount-currency-field { display: grid; grid-template-columns: minmax(0, 1fr) 76px; gap: 6px; }
+.amount-currency-field { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 6px; }
 .amount-currency-field select { min-width: 76px; }
+.contract-amount-stack { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 6px; align-items: center; }
+.contract-amount-stack input { min-width: 0; }
+.contract-amount-stack select { width: 76px; min-width: 76px; }
 .contract-form-section { border: 0.5px solid #eeede8; border-radius: 8px; background: #fff; padding: 13px 14px 14px; margin-bottom: 14px; }
 .contract-form-section:last-child { margin-bottom: 0; }
 .form-subtitle { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 11px; padding-bottom: 7px; border-bottom: 0.5px solid #f0efe9; font-size: 12px; font-weight: 600; color: #333; }
@@ -610,9 +642,13 @@ td { padding: 9px 12px; vertical-align: middle; }
             <option value="3">PaperLens</option>
             <option value="4">BrightFrame</option>
           </select>
-          <div class="srch"><i class="ti ti-search"></i><input placeholder="콘텐츠명 검색" oninput="filterSearch(this.value)" /></div>
+          <select class="psel" id="content-filter" onchange="filterContentName()" disabled>
+            <option value="">제작사를 먼저 선택하세요</option>
+          </select>
+          <div class="srch"><i class="ti ti-search"></i><input id="contract-search-input" placeholder="플랫폼명 검색" onkeydown="handlePlatformSearchKey(event)" /></div>
           <button class="tbtn tbtn-primary" onclick="showNewContract()"><i class="ti ti-plus"></i> 계약 추가</button>
         </div>
+        <div class="filter-chip-row" id="contract-filter-chips"></div>
         <div class="tscroll">
           <table>
             <thead>
@@ -687,7 +723,15 @@ td { padding: 9px 12px; vertical-align: middle; }
                       </select>
                     </div>
                     <div class="fg"><label>RS 비율 %</label><input id="new-rs-rate" type="number" min="0" max="100" step="0.1" placeholder="RS / MG+RS 선택 시 입력" disabled /></div>
-                    <div class="fg"><label>계약 금액</label><input id="new-contract-amount" type="number" disabled placeholder="MG, Flat Fee만 해당" /></div>
+                    <div class="fg"><label>계약 금액</label>
+                      <div class="contract-amount-stack">
+                        <select id="new-contract-currency" disabled>
+                          <option value="USD">USD</option>
+                          <option value="KRW">KRW</option>
+                        </select>
+                        <input id="new-contract-amount" type="number" disabled placeholder="MG, Flat Fee만 해당" />
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="contract-form-section">
@@ -758,7 +802,15 @@ td { padding: 9px 12px; vertical-align: middle; }
                       </select>
                     </div>
                     <div class="fg"><label>RS 비율 %</label><input id="cd-rs-rate" type="number" min="0" max="100" step="0.1" /></div>
-                    <div class="fg"><label>계약 금액</label><input id="cd-contract-amount" type="number" disabled placeholder="MG, Flat Fee만 해당" /></div>
+                    <div class="fg"><label>계약 금액</label>
+                      <div class="contract-amount-stack">
+                        <select id="cd-contract-currency" disabled>
+                          <option value="USD">USD</option>
+                          <option value="KRW">KRW</option>
+                        </select>
+                        <input id="cd-contract-amount" type="number" disabled placeholder="MG, Flat Fee만 해당" />
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="contract-form-section">
@@ -785,26 +837,26 @@ td { padding: 9px 12px; vertical-align: middle; }
                       <div class="data-grid">
                         <div class="fg"><label>발생월</label><input id="flat-month" type="month" value="2025-04" /></div>
                         <div class="fg"><label>플랫폼 입금일</label><input id="flat-paid-date" type="date" value="2025-05-10" /></div>
-                        <div class="fg"><label>플랫폼 지급액</label><div class="amount-currency-field"><input id="flat-platform-amount" type="number" value="15000" /><select><option>USD</option><option>KRW</option></select></div></div>
+                        <div class="fg"><label>플랫폼 지급액</label><div class="amount-currency-field"><select><option>USD</option><option>KRW</option></select><input id="flat-platform-amount" type="number" value="15000" /></div></div>
                       </div>
                     </div>
                     <div class="contract-form-section">
                       <div class="form-subtitle">공제 내역</div>
                       <div class="data-grid">
                         <div class="fg"><label>원천세 비율</label><input type="number" value="10" /></div>
-                        <div class="fg"><label>원천세 금액</label><input type="number" value="1500" /></div>
-                        <div class="fg"><label>송금 수수료</label><input type="number" value="35" /></div>
+                        <div class="fg"><label>원천세 금액(USD)</label><input type="number" value="1500" /></div>
+                        <div class="fg"><label>송금 수수료(USD)</label><input type="number" value="35" /></div>
                         <div class="fg"><label>환율</label><input type="number" value="1380" /></div>
-                        <div class="fg"><label>환전 수수료</label><input type="number" value="8000" /></div>
-                        <div class="fg"><label>실제 입금액(원)</label><input id="flat-deposit-amount" type="number" value="18457000" /></div>
+                        <div class="fg"><label>환전 수수료(원)</label><input type="number" value="8000" /></div>
+                        <div class="fg"><label>실입금액(원)</label><input id="flat-deposit-amount" type="number" value="18457000" /></div>
                       </div>
                     </div>
                     <div class="contract-form-section">
                       <div class="form-subtitle">정산</div>
                       <div class="data-grid">
                         <div class="fg"><label>Bable 수수료율</label><input type="number" value="7" /></div>
-                        <div class="fg"><label>Bable 수수료 금액</label><input type="number" value="1291990" /></div>
-                        <div class="fg"><label>제작사 정산액</label><input id="flat-producer-amount" type="number" value="17165010" /></div>
+                        <div class="fg"><label>Bable 수수료 금액(원)</label><input type="number" value="1291990" /></div>
+                        <div class="fg"><label>제작사 정산액(원)</label><input id="flat-producer-amount" type="number" value="17165010" /></div>
                         <div class="fg"><label>정산 상태</label><select id="flat-settlement-status"><option>예정</option><option>완료</option></select></div>
                       </div>
                     </div>
@@ -826,26 +878,26 @@ td { padding: 9px 12px; vertical-align: middle; }
                       <div class="data-grid">
                         <div class="fg"><label>발생월</label><input id="mg-month" type="month" value="2025-04" /></div>
                         <div class="fg"><label>플랫폼 입금일</label><input id="mg-paid-date" type="date" value="2025-05-10" /></div>
-                        <div class="fg"><label>플랫폼 지급액</label><div class="amount-currency-field"><input id="mg-platform-amount" type="number" value="30000" /><select><option>USD</option><option>KRW</option></select></div></div>
+                        <div class="fg"><label>플랫폼 지급액</label><div class="amount-currency-field"><select><option>USD</option><option>KRW</option></select><input id="mg-platform-amount" type="number" value="30000" /></div></div>
                       </div>
                     </div>
                     <div class="contract-form-section">
                       <div class="form-subtitle">공제 내역</div>
                       <div class="data-grid">
                         <div class="fg"><label>원천세 비율</label><input type="number" value="10" /></div>
-                        <div class="fg"><label>원천세 금액</label><input type="number" value="3000" /></div>
-                        <div class="fg"><label>송금 수수료</label><input type="number" value="35" /></div>
+                        <div class="fg"><label>원천세 금액(USD)</label><input type="number" value="3000" /></div>
+                        <div class="fg"><label>송금 수수료(USD)</label><input type="number" value="35" /></div>
                         <div class="fg"><label>환율</label><input type="number" value="1380" /></div>
-                        <div class="fg"><label>환전 수수료</label><input type="number" value="8000" /></div>
-                        <div class="fg"><label>실제 입금액(원)</label><input id="mg-deposit-amount" type="number" value="37207000" /></div>
+                        <div class="fg"><label>환전 수수료(원)</label><input type="number" value="8000" /></div>
+                        <div class="fg"><label>실입금액(원)</label><input id="mg-deposit-amount" type="number" value="37207000" /></div>
                       </div>
                     </div>
                     <div class="contract-form-section">
                       <div class="form-subtitle">정산</div>
                       <div class="data-grid">
                         <div class="fg"><label>Bable 수수료율</label><input type="number" value="7" /></div>
-                        <div class="fg"><label>Bable 수수료 금액</label><input type="number" value="2604490" /></div>
-                        <div class="fg"><label>제작사 정산액</label><input id="mg-producer-amount" type="number" value="34602510" /></div>
+                        <div class="fg"><label>Bable 수수료 금액(원)</label><input type="number" value="2604490" /></div>
+                        <div class="fg"><label>제작사 정산액(원)</label><input id="mg-producer-amount" type="number" value="34602510" /></div>
                         <div class="fg"><label>정산 상태</label><select id="mg-settlement-status"><option>예정</option><option>완료</option></select></div>
                       </div>
                     </div>
@@ -863,7 +915,7 @@ td { padding: 9px 12px; vertical-align: middle; }
               <div class="data-list-title">등록된 RS 데이터</div>
               <div class="rs-table-head">
                 <div>발생분기</div>
-                <div>제작사 정산액</div>
+                <div>제작사 정산액(원)</div>
                 <div>정산상태</div>
                 <div></div>
               </div>
@@ -916,7 +968,7 @@ td { padding: 9px 12px; vertical-align: middle; }
         <div class="ops-table-scroll">
           <table class="ops-table dense">
             <colgroup><col style="width:34px"><col style="width:150px"><col style="width:126px"><col style="width:128px"><col style="width:82px"><col style="width:84px"><col style="width:104px"><col style="width:116px"><col style="width:74px"><col style="width:76px"><col style="width:106px"><col style="width:96px"><col style="width:72px"><col style="width:96px"><col style="width:112px"><col style="width:96px"><col style="width:116px"><col style="width:120px"><col style="width:94px"></colgroup>
-            <thead><tr><th></th><th>콘텐츠</th><th class="right">제작사</th><th class="right">플랫폼사</th><th class="center">계약타입</th><th class="right">발생월</th><th class="right">플랫폼 입금일</th><th class="right">플랫폼 지급액</th><th class="right">RS 비율</th><th class="right">원천세 비율</th><th class="right">원천세 금액</th><th class="right">송금 수수료</th><th class="right">환율</th><th class="right">환전 수수료</th><th class="right">실제 입금액</th><th class="right">비에이블 수수료율</th><th class="right">비에이블 수수료 금액</th><th class="right">제작사 정산액</th><th class="center">상태</th></tr></thead>
+            <thead><tr><th></th><th>콘텐츠</th><th class="right">제작사</th><th class="right">플랫폼사</th><th class="center">계약타입</th><th class="right">발생월</th><th class="right">플랫폼 입금일</th><th class="right">플랫폼 지급액</th><th class="right">RS 비율</th><th class="right">원천세 비율</th><th class="right">원천세 금액(USD)</th><th class="right">송금 수수료(USD)</th><th class="right">환율</th><th class="right">환전 수수료(원)</th><th class="right">실입금액(원)</th><th class="right">비에이블 수수료율</th><th class="right">비에이블 수수료 금액(원)</th><th class="right">제작사 정산액(원)</th><th class="center">상태</th></tr></thead>
             <tbody id="draft-tbody"></tbody>
           </table>
         </div>
@@ -934,7 +986,7 @@ td { padding: 9px 12px; vertical-align: middle; }
         <div class="ops-table-scroll">
           <table class="ops-table">
             <colgroup><col><col style="width:130px"><col style="width:78px"><col style="width:150px"><col style="width:128px"><col style="width:112px"><col style="width:110px"></colgroup>
-            <thead><tr><th>제작사</th><th class="right">정산 기준월</th><th class="right">항목 수</th><th class="right">제작사 정산액</th><th class="right">관리자</th><th class="center">상태</th><th class="center">상세</th></tr></thead>
+            <thead><tr><th>제작사</th><th class="right">정산 기준월</th><th class="right">항목 수</th><th class="right">제작사 정산액(원)</th><th class="right">관리자</th><th class="center">상태</th><th class="center">상세</th></tr></thead>
             <tbody id="progress-tbody"></tbody>
           </table>
         </div>
@@ -960,7 +1012,7 @@ td { padding: 9px 12px; vertical-align: middle; }
         <div class="ops-table-scroll">
           <table class="ops-table">
             <colgroup><col style="width:34px"><col><col style="width:130px"><col style="width:78px"><col style="width:150px"><col style="width:112px"><col style="width:110px"></colgroup>
-            <thead><tr><th></th><th>제작사</th><th class="right">정산 기준월</th><th class="right">항목 수</th><th class="right">제작사 정산액</th><th class="center">상태</th><th class="center">상세</th></tr></thead>
+            <thead><tr><th></th><th>제작사</th><th class="right">정산 기준월</th><th class="right">항목 수</th><th class="right">제작사 정산액(원)</th><th class="center">상태</th><th class="center">상세</th></tr></thead>
             <tbody id="ready-tbody"></tbody>
           </table>
         </div>
@@ -978,7 +1030,7 @@ td { padding: 9px 12px; vertical-align: middle; }
         <div class="ops-table-scroll">
           <table class="ops-table">
             <colgroup><col><col style="width:130px"><col style="width:78px"><col style="width:150px"><col style="width:112px"><col style="width:128px"><col style="width:112px"><col style="width:110px"></colgroup>
-            <thead><tr><th>제작사</th><th class="right">정산 기준월</th><th class="right">항목 수</th><th class="right">제작사 정산액</th><th class="right">완료 처리일</th><th class="right">처리한 관리자</th><th class="center">상태</th><th class="center">상세</th></tr></thead>
+            <thead><tr><th>제작사</th><th class="right">정산 기준월</th><th class="right">항목 수</th><th class="right">제작사 정산액(원)</th><th class="right">완료 처리일</th><th class="right">처리한 관리자</th><th class="center">상태</th><th class="center">상세</th></tr></thead>
             <tbody id="completed-tbody"></tbody>
           </table>
         </div>
@@ -996,7 +1048,7 @@ td { padding: 9px 12px; vertical-align: middle; }
           <div class="settlement-modal-sub" id="settlement-modal-sub"></div>
         </div>
         <div class="settlement-modal-amount">
-          <div class="settlement-modal-label">제작사 정산액</div>
+          <div class="settlement-modal-label">제작사 정산액(원)</div>
           <div class="settlement-modal-value" id="settlement-modal-amount"></div>
         </div>
         <button class="settlement-modal-close" onclick="closeSettlementDetailModal()"><i class="ti ti-x"></i></button>
@@ -1019,7 +1071,7 @@ td { padding: 9px 12px; vertical-align: middle; }
         <div class="process-review-summary">
           <div class="process-review-card"><div class="process-review-k">처리 대상</div><div class="process-review-v" id="process-review-count">0건</div></div>
           <div class="process-review-card"><div class="process-review-k">제작사</div><div class="process-review-v" id="process-review-studio" style="font-family:inherit"></div></div>
-          <div class="process-review-card"><div class="process-review-k">제작사 정산액 합계</div><div class="process-review-v" id="process-review-total">₩ 0</div></div>
+          <div class="process-review-card"><div class="process-review-k">제작사 정산액 합계(원)</div><div class="process-review-v" id="process-review-total">₩ 0</div></div>
         </div>
         <div class="process-review-section-head">
           <p class="process-review-section-title">상세 내역</p>
@@ -1038,14 +1090,14 @@ td { padding: 9px 12px; vertical-align: middle; }
                 <th>플랫폼 지급액</th>
                 <th>RS 비율</th>
                 <th>원천세 비율</th>
-                <th>원천세 금액</th>
-                <th>송금 수수료</th>
+                <th>원천세 금액(USD)</th>
+                <th>송금 수수료(USD)</th>
                 <th>환율</th>
-                <th>환전 수수료</th>
-                <th>실제 입금액</th>
+                <th>환전 수수료(원)</th>
+                <th>실입금액(원)</th>
                 <th>비에이블 수수료율</th>
-                <th>비에이블 수수료 금액</th>
-                <th>제작사 정산액</th>
+                <th>비에이블 수수료 금액(원)</th>
+                <th>제작사 정산액(원)</th>
                 <th>상태</th>
               </tr>
             </thead>
@@ -1077,7 +1129,8 @@ const contracts = [
 
 let selId = null;
 let filterCo = '';
-let filterQ = '';
+let filterContent = '';
+let filterPlatformQuery = '';
 let contractInfoEditing = false;
 const settlementDataState = {};
 const performanceDataState = {};
@@ -1143,26 +1196,36 @@ function syncNewContractType() {
   const type = document.getElementById('new-contract-type').value;
   const rsRate = document.getElementById('new-rs-rate');
   const contractAmount = document.getElementById('new-contract-amount');
+  const contractCurrency = document.getElementById('new-contract-currency');
   const hasRs = type === 'RS' || type === 'MG_RS';
   const isFlatOrMg = type === 'FLAT_FEE' || type === 'MG_RS';
   rsRate.disabled = !hasRs;
   if (!hasRs) rsRate.value = '';
   contractAmount.disabled = !isFlatOrMg;
-  if (!isFlatOrMg) contractAmount.value = '';
+  contractCurrency.disabled = !isFlatOrMg;
+  if (!isFlatOrMg) {
+    contractAmount.value = '';
+    contractCurrency.value = 'USD';
+  }
 }
 
 function syncDetailContractType() {
   const type = document.getElementById('cd-contract-type').value;
   const rsRate = document.getElementById('cd-rs-rate');
   const contractAmount = document.getElementById('cd-contract-amount');
+  const contractCurrency = document.getElementById('cd-contract-currency');
   const hasRs = type === 'RS' || type === 'MG_RS';
   const isFlatOrMg = type === 'FLAT_FEE' || type === 'MG_RS';
   rsRate.disabled = !contractInfoEditing || !hasRs;
   rsRate.readOnly = !contractInfoEditing;
   contractAmount.disabled = !contractInfoEditing || !isFlatOrMg;
   contractAmount.readOnly = !contractInfoEditing;
+  contractCurrency.disabled = !contractInfoEditing || !isFlatOrMg;
   if (!hasRs) rsRate.value = '';
-  if (!isFlatOrMg) contractAmount.value = '';
+  if (!isFlatOrMg) {
+    contractAmount.value = '';
+    contractCurrency.value = 'USD';
+  }
   configureContractDataTabs(type);
   if (hasRs && document.getElementById('rs-quarter-list') && !document.getElementById('rs-quarter-list').children.length) {
     addQuarterRow();
@@ -1187,12 +1250,22 @@ function parseMoneyNumber(value) {
   return Number.isFinite(num) ? num : 0;
 }
 
+function currencyFromMoney(value) {
+  return String(value || '').trim().startsWith('₩') ? 'KRW' : 'USD';
+}
+
+function formatContractMoney(amount, currency = 'USD') {
+  if (!amount) return '—';
+  const symbol = currency === 'KRW' ? '₩' : '$';
+  return `${symbol}${Number(amount).toLocaleString(currency === 'KRW' ? 'ko-KR' : 'en-US')}`;
+}
+
 function setContractInfoEditMode(isEditing) {
   contractInfoEditing = isEditing;
   const panel = document.getElementById('ct-info');
   const button = document.getElementById('contract-info-action');
   const lockedIds = ['cd-company', 'cd-content-input'];
-  const editableIds = ['cd-platform', 'cd-region', 'cd-contract-type', 'cd-exclusive', 'cd-rs-rate', 'cd-release-date', 'cd-term-months'];
+  const editableIds = ['cd-platform', 'cd-region', 'cd-contract-type', 'cd-exclusive', 'cd-rs-rate', 'cd-contract-currency', 'cd-release-date', 'cd-term-months'];
 
   panel?.classList.toggle('contract-info-read-mode', !isEditing);
   lockedIds.forEach((id) => {
@@ -1224,6 +1297,10 @@ function saveContractInfo() {
   contract.exclusive = document.getElementById('cd-exclusive').value;
   contract.rsRate = type === 'RS' || type === 'MG_RS' ? Number(document.getElementById('cd-rs-rate').value) || null : null;
   contract.contractAmount = type === 'FLAT_FEE' || type === 'MG_RS' ? Number(document.getElementById('cd-contract-amount').value) || null : null;
+  contract.contractCurrency = type === 'FLAT_FEE' || type === 'MG_RS' ? document.getElementById('cd-contract-currency').value : '';
+  contract.mg = type === 'FLAT_FEE' || type === 'MG_RS'
+    ? formatContractMoney(contract.contractAmount, contract.contractCurrency)
+    : '—';
   contract.date = document.getElementById('cd-release-date').value;
   contract.termMonths = Number(document.getElementById('cd-term-months').value) || '';
   const headerCompany = document.getElementById('detail-company-name');
@@ -1563,26 +1640,26 @@ function quarterRowTemplate(index, year = '2025', quarter = 'Q1', isNew = false,
               <div class="fg"><label>발생 연도</label><input type="number" value="${isNew ? '' : year}"${readonlyAttr} /></div>
               <div class="fg"><label>발생 분기</label><select${disabledAttr}><option ${quarter === 'Q1' ? 'selected' : ''}>Q1</option><option ${quarter === 'Q2' ? 'selected' : ''}>Q2</option><option ${quarter === 'Q3' ? 'selected' : ''}>Q3</option><option ${quarter === 'Q4' ? 'selected' : ''}>Q4</option></select></div>
               <div class="fg"><label>플랫폼 입금일</label><input type="date" value="${paidDate}"${readonlyAttr} /></div>
-              <div class="fg"><label>플랫폼 지급액</label><div class="amount-currency-field"><input type="number" value="${platformAmount}"${readonlyAttr} /><select${disabledAttr}><option>USD</option><option>KRW</option></select></div></div>
+              <div class="fg"><label>플랫폼 지급액</label><div class="amount-currency-field"><select${disabledAttr}><option>USD</option><option>KRW</option></select><input type="number" value="${platformAmount}"${readonlyAttr} /></div></div>
             </div>
           </div>
           <div class="contract-form-section">
             <div class="form-subtitle">공제 내역</div>
             <div class="data-grid">
               <div class="fg"><label>원천세 비율</label><input type="number" value="${isNew ? '' : '10'}"${readonlyAttr} /></div>
-              <div class="fg"><label>원천세 금액</label><input type="number" value="${isNew ? '' : '484'}"${readonlyAttr} /></div>
-              <div class="fg"><label>송금 수수료</label><input type="number" value="${isNew ? '' : '35'}"${readonlyAttr} /></div>
+              <div class="fg"><label>원천세 금액(USD)</label><input type="number" value="${isNew ? '' : '484'}"${readonlyAttr} /></div>
+              <div class="fg"><label>송금 수수료(USD)</label><input type="number" value="${isNew ? '' : '35'}"${readonlyAttr} /></div>
               <div class="fg"><label>환율</label><input type="number" value="${isNew ? '' : '1380'}"${readonlyAttr} /></div>
-              <div class="fg"><label>환전 수수료</label><input type="number" value="${isNew ? '' : '8000'}"${readonlyAttr} /></div>
-              <div class="fg"><label>실제 입금액(원)</label><input type="number" value="${isNew ? '' : '5954000'}"${readonlyAttr} /></div>
+              <div class="fg"><label>환전 수수료(원)</label><input type="number" value="${isNew ? '' : '8000'}"${readonlyAttr} /></div>
+              <div class="fg"><label>실입금액(원)</label><input type="number" value="${isNew ? '' : '5954000'}"${readonlyAttr} /></div>
             </div>
           </div>
           <div class="contract-form-section">
             <div class="form-subtitle">정산</div>
             <div class="data-grid">
               <div class="fg"><label>Bable 수수료율</label><input type="number" value="${isNew ? '' : '7'}"${readonlyAttr} /></div>
-              <div class="fg"><label>Bable 수수료 금액</label><input type="number" value="${isNew ? '' : '416780'}"${readonlyAttr} /></div>
-              <div class="fg"><label>제작사 정산액</label><input type="number" value="${producerAmount}"${readonlyAttr} /></div>
+              <div class="fg"><label>Bable 수수료 금액(원)</label><input type="number" value="${isNew ? '' : '416780'}"${readonlyAttr} /></div>
+              <div class="fg"><label>제작사 정산액(원)</label><input type="number" value="${producerAmount}"${readonlyAttr} /></div>
               <div class="fg"><label>정산 상태</label><input class="rs-status-input" readonly value="예정" /></div>
             </div>
           </div>
@@ -1626,6 +1703,7 @@ function resetNewContractForm() {
   syncNewContractType();
   document.getElementById('new-rs-rate').value = '';
   document.getElementById('new-contract-amount').value = '';
+  document.getElementById('new-contract-currency').value = 'USD';
   document.getElementById('new-release-date').value = '';
   document.getElementById('new-release-end-date').value = '';
   document.getElementById('new-term-months').value = '';
@@ -1641,6 +1719,7 @@ function createContract() {
   }
   const type = document.getElementById('new-contract-type').value;
   const contractAmount = Number(document.getElementById('new-contract-amount').value) || null;
+  const contractCurrency = document.getElementById('new-contract-currency').value || 'USD';
   const nextId = Math.max(0, ...contracts.map((item) => Number(item.id) || 0)) + 1;
   const content = contentSelect.value;
   const newContract = {
@@ -1658,23 +1737,105 @@ function createContract() {
     region: document.getElementById('new-region').value,
     termMonths: Number(document.getElementById('new-term-months').value) || '',
     contractAmount: type === 'FLAT_FEE' || type === 'MG_RS' ? contractAmount : null,
+    contractCurrency: type === 'FLAT_FEE' || type === 'MG_RS' ? contractCurrency : '',
     mg: type === 'FLAT_FEE' || type === 'MG_RS'
-      ? (contractAmount ? `$${contractAmount.toLocaleString('en-US')}` : '—')
+      ? formatContractMoney(contractAmount, contractCurrency)
       : '—'
   };
   contracts.unshift(newContract);
   performanceDataState[String(nextId)] = defaultPerformanceData(newContract);
   document.getElementById('contract-new').style.display = 'none';
+  refreshContractFilters();
   renderTable();
   selectContract(newContract.id);
+}
+
+function setFilterOptions(select, options, placeholder) {
+  if (!select) return;
+  select.innerHTML = '';
+  const first = document.createElement('option');
+  first.value = '';
+  first.textContent = placeholder;
+  select.appendChild(first);
+  options.forEach((value) => {
+    const option = document.createElement('option');
+    option.value = String(value);
+    option.textContent = String(value);
+    select.appendChild(option);
+  });
+}
+
+function syncFilterSelectState(select, active) {
+  if (!select) return;
+  select.value = '';
+  select.classList.toggle('is-filtered', active);
+}
+
+function refreshContractFilters() {
+  const companySelect = document.getElementById('company-filter');
+  const contentSelect = document.getElementById('content-filter');
+  syncFilterSelectState(companySelect, !!filterCo);
+
+  const contentSource = contracts.filter((item) =>
+    (!filterCo || String(item.companyId) === filterCo)
+  );
+  const possibleContents = Array.from(new Set(contentSource.map((item) => item.content).filter(Boolean))).sort();
+  if (!filterCo || !possibleContents.includes(filterContent)) filterContent = '';
+  if (!contentSelect) return;
+  contentSelect.disabled = !filterCo;
+  setFilterOptions(
+    contentSelect,
+    filterCo ? possibleContents : [],
+    filterCo ? '콘텐츠명 전체' : '제작사를 먼저 선택하세요'
+  );
+  syncFilterSelectState(contentSelect, !!filterContent);
+}
+
+function contractCompanyLabel(companyId) {
+  return contracts.find((item) => String(item.companyId) === String(companyId))?.company || '';
+}
+
+function renderContractFilterChips() {
+  const target = document.getElementById('contract-filter-chips');
+  if (!target) return;
+  const chips = [
+    filterCo ? { type: 'company', label: '제작사', key: filterCo, value: contractCompanyLabel(filterCo) } : null,
+    filterContent ? { type: 'content', label: '콘텐츠', key: filterContent, value: filterContent } : null,
+    filterPlatformQuery ? { type: 'platformSearch', label: '플랫폼명 검색어', key: filterPlatformQuery, value: filterPlatformQuery } : null
+  ].filter(Boolean);
+
+  target.classList.toggle('show', chips.length > 0);
+  target.innerHTML = chips.map((chip) => `
+    <span class="filter-chip">
+      <span>${chip.value}</span>
+      <button type="button" onclick="clearContractFilter('${chip.type}', '${encodeURIComponent(chip.key)}')" aria-label="${chip.label} 필터 해제">×</button>
+    </span>
+  `).join('');
+}
+
+function clearContractFilter(type, encodedKey) {
+  if (type === 'company') {
+    filterCo = '';
+    filterContent = '';
+  }
+  if (type === 'content') filterContent = '';
+  if (type === 'platformSearch') {
+    filterPlatformQuery = '';
+    const searchInput = document.getElementById('contract-search-input');
+    if (searchInput) searchInput.value = '';
+  }
+  refreshContractFilters();
+  renderTable();
 }
 
 function renderTable() {
   const tbody = document.getElementById('contract-tbody');
   tbody.innerHTML = '';
+  renderContractFilterChips();
   const filtered = contracts.filter(c =>
     (!filterCo || String(c.companyId) === filterCo) &&
-    (!filterQ || c.content.toLowerCase().includes(filterQ.toLowerCase()))
+    (!filterContent || c.content === filterContent) &&
+    (!filterPlatformQuery || c.platform.toLowerCase().includes(filterPlatformQuery.toLowerCase()))
   );
   filtered.forEach(c => {
     const tr = document.createElement('tr');
@@ -1725,7 +1886,8 @@ function selectContract(id) {
   document.getElementById('cd-contract-type').value = c.type || 'FLAT_FEE';
   document.getElementById('cd-exclusive').value = c.exclusive || 'exclusive';
   document.getElementById('cd-rs-rate').value = c.rsRate ?? '';
-  document.getElementById('cd-contract-amount').value = c.contractAmount ?? '';
+  document.getElementById('cd-contract-amount').value = c.contractAmount ?? (c.mg && c.mg !== '—' ? parseMoneyNumber(c.mg) : '');
+  document.getElementById('cd-contract-currency').value = c.contractCurrency || currencyFromMoney(c.mg);
   document.getElementById('cd-release-date').value = c.date || '';
   document.getElementById('cd-term-months').value = c.termMonths || '';
   contractInfoEditing = false;
@@ -1776,11 +1938,21 @@ function closeNew() {
 
 function filterCompany() {
   filterCo = document.getElementById('company-filter').value;
+  filterContent = '';
+  refreshContractFilters();
   renderTable();
 }
 
-function filterSearch(v) {
-  filterQ = v;
+function filterContentName() {
+  filterContent = document.getElementById('content-filter').value;
+  refreshContractFilters();
+  renderTable();
+}
+
+function handlePlatformSearchKey(event) {
+  if (event.key !== 'Enter') return;
+  event.preventDefault();
+  filterPlatformQuery = event.currentTarget.value.trim();
   renderTable();
 }
 
@@ -1790,6 +1962,10 @@ function contractTypeLabel(type) {
 
 function formatWon(amount) {
   return `₩ ${Number(amount || 0).toLocaleString('ko-KR')}`;
+}
+
+function formatUsd(amount) {
+  return `$ ${Number(amount || 0).toLocaleString('ko-KR', { maximumFractionDigits: 2 })}`;
 }
 
 function formatCurrencyAmount(amount, currency) {
@@ -1843,8 +2019,8 @@ function opsPaymentCells(row) {
     <td class="right ops-mono">${formatCurrencyAmount(detail.platformPayOriginal, detail.currency)}</td>
     <td class="right ops-muted ops-mono">${detail.rsRate}</td>
     <td class="right ops-muted ops-mono">${detail.whtRate}</td>
-    <td class="right ops-mono">${formatWon(detail.wht)}</td>
-    <td class="right ops-mono">${formatWon(detail.wireFee)}</td>
+    <td class="right ops-mono">${formatUsd(detail.wht)}</td>
+    <td class="right ops-mono">${formatUsd(detail.wireFee)}</td>
     <td class="right ops-mono">${detail.fxRate.toLocaleString('ko-KR')}</td>
     <td class="right ops-mono">${formatWon(detail.fxFee)}</td>
     <td class="right ops-mono">${formatWon(detail.krwIn)}</td>
@@ -2054,15 +2230,17 @@ function processSelectedDrafts() {
 }
 
 function reviewDetailForRow(row) {
-  const krwIn = Math.round(row.amount / 0.93);
-  const bableFee = krwIn - row.amount;
-  const wht = Math.round(krwIn * 0.1);
-  const wireFee = 35000;
+  const whtRate = 0.1;
+  const bableRate = 0.07;
+  const wireFee = 35;
   const fxFee = 8000;
   const fxRate = 1380;
+  const krwIn = Math.round(row.amount / 0.93);
+  const bableFee = krwIn - row.amount;
   const currency = row.currency || 'USD';
-  const platformPay = krwIn + wht + wireFee + fxFee;
-  const platformPayOriginal = Math.round(platformPay / fxRate);
+  const platformPayOriginal = Math.round((krwIn + fxFee + wireFee * fxRate) / ((1 - whtRate) * fxRate));
+  const wht = Math.round(platformPayOriginal * whtRate);
+  const platformPay = platformPayOriginal;
   const platformPaidAt = row.platformPaidAt || '2025-05-10';
   return { ...row, platformPay, platformPayOriginal, platformPaidAt, currency, rsRate: rsRateForRow(row), whtRate: '10%', wht, wireFee, fxRate, fxFee, krwIn, bableRate: '7%', bableFee };
 }
@@ -2080,8 +2258,8 @@ function renderProcessReviewRows(rows) {
       <td>${formatCurrencyAmount(row.platformPayOriginal, row.currency)}</td>
       <td>${row.rsRate}</td>
       <td>${row.whtRate}</td>
-      <td>${formatWon(row.wht)}</td>
-      <td>${formatWon(row.wireFee)}</td>
+      <td>${formatUsd(row.wht)}</td>
+      <td>${formatUsd(row.wireFee)}</td>
       <td>${row.fxRate.toLocaleString('ko-KR')}</td>
       <td>${formatWon(row.fxFee)}</td>
       <td>${formatWon(row.krwIn)}</td>
@@ -2158,20 +2336,15 @@ function findOpsRow(id) {
 }
 
 function settlementDetailSections(row) {
-  const platformPay = Math.round(row.amount / 0.93);
-  const fee = platformPay - row.amount;
-  const tax = Math.round(platformPay * 0.1);
-  const wire = 35000;
-  const fxFee = 8000;
-  const actual = platformPay - tax - wire - fxFee;
+  const detail = reviewDetailForRow(row);
   return [
     ['계약 정보', [
       ['제작사', row.studio], ['플랫폼사', row.platform], ['계약 타입', row.type],
       ['발생 월·분기', row.period], ['정산 상태', statusBadge(row.status)], ['콘텐츠', row.title]
     ]],
     ['정산 데이터', [
-      ['플랫폼 지급액', formatWon(platformPay)], ['원천세 금액', formatWon(tax)], ['송금 수수료', formatWon(wire)],
-      ['환전 수수료', formatWon(fxFee)], ['실제 입금액', formatWon(actual)], ['Bable 수수료', formatWon(fee)],
+      ['플랫폼 지급액', formatCurrencyAmount(detail.platformPayOriginal, detail.currency)], ['원천세 금액', formatUsd(detail.wht)], ['송금 수수료', formatUsd(detail.wireFee)],
+      ['환전 수수료', formatWon(detail.fxFee)], ['실입금액', formatWon(detail.krwIn)], ['Bable 수수료', formatWon(detail.bableFee)],
       ['제작사 정산액', formatWon(row.amount)], ['완료 처리일', row.completedAt || '—'], ['처리 관리자', row.completedBy || '—']
     ]]
   ];
@@ -2217,14 +2390,14 @@ function settlementGroupDetailTable(rows) {
             <th>플랫폼 지급액</th>
             <th>RS 비율</th>
             <th>원천세 비율</th>
-            <th>원천세 금액</th>
-            <th>송금 수수료</th>
+            <th>원천세 금액(USD)</th>
+            <th>송금 수수료(USD)</th>
             <th>환율</th>
-            <th>환전 수수료</th>
-            <th>실제 입금액</th>
+            <th>환전 수수료(원)</th>
+            <th>실입금액(원)</th>
             <th>비에이블 수수료율</th>
-            <th>비에이블 수수료 금액</th>
-            <th>제작사 정산액</th>
+            <th>비에이블 수수료 금액(원)</th>
+            <th>제작사 정산액(원)</th>
             <th>상태</th>
           </tr>
         </thead>
@@ -2239,8 +2412,8 @@ function settlementGroupDetailTable(rows) {
               <td>${formatCurrencyAmount(row.platformPayOriginal, row.currency)}</td>
               <td>${row.rsRate}</td>
               <td>${row.whtRate}</td>
-              <td>${formatWon(row.wht)}</td>
-              <td>${formatWon(row.wireFee)}</td>
+              <td>${formatUsd(row.wht)}</td>
+              <td>${formatUsd(row.wireFee)}</td>
               <td>${row.fxRate.toLocaleString('ko-KR')}</td>
               <td>${formatWon(row.fxFee)}</td>
               <td>${formatWon(row.krwIn)}</td>
@@ -2304,6 +2477,7 @@ function switchTab(tab) {
   location.hash = nextTab;
 }
 
+refreshContractFilters();
 renderTable();
 renderSettlementOps();
 if (['contracts', 'settlement', 'completed'].includes(location.hash.slice(1))) {

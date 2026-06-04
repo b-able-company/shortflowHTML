@@ -978,7 +978,7 @@
             <tr>
               <th>정산 월</th>
               <th>콘텐츠 수</th>
-              <th>총 제작사 정산액</th>
+              <th>총 제작사 정산액(원)</th>
               <th>상태</th>
               <th></th>
             </tr>
@@ -1004,15 +1004,15 @@
         <p id="settlementDoneDate" class="detail-done-date"></p>
         <div class="detail-grid">
           <div class="detail-card">
-            <p class="detail-k">실제 입금액</p>
+            <p class="detail-k">실입금액(원)</p>
             <p id="detailGross" class="detail-v">₩15,820,000</p>
           </div>
           <div class="detail-card">
-            <p class="detail-k">비에이블 수수료 금액</p>
+            <p class="detail-k">비에이블 수수료 금액(원)</p>
             <p id="detailDeduction" class="detail-v">₩2,486,587</p>
           </div>
           <div class="detail-card net">
-            <p class="detail-k">최종 정산액</p>
+            <p class="detail-k">최종 정산액(원)</p>
             <p id="detailNet" class="detail-v">₩10,733,413</p>
           </div>
         </div>
@@ -1162,6 +1162,17 @@
     function formatMoney(v) {
       if (v == null) return '—';
       return '₩' + v.toLocaleString('ko-KR');
+    }
+
+    function formatUsd(v) {
+      if (v == null) return '—';
+      return '$' + Number(v).toLocaleString('en-US', { maximumFractionDigits: 2 });
+    }
+
+    function formatUsdFromKrw(v, fxRate) {
+      if (v == null) return '—';
+      if (!fxRate) return formatUsd(v);
+      return formatUsd(v / fxRate);
     }
 
     function formatPct(v) {
@@ -1324,7 +1335,7 @@
           <th colspan="2"></th>
           <th colspan="3"><span class="table-group-label platform">플랫폼 지급</span></th>
           <th colspan="6"><span class="table-group-label deduct">공제 내역</span></th>
-          <th colspan="4"><span class="table-group-label settle">정산</span></th>
+          <th colspan="3"><span class="table-group-label settle">정산</span></th>
         </tr>
         <tr>
           <th class="text-cell">콘텐츠</th>
@@ -1333,15 +1344,14 @@
           <th>플랫폼 지급액</th>
           <th>계약 금액</th>
           <th>원천세 비율</th>
-          <th>원천세 금액</th>
-          <th>송금 수수료</th>
+          <th>원천세 금액(USD)</th>
+          <th>송금 수수료(USD)</th>
           <th>환율</th>
-          <th>환전 수수료</th>
-          <th>실제 입금액(원)</th>
-          <th>입금일자</th>
+          <th>환전 수수료(원)</th>
+          <th>실입금액(원)</th>
           <th>Bable 수수료율</th>
-          <th>Bable 수수료 금액</th>
-          <th>제작사 정산액</th>
+          <th>Bable 수수료 금액(원)</th>
+          <th>제작사 정산액(원)</th>
         </tr>
       `;
     }
@@ -1357,12 +1367,11 @@
             <td>${formatMoney(r.platformPay)}</td>
             <td>${formatMoney(r.contractAmount)}</td>
             <td>${formatPct(r.whtRate)}</td>
-            <td>${formatMoney(r.wht)}</td>
-            <td>${formatMoney(r.wireFee)}</td>
+            <td>${formatUsdFromKrw(r.wht, r.fxRate)}</td>
+            <td>${formatUsdFromKrw(r.wireFee, r.fxRate)}</td>
             <td>${formatFx(r.fxRate)}</td>
             <td>${formatMoney(r.fxFee)}</td>
             <td>${formatMoney(r.krwIn)}</td>
-            <td>${r.paidDate || '—'}</td>
             <td>${formatPct(r.bableRate)}</td>
             <td>${formatMoney(r.bableFee)}</td>
             <td class="producer-pay">${formatMoney(r.producerPay)}</td>
@@ -1377,7 +1386,7 @@
           <td colspan="3">전체 합계</td>
           <td colspan="7"></td>
           <td>${formatMoney(totalKrwIn)}</td>
-          <td colspan="2"></td>
+          <td colspan="1"></td>
           <td>${formatMoney(totalBable)}</td>
           <td class="producer-pay">${formatMoney(total.net)}</td>
         </tr>

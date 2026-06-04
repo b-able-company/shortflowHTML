@@ -34830,7 +34830,6 @@ const BASE_COLS = [
 { k: 'fxRate', label: '환율', width: 80, fx: true, align: 'right', group: 'deductions' },
 { k: 'fxFee', label: '환전 수수료', width: 100, currency: 'KRW', align: 'right', group: 'deductions' },
 { k: 'krwIn', label: '실제 입금액', width: 130, currency: 'KRW', align: 'right', strong: true, group: 'deductions' },
-{ k: 'paidDate', label: '입금일자', width: 120, align: 'right', group: 'settlement' },
 { k: 'bableRate', label: 'Bable 수수료율', width: 118, pct: true, align: 'right', group: 'settlement' },
 { k: 'bableFee', label: 'Bable 수수료 금액', width: 140, currency: 'KRW', align: 'right', group: 'settlement' },
 { k: 'producerPay', label: '제작사 정산액', width: 140, currency: 'KRW', align: 'right', emphasis: true, group: 'settlement' },
@@ -35129,6 +35128,11 @@ function PlatformRow({ p, open, onToggle, t = BASE_TOKENS }) {
   const flatTotal = platformFlatTotal(p);
   const mgTotal = platformMGTotal(p);
   const rsTotal = platformRSTotal(p);
+  const contractAmountMeta = p.type === 'flat' ?
+  { label: 'Flat Fee 계약금액', value: p.rows?.[0]?.contractAmount } :
+  p.type === 'mgrs' ?
+  { label: 'MG 계약 금액', value: p.mgRows?.[0]?.contractAmount } :
+  null;
 
   const summaryItems = p.type === 'flat' ?
   [{ label: '누적 Flat Fee', value: flatTotal }] :
@@ -35207,6 +35211,16 @@ function PlatformRow({ p, open, onToggle, t = BASE_TOKENS }) {
         }}>
           <MetaCell label="계약 구분" value={p.exclusive ? '독점' : '비독점'} t={t} />
           <MetaCell label="유통 권역" value={p.region} t={t} />
+          {contractAmountMeta &&
+          <MetaCell
+            label={contractAmountMeta.label}
+            value={
+            <span style={{ fontFamily: t.mono, color: t.ink, fontWeight: 700 }}>
+                {fmtUSD(contractAmountMeta.value)}
+              </span>
+            }
+            t={t} />
+          }
           <MetaCell
             label="기간"
             value={
