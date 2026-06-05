@@ -250,6 +250,9 @@ td { padding: 9px 12px; vertical-align: middle; }
 .extra-panel-body .tl-item:first-child { padding-top: 0; }
 .extra-panel-body .tl-item:last-child { padding-bottom: 0; }
 .extra-empty { font-size: 12px; color: #bbb; padding: 4px 0; }
+.ownership-transfer-grid { display: grid; grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr); gap: 10px; align-items: end; }
+.ownership-arrow { height: 31px; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 15px; }
+.ownership-note { margin-top: 10px; font-size: 11.5px; color: #8d8b84; line-height: 1.6; background: #fafaf7; border: 0.5px solid #eeede8; border-radius: 7px; padding: 9px 10px; }
 
 /* ── RELEASE HISTORY ── */
 .release-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
@@ -524,6 +527,7 @@ td { padding: 9px 12px; vertical-align: middle; }
             <div class="dtab" onclick="switchDTab(this,'tab-material')">자료</div>
             <div class="dtab" onclick="switchDTab(this,'tab-release')">릴리즈</div>
             <div class="dtab" onclick="switchDTab(this,'tab-extra')">부가 정보</div>
+            <div class="dtab" onclick="switchDTab(this,'tab-ownership')">소유권 이전</div>
           </div>
 
           <div class="dbody">
@@ -835,10 +839,31 @@ td { padding: 9px 12px; vertical-align: middle; }
               </div>
             </div>
 
+            <!-- ── 탭: 소유권 이전 ── -->
+            <div class="dpanel" id="tab-ownership">
+              <div class="basic-stack">
+                <div class="form-section">
+                  <div class="form-section-title">소유 제작사 변경</div>
+                  <div class="ownership-transfer-grid">
+                    <div class="fg">
+                      <label>현재 소유 제작사</label>
+                      <input id="ownership-current-company" readonly />
+                    </div>
+                    <div class="ownership-arrow"><i class="ti ti-arrow-right"></i></div>
+                    <div class="fg">
+                      <label>변경할 제작사</label>
+                      <select id="ownership-target-company"></select>
+                    </div>
+                  </div>
+                  <div class="ownership-note">저장하면 이 콘텐츠의 제작사 표시와 소유 기준이 선택한 제작사로 변경됩니다.</div>
+                </div>
+              </div>
+            </div>
+
           </div><!-- /dbody -->
 
           <div class="savebar edit-only" id="content-savebar">
-            <button class="btn danger-left" onclick="deleteContent()">삭제하기</button>
+            <button class="btn danger-left" id="content-delete-action" onclick="deleteContent()">삭제하기</button>
             <button class="btn btn-save" id="content-save-action" onclick="saveActiveContentTab()">기본 정보 저장</button>
           </div>
 
@@ -1087,6 +1112,7 @@ const contentTabLabels = {
   'tab-material': { key: 'material', label: '자료' },
   'tab-release': { key: 'release', label: '릴리즈' },
   'tab-extra': { key: 'extra', label: '부가 정보' },
+  'tab-ownership': { key: 'ownership', label: '소유권 이전' },
 };
 
 const releaseHistories = {
@@ -1112,6 +1138,51 @@ function posterMark(title) {
 
 function posterHtml(c, size) {
   return `<div class="poster poster-${size} ${c.poster}" data-mark="${posterMark(c.title)}"></div>`;
+}
+
+function getCompanyOptions() {
+  return [...new Set(contents.map(c => c.company).filter(Boolean))];
+}
+
+function populateOwnershipTransfer(c) {
+  const current = document.getElementById('ownership-current-company');
+  const target = document.getElementById('ownership-target-company');
+  if (!current || !target || !c) return;
+  current.value = c.company;
+  const options = getCompanyOptions().filter(company => company !== c.company);
+  target.innerHTML = [
+    '<option value="">이전할 제작사 선택</option>',
+    ...options.map(company => `<option value="${company}">${company}</option>`),
+  ].join('');
+}
+
+function renderExtraInfo(c) {
+  const bk = document.getElementById('extra-bookmarks');
+  const tl = document.getElementById('extra-timeline');
+  const ml = document.getElementById('extra-mails');
+  if (!bk || !tl || !ml || !c) return;
+
+  document.getElementById('extra-bookmark-count').textContent = `${c.bookmarks.length}개`;
+  bk.innerHTML = c.bookmarks.length
+    ? `<div class="bookmark-grid">${c.bookmarks.map(p=>`<div class="brow"><span class="bplatform">${p}</span></div>`).join('')}</div>`
+    : '<div class="extra-empty">북마크 없음</div>';
+
+  document.getElementById('extra-timeline-count').textContent = `${c.timeline.length}건`;
+  tl.innerHTML = c.timeline.map(t=>`
+    <div class="tl-item">
+      <div class="tl-dot ${t.dot}"></div>
+      <div><div class="tl-text">${t.text}</div><div class="tl-time">${t.time}</div></div>
+    </div>`).join('');
+
+  document.getElementById('extra-mail-count').textContent = `${c.mails.length}건`;
+  ml.innerHTML = c.mails.length
+    ? c.mails.map(m=>{const[p,d]=m.split(' — ');return`<div class="mrow"><span class="mplatform">${p}</span><span class="mdate">${d}</span></div>`;}).join('')
+    : '<div class="extra-empty">발송 이력 없음</div>';
+}
+
+function formatContentAdminDate(date = new Date()) {
+  const pad = value => String(value).padStart(2, '0');
+  return `${date.getFullYear()}.${pad(date.getMonth() + 1)}.${pad(date.getDate())} · ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
 function renderTable() {
@@ -1175,26 +1246,8 @@ function selectContent(id) {
   document.getElementById('b-reject').value = c.rejectReason || '';
   document.getElementById('approval-section').style.display = c.rejectReason ? '' : 'none';
 
-  // extra
-  const bk = document.getElementById('extra-bookmarks');
-  document.getElementById('extra-bookmark-count').textContent = `${c.bookmarks.length}개`;
-  bk.innerHTML = c.bookmarks.length
-    ? `<div class="bookmark-grid">${c.bookmarks.map(p=>`<div class="brow"><span class="bplatform">${p}</span></div>`).join('')}</div>`
-    : '<div class="extra-empty">북마크 없음</div>';
-
-  const tl = document.getElementById('extra-timeline');
-  document.getElementById('extra-timeline-count').textContent = `${c.timeline.length}건`;
-  tl.innerHTML = c.timeline.map(t=>`
-    <div class="tl-item">
-      <div class="tl-dot ${t.dot}"></div>
-      <div><div class="tl-text">${t.text}</div><div class="tl-time">${t.time}</div></div>
-    </div>`).join('');
-
-  const ml = document.getElementById('extra-mails');
-  document.getElementById('extra-mail-count').textContent = `${c.mails.length}건`;
-  ml.innerHTML = c.mails.length
-    ? c.mails.map(m=>{const[p,d]=m.split(' — ');return`<div class="mrow"><span class="mplatform">${p}</span><span class="mdate">${d}</span></div>`;}).join('')
-    : '<div class="extra-empty">발송 이력 없음</div>';
+  renderExtraInfo(c);
+  populateOwnershipTransfer(c);
 
   hideReleaseForm();
   editingReleaseId = null;
@@ -1258,11 +1311,15 @@ function syncContentSavebar(panelId) {
   const detail = document.getElementById('dp-detail');
   if (!detail) return;
   const activePanelId = panelId || document.querySelector('.dpanel.active')?.id;
-  detail.classList.remove('no-savebar');
   const action = document.getElementById('content-save-action');
+  const deleteAction = document.getElementById('content-delete-action');
   const tab = contentTabLabels[activePanelId] || contentTabLabels['tab-basic'];
+  detail.classList.toggle('no-savebar', activePanelId === 'tab-release' || activePanelId === 'tab-extra');
   if (action) {
     action.textContent = `${tab.label} 저장`;
+  }
+  if (deleteAction) {
+    deleteAction.style.display = activePanelId === 'tab-basic' ? '' : 'none';
   }
 }
 
@@ -1328,6 +1385,33 @@ function saveContentTab(tab) {
     c.driveFolderUrl = document.getElementById('b-drive-url').value.trim();
   }
 
+  if (tab === 'ownership') {
+    const previousCompany = c.company;
+    const nextCompany = document.getElementById('ownership-target-company').value;
+    if (!nextCompany) {
+      alert('변경할 제작사를 선택해주세요.');
+      return;
+    }
+    if (previousCompany === nextCompany) {
+      alert('현재 소유 제작사와 다른 제작사를 선택해주세요.');
+      return;
+    }
+    if (!confirm(`${c.title} 콘텐츠의 소유 제작사를 ${previousCompany}에서 ${nextCompany}(으)로 변경할까요?`)) {
+      return;
+    }
+    c.company = nextCompany;
+    c.timeline.unshift({
+      dot: 'blue',
+      text: `관리자가 소유 제작사를 ${previousCompany}에서 ${nextCompany}(으)로 변경함`,
+      time: formatContentAdminDate(),
+    });
+    document.getElementById('b-company').value = c.company;
+    document.getElementById('d-sub').textContent = `${c.company} · ${c.genre || '장르 없음'} · ${c.year}`;
+    renderTable();
+    renderExtraInfo(c);
+    populateOwnershipTransfer(c);
+  }
+
   const labels = {
     basic: '기본 정보',
     trans: '번역 데이터',
@@ -1336,6 +1420,7 @@ function saveContentTab(tab) {
     material: '자료',
     release: '릴리즈',
     extra: '부가 정보',
+    ownership: '소유권 이전',
   };
   alert(`${labels[tab] || '탭'}가 저장되었습니다.`);
 }

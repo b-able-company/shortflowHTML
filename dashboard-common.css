@@ -193,7 +193,7 @@ button {
 
 .content-footer {
   margin-top: 72px;
-  padding: 34px 0 38px;
+  padding: 48px 0 48px;
   border-top: 1px solid #e5e7eb;
   background: #fafafa;
   color: #8a9099;
@@ -243,11 +243,11 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
-  padding: 0 22px;
+  min-height: 52px;
+  padding: 0 34px;
   margin-left: auto;
   border: 1px solid #111827;
-  border-radius: 8px;
+  border-radius: 12px;
   background: #111827;
   color: #fff;
   font-size: 14px;
