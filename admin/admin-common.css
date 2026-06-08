@@ -98,6 +98,28 @@
   padding: 10px 0;
 }
 
+.sb .nav {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.18) transparent;
+}
+
+.sb .nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sb .nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sb .nav::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.16);
+  border-radius: 999px;
+}
+
+.sb .nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.24);
+}
+
 .ni {
   text-decoration: none;
 }
@@ -188,6 +210,66 @@ a.ni.active:visited {
   justify-content: center;
 }
 
+.sb-foot {
+  justify-content: flex-start;
+  background: rgba(255,255,255,0.04);
+}
+
+.sb-foot .uemail {
+  display: none;
+}
+
+.sb-foot .ava i {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.sb-profile-link {
+  min-width: 0;
+  flex: 1;
+  cursor: pointer;
+  border-radius: 6px;
+  outline: none;
+}
+
+.sb-profile-link:hover .uname,
+.sb-profile-link:focus-visible .uname {
+  color: rgba(255,255,255,0.78);
+}
+
+.admin-logout-btn {
+  width: 28px;
+  height: 28px;
+  margin-left: auto;
+  border-radius: 7px;
+  color: rgba(255,255,255,0.42);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  text-decoration: none;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.admin-logout-btn:hover,
+.admin-logout-btn:focus-visible {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  outline: none;
+}
+
+.admin-logout-btn i {
+  font-size: 15px;
+}
+
+.sb.collapsed .sb-profile-link {
+  display: none;
+}
+
+.sb.collapsed .admin-logout-btn {
+  display: none;
+}
+
 .sb.collapsed .ava {
   width: 24px;
   height: 24px;
@@ -257,6 +339,17 @@ a.ni.active:visited {
   gap: 5px;
   min-width: 0;
   flex-wrap: wrap;
+}
+
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .filter-tools {
@@ -589,4 +682,3 @@ th.status-col {
   background: #2a2a26;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
-

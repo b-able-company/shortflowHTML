@@ -111,6 +111,12 @@ td { padding: 9px 12px; vertical-align: middle; }
 
 /* DETAIL BODY */
 .dbody { flex: 1; overflow-y: auto; padding: 16px 18px; }
+.detail-tabbar { background: #fff; border-bottom: 0.5px solid #e8e6e0; display: flex; padding: 0 18px; flex-shrink: 0; }
+.detail-tab { padding: 9px 12px; font-size: 12px; color: #aaa; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -0.5px; user-select: none; }
+.detail-tab:hover { color: #666; }
+.detail-tab.active { color: #1a1a18; border-bottom-color: #1a1a18; font-weight: 500; }
+.detail-panel { display: none; }
+.detail-panel.active { display: block; }
 
 /* SECTIONS */
 .sec { margin-bottom: 20px; }
@@ -168,6 +174,30 @@ td { padding: 9px 12px; vertical-align: middle; }
 .cr-adjust { background: #FAEEDA; color: #854F0B; }
 .cr-amt-pos { font-family: monospace; color: #3B6D11; font-weight: 500; }
 .cr-amt-neg { font-family: monospace; color: #A32D2D; font-weight: 500; }
+.login-log-table { background: #fff; border: 0.5px solid #e8e6e0; }
+.login-log-table table { table-layout: fixed; }
+.login-log-table thead th { background: #fff; padding: 8px 12px; font-size: 11.5px; color: #8f8d86; border-bottom: 0.5px solid #e8e6e0; }
+.login-log-table tbody tr { cursor: default; }
+.login-log-table tbody tr:hover { background: transparent; }
+.login-log-table tbody tr:last-child { border-bottom: none; }
+.login-log-table td { font-size: 12.5px; padding: 8px 12px; color: #444; line-height: 1.35; }
+.login-log-table .bdg { min-width: 38px; justify-content: center; font-size: 10.5px; }
+.login-log-table th.log-date,
+.login-log-table td.log-date,
+.login-log-table th.log-ip,
+.login-log-table td.log-ip { text-align: left; }
+.login-log-table th.log-result,
+.login-log-table td.log-result { text-align: center; }
+.login-log-table .log-date,
+.login-ip { font-variant-numeric: tabular-nums; }
+.login-ip { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: #444; }
+.login-retention-note { margin-bottom: 8px; font-size: 10.5px; color: #b4b2aa; text-align: right; }
+.login-empty { padding: 28px 12px; color: #bbb; font-size: 12px; text-align: center; background: #fff; border: 0.5px solid #e8e6e0; border-radius: 8px; }
+.login-pagebar { min-height: 48px; padding: 13px 12px 2px; display: flex; align-items: center; justify-content: center; gap: 18px; background: #fff; }
+.login-page-btn { min-width: 18px; height: 24px; padding: 0; border: none; background: transparent; color: #9b9a94; font-size: 12px; cursor: pointer; font-family: inherit; }
+.login-page-btn.active { color: #1a1a18; font-weight: 600; }
+.login-page-btn:hover:not(:disabled) { color: #1a1a18; }
+.login-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* scrollbar */
 ::-webkit-scrollbar { width: 4px; }
@@ -220,9 +250,9 @@ td { padding: 9px 12px; vertical-align: middle; }
     <a class="ni" href="audit-log.html"><i class="ti ti-shield-check"></i> 관리 이력</a>
   </nav>
   <div class="sb-foot">
-    <div class="ava">L</div>
+    <div class="ava"><i class="ti ti-user"></i></div>
     <div>
-      <div class="uname">Lee · Admin</div>
+      <div class="uname">김관리자</div>
       <div class="uemail">ops@shortflow.io</div>
     </div>
   </div>
@@ -297,36 +327,46 @@ td { padding: 9px 12px; vertical-align: middle; }
               </div>
             </div>
           </div>
+          <div class="detail-tabbar">
+            <div class="detail-tab active" onclick="switchUserDetailTab(this,'user-tab-basic')">기본 정보</div>
+            <div class="detail-tab" onclick="switchUserDetailTab(this,'user-tab-login')">접속 기록</div>
+          </div>
           <div class="dbody">
-            <div class="sec">
-              <div class="sec-title">기본 정보</div>
-              <div class="edit-grid">
-                <div class="fg"><label>이름</label><input id="ud-edit-name" /></div>
-                <div class="fg"><label>이메일</label><input id="ud-edit-email" type="email" /></div>
-                <div class="fg"><label>전화번호</label><input id="ud-edit-phone" /></div>
-                <div class="fg"><label>역할</label>
-                  <select id="ud-edit-role">
-                    <option value="PRODUCTION">PRODUCTION</option>
-                    <option value="PLATFORM">PLATFORM</option>
-                  </select>
+            <div class="detail-panel active" id="user-tab-basic">
+              <div class="sec">
+                <div class="edit-grid">
+                  <div class="fg"><label>이름</label><input id="ud-edit-name" /></div>
+                  <div class="fg"><label>이메일</label><input id="ud-edit-email" type="email" /></div>
+                  <div class="fg"><label>전화번호</label><input id="ud-edit-phone" /></div>
+                  <div class="fg"><label>역할</label>
+                    <select id="ud-edit-role">
+                      <option value="PRODUCTION">PRODUCTION</option>
+                      <option value="PLATFORM">PLATFORM</option>
+                    </select>
+                  </div>
+                  <div class="fg"><label>권한 레벨</label>
+                    <select id="ud-edit-perm">
+                      <option value="OWNER">OWNER</option>
+                      <option value="WRITE">WRITE</option>
+                      <option value="READ">READ</option>
+                    </select>
+                  </div>
+                  <div class="fg"><label>소속 회사</label><select id="ud-edit-company"></select></div>
+                  <div class="fg"><label>가입일</label><input id="ud-edit-date" readonly /></div>
                 </div>
-                <div class="fg"><label>권한 레벨</label>
-                  <select id="ud-edit-perm">
-                    <option value="OWNER">OWNER</option>
-                    <option value="WRITE">WRITE</option>
-                    <option value="READ">READ</option>
-                  </select>
-                </div>
-                <div class="fg"><label>소속 회사</label><select id="ud-edit-company"></select></div>
-                <div class="fg"><label>가입일</label><input id="ud-edit-date" readonly /></div>
+              </div>
+              <div class="sec" id="ud-reject-sec" style="display:none">
+                <div class="sec-title">거절 사유</div>
+                <div style="font-size:12px;color:#A32D2D;background:#FCEBEB;border-radius:7px;padding:10px 12px" id="ud-reject-reason"></div>
               </div>
             </div>
-            <div class="sec" id="ud-reject-sec" style="display:none">
-              <div class="sec-title">거절 사유</div>
-              <div style="font-size:12px;color:#A32D2D;background:#FCEBEB;border-radius:7px;padding:10px 12px" id="ud-reject-reason"></div>
+            <div class="detail-panel" id="user-tab-login">
+              <div class="sec">
+                <div id="user-login-history"></div>
+              </div>
             </div>
           </div>
-          <div class="detail-savebar">
+          <div class="detail-savebar" id="user-savebar">
             <button class="btn danger-left" onclick="deleteUser()">삭제하기</button>
             <button class="btn btn-save" onclick="saveUserDetail()">저장</button>
           </div>
@@ -509,9 +549,46 @@ const creditHistory = [
   { type:'CHARGE', amount:300, balance:800, reason:'크레딧 충전', date:'2026.05.01 · 15:30' },
 ];
 
+const userLoginHistory = {
+  1: [
+    { date:'2026.06.05 · 09:18', ip:'121.134.82.10', result:'성공' },
+    { date:'2026.06.04 · 18:42', ip:'121.134.82.10', result:'성공' },
+    { date:'2026.06.04 · 09:06', ip:'121.134.82.10', result:'성공' },
+    { date:'2026.06.03 · 21:14', ip:'211.36.142.55', result:'실패' },
+    { date:'2026.06.03 · 10:11', ip:'211.36.142.55', result:'성공' },
+    { date:'2026.06.02 · 17:25', ip:'121.134.82.10', result:'성공' },
+    { date:'2026.06.01 · 08:48', ip:'121.134.82.10', result:'성공' },
+    { date:'2026.05.30 · 19:32', ip:'118.235.5.91', result:'성공' },
+    { date:'2026.05.29 · 11:09', ip:'121.134.82.10', result:'성공' },
+    { date:'2026.05.28 · 14:51', ip:'121.134.82.10', result:'성공' },
+    { date:'2026.05.26 · 09:22', ip:'211.36.142.55', result:'실패' },
+    { date:'2026.05.23 · 16:05', ip:'121.134.82.10', result:'성공' },
+  ],
+  2: [
+    { date:'2026.06.05 · 08:55', ip:'58.140.21.77', result:'성공' },
+    { date:'2026.06.02 · 15:07', ip:'58.140.21.77', result:'성공' },
+  ],
+  3: [
+    { date:'2026.06.04 · 13:20', ip:'175.223.31.91', result:'성공' },
+  ],
+  4: [
+    { date:'2026.06.05 · 01:12', ip:'104.28.211.34', result:'성공' },
+    { date:'2026.06.01 · 23:44', ip:'104.28.211.34', result:'성공' },
+  ],
+  5: [
+    { date:'2026.06.03 · 16:30', ip:'203.0.113.42', result:'성공' },
+  ],
+  8: [
+    { date:'2026.06.05 · 11:02', ip:'198.51.100.18', result:'성공' },
+    { date:'2026.06.05 · 10:58', ip:'198.51.100.18', result:'실패' },
+  ],
+};
+
 const sc = { PENDING:'b-pending', APPROVED:'b-approved', REJECTED:'b-rejected', INACTIVE:'b-inactive' };
 let selectedUserId = null;
 let selectedCompanyId = null;
+let loginHistoryPage = 1;
+const LOGIN_HISTORY_PAGE_SIZE = 10;
 
 function renderUsers() {
   const tbody = document.getElementById('user-tbody');
@@ -558,8 +635,85 @@ function selectUser(id) {
     rjSec.style.display = 'none';
   }
   document.getElementById('user-rr-box').classList.remove('show');
+  loginHistoryPage = 1;
+  renderUserLoginHistory(id);
+  resetUserDetailTab();
   document.getElementById('user-empty').style.display = 'none';
   document.getElementById('user-detail').style.display = 'flex';
+}
+
+function renderUserLoginHistory(userId) {
+  const wrap = document.getElementById('user-login-history');
+  if (!wrap) return;
+  const rows = userLoginHistory[userId] || [];
+  if (!rows.length) {
+    wrap.innerHTML = '<div class="login-empty">로그인 기록이 없습니다</div>';
+    return;
+  }
+  const totalPages = Math.max(1, Math.ceil(rows.length / LOGIN_HISTORY_PAGE_SIZE));
+  loginHistoryPage = Math.min(Math.max(loginHistoryPage, 1), totalPages);
+  const start = (loginHistoryPage - 1) * LOGIN_HISTORY_PAGE_SIZE;
+  const pageRows = rows.slice(start, start + LOGIN_HISTORY_PAGE_SIZE);
+  wrap.innerHTML = `
+    <div class="login-retention-note">접속 기록은 최근 14일간 저장됩니다.</div>
+    <div class="login-log-table">
+      <table>
+        <colgroup>
+          <col style="width:42%" />
+          <col style="width:38%" />
+          <col style="width:20%" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th class="log-date">일시</th>
+            <th class="log-ip">IP</th>
+            <th class="log-result">결과</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${pageRows.map(row => `
+            <tr>
+              <td class="tmeta log-date">${row.date}</td>
+              <td class="login-ip log-ip">${row.ip}</td>
+              <td class="log-result"><span class="bdg ${row.result === '성공' ? 'b-approved' : 'b-rejected'}">${row.result}</span></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+      <div class="login-pagebar">
+        ${totalPages > 1 ? `
+          ${Array.from({ length: totalPages }).map((_, index) => {
+            const page = index + 1;
+            return `<button class="login-page-btn ${page === loginHistoryPage ? 'active' : ''}" onclick="setUserLoginPage(${page})">${page}</button>`;
+          }).join('')}
+        ` : '<button class="login-page-btn active" disabled>1</button>'}
+      </div>
+    </div>`;
+}
+
+function setUserLoginPage(page) {
+  loginHistoryPage = page;
+  renderUserLoginHistory(selectedUserId);
+}
+
+function resetUserDetailTab() {
+  document.querySelectorAll('#user-detail .detail-tab').forEach((tab, index) => tab.classList.toggle('active', index === 0));
+  document.querySelectorAll('#user-detail .detail-panel').forEach((panel, index) => panel.classList.toggle('active', index === 0));
+  syncUserSavebar('user-tab-basic');
+}
+
+function switchUserDetailTab(el, panelId) {
+  document.querySelectorAll('#user-detail .detail-tab').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('#user-detail .detail-panel').forEach(panel => panel.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+  syncUserSavebar(panelId);
+}
+
+function syncUserSavebar(panelId) {
+  const savebar = document.getElementById('user-savebar');
+  if (!savebar) return;
+  savebar.style.display = panelId === 'user-tab-basic' ? 'flex' : 'none';
 }
 
 function approveUser(id) {

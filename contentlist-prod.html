@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>내콘텐츠 | shortflow</title>
+  <link rel="stylesheet" href="dashboard-common.css">
+  <script src="dashboard-nav.js"></script>
+  <style>
+    :root {
+      --prod-bg: #fff;
+      --prod-surface: #fff;
+      --prod-soft: #fafaf7;
+      --prod-line: #e7e5df;
+      --prod-line-strong: #d7d4cc;
+      --prod-ink: #151515;
+      --prod-muted: #686b73;
+      --prod-faint: #a2a6ae;
+      --prod-orange: #e85d2c;
+    }
+
+    body {
+      background: var(--prod-bg);
+    }
+
+    .prod-main {
+      padding-top: 18px;
+      padding-bottom: 64px;
+    }
+
+    .prod-toolbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 22px;
+      border-bottom: 1px solid var(--prod-line);
+    }
+
+    .prod-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 34px;
+      min-width: 0;
+    }
+
+    .prod-tab {
+      position: relative;
+      height: 40px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: #fff;
+      color: #9ba0aa;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .prod-tab-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 18px;
+      height: 18px;
+      margin-left: 5px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: #f4f4f2;
+      color: #8f96a3;
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .prod-tab.active {
+      color: #151515;
+    }
+
+    .prod-tab.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      border-radius: 999px;
+      background: var(--prod-orange);
+    }
+
+    .prod-tab.active .prod-tab-count {
+      background: #fff0eb;
+      color: var(--prod-orange);
+    }
+
+    .prod-primary {
+      height: 36px;
+      padding: 0 17px;
+      border-radius: 10px;
+      border: 1px solid var(--prod-orange);
+      background: var(--prod-orange);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .prod-primary:hover {
+      border-color: var(--prod-orange);
+      background: var(--prod-orange);
+      color: #fff;
+    }
+
+    .prod-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      overflow: visible;
+    }
+
+    .prod-card {
+      position: relative;
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid var(--prod-line);
+      border-radius: 15px;
+      background: var(--prod-surface);
+      transition: border-color 0.16s ease, transform 0.16s ease;
+      z-index: 1;
+    }
+
+    .prod-card:hover {
+      border-color: var(--prod-line-strong);
+      transform: translateY(-1px);
+    }
+
+    .prod-card.menu-open {
+      z-index: 40;
+    }
+
+    .prod-poster {
+      position: relative;
+      aspect-ratio: 1 / 1.3;
+      overflow: hidden;
+      border-radius: 10px;
+      background: linear-gradient(155deg, #f2c3ae 0%, #dfe4f5 100%);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+    }
+
+    .prod-poster::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 42%);
+    }
+
+    .prod-poster-label {
+      position: absolute;
+      right: 10px;
+      bottom: 9px;
+      color: rgba(107,112,122,0.58);
+      font-size: 9px;
+      font-weight: 750;
+      letter-spacing: 0;
+    }
+
+    .prod-badge {
+      position: absolute;
+      top: 9px;
+      left: 9px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.94);
+      color: var(--prod-ink);
+      font-size: 11px;
+      font-weight: 750;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.08);
+    }
+
+    .prod-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--prod-faint);
+    }
+
+    .prod-card-title {
+      margin-top: 12px;
+      color: var(--prod-ink);
+      font-size: 15px;
+      font-weight: 650;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .prod-card-foot {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 13px;
+    }
+
+    .prod-detail {
+      flex: 1;
+      height: 32px;
+      padding: 0 11px;
+      border: 1px solid var(--prod-line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--prod-ink);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .prod-more {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--prod-line);
+      border-radius: 8px;
+      background: #fff;
+      color: #676b73;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .prod-more svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2.1;
+    }
+
+    .prod-menu {
+      position: absolute;
+      right: 12px;
+      top: calc(100% - 8px);
+      z-index: 80;
+      width: 202px;
+      padding: 8px;
+      border: 1px solid var(--prod-line);
+      border-radius: 11px;
+      background: #fff;
+      box-shadow: 0 14px 32px rgba(17,24,39,0.13);
+      display: none;
+    }
+
+    .prod-card.menu-open .prod-menu {
+      display: block;
+    }
+
+    .prod-menu-item {
+      width: 100%;
+      min-height: 36px;
+      padding: 0 11px;
+      border-radius: 8px;
+      color: var(--prod-ink);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    .prod-menu-item:hover {
+      background: #f7f7f5;
+    }
+
+    .prod-menu-item.danger {
+      color: #b23b2e;
+    }
+
+    .tone-rose { background: #f4dfe1; }
+    .tone-indigo { background: #dfe3f6; }
+    .tone-teal { background: #d7eeea; }
+    .tone-amber { background: #f5e6c2; }
+    .tone-violet { background: #e4dff3; }
+    .tone-slate { background: #dfe4eb; }
+
+    .status-review .prod-dot { background: #d38c1c; }
+    .status-approved .prod-dot { background: #24824e; }
+    .status-draft .prod-dot { background: #8b9098; }
+    .status-approved .prod-badge { color: #176935; }
+    .status-review .prod-badge { color: #9a6a0f; }
+    .status-draft .prod-badge { color: #6f7680; }
+
+    .empty {
+      display: none;
+      padding: 56px 20px;
+      border: 1px dashed var(--prod-line-strong);
+      border-radius: 16px;
+      color: var(--prod-faint);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @media (max-width: 980px) {
+      .prod-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .prod-toolbar {
+        align-items: stretch;
+        flex-direction: column-reverse;
+        gap: 12px;
+      }
+
+      .prod-primary {
+        align-self: flex-end;
+      }
+
+      .prod-tabs {
+        gap: 18px;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 1px;
+      }
+
+      .prod-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div data-shortflow-nav="my-content"></div>
+
+  <main class="main prod-main">
+    <div class="prod-toolbar">
+      <nav class="prod-tabs" aria-label="내 콘텐츠 상태">
+        <button class="prod-tab active" type="button" data-filter="all">전체<span class="prod-tab-count" data-count="all">0</span></button>
+        <button class="prod-tab" type="button" data-filter="draft">임시저장<span class="prod-tab-count" data-count="draft">0</span></button>
+        <button class="prod-tab" type="button" data-filter="review">검토중<span class="prod-tab-count" data-count="review">0</span></button>
+        <button class="prod-tab" type="button" data-filter="approved">승인됨<span class="prod-tab-count" data-count="approved">0</span></button>
+      </nav>
+      <button class="prod-primary" type="button">콘텐츠 등록</button>
+    </div>
+
+    <section class="prod-grid" id="contentGrid" aria-label="내 콘텐츠 목록"></section>
+    <div class="empty" id="emptyState">이 상태의 콘텐츠가 없어요.</div>
+  </main>
+
+  <script>
+    const myContents = [
+      { title: '오피스 와이프의 남자 사냥법', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'rose', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
+      { title: '재벌집 비서', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'indigo', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
+      { title: '우리 반 전학생은 아이돌', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'teal', note: '아직 제출 전이에요. 필수 정보를 입력한 뒤 검토 요청해주세요.' },
+      { title: '그녀의 두 번째 엔딩', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'indigo', note: '회차 정보가 임시 저장되어 있어요.' },
+      { title: '대표님, 계약 연애는 처음이라서요', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'violet', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
+      { title: '달빛 아래 편의점', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'slate', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' }
+    ];
+
+    const grid = document.getElementById('contentGrid');
+    const empty = document.getElementById('emptyState');
+    let activeFilter = 'all';
+
+    function filteredContents() {
+      if (activeFilter === 'all') return myContents;
+      return myContents.filter(item => item.status === activeFilter);
+    }
+
+    function updateTabCounts() {
+      const counts = {
+        all: myContents.length,
+        draft: myContents.filter(item => item.status === 'draft').length,
+        review: myContents.filter(item => item.status === 'review').length,
+        approved: myContents.filter(item => item.status === 'approved').length,
+      };
+      document.querySelectorAll('[data-count]').forEach(node => {
+        node.textContent = counts[node.dataset.count] || 0;
+      });
+    }
+
+    function menuItemsFor(item) {
+      if (item.status === 'approved') return ['수정하기', '검토 요청 보내기', '워크플로우 보기'];
+      if (item.status === 'review') return ['워크플로우 보기'];
+      if (item.status === 'draft') return ['이어서 작성', '검토 요청 보내기', '삭제'];
+      return ['워크플로우 보기'];
+    }
+
+    function renderContents() {
+      const rows = filteredContents();
+
+      empty.style.display = rows.length ? 'none' : 'block';
+      grid.style.display = rows.length ? 'grid' : 'none';
+      grid.innerHTML = rows.map(item => `
+        <article class="prod-card status-${item.status}">
+          <div class="prod-poster tone-${item.tone}">
+            <span class="prod-badge">
+              <span class="prod-dot"></span>${item.statusLabel}
+            </span>
+            <span class="prod-poster-label">${item.type}</span>
+          </div>
+          <div class="prod-card-title">${item.title}</div>
+          <div class="prod-card-foot">
+            <button class="prod-detail" type="button">상세 보기</button>
+            <button class="prod-more" type="button" aria-label="${item.title} 더보기">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></svg>
+            </button>
+          </div>
+          <div class="prod-menu" role="menu">
+            ${menuItemsFor(item).map(label => `
+              <button class="prod-menu-item ${label === '삭제' ? 'danger' : ''}" type="button" role="menuitem">
+                <span>${label}</span>
+              </button>
+            `).join('')}
+          </div>
+        </article>
+      `).join('');
+    }
+
+    document.querySelectorAll('.prod-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        activeFilter = tab.dataset.filter;
+        document.querySelectorAll('.prod-tab').forEach(item => item.classList.toggle('active', item === tab));
+        renderContents();
+      });
+    });
+
+    document.addEventListener('click', event => {
+      const moreButton = event.target.closest('.prod-more');
+      if (moreButton) {
+        const card = moreButton.closest('.prod-card');
+        const willOpen = !card.classList.contains('menu-open');
+        document.querySelectorAll('.prod-card.menu-open').forEach(item => item.classList.remove('menu-open'));
+        card.classList.toggle('menu-open', willOpen);
+        event.stopPropagation();
+        return;
+      }
+
+      if (!event.target.closest('.prod-menu')) {
+        document.querySelectorAll('.prod-card.menu-open').forEach(item => item.classList.remove('menu-open'));
+      }
+    });
+
+    updateTabCounts();
+    renderContents();
+  </script>
+</body>
+</html>

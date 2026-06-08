@@ -72,13 +72,19 @@
       font-weight: 400;
       cursor: pointer;
     }
-    .tool-btn.filter {
+    .tool-btn.is-active {
       color: var(--orange);
       border-color: #ffb49a;
       background: #fff8f5;
     }
     .filter-body {
       padding: 16px 16px 16px;
+    }
+    .filter-panel.is-collapsed .search-row {
+      border-bottom-color: transparent;
+    }
+    .filter-panel.is-collapsed .filter-body {
+      display: none;
     }
     .filter-line {
       display: grid;
@@ -183,7 +189,8 @@
     .card { min-width: 0; position: relative; }
     .poster {
       position: relative;
-      width: 100%;
+      width: 96%;
+      margin: 0 auto;
       height: auto;
       aspect-ratio: 2 / 3;
       flex: none;
@@ -243,8 +250,9 @@
       letter-spacing: 1.3px;
     }
     .title {
-      margin-top: 10px;
-      font-size: 16px;
+      width: 96%;
+      margin: 10px auto 0;
+      font-size: 15px;
       font-weight: 400;
       line-height: 1.35;
       white-space: nowrap;
@@ -252,7 +260,8 @@
       text-overflow: ellipsis;
     }
     .genres {
-      margin-top: 3px;
+      width: 96%;
+      margin: 3px auto 0;
       color: #6b7280;
       font-size: 13px;
       font-weight: 400;
@@ -295,7 +304,7 @@
           <input id="search" type="search" placeholder="콘텐츠 검색">
         </label>
         <div class="divider"></div>
-        <button class="tool-btn filter" type="button">
+        <button class="tool-btn is-active" type="button" id="filterToggle" aria-expanded="true" aria-controls="filters">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
           필터
         </button>
@@ -305,11 +314,30 @@
         </button>
       </div>
       <div class="filter-body" id="filters">
-        <div class="filter-line" data-filter="type">
-          <div class="filter-label">종류</div>
+        <div class="filter-line" data-filter="section">
+          <div class="filter-label">섹션</div>
           <div class="chips">
-            <button class="chip active" data-value="숏드라마">숏드라마</button>
+            <button class="chip active" data-value="전체">전체</button>
+            <button class="chip" data-value="숏드라마">숏드라마</button>
             <button class="chip" data-value="숏애니">숏애니</button>
+          </div>
+        </div>
+        <div class="filter-line" data-filter="releaseType">
+          <div class="filter-label">릴리즈 유형</div>
+          <div class="chips">
+            <button class="chip active" data-value="전체">전체</button>
+            <button class="chip" data-value="신작(미공개)">신작(미공개)</button>
+            <button class="chip" data-value="기공개작">기공개작</button>
+          </div>
+        </div>
+        <div class="filter-line" data-filter="productionStage">
+          <div class="filter-label">제작단계</div>
+          <div class="chips">
+            <button class="chip active" data-value="전체">전체</button>
+            <button class="chip" data-value="기획중">기획중</button>
+            <button class="chip" data-value="제작중">제작중</button>
+            <button class="chip" data-value="심의중">심의중</button>
+            <button class="chip" data-value="제작완료">제작완료</button>
           </div>
         </div>
         <div class="filter-line" data-filter="genre">
@@ -332,6 +360,11 @@
             <button class="chip" data-value="공포">공포</button>
             <button class="chip" data-value="여성향">여성향</button>
             <button class="chip" data-value="남성향">남성향</button>
+            <button class="chip" data-value="판타지">판타지</button>
+            <button class="chip" data-value="순정">순정</button>
+            <button class="chip" data-value="멜로">멜로</button>
+            <button class="chip" data-value="미스터리">미스터리</button>
+            <button class="chip" data-value="기타">기타</button>
           </div>
         </div>
         <div class="filter-line" data-filter="year">
@@ -390,7 +423,9 @@
     ];
 
     const state = {
-      type: '숏드라마',
+      section: '전체',
+      releaseType: '전체',
+      productionStage: '전체',
       genre: '전체',
       year: '전체',
       language: '전체',
@@ -405,6 +440,14 @@
     const count = document.getElementById('count');
     const search = document.getElementById('search');
     const pagination = document.getElementById('pagination');
+    const filterPanel = document.querySelector('.filter-panel');
+    const filterToggle = document.getElementById('filterToggle');
+    const productionStages = ['기획중', '제작중', '심의중', '제작완료'];
+    contents.forEach((item, index) => {
+      item.section = item.type;
+      item.releaseType = index % 4 === 0 ? '신작(미공개)' : '기공개작';
+      item.productionStage = productionStages[index % productionStages.length];
+    });
 
     function iconHeart(filled) {
       return `<svg width="19" height="19" viewBox="0 0 24 24" fill="${filled ? '#ff3f4d' : 'none'}" stroke="${filled ? '#ff3f4d' : '#fff'}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>`;
@@ -412,7 +455,9 @@
 
     function render() {
       let items = contents.filter((item) => {
-        if (state.type !== '전체' && item.type !== state.type) return false;
+        if (state.section !== '전체' && item.section !== state.section) return false;
+        if (state.releaseType !== '전체' && item.releaseType !== state.releaseType) return false;
+        if (state.productionStage !== '전체' && item.productionStage !== state.productionStage) return false;
         if (state.genre !== '전체' && !item.genres.includes(state.genre)) return false;
         if (state.year !== '전체' && item.year !== state.year) return false;
         if (state.language !== '전체' && item.language !== state.language) return false;
@@ -477,6 +522,12 @@
       render();
     });
 
+    filterToggle.addEventListener('click', () => {
+      const isCollapsed = filterPanel.classList.toggle('is-collapsed');
+      filterToggle.setAttribute('aria-expanded', String(!isCollapsed));
+      filterToggle.classList.toggle('is-active', !isCollapsed);
+    });
+
     document.querySelector('.sort').addEventListener('click', (event) => {
       const btn = event.target.closest('button[data-sort]');
       if (!btn) return;
@@ -488,7 +539,7 @@
 
     document.getElementById('favoriteOnly').addEventListener('click', (event) => {
       state.favoriteOnly = !state.favoriteOnly;
-      event.currentTarget.classList.toggle('filter', state.favoriteOnly);
+      event.currentTarget.classList.toggle('is-active', state.favoriteOnly);
       resetPage();
       render();
     });

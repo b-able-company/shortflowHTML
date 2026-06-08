@@ -1,6 +1,7 @@
 (function () {
   const primaryNavItems = [
     { id: 'content', label: '콘텐츠', href: 'content-list.html' },
+    { id: 'my-content', label: '내콘텐츠', href: 'contentlist-prod.html' },
     { id: 'concierge', label: '컨시어지', href: 'concierge.html' },
     { id: 'platform-dashboard', label: '플랫폼 대시보드', href: 'shortflow-dashboard.html', aliases: ['dashboard'] },
     { id: 'producer-dashboard', label: '제작사 대시보드', href: 'producer-dashboard.html' },
