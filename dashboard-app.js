@@ -14,7 +14,7 @@
   function render() {
     const view = appState.tab === 'messages'
       ? renderMessagesView(appState)
-      : renderWorkflowView(appState);
+      : renderWorkflowView(appState, { dashboardKind: 'platform' });
     root.innerHTML = renderShell(view, {
       activePage: 'platform-dashboard',
       activeTab: appState.tab,

@@ -5,7 +5,7 @@
   const { renderWorkflowView } = window.ShortflowWorkflow;
 
   function render() {
-    root.innerHTML = renderShell(renderWorkflowView(appState), {
+    root.innerHTML = renderShell(renderWorkflowView(appState, { dashboardKind: 'producer' }), {
       activePage: 'producer-dashboard',
       activeTab: 'workflow',
       dashboardKind: 'producer',

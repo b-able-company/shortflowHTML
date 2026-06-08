@@ -22,11 +22,12 @@
 
   function profileCard(options) {
     const showSearch = options && options.showSearch;
+    const role = options && options.role ? options.role : '플랫폼';
     return `
       <section class="profile-card">
         <div class="avatar">R</div>
         <strong>Reelio</strong>
-        <span>플랫폼</span>
+        <span>${escapeHtml(role)}</span>
         ${showSearch ? '<input class="content-search" type="search" placeholder="콘텐츠명 검색..." value="' + escapeHtml(appState.workflowSearch) + '">' : ''}
       </section>
     `;

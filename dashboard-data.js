@@ -16,6 +16,29 @@
     { label: '매칭보류', value: 1 },
   ];
 
+  const producerStatusLabels = {
+    CONTENT_SUBMITTED: '콘텐츠 등록 신청',
+    CONTENT_APPROVED: '콘텐츠 승인됨',
+    REVISION_REQUESTED: '수정 신청',
+    REVISION_APPROVED: '수정 승인됨',
+  };
+
+  const producerWorkflowItems = [
+    { id: 'p1', title: '재벌집 비서', sub: '숏드라마 · 60화', status: 'CONTENT_SUBMITTED', date: '2026년 6월 8일', poster: 'indigo' },
+    { id: 'p2', title: '오피스 와이프의 남자 사냥법', sub: '숏드라마 · 80화', status: 'CONTENT_APPROVED', date: '2026년 6월 7일', poster: 'rose' },
+    { id: 'p4', title: '그녀의 두 번째 엔딩', sub: '숏드라마 · 72화', status: 'REVISION_REQUESTED', date: '2026년 6월 4일', poster: 'magenta' },
+    { id: 'p5', title: '대표님, 계약 연애는 처음이라서요', sub: '숏드라마 · 64화', status: 'REVISION_APPROVED', date: '2026년 6월 3일', poster: 'rose' },
+  ].map(item => ({ ...item, statusLabel: producerStatusLabels[item.status] }));
+
+  const producerInProgressStatuses = new Set(['CONTENT_SUBMITTED', 'REVISION_REQUESTED']);
+  const producerCompletedStatuses = new Set(['CONTENT_APPROVED', 'REVISION_APPROVED']);
+  const producerWorkflowStats = [
+    { label: '전체', value: producerWorkflowItems.length, accent: true },
+    { label: '진행중', value: producerWorkflowItems.filter(item => producerInProgressStatuses.has(item.status)).length },
+    { label: '완료', value: producerWorkflowItems.filter(item => producerCompletedStatuses.has(item.status)).length },
+    { label: '보류', value: 0 },
+  ];
+
   const messageItems = [
     {
       id: 'm1',
@@ -88,5 +111,12 @@
     },
   ];
 
-  window.ShortflowData = { workflowItems, workflowStats, messageItems };
+  window.ShortflowData = {
+    workflowItems,
+    workflowStats,
+    producerStatusLabels,
+    producerWorkflowItems,
+    producerWorkflowStats,
+    messageItems,
+  };
 })();
