@@ -89,6 +89,10 @@
 
     .prod-primary {
       height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       padding: 0 14px;
       border-radius: 8px;
       border: 1px solid var(--prod-orange);
@@ -96,7 +100,17 @@
       color: #fff;
       font-size: 12.5px;
       font-weight: 750;
+      text-decoration: none;
       white-space: nowrap;
+    }
+
+    .prod-primary::before {
+      content: "+";
+      display: inline-grid;
+      place-items: center;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1;
     }
 
     .prod-primary:hover {
@@ -335,7 +349,7 @@
         <button class="prod-tab" type="button" data-filter="review">검토중<span class="prod-tab-count" data-count="review">0</span></button>
         <button class="prod-tab" type="button" data-filter="approved">승인됨<span class="prod-tab-count" data-count="approved">0</span></button>
       </nav>
-      <button class="prod-primary" type="button">콘텐츠 등록</button>
+      <a class="prod-primary" href="content-create.html">새 콘텐츠</a>
     </div>
 
     <section class="prod-grid" id="contentGrid" aria-label="내 콘텐츠 목록"></section>
