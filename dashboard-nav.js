@@ -47,7 +47,7 @@
           </nav>
           <div class="nav-actions">
             <button class="icon-action" aria-label="알림">${icons.bell}</button>
-            <a class="icon-action cart" href="cart.html" aria-label="카트">${icons.cart}</a>
+            ${currentRole === 'platform' ? `<a class="icon-action cart" href="cart.html" aria-label="카트">${icons.cart}</a>` : ''}
             <button class="icon-action" aria-label="테마">${icons.moon}</button>
             <button class="lang">한국어</button>
             <a class="user ${currentPage === 'mypage' ? 'active' : ''}" href="owner.html" ${currentPage === 'mypage' ? 'aria-current="page"' : ''}>Reelio</a>
