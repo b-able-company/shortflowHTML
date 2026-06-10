@@ -114,7 +114,7 @@
           <div class="footer-info">
             <span>(주) 비에이블컴퍼니</span>
             <span>|</span>
-            <span>대표이사 강다혜</span>
+            <span>대표이사 강다해</span>
             <span>|</span>
             <span>주소: 서울시 강남구 테헤란로 123, 6층</span>
             <span>|</span>
@@ -122,7 +122,7 @@
             <span>고객문의: shortflow@bable-company.com</span>
           </div>
           <div class="footer-divider"></div>
-          <div class="footer-copy">© 2026. b.able company all rights reserved.</div>
+          <div class="footer-copy">© 2026 shortflow. All rights reserved.</div>
         </div>
       </footer>
     `;
@@ -222,6 +222,13 @@
     });
     remote.appendChild(producerButton);
 
+    const adminButton = document.createElement('a');
+    adminButton.className = 'utility-toggle admin-toggle';
+    adminButton.href = 'admin/index.html';
+    adminButton.setAttribute('aria-label', '관리자 입장 화면');
+    adminButton.textContent = '관리자 입장 뷰';
+    remote.appendChild(adminButton);
+
     const firstLoginButton = document.createElement('a');
     firstLoginButton.className = 'utility-toggle first-login-toggle';
     firstLoginButton.href = 'first-login-setup.html';
@@ -242,13 +249,6 @@
     signupButton.setAttribute('aria-label', '회원가입 화면');
     signupButton.textContent = '회원가입 뷰';
     remote.appendChild(signupButton);
-
-    const adminButton = document.createElement('a');
-    adminButton.className = 'utility-toggle admin-toggle';
-    adminButton.href = 'admin/index.html';
-    adminButton.setAttribute('aria-label', '관리자');
-    adminButton.textContent = 'ADMIN 화면 보기';
-    remote.appendChild(adminButton);
 
     document.body.appendChild(remote);
   }

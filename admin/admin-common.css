@@ -713,13 +713,8 @@ th.status-col {
   transition: all 0.2s ease;
 }
 
-.first-login-toggle {
+.utility-toggle.active {
   background: #e85d2c;
-}
-
-.login-view-toggle.active,
-.signup-view-toggle.active {
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(26, 26, 24, 0.28);
 }
 
 .utility-toggle:hover {
@@ -727,6 +722,6 @@ th.status-col {
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-.first-login-toggle:hover {
+.utility-toggle.active:hover {
   background: #c7471d;
 }

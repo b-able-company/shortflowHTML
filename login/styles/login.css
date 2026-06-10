@@ -27,25 +27,6 @@ input {
   font: inherit;
 }
 
-.back-to-content {
-  position: fixed;
-  top: 22px;
-  left: 50%;
-  z-index: 20;
-  min-height: 38px;
-  padding: 0 16px;
-  border-radius: 8px;
-  background: #ff5a1f;
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transform: translateX(-50%);
-  font-size: 13px;
-  font-weight: 800;
-  box-shadow: 0 10px 26px rgba(255, 90, 31, 0.24);
-}
-
 .login-page {
   min-height: 100vh;
   display: grid;
@@ -412,10 +393,6 @@ input {
 }
 
 @media (max-width: 980px) {
-  .back-to-content {
-    top: 16px;
-  }
-
   .login-page {
     grid-template-columns: 1fr;
   }

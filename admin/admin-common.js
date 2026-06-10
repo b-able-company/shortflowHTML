@@ -9,10 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="utility-remote-title">VIEW SWITCH</div>
       <a class="utility-toggle platform-view-toggle" href="../content-list.html">플랫폼 입장 뷰</a>
       <a class="utility-toggle producer-view-toggle" href="../contentlist-prod.html">제작사 입장 뷰</a>
+      <a class="utility-toggle admin-toggle active" href="index.html">관리자 입장 뷰</a>
       <a class="utility-toggle first-login-toggle" href="../first-login-setup.html">첫로그인</a>
       <a class="utility-toggle login-view-toggle" href="../login/login.html">로그인 뷰</a>
       <a class="utility-toggle signup-view-toggle" href="../login/index.html">회원가입 뷰</a>
-      <a class="utility-toggle admin-toggle" href="index.html">ADMIN 화면 보기</a>
     `;
     document.body.appendChild(remote);
   }
