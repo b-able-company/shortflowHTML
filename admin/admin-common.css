@@ -657,28 +657,76 @@ th.status-col {
   }
 }
 
-/* USER toggle on admin topbar (fixed top-right corner) */
-.user-toggle {
+/* Temporary view switcher shared with user-facing design pages. */
+.utility-remote {
   position: fixed;
-  top: 14px;
-  right: 14px;
+  top: 80px;
+  right: 0;
   z-index: 9999;
-  background: #1a1a18;
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-weight: 700;
-  font-size: 12px;
-  text-decoration: none;
-  display: inline-flex;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 118px;
+  padding: 10px;
+  border: 1px solid rgba(17, 17, 17, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.utility-remote::before {
+  content: "";
+  width: 28px;
+  height: 4px;
+  margin: 0 auto 1px;
+  border-radius: 999px;
+  background: #dedbd3;
+}
+
+.utility-remote-title {
+  color: #8b8f98;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+.utility-toggle {
+  display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  min-height: 34px;
+  padding: 7px 8px;
   border: none;
+  border-radius: 10px;
+  background: #1a1a18;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   transition: all 0.2s ease;
 }
-.user-toggle:hover { 
+
+.first-login-toggle {
+  background: #e85d2c;
+}
+
+.login-view-toggle.active,
+.signup-view-toggle.active {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(26, 26, 24, 0.28);
+}
+
+.utility-toggle:hover {
   background: #2a2a26;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.first-login-toggle:hover {
+  background: #c7471d;
 }

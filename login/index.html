@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <title>Shortflow Signup - 회원가입 플로우</title>
   <meta name="viewport" content="width=1280">
+  <link rel="stylesheet" href="../dashboard-common.css">
   <link rel="stylesheet" href="styles/fonts.css">
   <link rel="stylesheet" href="styles/base.css">
   <script src="vendor/react.development.js"></script>
@@ -11,6 +12,15 @@
   <script src="vendor/babel-standalone.min.js"></script>
 </head>
 <body>
+  <div class="utility-remote">
+    <div class="utility-remote-title">VIEW SWITCH</div>
+    <a class="utility-toggle platform-view-toggle" href="../content-list.html">플랫폼 입장 뷰</a>
+    <a class="utility-toggle producer-view-toggle" href="../contentlist-prod.html">제작사 입장 뷰</a>
+    <a class="utility-toggle first-login-toggle" href="../first-login-setup.html">첫로그인</a>
+    <a class="utility-toggle login-view-toggle" href="login.html">로그인 뷰</a>
+    <a class="utility-toggle signup-view-toggle active" href="index.html">회원가입 뷰</a>
+    <a class="utility-toggle admin-toggle" href="../admin/index.html">ADMIN 화면 보기</a>
+  </div>
   <div id="root"></div>
 
   <script type="text/babel" src="src/design-canvas.jsx"></script>

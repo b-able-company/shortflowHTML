@@ -1,12 +1,16 @@
 (function () {
   const primaryNavItems = [
-    { id: 'content', label: '콘텐츠', href: 'content-list.html' },
-    { id: 'my-content', label: '내콘텐츠', href: 'contentlist-prod.html' },
-    { id: 'concierge', label: '컨시어지', href: 'concierge.html' },
-    { id: 'platform-dashboard', label: '플랫폼 대시보드', href: 'shortflow-dashboard.html', aliases: ['dashboard'] },
-    { id: 'producer-dashboard', label: '제작사 대시보드', href: 'producer-dashboard.html' },
-    { id: 'guide', label: '이용가이드', href: '#' },
+    { id: 'content', label: '콘텐츠', href: 'content-list.html', role: 'platform' },
+    { id: 'concierge', label: '컨시어지', href: 'concierge.html', role: 'platform' },
+    { id: 'platform-dashboard', label: '플랫폼 대시보드', href: 'shortflow-dashboard.html', aliases: ['dashboard'], role: 'platform' },
+    { id: 'my-content', label: '내콘텐츠', href: 'contentlist-prod.html', role: 'producer' },
+    { id: 'producer-dashboard', label: '제작사 대시보드', href: 'producer-dashboard.html', role: 'producer' },
+    { id: 'guide', label: '이용가이드', href: '#', role: 'shared' },
   ];
+  const rolePages = {
+    platform: new Set(['content', 'concierge', 'platform-dashboard', 'dashboard']),
+    producer: new Set(['my-content', 'producer-dashboard']),
+  };
 
   const platformDashboardTabs = [
     { id: 'workflow', label: '워크플로우', href: 'shortflow-dashboard.html?tab=workflow' },
@@ -27,13 +31,14 @@
 
   function renderTopNav(activePage) {
     const currentPage = activePage || 'platform-dashboard';
+    const currentRole = resolveViewRole(currentPage);
 
     return `
       <header class="top-nav">
         <div class="nav-inner">
           <div class="brand"><span>short</span><b>flow</b></div>
           <nav class="primary-nav" aria-label="주 메뉴">
-            ${primaryNavItems.map(item => {
+            ${primaryNavItems.filter(item => item.role === 'shared' || item.role === currentRole).map(item => {
               const active = item.id === currentPage || (item.aliases || []).includes(currentPage);
               return `
                 <a class="${active ? 'active' : ''}" href="${item.href}" ${active ? 'aria-current="page"' : ''}>${item.label}</a>
@@ -51,6 +56,30 @@
         </div>
       </header>
     `;
+  }
+
+  function resolveViewRole(currentPage) {
+    if (rolePages.platform.has(currentPage)) {
+      rememberViewRole('platform');
+      return 'platform';
+    }
+    if (rolePages.producer.has(currentPage)) {
+      rememberViewRole('producer');
+      return 'producer';
+    }
+    try {
+      return localStorage.getItem('shortflow-view-role') === 'producer' ? 'producer' : 'platform';
+    } catch (error) {
+      return 'platform';
+    }
+  }
+
+  function rememberViewRole(role) {
+    try {
+      localStorage.setItem('shortflow-view-role', role);
+    } catch (error) {
+      // Local storage can be unavailable in restricted preview contexts.
+    }
   }
 
   function dashboardTabsFor(kind) {
@@ -147,6 +176,7 @@
 
     mountTopNav(node, config.active || node.dataset.shortflowNav || 'dashboard');
     mountFooter();
+    addUtilityShortcutButtons();
   }
 
   function mountDeclarativeNavs() {
@@ -155,26 +185,72 @@
     });
     mountFooter();
     
-    // Add temporary shortcut buttons to top-right corner
+    // Add temporary view switcher outside the design canvas.
     addUtilityShortcutButtons();
   }
 
   function addUtilityShortcutButtons() {
-    if (document.querySelector('.first-login-toggle') || document.querySelector('.admin-toggle')) return;
+    if (document.querySelector('.utility-remote')) return;
+
+    const remote = document.createElement('div');
+    remote.className = 'utility-remote';
+
+    const title = document.createElement('div');
+    title.className = 'utility-remote-title';
+    title.textContent = 'VIEW SWITCH';
+    remote.appendChild(title);
+
+    const currentRole = resolveViewRole(document.querySelector('[data-shortflow-nav]')?.dataset.shortflowNav);
+
+    const platformButton = document.createElement('a');
+    platformButton.className = 'utility-toggle platform-view-toggle' + (currentRole === 'platform' ? ' active' : '');
+    platformButton.href = 'content-list.html';
+    platformButton.setAttribute('aria-label', '플랫폼 입장 화면');
+    platformButton.textContent = '플랫폼 입장 뷰';
+    platformButton.addEventListener('click', function() {
+      rememberViewRole('platform');
+    });
+    remote.appendChild(platformButton);
+
+    const producerButton = document.createElement('a');
+    producerButton.className = 'utility-toggle producer-view-toggle' + (currentRole === 'producer' ? ' active' : '');
+    producerButton.href = 'contentlist-prod.html';
+    producerButton.setAttribute('aria-label', '제작사 입장 화면');
+    producerButton.textContent = '제작사 입장 뷰';
+    producerButton.addEventListener('click', function() {
+      rememberViewRole('producer');
+    });
+    remote.appendChild(producerButton);
 
     const firstLoginButton = document.createElement('a');
     firstLoginButton.className = 'utility-toggle first-login-toggle';
     firstLoginButton.href = 'first-login-setup.html';
     firstLoginButton.setAttribute('aria-label', '첫 로그인 설정');
     firstLoginButton.textContent = '첫로그인';
-    document.body.appendChild(firstLoginButton);
+    remote.appendChild(firstLoginButton);
+
+    const loginButton = document.createElement('a');
+    loginButton.className = 'utility-toggle login-view-toggle';
+    loginButton.href = 'login/login.html';
+    loginButton.setAttribute('aria-label', '로그인 화면');
+    loginButton.textContent = '로그인 뷰';
+    remote.appendChild(loginButton);
+
+    const signupButton = document.createElement('a');
+    signupButton.className = 'utility-toggle signup-view-toggle';
+    signupButton.href = 'login/index.html';
+    signupButton.setAttribute('aria-label', '회원가입 화면');
+    signupButton.textContent = '회원가입 뷰';
+    remote.appendChild(signupButton);
 
     const adminButton = document.createElement('a');
     adminButton.className = 'utility-toggle admin-toggle';
     adminButton.href = 'admin/index.html';
     adminButton.setAttribute('aria-label', '관리자');
     adminButton.textContent = 'ADMIN 화면 보기';
-    document.body.appendChild(adminButton);
+    remote.appendChild(adminButton);
+
+    document.body.appendChild(remote);
   }
 
   if (document.readyState === 'loading') {

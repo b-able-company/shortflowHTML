@@ -2,6 +2,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const sidebar = document.querySelector('.sb');
   const toggle = document.querySelector('.sb-toggle');
 
+  if (!document.querySelector('.utility-remote')) {
+    const remote = document.createElement('div');
+    remote.className = 'utility-remote';
+    remote.innerHTML = `
+      <div class="utility-remote-title">VIEW SWITCH</div>
+      <a class="utility-toggle platform-view-toggle" href="../content-list.html">플랫폼 입장 뷰</a>
+      <a class="utility-toggle producer-view-toggle" href="../contentlist-prod.html">제작사 입장 뷰</a>
+      <a class="utility-toggle first-login-toggle" href="../first-login-setup.html">첫로그인</a>
+      <a class="utility-toggle login-view-toggle" href="../login/login.html">로그인 뷰</a>
+      <a class="utility-toggle signup-view-toggle" href="../login/index.html">회원가입 뷰</a>
+      <a class="utility-toggle admin-toggle" href="index.html">ADMIN 화면 보기</a>
+    `;
+    document.body.appendChild(remote);
+  }
+
   if (!sidebar) return;
 
   const adminInfo = sidebar.querySelector('.sb-foot');
@@ -52,11 +67,4 @@ document.addEventListener('DOMContentLoaded', () => {
     setCollapsed(!sidebar.classList.contains('collapsed'));
   });
 
-  // Add USER switch button to top-right corner (fixed position)
-  const userLink = document.createElement('a');
-  userLink.className = 'user-toggle';
-  userLink.href = '../content-list.html';
-  userLink.textContent = 'USER 화면 보기';
-  userLink.setAttribute('aria-label', 'Switch to user view');
-  document.body.appendChild(userLink);
 });

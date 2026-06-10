@@ -238,14 +238,24 @@ document.addEventListener('DOMContentLoaded', async function() {
     const targetFields = [
       { label: '제작 상태', value: '제작 완료' },
       { label: '라이선스 형태', value: '비독점' },
-      { label: '라이선스 지역', value: '태국 제외 전세계' },
-      { label: '플랫폼' },
-      { label: '장르' },
-      { label: '에피소드' },
-      { label: '감독' },
-      { label: '작가' },
-      { label: '배우' },
-      { label: '추천 포인트' }
+      { label: '라이선스 지역', value: '전 세계' },
+      { label: '플랫폼', value: 'NovaShort / PlayStory / VeloDrama' },
+      { label: '장르', value: '회귀, 성장 드라마, 연예계, 로맨스' },
+      { label: '에피소드', value: '80 ep x 2 mins' },
+      { label: '감독', value: '이태준' },
+      { label: '작가', value: '박서윤' },
+      { label: '배우', value: '차우진, 김하린, 서민혁' },
+      {
+        label: '추천 포인트',
+        value: '- 인생 2회차의 통쾌한 복수극: 배신당하고 모든 것을 잃은 톱스타의 두 번째 도전\n- 연예계 성장 서사: 무명 시절로 돌아가 다시 정상에 오르는 과정\n- 미래를 아는 주인공의 전략 플레이: 과거의 실수를 바로잡으며 운명을 바꿔나감\n- 사랑과 우정의 재발견: 잃어버렸던 소중한 인연들을 다시 만나는 감동'
+      }
+    ];
+    const hashtags = [
+      '#회귀물',
+      '#톱스타성장기',
+      '#연예계드라마',
+      '#복수서사',
+      '#인생2회차'
     ];
     const targetLabels = new Set(targetFields.map(function(field) { return field.label; }));
     const hiddenLabels = new Set(['제작연도', '거래 상태']);
@@ -266,6 +276,54 @@ document.addEventListener('DOMContentLoaded', async function() {
     const syncRows = function() {
       const root = document.getElementById('root');
       if (!root) return;
+
+      const title = root.querySelector('h1');
+      if (title && normalize(title.textContent) !== '죽었다가 회귀한 톱스타 (2026)') {
+        const year = document.createElement('span');
+        year.textContent = '(2026)';
+        year.style.color = '#6B7280';
+        year.style.fontWeight = '600';
+        title.style.fontWeight = '700';
+        title.style.fontSize = '27px';
+        title.replaceChildren(document.createTextNode('죽었다가 회귀한 톱스타 '), year);
+      }
+
+      const contractButton = Array.from(root.querySelectorAll('button')).find(function(button) {
+        const text = normalize(button.textContent);
+        return text === '계약 완료' || text === '계약 가능';
+      });
+      if (contractButton && normalize(contractButton.textContent) !== '계약 가능') {
+        const textNode = Array.from(contractButton.childNodes).find(function(node) {
+          return node.nodeType === Node.TEXT_NODE && node.textContent.trim();
+        });
+        if (textNode) {
+          textNode.textContent = ' 계약 가능';
+        } else {
+          contractButton.appendChild(document.createTextNode('계약 가능'));
+        }
+      }
+
+      if (!root.querySelector('[data-detail-poster]')) {
+        const posterBrand = Array.from(root.querySelectorAll('div')).find(function(node) {
+          return normalize(node.textContent) === "PARK'N MEDIA";
+        });
+        const poster = posterBrand && posterBrand.parentElement;
+        if (poster) {
+          const image = document.createElement('img');
+          image.src = 'images/죽었다가회귀한.png';
+          image.alt = '죽었다가 회귀한 톱스타 포스터';
+          image.dataset.detailPoster = 'true';
+          image.style.display = 'block';
+          image.style.width = '100%';
+          image.style.height = '100%';
+          image.style.objectFit = 'cover';
+          poster.style.aspectRatio = '2 / 3';
+          poster.style.background = 'none';
+          poster.parentElement.style.gap = '36px';
+          poster.replaceChildren(image);
+        }
+      }
+
       const rowsByLabel = new Map();
       const rows = Array.from(root.querySelectorAll('div')).filter(function(node) {
         if (!isCompactRow(node)) return false;
@@ -330,22 +388,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (rowText.length > 80) return;
         node.remove();
       });
-      root.querySelectorAll('span').forEach(function(node) {
-        if (node.textContent.trim() === '#심리드라마') node.remove();
+      const hashtagNodes = Array.from(root.querySelectorAll('span')).filter(function(node) {
+        return node.textContent.trim().startsWith('#');
       });
-      Array.from(root.querySelectorAll('div')).forEach(function(node) {
-        const text = node.textContent.trim();
-        const removeTargets = new Set([
-          '- 성숙한 여성 서사: 중년 여성의 욕망과 감정을 전면에 드러낸 현실적 이야기',
-          '- 치유와 성장: 상처를 마주하고 감정을 받아들이는 과정'
-        ]);
-        if (removeTargets.has(text)) {
+      hashtagNodes.forEach(function(node, index) {
+        if (index < hashtags.length) {
+          if (node.textContent !== hashtags[index]) node.textContent = hashtags[index];
+        } else {
           node.remove();
-          return;
-        }
-        const target = '- 금기된 관계 서사: 딸의 연인과 엄마 사이의 도덕적 경계를 넘는 파격적 관계 구조';
-        if (text === target) {
-          node.textContent = target.replace(/ 구조$/, '');
         }
       });
     };
@@ -358,9 +408,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     const observer = new MutationObserver(syncRows);
     observer.observe(document.documentElement, { childList: true, subtree: true });
-    setTimeout(function() {
-      observer.disconnect();
-    }, 5000);
   }
 
 });
