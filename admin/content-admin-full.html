@@ -250,6 +250,17 @@ td { padding: 9px 12px; vertical-align: middle; }
 .extra-panel-body .tl-item:first-child { padding-top: 0; }
 .extra-panel-body .tl-item:last-child { padding-bottom: 0; }
 .extra-empty { font-size: 12px; color: #bbb; padding: 4px 0; }
+.operation-settings-body { padding-top: 0; padding-bottom: 0; }
+.operation-setting-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 72px; }
+.operation-setting-row + .operation-setting-row { border-top: 0.5px solid #f0efe9; }
+.operation-setting-copy { min-width: 0; }
+.operation-setting-name { font-size: 12px; font-weight: 600; color: #2b2b28; }
+.operation-setting-desc { margin-top: 4px; font-size: 11px; line-height: 1.45; color: #99978f; }
+.operation-switch { appearance: none; -webkit-appearance: none; position: relative; align-self: center; width: 40px; min-width: 40px; max-width: 40px; height: 22px; min-height: 22px; max-height: 22px; flex: 0 0 40px; margin: 0; padding: 0; border: 0; border-radius: 999px; background: #d8d7d2; line-height: 0; cursor: pointer; transition: background 140ms ease; }
+.operation-switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: transform 140ms ease; }
+.operation-switch.is-on { background: #e85d2c; }
+.operation-switch.is-on::after { transform: translateX(18px); }
+.operation-switch:focus-visible { outline: 2px solid rgba(232,93,44,0.3); outline-offset: 2px; }
 .ownership-transfer-grid { display: grid; grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr); gap: 10px; align-items: end; }
 .ownership-arrow { height: 31px; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 15px; }
 .ownership-note { margin-top: 10px; font-size: 11.5px; color: #8d8b84; line-height: 1.6; background: #fafaf7; border: 0.5px solid #eeede8; border-radius: 7px; padding: 9px 10px; }
@@ -815,6 +826,27 @@ td { padding: 9px 12px; vertical-align: middle; }
               <div class="extra-grid">
                 <div class="extra-panel">
                   <div class="extra-panel-head">
+                    <div class="extra-panel-title"><i class="ti ti-adjustments"></i> 운영 설정</div>
+                  </div>
+                  <div class="extra-panel-body operation-settings-body">
+                    <div class="operation-setting-row">
+                      <div class="operation-setting-copy">
+                        <div class="operation-setting-name">플랫폼 공개 여부</div>
+                        <div class="operation-setting-desc" id="platform-visible-desc"></div>
+                      </div>
+                      <button class="operation-switch" id="platform-visible-toggle" type="button" role="switch" onclick="toggleContentOperation('platformVisible')" aria-label="플랫폼 공개 여부"></button>
+                    </div>
+                    <div class="operation-setting-row">
+                      <div class="operation-setting-copy">
+                        <div class="operation-setting-name">Bable Only</div>
+                        <div class="operation-setting-desc" id="bable-only-desc"></div>
+                      </div>
+                      <button class="operation-switch" id="bable-only-toggle" type="button" role="switch" onclick="toggleContentOperation('bableOnly')" aria-label="Bable Only"></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="extra-panel">
+                  <div class="extra-panel-head">
                     <div class="extra-panel-title"><i class="ti ti-bookmark"></i> 북마크한 플랫폼</div>
                     <div class="extra-panel-count" id="extra-bookmark-count"></div>
                   </div>
@@ -1162,6 +1194,8 @@ function renderExtraInfo(c) {
   const ml = document.getElementById('extra-mails');
   if (!bk || !tl || !ml || !c) return;
 
+  renderContentOperations(c);
+
   document.getElementById('extra-bookmark-count').textContent = `${c.bookmarks.length}개`;
   bk.innerHTML = c.bookmarks.length
     ? `<div class="bookmark-grid">${c.bookmarks.map(p=>`<div class="brow"><span class="bplatform">${p}</span></div>`).join('')}</div>`
@@ -1178,6 +1212,75 @@ function renderExtraInfo(c) {
   ml.innerHTML = c.mails.length
     ? c.mails.map(m=>{const[p,d]=m.split(' — ');return`<div class="mrow"><span class="mplatform">${p}</span><span class="mdate">${d}</span></div>`;}).join('')
     : '<div class="extra-empty">발송 이력 없음</div>';
+}
+
+function renderContentOperations(c) {
+  if (!c) return;
+  if (typeof c.platformVisible !== 'boolean') c.platformVisible = true;
+  if (typeof c.bableOnly !== 'boolean') c.bableOnly = false;
+
+  const settings = [
+    {
+      key: 'platformVisible',
+      toggleId: 'platform-visible-toggle',
+      descId: 'platform-visible-desc',
+      onText: '공개 상태입니다. 플랫폼 사용자에게 콘텐츠가 노출됩니다.',
+      offText: '비공개 상태입니다. 플랫폼 사용자에게 콘텐츠가 노출되지 않습니다.',
+    },
+    {
+      key: 'bableOnly',
+      toggleId: 'bable-only-toggle',
+      descId: 'bable-only-desc',
+      onText: 'Bable Only가 활성화된 콘텐츠입니다.',
+      offText: 'Bable Only가 비활성화된 콘텐츠입니다.',
+    },
+  ];
+
+  settings.forEach(setting => {
+    const isOn = Boolean(c[setting.key]);
+    const toggle = document.getElementById(setting.toggleId);
+    const desc = document.getElementById(setting.descId);
+    if (toggle) {
+      toggle.classList.toggle('is-on', isOn);
+      toggle.setAttribute('aria-checked', String(isOn));
+      toggle.title = isOn ? 'ON' : 'OFF';
+    }
+    if (desc) desc.textContent = isOn ? setting.onText : setting.offText;
+  });
+}
+
+function toggleContentOperation(key) {
+  const c = contents.find(item => item.id === selId);
+  if (!c) return;
+
+  const config = {
+    platformVisible: {
+      label: '플랫폼 공개 여부',
+      on: '공개',
+      off: '비공개',
+    },
+    bableOnly: {
+      label: 'Bable Only',
+      on: 'ON',
+      off: 'OFF',
+    },
+  }[key];
+  if (!config) return;
+
+  const current = key === 'platformVisible'
+    ? c.platformVisible !== false
+    : Boolean(c.bableOnly);
+  const next = !current;
+  const nextLabel = next ? config.on : config.off;
+  if (!confirm(`${c.title} 콘텐츠의 ${config.label}를 ${nextLabel}(으)로 변경할까요?`)) return;
+
+  c[key] = next;
+  c.timeline.unshift({
+    dot: next ? 'green' : 'gray',
+    text: `관리자가 ${config.label}를 ${nextLabel}(으)로 변경함`,
+    time: formatContentAdminDate(),
+  });
+  renderExtraInfo(c);
 }
 
 function formatContentAdminDate(date = new Date()) {

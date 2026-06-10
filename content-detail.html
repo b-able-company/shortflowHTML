@@ -192,7 +192,133 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
 
   function stripDetailLocalNav(source) {
-    return source.replace(/\n\s*<DetailTopNav t=\{t\} \/>\n/g, '\n');
+    source = source.replace(/\n\s*<DetailTopNav t=\{t\} \/>\n/g, '\n');
+
+    const stillsStart = source.indexOf('function StillsSection');
+    const tabsStart = source.indexOf('function DetailContentTabs', stillsStart);
+    if (stillsStart >= 0 && tabsStart > stillsStart) {
+      const stillsComponent = `
+function StillsSection({ t }) {
+  const stills = [
+    'images/톱스타스틸컷1.png',
+    'images/톱스타스틸컷2.png',
+    'images/톱스타스틸컷3.png',
+  ];
+  const [selected, setSelected] = React.useState(null);
+
+  React.useEffect(() => {
+    if (!selected) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setSelected(null);
+    };
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [selected]);
+
+  return (
+    <>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 14 }}>
+        {stills.map((src, index) => (
+          <button
+            key={src}
+            type="button"
+            onClick={() => setSelected(src)}
+            aria-label={'스틸컷 ' + (index + 1) + ' 크게 보기'}
+            style={{
+              display: 'block',
+              width: '100%',
+              aspectRatio: '16 / 10',
+              padding: 0,
+              border: 'none',
+              borderRadius: 10,
+              background: '#F3F4F6',
+              overflow: 'hidden',
+              cursor: 'zoom-in',
+            }}
+          >
+            <img
+              src={src}
+              alt={'죽었다가 회귀한 톱스타 스틸컷 ' + (index + 1)}
+              style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          </button>
+        ))}
+      </div>
+
+      {selected && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="스틸컷 크게 보기"
+          onClick={() => setSelected(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 10050,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 32,
+            background: 'rgba(0, 0, 0, 0.82)',
+            cursor: 'zoom-out',
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setSelected(null)}
+            aria-label="스틸컷 닫기"
+            style={{
+              position: 'fixed',
+              top: 22,
+              right: 24,
+              zIndex: 1,
+              width: 42,
+              height: 42,
+              padding: 0,
+              border: 'none',
+              background: 'transparent',
+              color: '#fff',
+              fontFamily: 'Arial, sans-serif',
+              fontSize: 36,
+              fontWeight: 300,
+              lineHeight: '42px',
+              textShadow: '0 2px 10px rgba(0,0,0,0.55)',
+              cursor: 'pointer',
+            }}
+          >
+            ×
+          </button>
+          <img
+            src={selected}
+            alt="확대된 스틸컷"
+            onClick={(event) => event.stopPropagation()}
+            style={{
+              display: 'block',
+              maxWidth: 'min(900px, 92vw)',
+              maxHeight: '88vh',
+              width: 'auto',
+              height: 'auto',
+              borderRadius: 8,
+              boxShadow: '0 24px 70px rgba(0,0,0,0.45)',
+              cursor: 'default',
+            }}
+          />
+        </div>
+      )}
+    </>
+  );
+}
+
+`;
+      source = source.slice(0, stillsStart) + stillsComponent + source.slice(tabsStart);
+    }
+
+    return source;
   }
 
   function installDetailLayoutTweaks() {
@@ -281,11 +407,26 @@ document.addEventListener('DOMContentLoaded', async function() {
       if (title && normalize(title.textContent) !== '죽었다가 회귀한 톱스타 (2026)') {
         const year = document.createElement('span');
         year.textContent = '(2026)';
-        year.style.color = '#6B7280';
-        year.style.fontWeight = '600';
         title.style.fontWeight = '700';
         title.style.fontSize = '27px';
         title.replaceChildren(document.createTextNode('죽었다가 회귀한 톱스타 '), year);
+      }
+      if (title) {
+        title.style.lineHeight = '1.2';
+        const titleColumn = title.parentElement;
+        if (titleColumn) {
+          titleColumn.style.flex = '1 1 0';
+          titleColumn.style.minWidth = '0';
+          titleColumn.style.width = 'auto';
+        }
+        const year = title.querySelector('span');
+        if (year) {
+          year.style.display = 'inline-block';
+          year.style.color = '#6B7280';
+          year.style.fontSize = '22px';
+          year.style.fontWeight = '600';
+          year.style.verticalAlign = '2px';
+        }
       }
 
       const contractButton = Array.from(root.querySelectorAll('button')).find(function(button) {
@@ -337,12 +478,21 @@ document.addEventListener('DOMContentLoaded', async function() {
           row.remove();
           return;
         }
+        row.style.display = 'grid';
+        row.style.gridTemplateColumns = '80px minmax(0, 1fr)';
+        row.style.columnGap = '36px';
+        row.style.width = '100%';
+        row.style.marginLeft = '0';
+        row.children[1].style.minWidth = '0';
         if (!rowsByLabel.has(label)) rowsByLabel.set(label, row);
       });
 
       const templateRow = rowsByLabel.get('제작 상태') || rowsByLabel.get('플랫폼') || rowsByLabel.get('장르');
       if (templateRow && templateRow.parentElement) {
         const parent = templateRow.parentElement;
+        parent.style.width = '100%';
+        parent.style.maxWidth = '100%';
+        parent.style.marginLeft = '0';
         const firstKnownRow = Array.from(parent.children).find(function(child) {
           if (!child.children || child.children.length < 2) return false;
           return targetLabels.has(canonicalLabel(normalize(child.children[0].textContent)));

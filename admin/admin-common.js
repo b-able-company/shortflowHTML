@@ -1,3 +1,10 @@
+if (!document.querySelector('script[data-utility-remote-script]')) {
+  const utilityScript = document.createElement('script');
+  utilityScript.src = '../utility-remote.js';
+  utilityScript.dataset.utilityRemoteScript = 'true';
+  document.head.appendChild(utilityScript);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const sidebar = document.querySelector('.sb');
   const toggle = document.querySelector('.sb-toggle');
@@ -15,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <a class="utility-toggle signup-view-toggle" href="../login/index.html">회원가입 뷰</a>
     `;
     document.body.appendChild(remote);
+    window.ShortflowUtilityRemote?.init(remote);
   }
 
   if (!sidebar) return;

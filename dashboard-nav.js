@@ -1,4 +1,11 @@
 (function () {
+  if (!document.querySelector('script[data-utility-remote-script]')) {
+    const utilityScript = document.createElement('script');
+    utilityScript.src = 'utility-remote.js';
+    utilityScript.dataset.utilityRemoteScript = 'true';
+    document.head.appendChild(utilityScript);
+  }
+
   const primaryNavItems = [
     { id: 'content', label: '콘텐츠', href: 'content-list.html', role: 'platform' },
     { id: 'concierge', label: '컨시어지', href: 'concierge.html', role: 'platform' },
@@ -251,6 +258,7 @@
     remote.appendChild(signupButton);
 
     document.body.appendChild(remote);
+    window.ShortflowUtilityRemote?.init(remote);
   }
 
   if (document.readyState === 'loading') {

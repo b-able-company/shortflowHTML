@@ -6,7 +6,7 @@ body {
 
 body {
   min-height: 100vh;
-  font-family: "Geist", "Pretendard", system-ui, sans-serif;
+  font-family: "Pretendard Variable", "Pretendard", "Geist", system-ui, sans-serif;
   color: #0f1115;
   background: #fff;
 }

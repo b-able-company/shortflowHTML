@@ -95,7 +95,7 @@
     }
     .filter-line:last-child { margin-bottom: 0; }
     .filter-label {
-      padding-top: 8px;
+      padding-top: 6px;
       font-size: 14px;
       font-weight: 400;
     }
@@ -105,14 +105,14 @@
       gap: 10px 8px;
     }
     .chip {
-      height: 36px;
-      padding: 0 14px;
+      height: 32px;
+      padding: 0 12px;
       border: 1px solid #dfe3e8;
       border-radius: 6px;
       background: #fff;
       color: #111827;
       font-size: 13px;
-      font-weight: 400;
+      font-weight: 500;
       cursor: pointer;
     }
     .chip.active {
@@ -218,11 +218,44 @@
       height: 100%;
       object-fit: cover;
     }
-    .fav {
+    .poster > a {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .new-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 2;
+      padding: 6px 9px;
+      border-radius: 4px;
+      background: var(--orange);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0.4px;
+    }
+    .poster-actions {
       position: absolute;
       top: 14px;
       right: 14px;
       z-index: 2;
+      display: flex;
+      gap: 8px;
+      opacity: 0;
+      transform: translateY(-4px);
+      pointer-events: none;
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+    .poster:hover .poster-actions,
+    .poster:focus-within .poster-actions {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .poster-action {
       width: 36px;
       height: 36px;
       border: 0;
@@ -234,7 +267,24 @@
       justify-content: center;
       cursor: pointer;
     }
+    .poster-action:hover {
+      background: rgba(17,24,39,0.96);
+    }
     .fav.active svg { fill: #ff3f4d; stroke: #ff3f4d; }
+    .cart-add {
+      font-size: 17px;
+      line-height: 1;
+    }
+    .cart-add.active {
+      background: var(--orange);
+    }
+    @media (hover: none) {
+      .poster-actions {
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+      }
+    }
     .poster-title {
       position: absolute;
       left: 16px;
@@ -414,14 +464,14 @@
 
   <script>
     const contents = [
-      { title: '대표님이 내 전남친입니다', genres: ['로맨스'], year: '2026', language: '한국어', type: '숏드라마', favorite: true, poster: 'p1', image: 'images/대표님이내전남친.png', href: 'content-detail.html', posterTitle: '계약 연애는 처음이라서요' },
-      { title: '재벌집 막내 비서', genres: ['오피스 로맨스'], year: '2026', language: '한국어', type: '숏드라마', favorite: true, poster: 'p2', image: 'images/재벌집막내비서.png', href: 'content-detail.html', posterTitle: '재벌 막내아들이 집착한다' },
-      { title: '죽었다가 회귀한 톱스타', genres: ['회귀', '드라마'], year: '2025', language: '한국어', type: '숏드라마', favorite: false, poster: 'p3', image: 'images/죽었다가회귀한.png', href: 'content-detail.html', posterTitle: '남편이 돌아왔다' },
+      { title: '대표님이 내 전남친입니다', genres: ['로맨스'], year: '2026', language: '한국어', type: '숏드라마', favorite: true, isNew: true, poster: 'p1', image: 'images/대표님이내전남친.png', href: 'content-detail.html', posterTitle: '계약 연애는 처음이라서요' },
+      { title: '재벌집 막내 비서', genres: ['로맨스', '여성향'], year: '2026', language: '한국어', type: '숏드라마', favorite: true, poster: 'p2', image: 'images/재벌집막내비서.png', href: 'content-detail.html', posterTitle: '재벌 막내아들이 집착한다' },
+      { title: '죽었다가 회귀한 톱스타', genres: ['타임슬립', '액션'], year: '2025', language: '한국어', type: '숏드라마', favorite: false, poster: 'p3', image: 'images/죽었다가회귀한.png', href: 'content-detail.html', posterTitle: '남편이 돌아왔다' },
       { title: '우리 집에 킬러가 산다', genres: ['스릴러', '코미디'], year: '2025', language: '영어', type: '숏드라마', favorite: true, poster: 'p4', image: 'images/우리집에킬러가.png', href: 'content-detail.html', posterTitle: '귀신님 잘 부탁드립니다' },
-      { title: '우리 반 전학생은 아이돌', genres: ['청춘', '학원물'], year: '2024', language: '한국어', type: '숏드라마', favorite: true, poster: 'p5', href: 'content-detail.html', posterTitle: '전학생은 아이돌' },
-      { title: '깊은 밤의 고백', genres: ['로맨스', '여성향'], year: '2024', language: '한국어', type: '숏드라마', favorite: true, poster: 'p6', href: 'content-detail.html', posterTitle: '깊은 밤의 고백' },
-      { title: '폐궁의 마지막 왕녀', genres: ['사극', '복수'], year: '2023', language: '한국어', type: '숏드라마', favorite: false, poster: 'p7', href: 'content-detail.html', posterTitle: '마지막 왕녀' },
-      { title: '오피스와이프의 남자사냥법', genres: ['스릴러', '치정'], year: '2026', language: '한국어', type: '숏드라마', favorite: true, poster: 'p8', href: 'content-detail.html', posterTitle: '오피스 와이프의 남자사냥법' },
+      { title: '오늘부터 악녀 대행합니다', genres: ['로맨스', '코미디'], year: '2024', language: '한국어', type: '숏드라마', favorite: true, poster: 'p5', image: 'images/오늘부터악녀대행.png', href: 'content-detail.html', posterTitle: '오늘부터 악녀 대행합니다' },
+      { title: '남편이 AI입니다', genres: ['로맨스', 'SF', '코미디'], year: '2024', language: '한국어', type: '숏드라마', favorite: true, poster: 'p6', image: 'images/남편이AI.png', href: 'content-detail.html', posterTitle: '남편이 AI입니다' },
+      { title: '퇴사했더니 황제가 됐다', genres: ['판타지', '타임슬립', '사극'], year: '2023', language: '한국어', type: '숏드라마', favorite: false, poster: 'p7', image: 'images/퇴사했더니황제.png', href: 'content-detail.html', posterTitle: '퇴사했더니 황제가 됐다' },
+      { title: '살인범과 룸메이트가 되었다', genres: ['스릴러', '미스터리'], year: '2026', language: '한국어', type: '숏드라마', favorite: true, poster: 'p8', image: 'images/살인범과룸메이트.png', href: 'content-detail.html', posterTitle: '살인범과 룸메이트가 되었다' },
       { title: '내 남편의 비밀 계정', genres: ['복수', '스릴러'], year: '2025', language: '한국어', type: '숏드라마', favorite: false, poster: 'p9', href: 'content-detail.html', posterTitle: '비밀 계정' },
       { title: '첫사랑은 계약 종료', genres: ['로맨스', '코미디'], year: '2023', language: '한국어', type: '숏드라마', favorite: false, poster: 'p10', href: 'content-detail.html', posterTitle: '계약 종료' },
       { title: '달빛 아래 편의점', genres: ['청춘', 'SF'], year: '2022', language: '한국어', type: '숏드라마', favorite: false, poster: 'p11', href: 'content-detail.html', posterTitle: '달빛 편의점' },
@@ -483,17 +533,23 @@
       count.textContent = `총 ${items.length}개`;
       grid.innerHTML = pageItems.map((item, index) => `
         <article class="card">
-          <a href="${item.href}">
-            <div class="poster ${item.poster} ${item.image ? 'has-image' : ''}">
+          <div class="poster ${item.poster} ${item.image ? 'has-image' : ''}">
+            <a href="${item.href}">
               ${item.image
                 ? `<img class="poster-image" src="${item.image}" alt="${item.title} 포스터">`
                 : `<div class="poster-sub">SHORTFLOW ORIGINAL</div>
                    <div class="poster-title">${item.posterTitle}</div>`}
+            </a>
+            ${item.isNew ? '<span class="new-badge">NEW</span>' : ''}
+            <div class="poster-actions">
+              <button class="poster-action fav ${item.favorite ? 'active' : ''}" type="button" data-title="${item.title}" aria-label="${item.title} 즐겨찾기">
+                ${iconHeart(item.favorite)}
+              </button>
+              <button class="poster-action cart-add ${item.inCart ? 'active' : ''}" type="button" data-title="${item.title}" aria-label="${item.title} 장바구니 ${item.inCart ? '빼기' : '담기'}" aria-pressed="${Boolean(item.inCart)}">
+                🛒
+              </button>
             </div>
-          </a>
-          <button class="fav ${item.favorite ? 'active' : ''}" data-title="${item.title}" aria-label="즐겨찾기">
-            ${iconHeart(item.favorite)}
-          </button>
+          </div>
           <a href="${item.href}">
             <div class="title">${item.title}</div>
             <div class="genres">${item.genres.join(', ')}</div>
@@ -571,11 +627,13 @@
     });
 
     grid.addEventListener('click', (event) => {
-      const btn = event.target.closest('.fav');
+      const btn = event.target.closest('.poster-action');
       if (!btn) return;
       event.preventDefault();
       const item = contents.find((content) => content.title === btn.dataset.title);
-      if (item) item.favorite = !item.favorite;
+      if (!item) return;
+      if (btn.classList.contains('fav')) item.favorite = !item.favorite;
+      if (btn.classList.contains('cart-add')) item.inCart = !item.inCart;
       render();
     });
 

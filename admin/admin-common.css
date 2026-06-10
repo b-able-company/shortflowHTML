@@ -1,7 +1,13 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css");
+
 /* Shared shell styles for the Shortflow admin HTML pages. */
 :root {
   --admin-sidebar-width: 210px;
   --admin-sidebar-collapsed-width: 64px;
+}
+
+body {
+  font-family: "Pretendard Variable", "Pretendard", "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
 }
 
 .sb {
@@ -690,6 +696,14 @@ th.status-col {
   font-weight: 800;
   letter-spacing: 0.06em;
   text-align: center;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.utility-remote.is-dragging,
+.utility-remote.is-dragging .utility-remote-title {
+  cursor: grabbing;
 }
 
 .utility-toggle {
