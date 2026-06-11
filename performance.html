@@ -152,28 +152,39 @@ document.addEventListener('DOMContentLoaded', async function() {
       '<script type="text/babel">' +
       'PerfTopNav=function PerfTopNav(){return null;};' +
       'BASE_TOKENS.surfaceAlt="rgb(250, 250, 250)";' +
+      'const PERF_MOCK_CONTENT={' +
+      'p1:{title:"대표님이 내 전남친입니다",subtitle:"80부작 · 로맨스",posterImage:"images/대표님이내전남친.png",platforms:["NovaShort","PlayStory","VeloDrama","StoryWave"]},' +
+      'p2:{title:"재벌집 막내 비서",subtitle:"72부작 · 로맨스 · 여성향",posterImage:"images/재벌집막내비서.png",platforms:["NovaShort","PlayStory","StoryWave"]},' +
+      'p3:{title:"죽었다가 회귀한 톱스타",subtitle:"80부작 · 타임슬립 · 액션",posterImage:"images/죽었다가회귀한.png",platforms:["NovaShort","VeloDrama"]},' +
+      'p4:{title:"우리 집에 킬러가 산다",subtitle:"64부작 · 스릴러 · 코미디",posterImage:"images/우리집에킬러가.png",platforms:["NovaShort","PlayStory","VeloDrama","StoryWave","MiniStage"]},' +
+      'p5:{title:"오늘부터 악녀 대행합니다",subtitle:"70부작 · 로맨스 · 코미디",posterImage:"images/오늘부터악녀대행.png",platforms:["NovaShort","PlayStory"]}' +
+      '};' +
+      'PERF_CONTENTS.forEach((c)=>{const mock=PERF_MOCK_CONTENT[c.id];if(!mock)return;c.title=mock.title;c.subtitle=mock.subtitle;c.posterImage=new URL(mock.posterImage,window.location.href).href;c.platforms.forEach((p,i)=>{p.name=mock.platforms[i]||("Stage"+(i+1));});});' +
+      'const fullNumber=(value)=>Number(value).toLocaleString("ko-KR");' +
+      'const latestUpdateDate=(platforms)=>platforms.map((p)=>p.lastUpdate).filter(Boolean).sort().reverse()[0]||"-";' +
       'const PERF_PLATFORM_LAST_UPDATES={' +
-      'p1:{"네이버시리즈":"2026-04-29","카카오페이지":"2026-04-28","드라마박스":"2026-04-26","숏맥스":"2026-04-24"},' +
-      'p2:{"네이버시리즈":"2026-04-28","카카오페이지":"2026-04-27","숏맥스":"2026-04-25"},' +
-      'p3:{"네이버시리즈":"2026-04-25","드라마박스":"2026-04-21"},' +
-      'p4:{"네이버시리즈":"2026-04-29","카카오페이지":"2026-04-29","드라마박스":"2026-04-27","숏맥스":"2026-04-25","톡톡숏":"2026-04-20"},' +
-      'p5:{"네이버시리즈":"2026-04-29","카카오페이지":"2026-04-28"}' +
+      'p1:{"NovaShort":"2026-04-29","PlayStory":"2026-04-28","VeloDrama":"2026-04-26","StoryWave":"2026-04-24"},' +
+      'p2:{"NovaShort":"2026-04-28","PlayStory":"2026-04-27","StoryWave":"2026-04-25"},' +
+      'p3:{"NovaShort":"2026-04-25","VeloDrama":"2026-04-21"},' +
+      'p4:{"NovaShort":"2026-04-29","PlayStory":"2026-04-29","VeloDrama":"2026-04-27","StoryWave":"2026-04-25","MiniStage":"2026-04-20"},' +
+      'p5:{"NovaShort":"2026-04-29","PlayStory":"2026-04-28"}' +
       '};' +
       'PERF_CONTENTS.forEach((c)=>c.platforms.forEach((p)=>{p.lastUpdate=(PERF_PLATFORM_LAST_UPDATES[c.id]&&PERF_PLATFORM_LAST_UPDATES[c.id][p.name])||p.lastUpdate||c.lastUpdate;}));' +
+      'PerfPoster=function PerfPoster({c,size}){return c.posterImage?<div style={{width:size,height:Math.round(size*1.4),borderRadius:7,overflow:"hidden",flexShrink:0,boxShadow:"inset 0 0 0 0.5px rgba(0,0,0,0.08)"}}><img src={c.posterImage} alt={c.title+" 포스터"} style={{display:"block",width:"100%",height:"100%",objectFit:"cover"}}/></div>:<Poster tone={c.posterTone} size={size} label=""/>;};' +
       'PerfTile=function PerfTile({label,value,full,t}){' +
       'return <div style={{background:t.surface,border:"0.5px solid "+t.line,borderRadius:12,padding:"14px 18px",flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:8}}><div style={{fontSize:11,color:t.inkMute,letterSpacing:0.4,textTransform:"uppercase",fontWeight:700,fontFamily:t.sans}}>{label}</div><div style={{fontFamily:t.mono,fontSize:24,fontWeight:700,color:value==null?t.inkFaint:t.ink,letterSpacing:-0.5,fontVariantNumeric:"tabular-nums",lineHeight:1.1}}>{value==null?"-":compact(value)}</div></div>;' +
       '};' +
       'PerfPlatformRow=function PerfPlatformRow({p,t=BASE_TOKENS}){' +
       'const has=platformHasAny(p);' +
       'return <div style={{background:t.surface,border:"0.5px solid "+t.line,borderRadius:14,overflow:"hidden"}}>' +
-      '<div style={{padding:"16px 20px",display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:16,background:t.surfaceAlt}}>' +
+      '<div style={{padding:"12px 20px",display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:16,background:t.surfaceAlt}}>' +
       '<div style={{minWidth:0}}><div style={{fontSize:17,fontWeight:700,letterSpacing:-0.3,color:t.ink}}>{p.name}</div>' +
       '<div style={{display:"flex",alignItems:"center",gap:14,flexWrap:"wrap",marginTop:8,color:t.inkMute,fontSize:12,lineHeight:"18px"}}>' +
       '<span style={{display:"inline-flex",alignItems:"center",gap:6}}><span style={{fontSize:11,color:t.inkFaint}}>출시</span><span style={{fontFamily:t.mono,color:t.inkMute,fontVariantNumeric:"tabular-nums"}}>{p.releaseDate||"-"}</span></span>' +
       '<span style={{display:"inline-flex",alignItems:"center",gap:6}}><span style={{fontSize:11,color:t.inkFaint}}>업데이트</span><span style={{fontFamily:t.mono,color:t.inkMute,fontVariantNumeric:"tabular-nums"}}>{p.lastUpdate||"-"}</span></span>' +
       '</div></div></div>' +
       '<div style={{borderTop:"0.5px solid "+t.line}}>' +
-      '{!has?<div style={{padding:"24px 20px",display:"flex",alignItems:"center",justifyContent:"center",gap:10,color:t.inkMute,fontSize:13}}><span style={{width:24,height:24,borderRadius:12,border:"1px dashed "+t.lineStrong,display:"inline-flex",alignItems:"center",justifyContent:"center",color:t.inkFaint,fontFamily:t.mono,fontSize:12}}>-</span>이 플랫폼은 지표를 제공하지 않습니다</div>:<div style={{display:"grid",gridTemplateColumns:"repeat(4, 1fr)"}}>{METRIC_ORDER.map((m,i)=>{const v=p[m.key];return <div key={m.key} style={{padding:"18px 20px",borderRight:i<3?"0.5px solid "+t.line:"none"}}><div style={{fontSize:10.5,color:t.inkMute,fontWeight:700,letterSpacing:0.4,textTransform:"uppercase",marginBottom:8}}>{m.label}</div><div style={{fontFamily:t.mono,fontSize:18,fontWeight:700,letterSpacing:-0.3,color:v==null?t.inkFaint:t.ink,fontVariantNumeric:"tabular-nums",lineHeight:1}}>{v==null?"미제공":compact(v)}</div></div>;})}</div>}' +
+      '{!has?<div style={{padding:"24px 20px",display:"flex",alignItems:"center",justifyContent:"center",gap:10,color:t.inkMute,fontSize:13}}><span style={{width:24,height:24,borderRadius:12,border:"1px dashed "+t.lineStrong,display:"inline-flex",alignItems:"center",justifyContent:"center",color:t.inkFaint,fontFamily:t.mono,fontSize:12}}>-</span>이 플랫폼은 지표를 제공하지 않습니다</div>:<div style={{display:"grid",gridTemplateColumns:"repeat(4, 1fr)"}}>{METRIC_ORDER.map((m,i)=>{const v=p[m.key];return <div key={m.key} style={{padding:"18px 20px",borderRight:i<3?"0.5px solid "+t.line:"none"}}><div style={{fontSize:10.5,color:t.inkMute,fontWeight:700,letterSpacing:0.4,textTransform:"uppercase",marginBottom:8}}>{m.label}</div><div style={{fontFamily:t.mono,fontSize:16,fontWeight:600,letterSpacing:-0.2,color:v==null?t.inkFaint:t.ink,fontVariantNumeric:"tabular-nums",lineHeight:1}}>{v==null?"미제공":fullNumber(v)}</div></div>;})}</div>}' +
       '</div></div>;' +
       '};' +
       'PerfDetailAccordion=function PerfDetailAccordion({t=BASE_TOKENS,contentId,onBack}){' +
@@ -181,14 +192,14 @@ document.addEventListener('DOMContentLoaded', async function() {
       'return <div style={{minHeight:"100%",background:t.bg,color:t.ink,fontFamily:t.sans}}><PerfTopNav t={t}/><main style={{margin:"0 auto",padding:"32px 64px 80px",maxWidth:1280}}>' +
       '<button onClick={onBack} style={{background:"transparent",border:"none",padding:0,cursor:"pointer",display:"inline-flex",alignItems:"center",gap:6,marginBottom:18,fontFamily:t.sans,fontSize:13,color:t.inkMute}}><Chevron dir="left" size={11} color={t.inkMute}/>퍼포먼스</button>' +
       '<section style={{display:"block",marginBottom:30}}>' +
-      '<div style={{display:"flex",gap:22,alignItems:"flex-start"}}><Poster tone={c.posterTone} size={posterSize}/>' +
+      '<div style={{display:"flex",gap:22,alignItems:"flex-start"}}><PerfPoster c={c} size={posterSize}/>' +
       '<div style={{flex:1,minWidth:0,minHeight:posterHeight,display:"flex",flexDirection:"column"}}>' +
       '<div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:18,minHeight:30}}>' +
       '<h1 style={{fontSize:26,fontWeight:700,letterSpacing:-0.6,margin:"6px 0 0",lineHeight:1.15,color:t.ink}}>{c.title}</h1>' +
-      '<div style={{display:"inline-flex",alignItems:"center",gap:8,alignSelf:"flex-start",padding:"4px 10px",borderRadius:8,background:t.surfaceAlt,fontSize:12,color:t.inkMute,whiteSpace:"nowrap",flexShrink:0,lineHeight:"18px"}}><span style={{fontFamily:t.sans}}>최초 릴리즈</span><span style={{fontFamily:t.mono,color:t.ink,fontWeight:500,fontVariantNumeric:"tabular-nums"}}>{firstReleaseDate(c.platforms)}</span><span style={{fontFamily:t.sans,fontSize:11,color:t.inkFaint}}>가장 빠른 플랫폼 기준</span></div>' +
+      '<div style={{display:"inline-flex",alignItems:"center",gap:8,alignSelf:"flex-start",padding:"4px 10px",borderRadius:8,background:t.surfaceAlt,fontSize:12,color:t.inkMute,whiteSpace:"nowrap",flexShrink:0,lineHeight:"18px"}}><span style={{fontFamily:t.sans}}>마지막 업데이트</span><span style={{fontFamily:t.mono,color:t.ink,fontWeight:500,fontVariantNumeric:"tabular-nums"}}>{latestUpdateDate(c.platforms)}</span></div>' +
       '</div>' +
       '<div style={{display:"flex",flexDirection:"column",gap:10,marginTop:"auto"}}><div style={{fontSize:10,letterSpacing:0.6,color:t.inkMute,fontFamily:t.mono,textTransform:"uppercase",lineHeight:"12px"}}>플랫폼 합산 누적 (제공 지표 기준)</div>' +
-      '<div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(190px, 1fr))",gap:10}}>{tiles.length>0?tiles.map((m)=><PerfTile key={m.key} label={m.label} value={tot[m.key]} full t={t}/>):<div style={{flex:1,padding:"18px",borderRadius:12,background:t.surfaceAlt,color:t.inkMute,fontSize:13}}>아직 제공된 지표가 없습니다.</div>}</div></div>' +
+      '<div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(190px, 1fr))",gap:10}}>{tiles.length>0?tiles.map((m)=><PerfTile key={m.key} label={m.label} value={tot[m.key]} t={t}/>):<div style={{flex:1,padding:"18px",borderRadius:12,background:t.surfaceAlt,color:t.inkMute,fontSize:13}}>아직 제공된 지표가 없습니다.</div>}</div></div>' +
       '</div></div></section>' +
       '<div style={{marginBottom:14,paddingBottom:12,borderBottom:"0.5px solid "+t.line}}><div style={{fontSize:10,letterSpacing:0.6,color:t.inkMute,fontFamily:t.mono,textTransform:"uppercase",marginBottom:6}}>플랫폼별 누적 지표</div><div style={{fontSize:18,fontWeight:700,letterSpacing:-0.3}}>{c.platforms.length}개 플랫폼 연동</div></div>' +
       '<div style={{display:"flex",flexDirection:"column",gap:12}}>{c.platforms.map((p)=><PerfPlatformRow key={p.name} p={p} t={t}/>)}</div>' +
@@ -207,7 +218,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       '<div></div><div>콘텐츠</div>{cols.map((c)=><div key={c.key} style={{textAlign:"right"}}>{c.label}</div>)}<div></div>' +
       '</div>' +
       '{list.map((c,i)=>{const tot=contentTotals(c);return <div key={c.id} onClick={()=>onOpen&&onOpen(c.id)} style={{display:"grid",gridTemplateColumns:"56px minmax(180px,1.25fr) repeat(3, minmax(92px,1fr)) minmax(64px,0.7fr) 72px",padding:"14px 22px",alignItems:"center",cursor:"pointer",borderBottom:i===list.length-1?"none":"0.5px solid "+t.line}} onMouseEnter={(e)=>e.currentTarget.style.background=t.surfaceAlt} onMouseLeave={(e)=>e.currentTarget.style.background="transparent"}>' +
-      '<Poster tone={c.posterTone} size={40} label=""/><div style={{minWidth:0}}><div style={{fontSize:14.5,fontWeight:700,letterSpacing:-0.2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.title}</div></div>' +
+      '<PerfPoster c={c} size={40}/><div style={{minWidth:0}}><div style={{fontSize:15,fontWeight:600,letterSpacing:-0.2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.title}</div></div>' +
       '{cols.map((col)=><div key={col.key} style={{textAlign:"right",fontFamily:t.mono,fontSize:14,fontWeight:600,color:tot[col.key]==null?t.inkFaint:t.ink,fontVariantNumeric:"tabular-nums"}}>{tot[col.key]==null?"-":compact(tot[col.key])}</div>)}' +
       '<div style={{display:"flex",justifyContent:"flex-end"}}><Chevron dir="right" color={t.inkFaint}/></div>' +
       '</div>;})}' +
@@ -258,9 +269,176 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (window.Babel && typeof window.Babel.transformScriptTags === 'function') {
       window.Babel.transformScriptTags();
     }
+    installPerformancePosterImages();
   } catch (err) {
     setStatus('Error unpacking: ' + err.message);
     console.error('Bundle unpack error:', err);
+  }
+
+  function installPerformancePosterImages() {
+    const posters = {
+      '대표님이 내 전남친입니다': 'images/대표님이내전남친.png',
+      '재벌집 막내 비서': 'images/재벌집막내비서.png',
+      '죽었다가 회귀한 톱스타': 'images/죽었다가회귀한.png',
+      '우리 집에 킬러가 산다': 'images/우리집에킬러가.png',
+      '오늘부터 악녀 대행합니다': 'images/오늘부터악녀대행.png'
+    };
+
+    const findPosterSlot = function(titleNode) {
+      let container = titleNode.parentElement;
+      while (container && container.id !== 'root') {
+        const slot = Array.from(container.children).find(function(child) {
+          if (!(child instanceof HTMLElement)) return false;
+          const width = parseFloat(child.style.width);
+          const height = parseFloat(child.style.height);
+          return width >= 36 && width <= 150 && height >= width * 1.25 && height <= width * 1.55;
+        });
+        if (slot) return slot;
+        container = container.parentElement;
+      }
+      return null;
+    };
+
+    const syncPosters = function() {
+      const root = document.getElementById('root');
+      if (!root) return;
+
+      root.querySelectorAll('div').forEach(function(node) {
+        if (node.children.length || !posters[node.textContent.trim()]) return;
+        if (node.tagName !== 'H1') {
+          node.style.fontSize = '15px';
+          node.style.fontWeight = '600';
+        }
+      });
+
+      root.querySelectorAll('div, span').forEach(function(node) {
+        if (node.children.length) return;
+        const text = node.textContent.trim();
+        if (text !== '최초 릴리즈' && text !== '마지막 업데이트') return;
+
+        const badge = node.parentElement;
+        if (!badge || badge.dataset.performanceUpdateBadge === 'true') return;
+        const badgeText = badge.textContent.trim();
+        if (
+          !badgeText.includes('최초 릴리즈') &&
+          !badgeText.includes('가장 빠른 플랫폼 기준') &&
+          !badgeText.includes('가장 최근 플랫폼 기준') &&
+          !(text === '마지막 업데이트' && badge.children.length > 1)
+        ) return;
+
+        const label = document.createElement('span');
+        label.textContent = '마지막 업데이트';
+        label.style.fontFamily = 'Pretendard, sans-serif';
+
+        const title = root.querySelector('h1');
+        const contents = window.PERF_CONTENTS || [];
+        const content = title && contents.find(function(item) {
+          return item.title === title.textContent.trim();
+        });
+        const latestDate = content && content.platforms
+          .map(function(platform) { return platform.lastUpdate; })
+          .filter(Boolean)
+          .sort()
+          .reverse()[0];
+
+        if (latestDate) {
+          const date = document.createElement('span');
+          date.textContent = latestDate;
+          date.style.fontFamily = 'Geist Mono, monospace';
+          date.style.color = '#202124';
+          date.style.fontWeight = '500';
+          badge.replaceChildren(label, date);
+          badge.style.gap = '8px';
+        } else {
+          badge.replaceChildren(label);
+          badge.style.gap = '0';
+        }
+        badge.dataset.performanceUpdateBadge = 'true';
+      });
+
+      root.querySelectorAll('div, span').forEach(function(node) {
+        const text = node.textContent.trim();
+        if (!node.children.length && (/^지표\s*\d+\s*\/\s*\d+$/.test(text) || text === '데이터 미제공')) {
+          node.remove();
+        }
+      });
+
+      const platformNames = new Set(['NovaShort', 'PlayStory', 'VeloDrama', 'StoryWave', 'MiniStage']);
+      root.querySelectorAll('div').forEach(function(node) {
+        if (node.children.length || !platformNames.has(node.textContent.trim())) return;
+
+        let header = node.parentElement;
+        for (let depth = 0; header && depth < 3; depth += 1, header = header.parentElement) {
+          if (header.style.padding === '16px 20px' || header.style.padding === '12px 20px') {
+            header.style.padding = '12px 20px';
+            header.style.background = 'rgb(250, 250, 250)';
+            break;
+          }
+        }
+      });
+
+      root.querySelectorAll('div').forEach(function(label) {
+        if (label.children.length || !/^(?:누적\s*)?(조회수|팔로우수|좋아요수|광고수)$/.test(label.textContent.trim())) return;
+        const metricCell = label.parentElement;
+        if (!metricCell) return;
+
+        const values = Array.from(metricCell.children).filter(function(child) {
+          return child !== label && !child.children.length;
+        });
+        const value = values[0];
+        if (!value) return;
+
+        if (metricCell.style.padding === '14px 18px') {
+          values.slice(1).forEach(function(extra) {
+            if (/^\d{1,3}(?:,\d{3})*$/.test(extra.textContent.trim())) extra.remove();
+          });
+          return;
+        }
+        if (metricCell.style.padding !== '18px 20px') return;
+
+        const fullValue = values.find(function(child) {
+          return child !== value && /^\d{1,3}(?:,\d{3})*$/.test(child.textContent.trim());
+        });
+        if (fullValue) {
+          value.textContent = fullValue.textContent.trim();
+          fullValue.remove();
+        }
+
+        value.style.fontSize = '16px';
+        value.style.fontWeight = '600';
+        value.style.letterSpacing = '-0.2px';
+      });
+
+      root.querySelectorAll('div, h1').forEach(function(node) {
+        if (node.children.length || !posters[node.textContent.trim()]) return;
+        const slot = findPosterSlot(node);
+        if (!slot || slot.dataset.performancePoster === node.textContent.trim()) return;
+
+        const title = node.textContent.trim();
+        const image = document.createElement('img');
+        image.src = new URL(posters[title], window.location.href).href;
+        image.alt = title + ' 포스터';
+        image.style.cssText = 'display:block;width:100%;height:100%;object-fit:cover;';
+
+        slot.replaceChildren(image);
+        slot.dataset.performancePoster = title;
+        slot.style.padding = '0';
+        slot.style.overflow = 'hidden';
+        slot.style.background = '#f4f4f2';
+      });
+    };
+
+    syncPosters();
+    requestAnimationFrame(syncPosters);
+    [100, 300, 800].forEach(function(delay) {
+      setTimeout(syncPosters, delay);
+    });
+
+      const root = document.getElementById('root');
+      if (!root) return;
+
+      const observer = new MutationObserver(syncPosters);
+      observer.observe(root, { childList: true, subtree: true });
   }
 });
 

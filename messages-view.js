@@ -21,13 +21,7 @@
   }
 
   function renderAdminIcon() {
-    return `
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M12 3 5 6v5c0 4.4 2.9 8.4 7 10 4.1-1.6 7-5.6 7-10V6l-7-3Z"/>
-        <path d="M9 12h6"/>
-        <path d="M12 9v6"/>
-      </svg>
-    `;
+    return '<img src="images/wlogo.png" alt="">';
   }
 
   function renderMessageList(selectedId) {

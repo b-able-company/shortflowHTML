@@ -33770,18 +33770,22 @@ Object.assign(window, { BASE_TOKENS, POSTER_TONES });
 <script type="text/babel">
 // Small shared UI primitives used across all dashboard variants.
 
-function Poster({ tone = 'rose', size = 44, label = '포스터' }) {
+function Poster({ tone = 'rose', size = 44, label = '포스터', image = '' }) {
   const t = POSTER_TONES[tone] || POSTER_TONES.rose;
   return (
     <div style={{
       width: size, height: Math.round(size * 1.4), borderRadius: 6,
       background: `linear-gradient(160deg, ${t.bg} 0%, ${t.bg} 55%, ${shade(t.bg, -8)} 100%)`,
       display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
-      padding: '4px 2px',
+      padding: image ? 0 : '4px 2px',
       fontFamily: BASE_TOKENS.mono, fontSize: 8, color: t.ink,
-      letterSpacing: 0.3, flexShrink: 0,
+      letterSpacing: 0.3, flexShrink: 0, overflow: 'hidden',
       boxShadow: 'inset 0 0 0 0.5px rgba(0,0,0,0.08)',
-    }}>{label}</div>
+    }}>
+      {image
+        ? <img src={image} alt={`${label} 포스터`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        : label}
+    </div>
   );
 }
 
@@ -33870,51 +33874,54 @@ Object.assign(window, { Poster, Badge, Card, Divider, Label, Money, Chevron, sha
 const CONTENTS = [
   {
     id: 'c1',
-    title: '사랑은 계속된다',
-    subtitle: '12부작 로맨스 드라마',
+    title: '대표님이 내 전남친입니다',
+    subtitle: '80부작 로맨스',
     releaseDate: '2024.08.15',
-    platforms: ['드라마박스', '넷숏', '숏맥스'],
+    platforms: ['PlayStory', 'MiniStage', 'VeloDrama'],
     posterTone: 'rose',
+    posterImage: 'images/대표님이내전남친.png',
     // platform별 월별 RS + 일회성 MG
     rs: {
-      '넷숏': {
+      'MiniStage': {
         '2024.09': 80, '2024.10': 210, '2024.11': 290, '2024.12': 340,
         '2025.01': 380, '2025.02': 310, '2025.03': 280,
       },
-      '숏맥스': {
+      'VeloDrama': {
         '2024.12': 110, '2025.01': 160, '2025.02': 130, '2025.03': 80,
       },
     },
     mg: [
-      { platform: '드라마박스', month: '2024.08', amount: 3000 },
-      { platform: '숏맥스', month: '2024.12', amount: 2500 },
+      { platform: 'PlayStory', month: '2024.08', amount: 3000 },
+      { platform: 'VeloDrama', month: '2024.12', amount: 2500 },
     ],
   },
   {
     id: 'c2',
-    title: '달빛 연인',
-    subtitle: '8부작 시대극',
+    title: '재벌집 막내 비서',
+    subtitle: '72부작 로맨스 · 여성향',
     releaseDate: '2024.11.02',
-    platforms: ['숏맥스'],
+    platforms: ['VeloDrama'],
     posterTone: 'indigo',
+    posterImage: 'images/재벌집막내비서.png',
     rs: {
-      '숏맥스': {
+      'VeloDrama': {
         '2024.12': 180, '2025.01': 420, '2025.02': 490, '2025.03': 480,
       },
     },
     mg: [
-      { platform: '숏맥스', month: '2024.11', amount: 2000 },
+      { platform: 'VeloDrama', month: '2024.11', amount: 2000 },
     ],
   },
   {
     id: 'c3',
-    title: '첫사랑 탐정',
-    subtitle: '10부작 미스터리',
+    title: '죽었다가 회귀한 톱스타',
+    subtitle: '80부작 타임슬립 · 액션',
     releaseDate: '2025.02.20',
-    platforms: ['넷숏'],
+    platforms: ['MiniStage'],
     posterTone: 'teal',
+    posterImage: 'images/죽었다가회귀한.png',
     rs: {
-      '넷숏': {
+      'MiniStage': {
         '2025.02': 60, // 이달엔 데이터 없음 (2025.03 기준)
       },
     },
@@ -33922,20 +33929,21 @@ const CONTENTS = [
   },
   {
     id: 'c4',
-    title: '도시의 밤',
-    subtitle: '6부작 느와르',
+    title: '우리 집에 킬러가 산다',
+    subtitle: '64부작 스릴러 · 코미디',
     releaseDate: '2024.05.10',
-    platforms: ['드라마박스'],
+    platforms: ['PlayStory'],
     posterTone: 'amber',
+    posterImage: 'images/우리집에킬러가.png',
     rs: {
-      '드라마박스': {
+      'PlayStory': {
         '2024.06': 450, '2024.07': 680, '2024.08': 920, '2024.09': 1100,
         '2024.10': 980, '2024.11': 820, '2024.12': 700, '2025.01': 560,
         '2025.02': 440, '2025.03': 330,
       },
     },
     mg: [
-      { platform: '드라마박스', month: '2024.05', amount: 4000 },
+      { platform: 'PlayStory', month: '2024.05', amount: 4000 },
     ],
   },
 ];
@@ -34327,7 +34335,7 @@ function DesktopDashboard({ t = BASE_TOKENS, onOpenContent, variant = 'A' }) {
                 borderBottom: i === CONTENTS.length - 1 ? 'none' : `0.5px solid ${t.line}`,
                 cursor: 'pointer',
               }}>
-                <Poster tone={c.posterTone} size={44} />
+                <Poster tone={c.posterTone} image={c.posterImage} label={c.title} size={44} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: -0.2 }}>{c.title}</div>
                   <div style={{ display: 'flex', gap: 6, marginTop: 6, flexWrap: 'wrap' }}>
@@ -34434,7 +34442,7 @@ function DesktopDetail({ contentId, onBack, t = BASE_TOKENS }) {
 
         {/* Header */}
         <div style={{ display: 'flex', gap: 18, alignItems: 'center', marginBottom: 28 }}>
-          <Poster tone={c.posterTone} size={72} />
+          <Poster tone={c.posterTone} image={c.posterImage} label={c.title} size={72} />
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 26, fontWeight: 700, letterSpacing: -0.6, lineHeight: 1.15 }}>{c.title}</div>
             <div style={{ fontSize: 13, color: t.inkMute, marginTop: 6 }}>
@@ -34562,10 +34570,10 @@ Object.assign(window, { DesktopDashboard, DesktopDetail });
 
 const SETTLE_CONTENT = {
   id: 'c-detail-1',
-  title: '사랑은 계속된다',
-  subtitle: '12부작 로맨스 드라마 · 60min/ep',
-  // 최초 릴리즈는 PLATFORMS 중 가장 빠른 releaseDate로 계산 (아래 firstReleaseDate)
+  title: '대표님이 내 전남친입니다',
+  subtitle: '80부작 로맨스 · 2min/ep',
   posterTone: 'rose',
+  posterImage: 'images/대표님이내전남친.png',
 };
 
 // 단위 메모
@@ -34574,10 +34582,10 @@ const SETTLE_CONTENT = {
 //   환율: KRW per 1 USD
 
 const PLATFORMS = [
-  // ── 1) Flat Fee 1회성 (드라마박스) ───────────────────────────
+  // ── 1) Flat Fee 1회성 (PlayStory) ───────────────────────────
   {
-    id: 'p-drama',
-    name: '드라마박스',
+    id: 'p-playstory',
+    name: 'PlayStory',
     type: 'flat',
     exclusive: true,
     region: '글로벌',
@@ -34604,10 +34612,10 @@ const PLATFORMS = [
     ],
   },
 
-  // ── 2) MG + RS (넷숏) ───────────────────────────────────────
+  // ── 2) MG + RS (MiniStage) ──────────────────────────────────
   {
-    id: 'p-netshot',
-    name: '넷숏',
+    id: 'p-ministage',
+    name: 'MiniStage',
     type: 'mgrs',
     exclusive: false,
     region: '북미, 유럽, 동남아',
@@ -34684,10 +34692,10 @@ const PLATFORMS = [
     ],
   },
 
-  // ── 3) RS only (숏맥스) ─────────────────────────────────────
+  // ── 3) RS only (VeloDrama) ──────────────────────────────────
   {
-    id: 'p-shortmax',
-    name: '숏맥스',
+    id: 'p-velodrama',
+    name: 'VeloDrama',
     type: 'rs',
     exclusive: false,
     region: '아시아',
@@ -34761,7 +34769,6 @@ function platformTotal(p) {
   return platformFlatTotal(p) + platformMGTotal(p) + platformRSTotal(p);
 }
 
-// 최초 릴리즈 = 가장 빠른 플랫폼 releaseDate
 function firstReleaseDate() {
   const dates = PLATFORMS.map((p) => p.releaseDate).sort();
   return dates[0];
@@ -34927,7 +34934,7 @@ function ContentHeader({ t = BASE_TOKENS }) {
     }}>
       {/* 콘텐츠 정보 */}
       <div style={{ display: 'flex', gap: 22, alignItems: 'flex-start' }}>
-        <Poster tone={c.posterTone} size={posterSize} />
+        <Poster tone={c.posterTone} image={c.posterImage} label={c.title} size={posterSize} />
         <div style={{
           flex: 1,
           minWidth: 0,
@@ -34954,7 +34961,6 @@ function ContentHeader({ t = BASE_TOKENS }) {
               <span style={{ fontFamily: t.mono, color: t.ink, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
                 {firstReleaseDate()}
               </span>
-              <span style={{ fontFamily: t.sans, fontSize: 11, color: t.inkFaint }}>가장 빠른 플랫폼 기준</span>
             </div>
           </div>
 

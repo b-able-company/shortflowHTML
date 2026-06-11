@@ -3,6 +3,15 @@
 <head>
   <meta charset="utf-8">
   <title>콘텐츠 상세보기</title>
+  <script>
+    window.__SHORTFLOW_DEFER_NAV__ = true;
+    try {
+      window.__SHORTFLOW_DETAIL_ENTRY_ROLE__ =
+        localStorage.getItem('shortflow-view-role') === 'producer' ? 'producer' : 'platform';
+    } catch (error) {
+      window.__SHORTFLOW_DETAIL_ENTRY_ROLE__ = 'platform';
+    }
+  </script>
   <script src="dashboard-nav.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -146,7 +155,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     // preserve ordering (React before ReactDOM before Babel before text/babel).
     const doc = new DOMParser().parseFromString(template, 'text/html');
     document.documentElement.replaceWith(doc.documentElement);
-    installCommonNav();
     installDetailLayoutTweaks();
     installDetailFieldTweaks();
     const dead = Array.from(document.scripts);
@@ -174,18 +182,38 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (window.Babel && typeof window.Babel.transformScriptTags === 'function') {
       window.Babel.transformScriptTags();
     }
+    await installCommonNav();
   } catch (err) {
     setStatus('Error unpacking: ' + err.message);
     console.error('Bundle unpack error:', err);
   }
 
-  function installCommonNav() {
+  async function installCommonNav() {
+    const pending = [];
+
     if (!document.querySelector('link[href="dashboard-common.css"]')) {
       const link = document.createElement('link');
       link.rel = 'stylesheet';
       link.href = 'dashboard-common.css';
+      pending.push(new Promise(function(resolve) {
+        link.addEventListener('load', resolve, { once: true });
+        link.addEventListener('error', resolve, { once: true });
+      }));
       document.head.appendChild(link);
     }
+    if (!window.ShortflowUtilityRemote && !document.querySelector('script[data-utility-remote-script]')) {
+      const utilityScript = document.createElement('script');
+      utilityScript.src = 'utility-remote.js';
+      utilityScript.dataset.utilityRemoteScript = 'true';
+      pending.push(new Promise(function(resolve) {
+        utilityScript.addEventListener('load', resolve, { once: true });
+        utilityScript.addEventListener('error', resolve, { once: true });
+      }));
+      document.head.appendChild(utilityScript);
+    }
+
+    await Promise.all(pending);
+
     if (window.ShortflowNav && typeof window.ShortflowNav.mount === 'function') {
       window.ShortflowNav.mount({ active: 'content' });
     }
@@ -404,6 +432,20 @@ function StillsSection({ t }) {
       if (!root) return;
 
       const title = root.querySelector('h1');
+      const backButton = Array.from(root.querySelectorAll('button')).find(function(button) {
+        return normalize(button.textContent) === '뒤로 가기';
+      });
+      if (
+        backButton &&
+        window.__SHORTFLOW_DETAIL_ENTRY_ROLE__ === 'platform' &&
+        backButton.dataset.platformBackBound !== 'true'
+      ) {
+        backButton.dataset.platformBackBound = 'true';
+        backButton.addEventListener('click', function() {
+          window.location.href = 'content-list.html';
+        });
+      }
+
       if (title && normalize(title.textContent) !== '죽었다가 회귀한 톱스타 (2026)') {
         const year = document.createElement('span');
         year.textContent = '(2026)';
@@ -481,9 +523,12 @@ function StillsSection({ t }) {
         row.style.display = 'grid';
         row.style.gridTemplateColumns = '80px minmax(0, 1fr)';
         row.style.columnGap = '36px';
+        row.style.alignItems = 'start';
         row.style.width = '100%';
         row.style.marginLeft = '0';
+        row.children[0].style.lineHeight = '1.7';
         row.children[1].style.minWidth = '0';
+        row.children[1].style.lineHeight = '1.7';
         if (!rowsByLabel.has(label)) rowsByLabel.set(label, row);
       });
 

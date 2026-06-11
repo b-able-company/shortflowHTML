@@ -150,6 +150,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     installDetailLayoutTweaks();
     installDetailFieldTweaks();
     installMyContentActions();
+    installProducerBackNavigation();
     const dead = Array.from(document.scripts);
     for (const old of dead) {
       const s = document.createElement('script');
@@ -194,6 +195,25 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   function stripDetailLocalNav(source) {
     return source.replace(/\n\s*<DetailTopNav t=\{t\} \/>\n/g, '\n');
+  }
+
+  function installProducerBackNavigation() {
+    if (document.documentElement.dataset.producerBackBound === 'true') return;
+    document.documentElement.dataset.producerBackBound = 'true';
+
+    document.addEventListener('click', function(event) {
+      const control = event.target.closest('button, a');
+      if (!control) return;
+
+      const label = control.textContent.replace(/\s+/g, ' ').trim();
+      if (label !== '뒤로가기' && label !== '뒤로 가기' && label !== '목록으로' && !/^Back$/i.test(label)) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      window.location.href = 'contentlist-prod.html';
+    }, true);
   }
 
   function installDetailLayoutTweaks() {

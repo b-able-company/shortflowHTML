@@ -1,5 +1,5 @@
 (function () {
-  const { escapeHtml, profileCard } = window.ShortflowCommon;
+  const { escapeHtml } = window.ShortflowCommon;
   const {
     workflowItems,
     workflowStats,
@@ -10,6 +10,14 @@
   function posterClass(tone) {
     if (!tone || tone === 'none') return 'poster none';
     return `poster ${tone}`;
+  }
+
+  function renderPoster(item, detail) {
+    const className = `${posterClass(item.poster)}${detail ? ' detail-poster' : ''}${item.image ? ' has-image' : ''}`;
+    const content = item.image
+      ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)} 포스터">`
+      : item.poster === 'none' ? '▧' : '';
+    return `<span class="${className}">${content}</span>`;
   }
 
   function renderStats(stats, isProducer) {
@@ -29,12 +37,12 @@
   }
 
   const timelineItems = [
-    { title: '메타데이터 다운로드가 완료되었습니다.', date: '2026년 4월 22일 오후 01:43 (KST)', active: true },
-    { title: '메타데이터 다운로드가 완료되었습니다.', date: '2026년 4월 21일 오전 10:11 (KST)' },
-    { title: '메타데이터 권한이 부여되었습니다.', date: '2026년 4월 21일 오전 10:10 (KST)' },
-    { title: '제안 조건을 승인했습니다.', date: '2026년 4월 21일 오전 10:10 (KST)' },
-    { title: '제안 조건이 수신되었습니다.', date: '2026년 4월 21일 오전 10:09 (KST)' },
-    { title: '유통 제안이 접수되었습니다.', date: '2026년 4월 21일 오전 10:06 (KST)' },
+    { title: '메타데이터 다운로드가 완료되었습니다.', date: '2026년 4월 22일 오후 01:43', active: true },
+    { title: '메타데이터 다운로드가 완료되었습니다.', date: '2026년 4월 21일 오전 10:11' },
+    { title: '메타데이터 권한이 부여되었습니다.', date: '2026년 4월 21일 오전 10:10' },
+    { title: '제안 조건을 승인했습니다.', date: '2026년 4월 21일 오전 10:10' },
+    { title: '제안 조건이 수신되었습니다.', date: '2026년 4월 21일 오전 10:09' },
+    { title: '유통 제안이 접수되었습니다.', date: '2026년 4월 21일 오전 10:06' },
   ];
 
   const producerTimelineByStatus = {
@@ -57,7 +65,7 @@
     ],
   };
 
-  function renderWorkflowList(items, search, selectedId) {
+  function renderWorkflowList(items, search, selectedId, isProducer) {
     const keyword = search.trim().toLowerCase();
     const filteredItems = items.filter(item => {
       if (!keyword) return true;
@@ -66,15 +74,22 @@
 
     return `
       <section class="list-card workflow-list">
+        <div class="workflow-search-bar">
+          <input class="content-search" type="search" placeholder="콘텐츠명 검색..." value="${escapeHtml(search)}">
+        </div>
         ${filteredItems.map(item => `
           <button class="workflow-item ${item.id === selectedId ? 'selected' : ''}" data-workflow-id="${item.id}" data-status="${escapeHtml(item.status)}">
-            <span class="${posterClass(item.poster)}">${item.poster === 'none' ? '▧' : ''}</span>
+            ${renderPoster(item, false)}
             <span class="workflow-copy">
               <strong>${escapeHtml(item.title)}</strong>
-              ${item.sub ? `<em>${escapeHtml(item.sub)}</em>` : ''}
-              <small>${escapeHtml(item.statusLabel || item.status)}</small>
+              ${isProducer && item.sub
+                ? `<em>${escapeHtml(item.sub)}</em>`
+                : item.englishTitle ? `<em>${escapeHtml(item.englishTitle)}</em>` : ''}
+              <span class="workflow-meta">
+                <small>${escapeHtml(item.statusLabel || item.status)}</small>
+                <time>${escapeHtml(item.date)}</time>
+              </span>
             </span>
-            <time>${escapeHtml(item.date)}</time>
           </button>
         `).join('')}
       </section>
@@ -93,7 +108,7 @@
 
     const isUnconfirmedPlatformItem = !isProducer && item.id === 'w1';
     const title = isUnconfirmedPlatformItem ? '콘텐츠 미확정' : item.title;
-    const subtitle = isUnconfirmedPlatformItem ? '' : item.sub;
+    const subtitle = isUnconfirmedPlatformItem ? '' : (isProducer ? item.sub : item.englishTitle);
     const subtitleHtml = isUnconfirmedPlatformItem
       ? '<p class="detail-subtitle-placeholder" aria-hidden="true">&nbsp;</p>'
       : subtitle ? `<p>${escapeHtml(subtitle)}</p>` : '';
@@ -106,7 +121,7 @@
     return `
       <section class="workflow-detail">
         <div class="workflow-detail-head">
-          <span class="${posterClass(item.poster)} detail-poster">${item.poster === 'none' ? '▧' : ''}</span>
+          ${renderPoster(item, true)}
           <div class="detail-copy">
             <span class="detail-status">${escapeHtml(status)}</span>
             <h2>${escapeHtml(title)}</h2>
@@ -149,8 +164,7 @@
     return `
       <div class="dashboard-grid workflow-grid">
         <aside class="left-column">
-          ${profileCard({ showSearch: true, role: isProducer ? '제작사' : '플랫폼' })}
-          ${renderWorkflowList(items, state.workflowSearch, state.selectedWorkflowId)}
+          ${renderWorkflowList(items, state.workflowSearch, state.selectedWorkflowId, isProducer)}
         </aside>
         <section class="right-column">
           ${renderStats(stats, isProducer)}

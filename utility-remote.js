@@ -54,7 +54,7 @@
 
     const saved = readPosition();
     if (saved) {
-      requestAnimationFrame(() => setPosition(remote, saved.x, saved.y));
+      setPosition(remote, saved.x, saved.y);
     }
 
     let drag = null;
@@ -110,9 +110,4 @@
   } else {
     initAll();
   }
-
-  new MutationObserver(initAll).observe(document.documentElement, {
-    childList: true,
-    subtree: true,
-  });
 })();

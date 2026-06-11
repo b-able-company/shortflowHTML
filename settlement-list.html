@@ -301,6 +301,17 @@
       letter-spacing: 0.3px;
     }
 
+    .poster.has-image::after {
+      content: none;
+    }
+
+    .poster img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
     .card-title {
       margin: 0;
       font-size: 15px;
@@ -1044,12 +1055,12 @@
       window.ShortflowNav.renderDashboardSubNav('settlement', 'producer');
 
     const contents = [
-      { title: '남잠공주의 스포일러', year: '2024', genre: '로맨스 판타지', amount: 24318502, platforms: ['DramaBox', 'ReelShort', 'ShortMax'], release: '2024-11', poster: '#e9d8dc' },
-      { title: '닥터 루시퍼', year: '2024', genre: '미디컬 미스터리', amount: 41205770, platforms: ['ReelShort', 'DramaBox', 'ShortMax', 'GoodShort'], release: '2024-08', poster: '#c5cadc' },
-      { title: '회귀한 재벌의 복수극', year: '2025', genre: '복수극', amount: 18984620, platforms: ['ShortMax', 'DramaBox'], release: '2025-01', poster: '#e8dbbc' },
-      { title: '늑대왕자의 비밀', year: '2025', genre: '판타지 로맨스', amount: 9412300, platforms: ['ReelShort', 'GoodShort'], release: '2025-02', poster: '#c4dddc' },
-      { title: '사장님의 계약직 애인', year: '2024', genre: '오피스 로맨스', amount: 6750188, platforms: ['DramaBox', 'ShortMax', 'ReelShort'], release: '2024-12', poster: '#d3d6de' },
-      { title: '비밀스파이의 키스', year: '2025', genre: '스파이 로맨스', amount: 2410000, platforms: ['ReelShort'], release: '2025-03', poster: '#e9d7da' }
+      { title: '대표님이 내 전남친입니다', year: '2024', genre: '로맨스', amount: 24318502, platforms: ['PlayStory', 'NovaShort', 'VeloDrama'], release: '2024-11', image: 'images/대표님이내전남친.png' },
+      { title: '재벌집 막내 비서', year: '2024', genre: '로맨스 · 여성향', amount: 41205770, platforms: ['NovaShort', 'PlayStory', 'VeloDrama', 'StoryWave'], release: '2024-08', image: 'images/재벌집막내비서.png' },
+      { title: '죽었다가 회귀한 톱스타', year: '2025', genre: '타임슬립 · 액션', amount: 18984620, platforms: ['VeloDrama', 'PlayStory'], release: '2025-01', image: 'images/죽었다가회귀한.png' },
+      { title: '우리 집에 킬러가 산다', year: '2025', genre: '스릴러 · 코미디', amount: 9412300, platforms: ['NovaShort', 'StoryWave'], release: '2025-02', image: 'images/우리집에킬러가.png' },
+      { title: '오늘부터 악녀 대행합니다', year: '2024', genre: '로맨스 · 코미디', amount: 6750188, platforms: ['PlayStory', 'VeloDrama', 'NovaShort'], release: '2024-12', image: 'images/오늘부터악녀대행.png' },
+      { title: '남편이 AI입니다', year: '2025', genre: '로맨스 · SF · 코미디', amount: 2410000, platforms: ['NovaShort'], release: '2025-03', image: 'images/남편이AI.png' }
     ];
 
     let currentSettlementStatus = 'SCHEDULED'; // SCHEDULED | CONFIRMED | COMPLETED | NONE
@@ -1061,8 +1072,8 @@
       doneDate: '2025-05-15',
       rows: [
         {
-          content: '남잠공주의 스포일러',
-          platform: 'YouTube',
+          content: '대표님이 내 전남친입니다',
+          platform: 'ViewCast',
           period: '2025-04',
           platformPay: 6200000,
           contractAmount: 6200000,
@@ -1078,8 +1089,8 @@
           producerPay: 4429600
         },
         {
-          content: '남잠공주의 스포일러',
-          platform: 'Instagram',
+          content: '대표님이 내 전남친입니다',
+          platform: 'FrameStory',
           period: '2025-04',
           platformPay: 2840000,
           contractAmount: null,
@@ -1095,8 +1106,8 @@
           producerPay: 1862720
         },
         {
-          content: '닥터 루시퍼',
-          platform: 'Instagram',
+          content: '재벌집 막내 비서',
+          platform: 'FrameStory',
           period: '2025-Q1',
           platformPay: 5120000,
           contractAmount: null,
@@ -1112,8 +1123,8 @@
           producerPay: 3385760
         },
         {
-          content: '회귀한 재벌의 복수극',
-          platform: 'TikTok',
+          content: '죽었다가 회귀한 톱스타',
+          platform: 'LoopClip',
           period: '2025-04',
           platformPay: 4500000,
           contractAmount: 4500000,
@@ -1136,25 +1147,25 @@
         monthLabel: '2025년 3월',
         doneDate: '2025-04-15',
         rows: [
-          { content: '남잠공주의 스포일러', platform: 'YouTube', period: '2025-03', platformPay: 6580000, contractAmount: 6580000, whtRate: 10, wht: 658000, wireFee: 35000, fxRate: 1392, fxFee: 8000, krwIn: 5879000, paidDate: '2025-04-10', bableRate: 20, bableFee: 1175800, producerPay: 4703200 },
-          { content: '닥터 루시퍼', platform: 'Instagram', period: '2025-Q1', platformPay: 5210600, contractAmount: null, whtRate: 16.5, wht: 859749, wireFee: 35000, fxRate: 1448, fxFee: 8000, krwIn: 4305851, paidDate: '2025-04-11', bableRate: 20, bableFee: 861170, producerPay: 3444681 },
-          { content: '회귀한 재벌의 복수극', platform: 'TikTok', period: '2025-03', platformPay: 3690000, contractAmount: 3690000, whtRate: 10, wht: 369000, wireFee: 35000, fxRate: 1392, fxFee: 8000, krwIn: 3278000, paidDate: '2025-04-12', bableRate: 20, bableFee: 655600, producerPay: 2622400 }
+          { content: '대표님이 내 전남친입니다', platform: 'ViewCast', period: '2025-03', platformPay: 6580000, contractAmount: 6580000, whtRate: 10, wht: 658000, wireFee: 35000, fxRate: 1392, fxFee: 8000, krwIn: 5879000, paidDate: '2025-04-10', bableRate: 20, bableFee: 1175800, producerPay: 4703200 },
+          { content: '재벌집 막내 비서', platform: 'FrameStory', period: '2025-Q1', platformPay: 5210600, contractAmount: null, whtRate: 16.5, wht: 859749, wireFee: 35000, fxRate: 1448, fxFee: 8000, krwIn: 4305851, paidDate: '2025-04-11', bableRate: 20, bableFee: 861170, producerPay: 3444681 },
+          { content: '죽었다가 회귀한 톱스타', platform: 'LoopClip', period: '2025-03', platformPay: 3690000, contractAmount: 3690000, whtRate: 10, wht: 369000, wireFee: 35000, fxRate: 1392, fxFee: 8000, krwIn: 3278000, paidDate: '2025-04-12', bableRate: 20, bableFee: 655600, producerPay: 2622400 }
         ]
       },
       {
         monthLabel: '2025년 2월',
         doneDate: '2025-03-13',
         rows: [
-          { content: '늑대왕자의 비밀', platform: 'YouTube', period: '2025-02', platformPay: 7410000, contractAmount: 7410000, whtRate: 10, wht: 741000, wireFee: 35000, fxRate: 1430, fxFee: 9000, krwIn: 6625000, paidDate: '2025-03-10', bableRate: 20, bableFee: 1325000, producerPay: 5300000 },
-          { content: '사장님의 계약직 애인', platform: 'Naver TV', period: '2025-02', platformPay: 7415700, contractAmount: null, whtRate: 10, wht: 741570, wireFee: 35000, fxRate: 1430, fxFee: 9000, krwIn: 6630130, paidDate: '2025-03-11', bableRate: 20, bableFee: 1326026, producerPay: 5304104 }
+          { content: '우리 집에 킬러가 산다', platform: 'ViewCast', period: '2025-02', platformPay: 7410000, contractAmount: 7410000, whtRate: 10, wht: 741000, wireFee: 35000, fxRate: 1430, fxFee: 9000, krwIn: 6625000, paidDate: '2025-03-10', bableRate: 20, bableFee: 1325000, producerPay: 5300000 },
+          { content: '오늘부터 악녀 대행합니다', platform: 'K-Stream', period: '2025-02', platformPay: 7415700, contractAmount: null, whtRate: 10, wht: 741570, wireFee: 35000, fxRate: 1430, fxFee: 9000, krwIn: 6630130, paidDate: '2025-03-11', bableRate: 20, bableFee: 1326026, producerPay: 5304104 }
         ]
       },
       {
         monthLabel: '2025년 1월',
         doneDate: '2025-02-12',
         rows: [
-          { content: '비밀스파이의 키스', platform: 'TikTok', period: '2025-01', platformPay: 6230000, contractAmount: 6230000, whtRate: 10, wht: 623000, wireFee: 35000, fxRate: 1440, fxFee: 8000, krwIn: 5564000, paidDate: '2025-02-10', bableRate: 20, bableFee: 1112800, producerPay: 4451200 },
-          { content: '남잠공주의 스포일러', platform: 'Instagram', period: '2024-Q4', platformPay: 7867850, contractAmount: null, whtRate: 16.5, wht: 1298195, wireFee: 35000, fxRate: 1440, fxFee: 8000, krwIn: 6520655, paidDate: '2025-02-11', bableRate: 20, bableFee: 1304131, producerPay: 5216524 }
+          { content: '남편이 AI입니다', platform: 'LoopClip', period: '2025-01', platformPay: 6230000, contractAmount: 6230000, whtRate: 10, wht: 623000, wireFee: 35000, fxRate: 1440, fxFee: 8000, krwIn: 5564000, paidDate: '2025-02-10', bableRate: 20, bableFee: 1112800, producerPay: 4451200 },
+          { content: '대표님이 내 전남친입니다', platform: 'FrameStory', period: '2024-Q4', platformPay: 7867850, contractAmount: null, whtRate: 16.5, wht: 1298195, wireFee: 35000, fxRate: 1440, fxFee: 8000, krwIn: 6520655, paidDate: '2025-02-11', bableRate: 20, bableFee: 1304131, producerPay: 5216524 }
         ]
       }
     ];
@@ -1290,7 +1301,7 @@
       const grid = document.getElementById('contentGrid');
       grid.innerHTML = list.length ? list.map(item => `
         <article class="content-card" onclick="goDetail()">
-          <div class="poster" style="background:${item.poster};"></div>
+          <div class="poster has-image"><img src="${item.image}" alt="${item.title} 포스터"></div>
           <div>
             <div class="card-title-row">
               <h3 class="card-title">${item.title}</h3>

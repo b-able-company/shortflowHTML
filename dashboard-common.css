@@ -142,9 +142,9 @@ button {
 }
 
 .brand {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.7px;
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
   white-space: nowrap;
 }
 
@@ -155,8 +155,10 @@ button {
   text-decoration: none;
 }
 
-.brand b {
-  color: var(--orange);
+.brand-logo {
+  display: block;
+  width: 86px;
+  height: auto;
 }
 
 .primary-nav {
@@ -447,11 +449,21 @@ button {
   overflow: hidden;
 }
 
+.workflow-search-bar {
+  padding: 12px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.workflow-search-bar .content-search {
+  margin-top: 0;
+  background: #fafaf8;
+}
+
 .workflow-item {
   width: 100%;
   min-height: 90px;
   display: grid;
-  grid-template-columns: 40px minmax(0, 1fr) auto;
+  grid-template-columns: 40px minmax(0, 1fr);
   gap: 12px;
   align-items: center;
   padding: 12px 12px;
@@ -495,6 +507,17 @@ button {
   background: #f4f4f6;
 }
 
+.poster.has-image {
+  background: #f4f4f6;
+}
+
+.poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .workflow-copy {
   min-width: 0;
 }
@@ -524,8 +547,6 @@ button {
 }
 
 .workflow-copy small {
-  width: fit-content;
-  margin-top: 7px;
   padding: 2px 7px;
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -535,7 +556,20 @@ button {
   font-weight: 600;
 }
 
-.workflow-item time {
+.workflow-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 7px;
+}
+
+.workflow-meta small {
+  display: inline-flex;
+  flex: 0 1 auto;
+}
+
+.workflow-meta time {
   color: var(--ink-faint);
   font-size: 10px;
   white-space: nowrap;
@@ -732,13 +766,13 @@ button {
   background: var(--orange);
 }
 
-.timeline-list li.active::after {
+.timeline-list li.active:not(:last-child)::after {
   content: "";
   position: absolute;
-  top: 14px;
+  top: 9px;
   left: -18px;
   width: 2px;
-  height: 39px;
+  height: calc(100% + 20px);
   background: var(--orange);
 }
 
@@ -963,10 +997,11 @@ button {
   justify-content: center;
 }
 
-.admin-comment-dot svg {
-  width: 17px;
-  height: 17px;
-  stroke-width: 1.9;
+.admin-comment-dot img {
+  display: block;
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
 }
 
 .admin-comment-content {

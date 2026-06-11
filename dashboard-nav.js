@@ -1,5 +1,5 @@
 (function () {
-  if (!document.querySelector('script[data-utility-remote-script]')) {
+  if (!window.__SHORTFLOW_DEFER_NAV__ && !document.querySelector('script[data-utility-remote-script]')) {
     const utilityScript = document.createElement('script');
     utilityScript.src = 'utility-remote.js';
     utilityScript.dataset.utilityRemoteScript = 'true';
@@ -43,7 +43,9 @@
     return `
       <header class="top-nav">
         <div class="nav-inner">
-          <div class="brand"><span>short</span><b>flow</b></div>
+          <a class="brand" href="${currentRole === 'producer' ? 'contentlist-prod.html' : 'content-list.html'}" aria-label="숏플로우 홈">
+            <img class="brand-logo" src="images/shortflow-logo.svg" alt="숏플로우 Shortflow">
+          </a>
           <nav class="primary-nav" aria-label="주 메뉴">
             ${primaryNavItems.filter(item => item.role === 'shared' || item.role === currentRole).map(item => {
               const active = item.id === currentPage || (item.aliases || []).includes(currentPage);
@@ -261,10 +263,12 @@
     window.ShortflowUtilityRemote?.init(remote);
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', mountDeclarativeNavs);
-  } else {
-    mountDeclarativeNavs();
+  if (!window.__SHORTFLOW_DEFER_NAV__) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', mountDeclarativeNavs);
+    } else {
+      mountDeclarativeNavs();
+    }
   }
 
   window.ShortflowNav = {

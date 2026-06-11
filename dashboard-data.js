@@ -1,12 +1,12 @@
 (function () {
   const workflowItems = [
-    { id: 'w1', title: '컨시어지 구매 의사', sub: '콘텐츠 미확정', status: '유통 제안 전달됨', date: '2026년 5월 20일', poster: 'none' },
-    { id: 'w2', title: '거짓 커밍 아웃 대소동 외 1개', sub: '거짓 커밍 아웃 대소동 외 1개', status: '컨펌 확인됨', date: '2026년 5월 19일', poster: 'rose' },
-    { id: 'w3', title: 'Save My Favorite', sub: '사랑의 코딩법: 죽음의 타임루프', status: '유통 제안 전달됨', date: '2026년 5월 19일', poster: 'indigo' },
-    { id: 'w4', title: '죽은 줄 알았던 남편이 돌아왔다', sub: '以为已死的丈夫回来了', status: '유통 제안 전달됨', date: '2026년 5월 19일', poster: 'rose' },
-    { id: 'w5', title: '닥터루시퍼', sub: 'Dr. Lucifer', status: '유통 제안 전달됨', date: '2026년 5월 18일', poster: 'none' },
-    { id: 'w6', title: '거짓 커밍 아웃 대소동', sub: '가능성제로로맨스', status: '유통 제안 전달됨', date: '2026년 5월 18일', poster: 'rose' },
-    { id: 'w7', title: '닥터루시퍼', sub: 'The Office Mistress: How the Witch Hunts Men', status: '유통 제안 전달됨', date: '2026년 5월 18일', poster: 'magenta' },
+    { id: 'w2', title: '대표님이 내 전남친입니다', englishTitle: 'My CEO Is My Ex-Boyfriend', sub: '로맨스 · 80화', status: '컨펌 확인됨', date: '2026년 5월 19일', poster: 'rose', image: 'images/대표님이내전남친.png' },
+    { id: 'w3', title: '재벌집 막내 비서', englishTitle: 'The Chaebol Family’s Youngest Secretary', sub: '로맨스 · 여성향 · 72화', status: '유통 제안 전달됨', date: '2026년 5월 19일', poster: 'indigo', image: 'images/재벌집막내비서.png' },
+    { id: 'w4', title: '죽었다가 회귀한 톱스타', englishTitle: 'The Top Star Who Came Back to Life', sub: '타임슬립 · 액션 · 80화', status: '유통 제안 전달됨', date: '2026년 5월 19일', poster: 'rose', image: 'images/죽었다가회귀한.png' },
+    { id: 'w5', title: '우리 집에 킬러가 산다', englishTitle: 'A Killer Lives in My House', sub: '스릴러 · 코미디 · 64화', status: '제안 조건 수신됨', date: '2026년 5월 18일', poster: 'indigo', image: 'images/우리집에킬러가.png' },
+    { id: 'w6', title: '오늘부터 악녀 대행합니다', englishTitle: 'Villainess for Hire', sub: '로맨스 · 코미디 · 70화', status: '유통 제안 전달됨', date: '2026년 5월 18일', poster: 'rose', image: 'images/오늘부터악녀대행.png' },
+    { id: 'w7', title: '남편이 AI입니다', englishTitle: 'My Husband Is an AI', sub: '로맨스 · SF · 코미디 · 60화', status: '메타데이터 전달됨', date: '2026년 5월 18일', poster: 'magenta', image: 'images/남편이AI.png' },
+    { id: 'w1', title: '컨시어지 구매 의사', englishTitle: 'Content Not Selected', sub: '콘텐츠 미확정', status: '유통 제안 전달됨', date: '2026년 5월 20일', poster: 'none' },
   ];
 
   const workflowStats = [
