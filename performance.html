@@ -428,17 +428,23 @@ document.addEventListener('DOMContentLoaded', async function() {
       });
     };
 
-    syncPosters();
-    requestAnimationFrame(syncPosters);
-    [100, 300, 800].forEach(function(delay) {
-      setTimeout(syncPosters, delay);
+    const root = document.getElementById('root');
+    if (!root) return;
+
+    let syncScheduled = false;
+    const observer = new MutationObserver(function() {
+      if (syncScheduled) return;
+      syncScheduled = true;
+      requestAnimationFrame(function() {
+        syncScheduled = false;
+        observer.disconnect();
+        syncPosters();
+        observer.observe(root, { childList: true, subtree: true });
+      });
     });
 
-      const root = document.getElementById('root');
-      if (!root) return;
-
-      const observer = new MutationObserver(syncPosters);
-      observer.observe(root, { childList: true, subtree: true });
+    observer.observe(root, { childList: true, subtree: true });
+    syncPosters();
   }
 });
 

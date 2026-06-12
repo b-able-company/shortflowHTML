@@ -56,6 +56,9 @@
     if (saved) {
       setPosition(remote, saved.x, saved.y);
     }
+    requestAnimationFrame(() => {
+      remote.style.visibility = 'visible';
+    });
 
     let drag = null;
 

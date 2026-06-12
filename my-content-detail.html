@@ -194,7 +194,28 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
 
   function stripDetailLocalNav(source) {
-    return source.replace(/\n\s*<DetailTopNav t=\{t\} \/>\n/g, '\n');
+    const teaserViews = [28430, 19752, 14368];
+    const episodeViews = [12840, 10932, 9841, 8756, 7942, 6815, 5927, 4836, 3914, 2847];
+
+    return source
+      .replace(/\{ type: '예고편', title: '예고편', duration: '[^']+', tone: ([^}]+) \}/g, function(match, tone, offset) {
+        const teaserIndex = source.slice(0, offset).match(/\{ type: '예고편'/g)?.length || 0;
+        const views = teaserViews[teaserIndex] || 0;
+        return match.replace(/ \}$/, `, views: ${views} }`);
+      })
+      .replace(/\{ type: '무료회차', title: '(\d+)화', duration: '[^']+' \}/g, function(match, episodeNumber) {
+        const views = episodeViews[Number(episodeNumber) - 1] || 0;
+        return match.replace(/ \}$/, `, views: ${views} }`);
+      })
+      .replace(/\n\s*<DetailTopNav t=\{t\} \/>\n/g, '\n')
+      .replace(
+        /\n\s*<div style=\{\{ marginTop: 5, fontSize: 12, color: 'rgba\(255,255,255,0\.72\)' \}\}>\{video\.duration\}<\/div>/g,
+        "\n                  <div style={{ marginTop: 5, fontSize: 12, color: 'rgba(255,255,255,0.72)' }}>조회수 {video.views.toLocaleString('ko-KR')}</div>"
+      )
+      .replace(
+        /\n\s*<div style=\{\{ marginTop: 5, fontSize: 12, color: 'rgba\(255,255,255,0\.72\)' \}\}>\{episode\.duration\}<\/div>/g,
+        "\n                  <div style={{ marginTop: 5, fontSize: 12, color: 'rgba(255,255,255,0.72)' }}>조회수 {episode.views.toLocaleString('ko-KR')}</div>"
+      );
   }
 
   function installProducerBackNavigation() {
@@ -341,6 +362,8 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
 
   function installMyContentActions() {
+    let observer = null;
+
     const renderActionbar = function() {
       const root = document.getElementById('root');
       if (!root || document.querySelector('.my-content-actionbar')) return;
@@ -386,6 +409,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       actionbar.appendChild(editButton);
       actionbar.appendChild(reviewButton);
       actionbar.appendChild(workflowButton);
+      actionbar.style.visibility = 'hidden';
       document.body.appendChild(actionbar);
 
       const positionActionbar = function() {
@@ -408,25 +432,22 @@ document.addEventListener('DOMContentLoaded', async function() {
         actionbar.style.left = Math.max(12, hasOutsideRoom ? outsideLeft : insideLeft) + 'px';
       };
 
-      positionActionbar();
+      observer?.disconnect();
+      requestAnimationFrame(function() {
+        positionActionbar();
+        actionbar.style.visibility = 'visible';
+      });
       window.addEventListener('resize', positionActionbar);
       window.addEventListener('scroll', positionActionbar, { passive: true });
-      [100, 300, 800, 1600].forEach(function(delay) {
-        setTimeout(positionActionbar, delay);
-      });
     };
 
     renderActionbar();
-    requestAnimationFrame(renderActionbar);
-    [100, 300, 800, 1600].forEach(function(delay) {
-      setTimeout(renderActionbar, delay);
-    });
-
-    const observer = new MutationObserver(renderActionbar);
-    observer.observe(document.documentElement, { childList: true, subtree: true });
-    setTimeout(function() {
-      observer.disconnect();
-    }, 5000);
+    if (!document.querySelector('.my-content-actionbar')) {
+      const root = document.getElementById('root');
+      if (!root) return;
+      observer = new MutationObserver(renderActionbar);
+      observer.observe(root, { childList: true, subtree: true });
+    }
   }
 
   function installDetailFieldTweaks() {
@@ -545,17 +566,23 @@ document.addEventListener('DOMContentLoaded', async function() {
       });
     };
 
-    syncRows();
-    requestAnimationFrame(syncRows);
-    [100, 300, 800, 1600].forEach(function(delay) {
-      setTimeout(syncRows, delay);
+    const root = document.getElementById('root');
+    if (!root) return;
+
+    let syncScheduled = false;
+    const observer = new MutationObserver(function() {
+      if (syncScheduled) return;
+      syncScheduled = true;
+      requestAnimationFrame(function() {
+        syncScheduled = false;
+        observer.disconnect();
+        syncRows();
+        observer.observe(root, { childList: true, subtree: true });
+      });
     });
 
-    const observer = new MutationObserver(syncRows);
-    observer.observe(document.documentElement, { childList: true, subtree: true });
-    setTimeout(function() {
-      observer.disconnect();
-    }, 5000);
+    observer.observe(root, { childList: true, subtree: true });
+    syncRows();
   }
 
 });

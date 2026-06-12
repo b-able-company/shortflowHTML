@@ -220,7 +220,16 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
 
   function stripDetailLocalNav(source) {
-    source = source.replace(/\n\s*<DetailTopNav t=\{t\} \/>\n/g, '\n');
+    source = source
+      .replace(/\n\s*<DetailTopNav t=\{t\} \/>\n/g, '\n')
+      .replace(
+        /\n\s*<div style=\{\{ marginTop: 5, fontSize: 12, color: 'rgba\(255,255,255,0\.72\)' \}\}>\{video\.duration\}<\/div>/g,
+        ''
+      )
+      .replace(
+        /\n\s*<div style=\{\{ marginTop: 5, fontSize: 12, color: 'rgba\(255,255,255,0\.72\)' \}\}>\{episode\.duration\}<\/div>/g,
+        ''
+      );
 
     const stillsStart = source.indexOf('function StillsSection');
     const tabsStart = source.indexOf('function DetailContentTabs', stillsStart);
@@ -595,14 +604,23 @@ function StillsSection({ t }) {
       });
     };
 
-    syncRows();
-    requestAnimationFrame(syncRows);
-    [100, 300, 800, 1600].forEach(function(delay) {
-      setTimeout(syncRows, delay);
+    const root = document.getElementById('root');
+    if (!root) return;
+
+    let syncScheduled = false;
+    const observer = new MutationObserver(function() {
+      if (syncScheduled) return;
+      syncScheduled = true;
+      requestAnimationFrame(function() {
+        syncScheduled = false;
+        observer.disconnect();
+        syncRows();
+        observer.observe(root, { childList: true, subtree: true });
+      });
     });
 
-    const observer = new MutationObserver(syncRows);
-    observer.observe(document.documentElement, { childList: true, subtree: true });
+    observer.observe(root, { childList: true, subtree: true });
+    syncRows();
   }
 
 });

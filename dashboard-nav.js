@@ -204,6 +204,7 @@
 
     const remote = document.createElement('div');
     remote.className = 'utility-remote';
+    remote.style.visibility = 'hidden';
 
     const title = document.createElement('div');
     title.className = 'utility-remote-title';
