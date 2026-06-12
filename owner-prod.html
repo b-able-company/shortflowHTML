@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>마이페이지 | shortflow</title>
+  <title>제작사 마이페이지 | shortflow</title>
   <link rel="stylesheet" href="dashboard-common.css">
   <script src="dashboard-nav.js"></script>
   <style>
@@ -310,6 +310,13 @@
 
     .field-input::placeholder {
       color: var(--owner-faint);
+    }
+
+    .field-help {
+      margin-top: 6px;
+      color: var(--owner-muted);
+      font-size: 11px;
+      line-height: 1.45;
     }
 
     .field-with-action {
@@ -867,19 +874,18 @@
   <script>
     const companyInfo = {
       name: 'Reelio',
-      type: '플랫폼',
+      type: '제작사',
       inviteCode: 'RLO-7K2X-94QM',
     };
 
     const companyProfile = {
       name: 'Reelio',
       email: 'contact@reelio.co',
+      googleEmail: 'daon.kim@gmail.com',
       country: '대한민국',
-      description: '숏폼 IP 매칭·유통 플랫폼. 창작자와 글로벌 유통사를 연결합니다.',
+      description: '글로벌 숏폼 콘텐츠를 기획하고 제작하는 콘텐츠 제작사입니다.',
       phone: '+82 2-1234-5678',
       website: 'https://reelio.co',
-      appUrl: 'https://app.reelio.co',
-      appDescription: '글로벌 숏폼 콘텐츠를 탐색하고 라이선스를 검토할 수 있는 플랫폼 앱입니다.',
       address: '서울특별시 강남구 테헤란로 142, 6층',
     };
 
@@ -926,6 +932,7 @@
       { id: 'account', label: '회원정보', icon: 'user', ownerOnly: false },
       { id: 'password', label: '비밀번호 변경', icon: 'lock', ownerOnly: false },
       { id: 'info', label: '회사 정보', icon: 'building', ownerOnly: false },
+      { id: 'credits', label: '크레딧', icon: 'credit', ownerOnly: false },
       { id: 'members', label: '멤버 권한', icon: 'users', ownerOnly: true },
       { id: 'invite', label: '초대 코드', icon: 'key', ownerOnly: true },
     ];
@@ -971,7 +978,7 @@
           </section>
           <nav class="owner-nav-list" aria-label="회사 관리">
             ${tabs.map(tab => `
-              <a class="owner-nav-card ${tab.id === activeTab ? 'active' : ''}" href="owner.html?tab=${tab.id}" ${tab.id === activeTab ? 'aria-current="page"' : ''}>
+              <a class="owner-nav-card ${tab.id === activeTab ? 'active' : ''}" href="owner-prod.html?tab=${tab.id}" ${tab.id === activeTab ? 'aria-current="page"' : ''}>
                 ${icon(tab.icon)}
                 <span>${tab.label}</span>
                 ${tab.ownerOnly ? '<b class="owner-badge">OWNER ONLY</b>' : ''}
@@ -1033,6 +1040,18 @@
           <div class="field-value">
             <input class="field-input" type="password" placeholder="${label}" autocomplete="${autocomplete}">
           </div>
+        </div>
+      `;
+    }
+
+    function googleEmailField() {
+      return `
+        <div class="field full editable">
+          <label>GOOGLE EMAIL</label>
+          <div class="field-value mono">
+            <input id="google-email" class="field-input" type="email" value="${escapeHtml(companyProfile.googleEmail)}" autocomplete="email" inputmode="email">
+          </div>
+          <p class="field-help">영상 업로드 및 Google Drive 연동에 사용됩니다.</p>
         </div>
       `;
     }
@@ -1101,7 +1120,7 @@
     }
 
     function field(label, value, options = {}) {
-      const isMono = ['EMAIL', 'WEBSITE', 'PHONE', '앱 URL'].includes(label);
+      const isMono = ['EMAIL', 'WEBSITE', 'PHONE'].includes(label);
       const locked = options.locked;
       return `
         <div class="field ${options.full ? 'full' : ''} ${locked ? '' : 'editable'}">
@@ -1119,7 +1138,7 @@
           <header class="panel-head">
             <span class="panel-dot"></span>
             <strong class="panel-title">회사 정보</strong>
-            <button class="primary-action" type="button">
+            <button class="primary-action" type="button" data-action="save-company">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
               변경 사항 저장
             </button>
@@ -1127,11 +1146,10 @@
           <div class="field-grid">
             ${field('회사명', companyProfile.name, { locked: true })}
             ${field('EMAIL', companyProfile.email)}
+            ${googleEmailField()}
             ${field('국가', companyProfile.country)}
             ${field('PHONE', companyProfile.phone)}
             ${field('WEBSITE', companyProfile.website)}
-            ${field('앱 URL', companyProfile.appUrl, { full: true })}
-            ${field('앱 소개', companyProfile.appDescription, { full: true })}
             ${field('주소', companyProfile.address, { full: true })}
             ${field('회사 소개', companyProfile.description, { full: true })}
           </div>
@@ -1404,9 +1422,22 @@
       render();
     }
 
+    function saveCompany() {
+      const googleEmailInput = document.getElementById('google-email');
+      const googleEmail = googleEmailInput ? googleEmailInput.value.trim() : companyProfile.googleEmail;
+
+      if (!isValidEmail(googleEmail)) {
+        alert('올바른 구글 이메일 형식으로 입력해주세요.');
+        return;
+      }
+
+      companyProfile.googleEmail = googleEmail;
+      render();
+    }
+
     function render() {
       try {
-        localStorage.setItem('shortflow-view-role', 'platform');
+        localStorage.setItem('shortflow-view-role', 'producer');
       } catch (error) {
         // Local storage can be unavailable in restricted preview contexts.
       }
@@ -1429,6 +1460,10 @@
       }
       if (actionButton?.dataset.action === 'save-account') {
         saveAccount();
+        return;
+      }
+      if (actionButton?.dataset.action === 'save-company') {
+        saveCompany();
         return;
       }
 

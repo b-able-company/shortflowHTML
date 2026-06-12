@@ -9,14 +9,15 @@
   const primaryNavItems = [
     { id: 'content', label: '콘텐츠', href: 'content-list.html', role: 'platform' },
     { id: 'concierge', label: '컨시어지', href: 'concierge.html', role: 'platform' },
-    { id: 'platform-dashboard', label: '플랫폼 대시보드', href: 'shortflow-dashboard.html', aliases: ['dashboard'], role: 'platform' },
+    { id: 'platform-dashboard', label: '대시보드', href: 'shortflow-dashboard.html', aliases: ['dashboard'], role: 'platform' },
     { id: 'my-content', label: '내콘텐츠', href: 'contentlist-prod.html', role: 'producer' },
-    { id: 'producer-dashboard', label: '제작사 대시보드', href: 'producer-dashboard.html', role: 'producer' },
+    { id: 'producer-dashboard', label: '대시보드', href: 'producer-dashboard.html', role: 'producer' },
+    { id: 'script-analysis', label: 'AI 대본분석', href: '#', role: 'producer' },
     { id: 'guide', label: '이용가이드', href: '#', role: 'shared' },
   ];
   const rolePages = {
     platform: new Set(['content', 'concierge', 'platform-dashboard', 'dashboard']),
-    producer: new Set(['my-content', 'producer-dashboard']),
+    producer: new Set(['my-content', 'producer-dashboard', 'script-analysis']),
   };
 
   const platformDashboardTabs = [
@@ -59,7 +60,7 @@
             ${currentRole === 'platform' ? `<a class="icon-action cart" href="cart.html" aria-label="카트">${icons.cart}</a>` : ''}
             <button class="icon-action" aria-label="테마">${icons.moon}</button>
             <button class="lang">한국어</button>
-            <a class="user ${currentPage === 'mypage' ? 'active' : ''}" href="owner.html" ${currentPage === 'mypage' ? 'aria-current="page"' : ''}>Reelio</a>
+            <a class="user ${currentPage === 'mypage' ? 'active' : ''}" href="${currentRole === 'producer' ? 'owner-prod.html' : 'owner.html'}" ${currentPage === 'mypage' ? 'aria-current="page"' : ''}>Reelio</a>
             <a class="logout" href="login/login.html">로그아웃</a>
           </div>
         </div>

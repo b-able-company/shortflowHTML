@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       'p5:{"NovaShort":"2026-04-29","PlayStory":"2026-04-28"}' +
       '};' +
       'PERF_CONTENTS.forEach((c)=>c.platforms.forEach((p)=>{p.lastUpdate=(PERF_PLATFORM_LAST_UPDATES[c.id]&&PERF_PLATFORM_LAST_UPDATES[c.id][p.name])||p.lastUpdate||c.lastUpdate;}));' +
-      'PerfPoster=function PerfPoster({c,size}){return c.posterImage?<div style={{width:size,height:Math.round(size*1.4),borderRadius:7,overflow:"hidden",flexShrink:0,boxShadow:"inset 0 0 0 0.5px rgba(0,0,0,0.08)"}}><img src={c.posterImage} alt={c.title+" 포스터"} style={{display:"block",width:"100%",height:"100%",objectFit:"cover"}}/></div>:<Poster tone={c.posterTone} size={size} label=""/>;};' +
+      'var PerfPoster=window.PerfPoster=function PerfPoster({c,size}){return c.posterImage?<div style={{width:size,height:Math.round(size*1.4),borderRadius:7,overflow:"hidden",flexShrink:0,boxShadow:"inset 0 0 0 0.5px rgba(0,0,0,0.08)"}}><img src={c.posterImage} alt={c.title+" 포스터"} style={{display:"block",width:"100%",height:"100%",objectFit:"cover"}}/></div>:<Poster tone={c.posterTone} size={size} label=""/>;};' +
       'PerfTile=function PerfTile({label,value,full,t}){' +
       'return <div style={{background:t.surface,border:"0.5px solid "+t.line,borderRadius:12,padding:"14px 18px",flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:8}}><div style={{fontSize:11,color:t.inkMute,letterSpacing:0.4,textTransform:"uppercase",fontWeight:700,fontFamily:t.sans}}>{label}</div><div style={{fontFamily:t.mono,fontSize:24,fontWeight:700,color:value==null?t.inkFaint:t.ink,letterSpacing:-0.5,fontVariantNumeric:"tabular-nums",lineHeight:1.1}}>{value==null?"-":compact(value)}</div></div>;' +
       '};' +
