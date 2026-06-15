@@ -1,5 +1,6 @@
 (function () {
   const STORAGE_KEY = 'shortflow-utility-remote-position';
+  const COLLAPSED_STORAGE_KEY = 'shortflow-utility-remote-collapsed';
   const DEFAULT_TOP = 80;
 
   function clamp(value, min, max) {
@@ -18,6 +19,29 @@
 
   function savePosition(x, y) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ x, y }));
+  }
+
+  function readCollapsed() {
+    try {
+      return localStorage.getItem(COLLAPSED_STORAGE_KEY) === 'true';
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function saveCollapsed(collapsed) {
+    try {
+      localStorage.setItem(COLLAPSED_STORAGE_KEY, String(collapsed));
+    } catch (error) {
+      // Local storage can be unavailable in restricted preview contexts.
+    }
+  }
+
+  function setCollapsed(remote, button, collapsed) {
+    remote.classList.toggle('is-collapsed', collapsed);
+    button.textContent = collapsed ? 'VIEW' : '×';
+    button.setAttribute('aria-label', collapsed ? '화면 전환 리모컨 펼치기' : '화면 전환 리모컨 숨기기');
+    button.setAttribute('aria-expanded', String(!collapsed));
   }
 
   function constrain(remote, x, y) {
@@ -52,10 +76,23 @@
     remote.dataset.draggableRemote = 'true';
     handle.setAttribute('title', '드래그해서 이동 · 더블클릭해서 위치 초기화');
 
+    const collapseButton = document.createElement('button');
+    collapseButton.className = 'utility-remote-collapse';
+    collapseButton.type = 'button';
+    remote.prepend(collapseButton);
+
     const saved = readPosition();
     if (saved) {
       setPosition(remote, saved.x, saved.y);
     }
+    setCollapsed(remote, collapseButton, readCollapsed());
+
+    collapseButton.addEventListener('click', () => {
+      const collapsed = !remote.classList.contains('is-collapsed');
+      setCollapsed(remote, collapseButton, collapsed);
+      saveCollapsed(collapsed);
+    });
+
     requestAnimationFrame(() => {
       remote.style.visibility = 'visible';
     });
@@ -95,6 +132,7 @@
     handle.addEventListener('dblclick', () => resetPosition(remote));
 
     window.addEventListener('resize', () => {
+      if (remote.classList.contains('is-collapsed')) return;
       const position = readPosition();
       if (!position) return;
       const next = setPosition(remote, position.x, position.y);

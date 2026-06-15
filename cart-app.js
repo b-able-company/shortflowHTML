@@ -46,7 +46,9 @@
     const tone = window.POSTER_TONES[item.posterTone] || window.POSTER_TONES.rose;
     return `
       <div class="poster" style="--poster-width:${size}px;--poster-bg:${tone.bg};--poster-bg-dark:${tone.dark};--poster-ink:${tone.ink};">
-        ${escapeHtml(label)}
+        ${item.posterImage
+          ? `<img src="${escapeHtml(item.posterImage)}" alt="${escapeHtml(item.title || "콘텐츠")} 포스터">`
+          : escapeHtml(label)}
       </div>
     `;
   }

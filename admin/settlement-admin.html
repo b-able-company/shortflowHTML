@@ -534,10 +534,14 @@ td { padding: 9px 12px; vertical-align: middle; }
 .settlement-detail-v { font-size: 12.5px; color: #1a1a18; font-weight: 500; }
 .settlement-modal-foot { padding: 12px 20px; border-top: 0.5px solid #e8e6e0; display: flex; justify-content: flex-end; background: #fff; }
 .process-review-panel { width: min(1180px, 100%); }
-.process-review-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
+.process-review-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
 .process-review-card { background: #fff; border: 0.5px solid #e8e6e0; border-radius: 8px; padding: 11px 12px; }
+.process-review-stat { display: flex; min-height: 72px; flex-direction: column; }
+.process-review-stat .process-review-v { display: flex; flex: 1; align-items: center; }
 .process-review-k { font-size: 10.5px; color: #aaa; margin-bottom: 5px; }
 .process-review-v { font-size: 14px; color: #1a1a18; font-weight: 700; font-family: monospace; }
+.process-review-month { width: 100%; height: 30px; padding: 0 8px; border: 0.5px solid #d8d6cf; border-radius: 6px; background: #fff; color: #1a1a18; font-family: monospace; font-size: 13px; font-weight: 600; }
+.process-review-month:focus { outline: none; border-color: #e85d2c; box-shadow: 0 0 0 2px rgba(232,93,44,0.1); }
 .process-review-section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
 .process-review-section-title { margin: 0; font-size: 12.5px; font-weight: 600; color: #1a1a18; }
 .process-review-section-meta { margin: 0; font-size: 11px; color: #aaa; }
@@ -986,7 +990,7 @@ td { padding: 9px 12px; vertical-align: middle; }
         <div class="ops-table-scroll">
           <table class="ops-table">
             <colgroup><col><col style="width:130px"><col style="width:78px"><col style="width:150px"><col style="width:128px"><col style="width:112px"><col style="width:110px"></colgroup>
-            <thead><tr><th>제작사</th><th class="right">정산 기준월</th><th class="right">항목 수</th><th class="right">제작사 정산액(원)</th><th class="right">관리자</th><th class="center">상태</th><th class="center">상세</th></tr></thead>
+            <thead><tr><th>제작사</th><th class="right">정산 예정월</th><th class="right">항목 수</th><th class="right">제작사 정산액(원)</th><th class="right">관리자</th><th class="center">상태</th><th class="center">상세</th></tr></thead>
             <tbody id="progress-tbody"></tbody>
           </table>
         </div>
@@ -1012,7 +1016,7 @@ td { padding: 9px 12px; vertical-align: middle; }
         <div class="ops-table-scroll">
           <table class="ops-table">
             <colgroup><col style="width:34px"><col><col style="width:130px"><col style="width:78px"><col style="width:150px"><col style="width:112px"><col style="width:110px"></colgroup>
-            <thead><tr><th></th><th>제작사</th><th class="right">정산 기준월</th><th class="right">항목 수</th><th class="right">제작사 정산액(원)</th><th class="center">상태</th><th class="center">상세</th></tr></thead>
+            <thead><tr><th></th><th>제작사</th><th class="right">정산월</th><th class="right">항목 수</th><th class="right">제작사 정산액(원)</th><th class="center">상태</th><th class="center">상세</th></tr></thead>
             <tbody id="ready-tbody"></tbody>
           </table>
         </div>
@@ -1030,7 +1034,7 @@ td { padding: 9px 12px; vertical-align: middle; }
         <div class="ops-table-scroll">
           <table class="ops-table">
             <colgroup><col><col style="width:130px"><col style="width:78px"><col style="width:150px"><col style="width:112px"><col style="width:128px"><col style="width:112px"><col style="width:110px"></colgroup>
-            <thead><tr><th>제작사</th><th class="right">정산 기준월</th><th class="right">항목 수</th><th class="right">제작사 정산액(원)</th><th class="right">완료 처리일</th><th class="right">처리한 관리자</th><th class="center">상태</th><th class="center">상세</th></tr></thead>
+            <thead><tr><th>제작사</th><th class="right">정산월</th><th class="right">항목 수</th><th class="right">제작사 정산액(원)</th><th class="right">완료 처리일</th><th class="right">처리한 관리자</th><th class="center">상태</th><th class="center">상세</th></tr></thead>
             <tbody id="completed-tbody"></tbody>
           </table>
         </div>
@@ -1069,9 +1073,13 @@ td { padding: 9px 12px; vertical-align: middle; }
       </div>
       <div class="settlement-modal-body">
         <div class="process-review-summary">
-          <div class="process-review-card"><div class="process-review-k">처리 대상</div><div class="process-review-v" id="process-review-count">0건</div></div>
-          <div class="process-review-card"><div class="process-review-k">제작사</div><div class="process-review-v" id="process-review-studio" style="font-family:inherit"></div></div>
-          <div class="process-review-card"><div class="process-review-k">제작사 정산액 합계(원)</div><div class="process-review-v" id="process-review-total">₩ 0</div></div>
+          <div class="process-review-card process-review-stat"><div class="process-review-k">처리 대상</div><div class="process-review-v" id="process-review-count">0건</div></div>
+          <div class="process-review-card process-review-stat"><div class="process-review-k">제작사</div><div class="process-review-v" id="process-review-studio" style="font-family:inherit"></div></div>
+          <div class="process-review-card process-review-stat"><div class="process-review-k">제작사 정산액 합계(원)</div><div class="process-review-v" id="process-review-total">₩ 0</div></div>
+          <label class="process-review-card" for="process-review-month">
+            <div class="process-review-k">정산 예정월</div>
+            <input class="process-review-month" id="process-review-month" type="month" required />
+          </label>
         </div>
         <div class="process-review-section-head">
           <p class="process-review-section-title">상세 내역</p>
@@ -1106,7 +1114,7 @@ td { padding: 9px 12px; vertical-align: middle; }
         </div>
       </div>
       <div class="settlement-modal-foot">
-        <div class="process-review-foot-note">검토 후 선택한 건을 제작사 확인 대기 상태로 이동합니다.</div>
+        <div class="process-review-foot-note">선택한 정산 예정월의 배치로 생성하여 제작사 확인 대기 상태로 이동합니다.</div>
         <div class="process-review-actions">
           <button class="btn" onclick="closeProcessReviewModal()">닫기</button>
           <button class="btn btn-primary" onclick="confirmProcessSelectedDrafts()">정산 예정 처리</button>
@@ -1154,27 +1162,27 @@ let opsDraftRows = [
   { id:'d7', title:'Heiress in Disguise', studio:'ReelHouse Inc.', platform:'KuaiKan Drama', type:'MG+RS', period:'2025-04', amount:28900000, status:'DRAFT' }
 ];
 let opsProgressRows = [
-  { id:'s1', title:'Boss Next Door', studio:'PaperLens', platform:'DramaBox (US)', type:'MG+RS', period:'2025-03', amount:26400000, status:'SCHEDULED' },
-  { id:'s2', title:'Ghost Wedding', studio:'Crescendo Pictures', platform:'ShortReel (US)', type:'RS', period:'2025-Q1', amount:6320000, status:'SCHEDULED' },
-  { id:'s3', title:'CEO Pretends to be Poor', studio:'OneTake Media', platform:'Viki', type:'RS', period:'2025-Q1', amount:11180000, status:'SCHEDULED' }
+  { id:'s1', title:'Boss Next Door', studio:'PaperLens', platform:'DramaBox (US)', type:'MG+RS', period:'2025-03', settlementMonth:'2025-04', amount:26400000, status:'SCHEDULED' },
+  { id:'s2', title:'Ghost Wedding', studio:'Crescendo Pictures', platform:'ShortReel (US)', type:'RS', period:'2025-Q1', settlementMonth:'2025-04', amount:6320000, status:'SCHEDULED' },
+  { id:'s3', title:'CEO Pretends to be Poor', studio:'OneTake Media', platform:'Viki', type:'RS', period:'2025-Q1', settlementMonth:'2025-04', amount:11180000, status:'SCHEDULED' }
 ];
 let opsReadyRows = [
-  { id:'r1', title:'My Fake Fiance', studio:'BrightFrame', platform:'WeTV', type:'MG+RS', period:'2025-03', amount:19800000, status:'READY' },
-  { id:'r2', title:'The Tycoon Secret Son', studio:'ReelHouse Inc.', platform:'iQIYI', type:'RS', period:'2025-Q1', amount:12640000, status:'READY' },
-  { id:'r3', title:'Twin Brothers Trouble', studio:'NextWave Studios', platform:'FlexTV (JP)', type:'Flat Fee', period:'2025-03', amount:15000000, status:'READY' },
-  { id:'r4', title:'Reborn as the Villainess', studio:'OneTake Media', platform:'KuaiKan Drama', type:'RS', period:'2025-Q1', amount:9240000, status:'READY' }
+  { id:'r1', title:'My Fake Fiance', studio:'BrightFrame', platform:'WeTV', type:'MG+RS', period:'2025-03', settlementMonth:'2025-04', amount:19800000, status:'READY' },
+  { id:'r2', title:'The Tycoon Secret Son', studio:'ReelHouse Inc.', platform:'iQIYI', type:'RS', period:'2025-Q1', settlementMonth:'2025-04', amount:12640000, status:'READY' },
+  { id:'r3', title:'Twin Brothers Trouble', studio:'NextWave Studios', platform:'FlexTV (JP)', type:'Flat Fee', period:'2025-03', settlementMonth:'2025-04', amount:15000000, status:'READY' },
+  { id:'r4', title:'Reborn as the Villainess', studio:'OneTake Media', platform:'KuaiKan Drama', type:'RS', period:'2025-Q1', settlementMonth:'2025-04', amount:9240000, status:'READY' }
 ];
 let opsCompletedRows = [
-  { id:'c1', title:'Boss Next Door', studio:'PaperLens', platform:'DramaBox (US)', type:'MG+RS', period:'2025-02', amount:24800000, status:'COMPLETED', completedAt:'2025-03-12', completedBy:'Lee · Admin' },
-  { id:'c2', title:'Ghost Wedding', studio:'Crescendo Pictures', platform:'ShortReel (US)', type:'RS', period:'2024-Q4', amount:7120000, status:'COMPLETED', completedAt:'2025-02-08', completedBy:'Park · Admin' },
-  { id:'c3', title:'CEO Pretends to be Poor', studio:'OneTake Media', platform:'Viki', type:'RS', period:'2024-Q4', amount:10220000, status:'COMPLETED', completedAt:'2025-02-08', completedBy:'Park · Admin' },
-  { id:'c4', title:'Married First, Love Later', studio:'NextWave Studios', platform:'ShortReel (US)', type:'MG+RS', period:'2025-02', amount:31400000, status:'COMPLETED', completedAt:'2025-03-12', completedBy:'Lee · Admin' },
-  { id:'c5', title:'Reborn as the Villainess', studio:'OneTake Media', platform:'iQIYI', type:'RS', period:'2024-Q4', amount:8640000, status:'COMPLETED', completedAt:'2025-02-08', completedBy:'Park · Admin' },
-  { id:'c6', title:'Bloom Again', studio:'PaperLens', platform:'Viki', type:'MG+RS', period:'2025-02', amount:21900000, status:'COMPLETED', completedAt:'2025-03-12', completedBy:'Lee · Admin' },
-  { id:'c7', title:'Seven Suns', studio:'BrightFrame', platform:'ShortReel (US)', type:'Flat Fee', period:'2025-02', amount:18000000, status:'COMPLETED', completedAt:'2025-03-04', completedBy:'Lee · Admin' },
-  { id:'c8', title:'The Last Letter', studio:'NextWave Studios', platform:'ShortReel (US)', type:'MG+RS', period:'2025-02', amount:29800000, status:'COMPLETED', completedAt:'2025-03-12', completedBy:'Lee · Admin' },
-  { id:'c9', title:'Echo of Spring', studio:'NextWave Studios', platform:'WeTV', type:'RS', period:'2024-Q4', amount:7380000, status:'COMPLETED', completedAt:'2025-02-08', completedBy:'Park · Admin' },
-  { id:'c10', title:'Reverse Cinderella', studio:'OneTake Media', platform:'iQIYI', type:'RS', period:'2024-Q4', amount:13220000, status:'COMPLETED', completedAt:'2025-02-08', completedBy:'Park · Admin' }
+  { id:'c1', title:'Boss Next Door', studio:'PaperLens', platform:'DramaBox (US)', type:'MG+RS', period:'2025-02', settlementMonth:'2025-03', amount:24800000, status:'COMPLETED', completedAt:'2025-03-12', completedBy:'Lee · Admin' },
+  { id:'c2', title:'Ghost Wedding', studio:'Crescendo Pictures', platform:'ShortReel (US)', type:'RS', period:'2024-Q4', settlementMonth:'2025-02', amount:7120000, status:'COMPLETED', completedAt:'2025-02-08', completedBy:'Park · Admin' },
+  { id:'c3', title:'CEO Pretends to be Poor', studio:'OneTake Media', platform:'Viki', type:'RS', period:'2024-Q4', settlementMonth:'2025-02', amount:10220000, status:'COMPLETED', completedAt:'2025-02-08', completedBy:'Park · Admin' },
+  { id:'c4', title:'Married First, Love Later', studio:'NextWave Studios', platform:'ShortReel (US)', type:'MG+RS', period:'2025-02', settlementMonth:'2025-03', amount:31400000, status:'COMPLETED', completedAt:'2025-03-12', completedBy:'Lee · Admin' },
+  { id:'c5', title:'Reborn as the Villainess', studio:'OneTake Media', platform:'iQIYI', type:'RS', period:'2024-Q4', settlementMonth:'2025-02', amount:8640000, status:'COMPLETED', completedAt:'2025-02-08', completedBy:'Park · Admin' },
+  { id:'c6', title:'Bloom Again', studio:'PaperLens', platform:'Viki', type:'MG+RS', period:'2025-02', settlementMonth:'2025-03', amount:21900000, status:'COMPLETED', completedAt:'2025-03-12', completedBy:'Lee · Admin' },
+  { id:'c7', title:'Seven Suns', studio:'BrightFrame', platform:'ShortReel (US)', type:'Flat Fee', period:'2025-02', settlementMonth:'2025-03', amount:18000000, status:'COMPLETED', completedAt:'2025-03-04', completedBy:'Lee · Admin' },
+  { id:'c8', title:'The Last Letter', studio:'NextWave Studios', platform:'ShortReel (US)', type:'MG+RS', period:'2025-02', settlementMonth:'2025-03', amount:29800000, status:'COMPLETED', completedAt:'2025-03-12', completedBy:'Lee · Admin' },
+  { id:'c9', title:'Echo of Spring', studio:'NextWave Studios', platform:'WeTV', type:'RS', period:'2024-Q4', settlementMonth:'2025-02', amount:7380000, status:'COMPLETED', completedAt:'2025-02-08', completedBy:'Park · Admin' },
+  { id:'c10', title:'Reverse Cinderella', studio:'OneTake Media', platform:'iQIYI', type:'RS', period:'2024-Q4', settlementMonth:'2025-02', amount:13220000, status:'COMPLETED', completedAt:'2025-02-08', completedBy:'Park · Admin' }
 ];
 let selectedDraftRows = {};
 let selectedReadyRows = {};
@@ -2068,6 +2076,15 @@ function groupIdFor(studio, period) {
   return `${studio}__${period}`.replace(/[^a-zA-Z0-9_-]/g, '_');
 }
 
+function currentSettlementMonth() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function settlementMonthForRow(row) {
+  return row.settlementMonth || row.period;
+}
+
 function settlementAdminForRows(rows) {
   return rows.find((row) => row.completedBy)?.completedBy || rows.find((row) => row.scheduledBy)?.scheduledBy || 'Lee · Admin';
 }
@@ -2075,12 +2092,13 @@ function settlementAdminForRows(rows) {
 function groupSettlementRows(rows) {
   const groups = new Map();
   rows.forEach((row) => {
-    const key = `${row.studio}||${row.period}`;
+    const settlementMonth = settlementMonthForRow(row);
+    const key = `${row.studio}||${settlementMonth}`;
     if (!groups.has(key)) {
       groups.set(key, {
-        id: groupIdFor(row.studio, row.period),
+        id: groupIdFor(row.studio, settlementMonth),
         studio: row.studio,
-        period: row.period,
+        period: settlementMonth,
         status: row.status,
         rows: [],
         amount: 0,
@@ -2294,6 +2312,7 @@ function openProcessReviewModal(rows) {
   document.getElementById('process-review-count').textContent = `${rows.length}건`;
   document.getElementById('process-review-studio').textContent = studio;
   document.getElementById('process-review-total').textContent = formatWon(total);
+  document.getElementById('process-review-month').value = currentSettlementMonth();
   renderProcessReviewRows(rows);
   document.getElementById('process-review-modal').classList.add('show');
 }
@@ -2306,9 +2325,20 @@ function closeProcessReviewModal() {
 function confirmProcessSelectedDrafts() {
   const movingIds = new Set(processReviewRows.map((row) => row.id));
   if (!movingIds.size) return;
+  const settlementMonthInput = document.getElementById('process-review-month');
+  const settlementMonth = settlementMonthInput.value;
+  if (!settlementMonth) {
+    settlementMonthInput.focus();
+    return;
+  }
   const moving = opsDraftRows.filter((row) => movingIds.has(row.id));
   opsDraftRows = opsDraftRows.filter((row) => !movingIds.has(row.id));
-  opsProgressRows = moving.map((row) => ({ ...row, status: 'SCHEDULED' })).concat(opsProgressRows);
+  opsProgressRows = moving.map((row) => ({
+    ...row,
+    settlementMonth,
+    scheduledBy: 'Lee · Admin',
+    status: 'SCHEDULED'
+  })).concat(opsProgressRows);
   selectedDraftRows = {};
   closeProcessReviewModal();
   renderSettlementOps();
@@ -2441,7 +2471,8 @@ function openSettlementGroupModal(source, groupId) {
   document.getElementById('settlement-modal-poster').style.background = posterColor(group.id);
   document.getElementById('settlement-modal-poster').textContent = posterInitials(group.studio);
   document.getElementById('settlement-modal-title').textContent = `${group.studio} 정산 상세`;
-  document.getElementById('settlement-modal-sub').innerHTML = `정산 기준월 <span class="ops-mono">${group.period}</span> · ${group.rows.length}건 · ${settlementAdminForRows(group.rows)}`;
+  const settlementMonthLabel = source === 'progress' ? '정산 예정월' : '정산월';
+  document.getElementById('settlement-modal-sub').innerHTML = `${settlementMonthLabel} <span class="ops-mono">${group.period}</span> · ${group.rows.length}건 · ${settlementAdminForRows(group.rows)}`;
   document.getElementById('settlement-modal-amount').textContent = formatWon(total);
   document.getElementById('settlement-modal-body').innerHTML = settlementGroupDetailTable(group.rows);
   document.getElementById('settlement-detail-modal').classList.add('show');
