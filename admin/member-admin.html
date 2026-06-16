@@ -81,6 +81,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 .b-approved { background: #EAF3DE; color: #3B6D11; }
 .b-rejected { background: #FCEBEB; color: #A32D2D; }
 .b-inactive { background: #f0efe9; color: #aaa; }
+.b-setup-required { background: #E6F1FB; color: #185FA5; }
 .plain-meta { font-size: 11.5px; color: #666; font-weight: 500; }
 .plain-meta.subtle { color: #888; font-weight: 400; }
 
@@ -141,6 +142,23 @@ td { padding: 9px 12px; vertical-align: middle; }
 .detail-savebar .danger-left:hover { border-color: rgba(255,59,48,0.24); background: rgba(255,59,48,0.12); }
 .detail-savebar .btn-save { border-color: transparent; background: #007aff; color: #fff; box-shadow: 0 2px 6px rgba(0,122,255,0.22); }
 .detail-savebar .btn-save:hover { background: #006ee6; box-shadow: 0 3px 8px rgba(0,122,255,0.26); }
+.extra-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.extra-panel { border: 0.5px solid #e8e6e0; border-radius: 8px; background: #fff; overflow: hidden; }
+.extra-panel-head { padding: 11px 13px; border-bottom: 0.5px solid #f0efe9; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.extra-panel-title { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 500; color: #333; }
+.extra-panel-title i { font-size: 14px; color: #aaa; }
+.extra-panel-body { padding: 12px 13px; }
+.operation-settings-body { padding-top: 0; padding-bottom: 0; }
+.operation-setting-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 72px; }
+.operation-setting-row + .operation-setting-row { border-top: 0.5px solid #f0efe9; }
+.operation-setting-copy { min-width: 0; }
+.operation-setting-name { font-size: 12px; font-weight: 600; color: #2b2b28; }
+.operation-setting-desc { margin-top: 4px; font-size: 11px; line-height: 1.45; color: #99978f; }
+.operation-switch { appearance: none; -webkit-appearance: none; position: relative; align-self: center; width: 40px; min-width: 40px; max-width: 40px; height: 22px; min-height: 22px; max-height: 22px; flex: 0 0 40px; margin: 0; padding: 0; border: 0; border-radius: 999px; background: #d8d7d2; line-height: 0; cursor: pointer; transition: background 140ms ease; }
+.operation-switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: transform 140ms ease; }
+.operation-switch.is-on { background: #e85d2c; }
+.operation-switch.is-on::after { transform: translateX(18px); }
+.operation-switch:focus-visible { outline: 2px solid rgba(232,93,44,0.3); outline-offset: 2px; }
 
 /* USER LIST IN COMPANY */
 .user-list { display: flex; flex-direction: column; gap: 6px; }
@@ -330,6 +348,7 @@ td { padding: 9px 12px; vertical-align: middle; }
           <div class="detail-tabbar">
             <div class="detail-tab active" onclick="switchUserDetailTab(this,'user-tab-basic')">기본 정보</div>
             <div class="detail-tab" onclick="switchUserDetailTab(this,'user-tab-login')">접속 기록</div>
+            <div class="detail-tab" onclick="switchUserDetailTab(this,'user-tab-operation')">계정 설정</div>
           </div>
           <div class="dbody">
             <div class="detail-panel active" id="user-tab-basic">
@@ -363,6 +382,24 @@ td { padding: 9px 12px; vertical-align: middle; }
             <div class="detail-panel" id="user-tab-login">
               <div class="sec">
                 <div id="user-login-history"></div>
+              </div>
+            </div>
+            <div class="detail-panel" id="user-tab-operation">
+              <div class="extra-grid">
+                <div class="extra-panel">
+                  <div class="extra-panel-head">
+                    <div class="extra-panel-title"><i class="ti ti-adjustments"></i> 계정 설정</div>
+                  </div>
+                  <div class="extra-panel-body operation-settings-body">
+                    <div class="operation-setting-row">
+                      <div class="operation-setting-copy">
+                        <div class="operation-setting-name">온보딩 설정</div>
+                        <div class="operation-setting-desc" id="user-onboarding-desc"></div>
+                      </div>
+                      <button class="operation-switch" id="user-onboarding-toggle" type="button" role="switch" onclick="toggleUserSetupRequirement()" aria-label="온보딩 설정"></button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -584,7 +621,7 @@ const userLoginHistory = {
   ],
 };
 
-const sc = { PENDING:'b-pending', APPROVED:'b-approved', REJECTED:'b-rejected', INACTIVE:'b-inactive' };
+const sc = { PENDING:'b-pending', APPROVED:'b-approved', REJECTED:'b-rejected', INACTIVE:'b-inactive', SETUP_REQUIRED:'b-setup-required' };
 let selectedUserId = null;
 let selectedCompanyId = null;
 let loginHistoryPage = 1;
@@ -637,9 +674,50 @@ function selectUser(id) {
   document.getElementById('user-rr-box').classList.remove('show');
   loginHistoryPage = 1;
   renderUserLoginHistory(id);
+  renderUserOperations(u);
   resetUserDetailTab();
   document.getElementById('user-empty').style.display = 'none';
   document.getElementById('user-detail').style.display = 'flex';
+}
+
+function renderUserOperations(user) {
+  const desc = document.getElementById('user-onboarding-desc');
+  const toggle = document.getElementById('user-onboarding-toggle');
+  if (!desc || !toggle || !user) return;
+
+  const isSetupRequired = user.status === 'SETUP_REQUIRED';
+  desc.textContent = isSetupRequired
+    ? '온보딩 설정이 필요한 상태입니다. 다음 로그인 시 첫 로그인 아이디/비밀번호 변경 페이지로 이동합니다.'
+    : '토글을 켜면 유저 상태가 SETUP_REQUIRED로 변경되고, 다음 로그인 시 첫 로그인 설정 페이지가 표시됩니다.';
+  toggle.classList.toggle('is-on', isSetupRequired);
+  toggle.setAttribute('aria-checked', String(isSetupRequired));
+  toggle.title = isSetupRequired ? 'ON' : 'OFF';
+}
+
+function toggleUserSetupRequirement() {
+  if (!selectedUserId) return;
+  const u = users.find(x => x.id === selectedUserId);
+  if (!u) return;
+  const isSetupRequired = u.status === 'SETUP_REQUIRED';
+  const nextStatus = isSetupRequired ? (u.previousStatus || 'APPROVED') : 'SETUP_REQUIRED';
+  if (!confirm(`${u.name} 유저를 ${nextStatus} 상태로 변경할까요?`)) return;
+
+  if (isSetupRequired) {
+    u.status = nextStatus;
+    delete u.previousStatus;
+  } else {
+    u.previousStatus = u.status;
+    u.status = nextStatus;
+  }
+  renderUsers();
+  document.getElementById('ud-status').className = `bdg ${sc[u.status]}`;
+  document.getElementById('ud-status').textContent = u.status;
+  const isPending = u.status === 'PENDING';
+  document.getElementById('ud-acts').innerHTML = isPending
+    ? `<button class="btn btn-approve" onclick="approveUser(${u.id})"><i class="ti ti-check"></i> 승인</button>
+       <button class="btn btn-reject" onclick="document.getElementById('user-rr-box').classList.add('show')"><i class="ti ti-x"></i> 거절</button>`
+    : `<span style="font-size:11.5px;color:#bbb">이미 처리된 유저입니다</span>`;
+  renderUserOperations(u);
 }
 
 function renderUserLoginHistory(userId) {
