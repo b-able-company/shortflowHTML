@@ -150,6 +150,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       '</' + 'script>';
     const removeBundledNavScript =
       '<script type="text/babel">' +
+      'try{localStorage.removeItem("perf.screen");}catch(e){}' +
       'PerfTopNav=function PerfTopNav(){return null;};' +
       'BASE_TOKENS.surfaceAlt="rgb(250, 250, 250)";' +
       'const PERF_MOCK_CONTENT={' +

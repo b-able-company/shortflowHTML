@@ -60,6 +60,19 @@
     return next;
   }
 
+  function isSamePageHref(href) {
+    if (!href) return false;
+    try {
+      const next = new URL(href, window.location.href);
+      return next.origin === window.location.origin &&
+        next.pathname === window.location.pathname &&
+        next.search === window.location.search &&
+        (!next.hash || next.hash === window.location.hash);
+    } catch (error) {
+      return false;
+    }
+  }
+
   function resetPosition(remote) {
     localStorage.removeItem(STORAGE_KEY);
     remote.style.left = 'auto';
@@ -75,6 +88,17 @@
 
     remote.dataset.draggableRemote = 'true';
     handle.setAttribute('title', '드래그해서 이동 · 더블클릭해서 위치 초기화');
+    remote.querySelectorAll('.utility-toggle.active').forEach((link) => {
+      link.setAttribute('aria-disabled', 'true');
+    });
+    remote.addEventListener('click', (event) => {
+      if (!(event.target instanceof Element)) return;
+      const link = event.target.closest('.utility-toggle');
+      if (!link) return;
+      if (link.classList.contains('active') || isSamePageHref(link.getAttribute('href'))) {
+        event.preventDefault();
+      }
+    });
 
     const collapseButton = document.createElement('button');
     collapseButton.className = 'utility-remote-collapse';
