@@ -487,6 +487,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 .ops-table.dense .ops-amount { font-size: 11px; }
 .ops-table.dense .ops-poster { width: 26px; height: 26px; border-radius: 5px; font-size: 9px; }
 .ops-check { width: 14px; height: 14px; accent-color: #1a1a18; cursor: pointer; }
+.ops-check:disabled { opacity: 0.35; cursor: not-allowed; }
 .ops-content { display: flex; align-items: center; min-width: 0; }
 .ops-poster { width: 32px; height: 32px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 10px; font-weight: 600; font-family: monospace; }
 .ops-title { font-size: 12.5px; font-weight: 500; color: #1a1a18; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -2130,25 +2131,30 @@ function groupDetailButton(source, group) {
 
 function renderDraftRows() {
   const studio = processStudioFilter();
-  const rows = studio === '제작사 전체'
-    ? []
+  const allStudios = studio === '제작사 전체';
+  const rows = allStudios
+    ? opsDraftRows
     : opsDraftRows.filter((row) => row.studio === studio);
   document.getElementById('draft-count').textContent = rows.length;
   document.getElementById('draft-tbody').innerHTML = rows.length ? rows.map((row) => `
     <tr>
-      <td><input class="ops-check" type="checkbox" ${selectedDraftRows[row.id] ? 'checked' : ''} onchange="toggleOpsSelection('draft','${row.id}',this.checked)" /></td>
+      <td><input class="ops-check" type="checkbox" ${selectedDraftRows[row.id] ? 'checked' : ''} ${allStudios ? 'disabled title="제작사를 선택하면 정산 처리가 가능합니다"' : ''} onchange="toggleOpsSelection('draft','${row.id}',this.checked)" /></td>
       <td>${opsContentCell(row)}</td>
       <td class="right ops-muted">${row.studio}</td>
       <td class="right ops-muted">${row.platform}</td>
       <td class="center">${typeBadge(row.type)}</td>
       ${opsPaymentCells(row)}
       <td class="center">${statusBadge(row.status)}</td>
-    </tr>`).join('') : emptyRow(20, studio === '제작사 전체' ? '제작사를 선택하면 정산 예정 처리 대상이 표시됩니다' : '처리할 정산 대상이 없습니다');
+    </tr>`).join('') : emptyRow(20, '처리할 정산 대상이 없습니다');
   const selected = opsDraftRows.filter((row) => selectedDraftRows[row.id]);
   const sum = selected.reduce((total, row) => total + row.amount, 0);
   document.getElementById('draft-selected-count').textContent = selected.length;
-  document.getElementById('draft-selected-sum').textContent = selected.length ? `· 합계 ${formatWon(sum)}` : '';
-  document.getElementById('process-selected-btn').disabled = selected.length === 0;
+  document.getElementById('draft-selected-sum').textContent = allStudios
+    ? '· 제작사를 선택하면 정산 처리가 가능합니다'
+    : (selected.length ? `· 합계 ${formatWon(sum)}` : '');
+  const processButton = document.getElementById('process-selected-btn');
+  processButton.disabled = allStudios || selected.length === 0;
+  processButton.title = allStudios ? '제작사를 선택하면 정산 처리가 가능합니다' : '';
 }
 
 function renderProgressRows() {
@@ -2240,6 +2246,7 @@ function toggleOpsSelection(group, id, checked) {
 }
 
 function processSelectedDrafts() {
+  if (processStudioFilter() === '제작사 전체') return;
   const moving = opsDraftRows.filter((row) => selectedDraftRows[row.id]);
   if (!moving.length) return;
   const studios = Array.from(new Set(moving.map((row) => row.studio)));

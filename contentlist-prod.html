@@ -464,6 +464,13 @@
       }
     });
 
+    document.addEventListener('pointerover', event => {
+      const detailButton = event.target.closest('.prod-detail');
+      if (!detailButton) return;
+      const title = detailButton.dataset.title || '';
+      window.ShortflowNav?.prefetchPage(`my-content-detail.html?title=${encodeURIComponent(title)}`);
+    }, { passive: true });
+
     updateTabCounts();
     renderContents();
   </script>

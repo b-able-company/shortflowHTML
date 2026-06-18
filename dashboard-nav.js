@@ -271,6 +271,47 @@
     window.ShortflowUtilityRemote?.init(remote);
   }
 
+  const prefetchedPages = new Set();
+
+  function prefetchPage(href) {
+    if (!href) return;
+
+    let url;
+    try {
+      url = new URL(href, window.location.href);
+    } catch (error) {
+      return;
+    }
+
+    if (url.origin !== window.location.origin || !url.pathname.endsWith('.html')) return;
+    if (url.pathname === window.location.pathname && url.search === window.location.search) return;
+
+    const key = url.href;
+    if (prefetchedPages.has(key)) return;
+    prefetchedPages.add(key);
+
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.as = 'document';
+    link.href = key;
+    document.head.appendChild(link);
+  }
+
+  function setupPagePrefetch() {
+    if (document.documentElement.dataset.shortflowPrefetch === 'true') return;
+    document.documentElement.dataset.shortflowPrefetch = 'true';
+
+    const prepareLink = (event) => {
+      if (!(event.target instanceof Element)) return;
+      const anchor = event.target.closest('a[href]');
+      if (!anchor) return;
+      prefetchPage(anchor.href);
+    };
+
+    document.addEventListener('pointerover', prepareLink, { passive: true });
+    document.addEventListener('focusin', prepareLink);
+  }
+
   if (!window.__SHORTFLOW_DEFER_NAV__) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', mountDeclarativeNavs);
@@ -278,6 +319,8 @@
       mountDeclarativeNavs();
     }
   }
+
+  setupPagePrefetch();
 
   window.ShortflowNav = {
     renderTopNav,
@@ -287,5 +330,6 @@
     mountTopNav,
     mountFooter,
     mount,
+    prefetchPage,
   };
 })();
