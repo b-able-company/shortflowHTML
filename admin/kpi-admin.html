@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KPI — Shortflow Admin</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+<link rel="stylesheet" href="admin-common.css"/>
+<script src="admin-common.js" defer></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5f4f0; display: flex; height: 100vh; overflow: hidden; font-size: 13px; color: #1a1a18; }
+
+/* SIDEBAR */
+.sb { width: 210px; min-width: 210px; background: #13130f; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
+.sb-logo { padding: 16px 16px 12px; border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+.sb-logo-main { color: #fff; font-size: 14px; font-weight: 600; }
+.sb-logo-sub { font-size: 9px; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 1px; }
+.nav { flex: 1; overflow-y: auto; padding: 6px 0; }
+.nav-label { font-size: 9px; color: rgba(255,255,255,0.22); letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 16px 3px; }
+.ni { display: flex; align-items: center; gap: 7px; padding: 6px 16px; font-size: 12.5px; color: rgba(255,255,255,0.42); cursor: pointer; border-left: 2px solid transparent; }
+.ni:hover { color: rgba(255,255,255,0.7); }
+.ni.active { color: #fff; border-left-color: #fff; background: rgba(255,255,255,0.04); }
+.ni i { font-size: 13px; flex-shrink: 0; }
+.sub .ni { padding-left: 36px; font-size: 12px; color: rgba(255,255,255,0.32); }
+.sub .ni:hover { color: rgba(255,255,255,0.6); }
+.sb-foot { padding: 10px 16px; border-top: 0.5px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 9px; }
+.ava { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 10px; color: #fff; font-weight: 500; flex-shrink: 0; }
+.uname { font-size: 11px; color: #fff; font-weight: 500; }
+.uemail { font-size: 10px; color: rgba(255,255,255,0.28); margin-top: 1px; }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { position: relative; height: 62px; background: #f5f4f0; display: flex; align-items: center; padding: 7px 32px 0; flex-shrink: 0; }
+.topbar::after { content: ""; position: absolute; left: 30px; right: 30px; bottom: 0; height: 0.5px; background: #d6d4cd; }
+.topbar-title { display: flex; align-items: center; gap: 9px; font-size: 19px; font-weight: 550; }
+.topbar-separator { color: #bbb; font-weight: 400; }
+.topbar-current { color: #777; font-size: 16px; font-weight: 500; }
+
+.body { flex: 1; overflow-y: auto; padding: 20px 30px 30px; width: 100%; }
+.section { margin-bottom: 30px; }
+.section:last-child { margin-bottom: 0; }
+
+/* SUMMARY */
+.summary-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 22px; }
+.metric-card { position: relative; min-height: 132px; padding: 22px 25px 20px; background: #fff; border-radius: 11px; display: flex; flex-direction: column; }
+.metric-top { display: block; padding-right: 48px; }
+.metric-name { font-size: 13.5px; color: #777; font-weight: 500; }
+.metric-icon { position: absolute; top: 22px; right: 25px; width: 52px; height: 52px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 25px; }
+.metric-value { margin-top: 14px; padding-right: 48px; font-size: 31px; line-height: 1; font-weight: 650; letter-spacing: -0.04em; white-space: nowrap; }
+.metric-value span { font-size: 15px !important; }
+.metric-change { margin-top: auto; padding-top: 15px; font-size: 12.5px; color: #999; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.metric-change strong { color: #23845d; font-weight: 600; }
+.metric-change i { color: #23845d; font-size: 15px; }
+.metric-change.down strong, .metric-change.down i { color: #c65f55; }
+.metric-foot { margin-top: auto; padding-top: 10px; border-top: 0.5px solid #f0efe9; display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 10.5px; color: #aaa; }
+.metric-foot strong { color: #555; font-weight: 550; }
+.tone-blue { background: #edf5ff; color: #3979b9; }
+.tone-violet { background: #f1efff; color: #6b62b8; }
+.tone-green { background: #eaf7f1; color: #23845d; }
+.tone-orange { background: #fff3e9; color: #bd6a2f; }
+.tone-yellow { background: #fff8dc; color: #9a7716; }
+
+/* CHARTS */
+.chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.chart-card { background: #fff; border-radius: 10px; min-height: 270px; overflow: hidden; }
+.chart-head { height: 50px; padding: 0 30px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.chart-title { font-size: 15px; font-weight: 600; color: #333; }
+.legend { display: flex; align-items: center; gap: 11px; font-size: 10px; color: #888; white-space: nowrap; }
+.legend-item { display: inline-flex; align-items: center; gap: 4px; }
+.legend-dot { width: 7px; height: 7px; border-radius: 2px; }
+.chart-body { height: 216px; padding: 12px 30px 16px; }
+.bar-chart { height: 100%; display: grid; grid-template-columns: 30px 1fr; grid-template-rows: 1fr 22px; }
+.y-axis { grid-row: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 1px 8px 0 0; font-size: 9px; color: #bbb; text-align: right; }
+.bar-plot { grid-column: 2; position: relative; display: flex; align-items: flex-end; justify-content: space-around; border-bottom: 0.5px solid #dddcd6; background: repeating-linear-gradient(to bottom, #fff 0, #fff calc(25% - 1px), #f1f0eb 25%); }
+.bar-group { position: relative; width: 14%; height: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 4px; cursor: help; }
+.bar-group::after { content: attr(data-tooltip); position: absolute; z-index: 10; left: 50%; bottom: calc(100% - 8px); width: max-content; padding: 7px 9px; border-radius: 6px; background: #292925; color: #fff; font-size: 10.5px; line-height: 1.4; white-space: nowrap; opacity: 0; visibility: hidden; transform: translate(-50%, 4px); transition: 120ms ease; pointer-events: none; box-shadow: 0 5px 16px rgba(0,0,0,.12); }
+.bar-group:hover::after { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+.bar { width: 12px; min-height: 3px; border-radius: 4px 4px 1px 1px; transition: opacity 120ms ease; }
+.bar:hover { opacity: .72; }
+.bar-labels { grid-column: 2; display: flex; justify-content: space-around; align-items: end; font-size: 9.5px; color: #aaa; }
+.single-bars .bar { width: 26px; }
+.stacked-group { position: relative; width: 14%; height: 100%; display: flex; align-items: flex-end; justify-content: center; cursor: help; }
+.stacked-group::after { content: attr(data-tooltip); position: absolute; z-index: 10; left: 50%; bottom: calc(100% - 8px); width: max-content; padding: 7px 9px; border-radius: 6px; background: #292925; color: #fff; font-size: 10.5px; line-height: 1.4; white-space: nowrap; opacity: 0; visibility: hidden; transform: translate(-50%, 4px); transition: 120ms ease; pointer-events: none; box-shadow: 0 5px 16px rgba(0,0,0,.12); }
+.stacked-group:hover::after { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+.stacked-bar { width: 28px; display: flex; flex-direction: column-reverse; border-radius: 5px 5px 1px 1px; overflow: hidden; }
+.stack-segment { width: 100%; min-height: 3px; transition: opacity 120ms ease; }
+.stack-segment:hover { opacity: .72; }
+.line-wrap { height: 100%; min-height: 0; display: flex; flex-direction: column; }
+.line-svg { flex: 1; width: 100%; min-height: 0; display: block; overflow: hidden; }
+.line-months { height: 22px; display: flex; justify-content: space-between; padding: 5px 8px 0 28px; color: #aaa; font-size: 9.5px; }
+
+/* TABLE */
+.table-card { background: #fff; border-radius: 10px; overflow: hidden; padding-bottom: 20px; }
+.table-head { height: 50px; padding: 0 22px; display: flex; align-items: center; }
+.table-title { color: #333; font-size: 15px; font-weight: 600; }
+.table-wrap { margin: 0 20px; border: 1px solid #e3e1db; border-radius: 8px; overflow-x: auto; }
+.data-table { width: 100%; min-width: 1300px; table-layout: fixed; border-collapse: collapse; white-space: nowrap; }
+.data-table th { height: 42px; padding: 0 14px; background: #faf9f6; border: 1px solid #e3e1db; color: #777; font-size: 12px; font-weight: 500; text-align: right; }
+.data-table th, .data-table td { width: 10%; }
+.data-table th:first-child, .data-table td:first-child { text-align: left; }
+.data-table td { height: 46px; padding: 0 14px; border: 1px solid #e3e1db; color: #555; font-size: 12.5px; text-align: right; }
+.data-table tr > :first-child { border-left: 0; }
+.data-table tr > :last-child { border-right: 0; }
+.data-table thead tr:first-child > * { border-top: 0; }
+.data-table tfoot tr:last-child > * { border-bottom: 0; }
+.data-table tbody tr:hover { background: #fcfbf8; }
+.data-table tfoot td { background: #faf9f6; color: #222; font-weight: 650; }
+.up { color: #23845d !important; font-weight: 600; }
+.down { color: #c65f55 !important; font-weight: 600; }
+.th-label { display: inline-flex; align-items: center; justify-content: flex-end; gap: 5px; }
+.help-tip { position: relative; width: 15px; height: 15px; border: 1px solid #c9c7c0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #999; font-size: 9px; font-weight: 650; line-height: 1; cursor: help; }
+.help-tip::after { content: attr(data-tooltip); position: absolute; z-index: 10; right: -8px; top: calc(100% + 8px); width: max-content; max-width: 300px; padding: 8px 10px; border-radius: 7px; background: #292925; color: #fff; font-size: 11px; font-weight: 400; line-height: 1.45; text-align: left; white-space: normal; opacity: 0; visibility: hidden; transform: translateY(-3px); transition: 120ms ease; pointer-events: none; box-shadow: 0 5px 16px rgba(0,0,0,.12); }
+.help-tip:hover::after, .help-tip:focus::after { opacity: 1; visibility: visible; transform: translateY(0); }
+
+@media (max-width: 1120px) {
+  .summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 860px) {
+  .summary-grid, .chart-grid { grid-template-columns: 1fr 1fr; }
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div class="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-main">shortflow</div>
+    <div class="sb-logo-sub">Admin</div>
+    <button class="sb-toggle" type="button" aria-label="네비 접기" aria-expanded="true"><i class="ti ti-chevron-left"></i></button>
+  </div>
+  <nav class="nav">
+    <div class="nav-label">메인</div>
+    <a class="ni active" href="dashboard-admin.html"><i class="ti ti-home"></i> 대시보드</a>
+    <div class="sub">
+      <a class="ni" href="dashboard-admin.html">운영 현황</a>
+      <a class="ni active" href="kpi-admin.html">KPI</a>
+    </div>
+    <div class="nav-label">회원</div>
+    <a class="ni" href="member-admin.html"><i class="ti ti-users"></i> 회원 관리</a>
+    <div class="sub">
+      <a class="ni" href="member-admin.html#users">유저</a>
+      <a class="ni" href="member-admin.html#companies">회사</a>
+    </div>
+    <div class="nav-label">콘텐츠</div>
+    <a class="ni" href="content-admin-full.html"><i class="ti ti-file-text"></i> 콘텐츠 관리</a>
+    <div class="sub">
+      <a class="ni" href="content-admin-full.html#list">전체 콘텐츠</a>
+      <a class="ni" href="content-admin-full.html#revisions">수정 요청</a>
+    </div>
+    <div class="nav-label">거래</div>
+    <a class="ni" href="workflow-admin.html"><i class="ti ti-git-branch"></i> 워크플로우</a>
+    <div class="sub">
+      <a class="ni" href="workflow-admin.html#platform">단일 거래</a>
+      <a class="ni" href="workflow-admin.html#bundle">묶음 거래</a>
+      <a class="ni" href="workflow-admin.html#turnkey">턴키 거래</a>
+    </div>
+    <a class="ni" href="turnkey-intent-admin.html"><i class="ti ti-clipboard-list"></i> 턴키 판매 의사</a>
+    <div class="nav-label">운영</div>
+    <a class="ni" href="settlement-admin.html"><i class="ti ti-receipt"></i> 정산</a>
+    <div class="sub">
+      <a class="ni" href="settlement-admin.html#contracts">계약관리</a>
+      <a class="ni" href="settlement-admin.html#settlement">정산처리</a>
+      <a class="ni" href="settlement-admin.html#completed">정산완료</a>
+    </div>
+    <a class="ni" href="mail-admin.html"><i class="ti ti-mail"></i> 메일 발송</a>
+    <a class="ni" href="audit-log.html"><i class="ti ti-shield-check"></i> 관리 이력</a>
+  </nav>
+  <div class="sb-foot">
+    <div class="ava"><i class="ti ti-user"></i></div>
+    <div>
+      <div class="uname">김관리자</div>
+      <div class="uemail">ops@shortflow.io</div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title">
+      <span>대시보드</span>
+      <span class="topbar-separator">/</span>
+      <span class="topbar-current">KPI</span>
+    </div>
+  </div>
+
+  <div class="body">
+    <section class="section">
+      <div class="summary-grid">
+        <article class="metric-card">
+          <div class="metric-top">
+            <span class="metric-name">제작사 수</span>
+            <span class="metric-icon tone-violet"><i class="ti ti-movie"></i></span>
+          </div>
+          <strong class="metric-value">24<span style="font-size:13px;margin-left:2px">개사</span></strong>
+          <div class="metric-change"><i class="ti ti-trending-up"></i><strong>+3</strong><span>전월 대비</span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-top">
+            <span class="metric-name">플랫폼사 수</span>
+            <span class="metric-icon tone-green"><i class="ti ti-device-tv"></i></span>
+          </div>
+          <strong class="metric-value">14<span style="font-size:13px;margin-left:2px">개사</span></strong>
+          <div class="metric-change"><i class="ti ti-trending-up"></i><strong>+1</strong><span>전월 대비</span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-top">
+            <span class="metric-name">등록 콘텐츠 수</span>
+            <span class="metric-icon tone-orange"><i class="ti ti-photo-video"></i></span>
+          </div>
+          <strong class="metric-value">87<span style="font-size:13px;margin-left:2px">편</span></strong>
+          <div class="metric-change"><i class="ti ti-trending-up"></i><strong>+12</strong><span>전월 대비</span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-top">
+            <span class="metric-name">구매 문의 수</span>
+            <span class="metric-icon tone-blue"><i class="ti ti-message-question"></i></span>
+          </div>
+          <strong class="metric-value">28<span style="font-size:13px;margin-left:2px">건</span></strong>
+          <div class="metric-change down"><i class="ti ti-trending-down"></i><strong>-3</strong><span>전월 대비</span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-top">
+            <span class="metric-name">누적 거래액</span>
+            <span class="metric-icon tone-yellow"><i class="ti ti-coins"></i></span>
+          </div>
+          <strong class="metric-value">4.2<span style="font-size:13px;margin-left:2px">억원</span></strong>
+          <div class="metric-change"><i class="ti ti-trending-up"></i><strong>+8,500만</strong><span>전월 대비</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="chart-grid">
+        <article class="chart-card">
+          <div class="chart-head">
+            <div class="chart-title">월별 신규 가입 회사 추이</div>
+            <div class="legend"><span class="legend-item"><i class="legend-dot" style="background:#5b8fd9"></i>제작사</span><span class="legend-item"><i class="legend-dot" style="background:#a9c8ec"></i>플랫폼사</span></div>
+          </div>
+          <div class="chart-body">
+            <div class="bar-chart">
+              <div class="y-axis"><span>8</span><span>6</span><span>4</span><span>2</span><span>0</span></div>
+              <div class="bar-plot">
+                <div class="bar-group" data-tooltip="제작사 2 · 플랫폼사 1 · 총 3개사"><i class="bar" style="height:25%;background:#5b8fd9"></i><i class="bar" style="height:12.5%;background:#a9c8ec"></i></div>
+                <div class="bar-group" data-tooltip="제작사 3 · 플랫폼사 2 · 총 5개사"><i class="bar" style="height:37.5%;background:#5b8fd9"></i><i class="bar" style="height:25%;background:#a9c8ec"></i></div>
+                <div class="bar-group" data-tooltip="제작사 5 · 플랫폼사 3 · 총 8개사"><i class="bar" style="height:62.5%;background:#5b8fd9"></i><i class="bar" style="height:37.5%;background:#a9c8ec"></i></div>
+                <div class="bar-group" data-tooltip="제작사 4 · 플랫폼사 2 · 총 6개사"><i class="bar" style="height:50%;background:#5b8fd9"></i><i class="bar" style="height:25%;background:#a9c8ec"></i></div>
+                <div class="bar-group" data-tooltip="제작사 6 · 플랫폼사 3 · 총 9개사"><i class="bar" style="height:75%;background:#5b8fd9"></i><i class="bar" style="height:37.5%;background:#a9c8ec"></i></div>
+                <div class="bar-group" data-tooltip="제작사 5 · 플랫폼사 2 · 총 7개사"><i class="bar" style="height:62.5%;background:#5b8fd9"></i><i class="bar" style="height:25%;background:#a9c8ec"></i></div>
+              </div>
+              <div class="bar-labels"><span>1월</span><span>2월</span><span>3월</span><span>4월</span><span>5월</span><span>6월</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="chart-card">
+          <div class="chart-head">
+            <div class="chart-title">월별 콘텐츠 등록 추이</div>
+            <div class="legend"><span class="legend-item"><i class="legend-dot" style="background:#8d83d8"></i>신규 콘텐츠</span></div>
+          </div>
+          <div class="chart-body">
+            <div class="line-wrap">
+              <svg class="line-svg" viewBox="-4 -4 540 217" preserveAspectRatio="none" aria-label="월별 콘텐츠 등록 추이 차트">
+                <defs>
+                  <linearGradient id="contentArea" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#8d83d8" stop-opacity=".28"/>
+                    <stop offset="100%" stop-color="#8d83d8" stop-opacity=".02"/>
+                  </linearGradient>
+                </defs>
+                <g stroke="#f0efe9" stroke-width="1">
+                  <line x1="30" y1="10" x2="510" y2="10"/><line x1="30" y1="55" x2="510" y2="55"/>
+                  <line x1="30" y1="100" x2="510" y2="100"/><line x1="30" y1="145" x2="510" y2="145"/><line x1="30" y1="190" x2="510" y2="190"/>
+                </g>
+                <g fill="#bbb" font-size="9">
+                  <text x="5" y="14">20</text><text x="5" y="59">15</text><text x="5" y="104">10</text><text x="11" y="149">5</text><text x="11" y="194">0</text>
+                </g>
+                <path d="M30 190 L30 127 L126 100 L222 136 L318 73 L414 91 L510 46 L510 190 Z" fill="url(#contentArea)"/>
+                <path d="M30 127 L126 100 L222 136 L318 73 L414 91 L510 46" fill="none" stroke="#8d83d8" stroke-width="2"/>
+                <g fill="#fff" stroke="#8d83d8" stroke-width="2">
+                  <circle cx="30" cy="127" r="4.5"/><circle cx="126" cy="100" r="4.5"/><circle cx="222" cy="136" r="4.5"/>
+                  <circle cx="318" cy="73" r="4.5"/><circle cx="414" cy="91" r="4.5"/><circle cx="510" cy="46" r="4.5"/>
+                </g>
+                <g fill="transparent" stroke="none" style="cursor:help">
+                  <circle cx="30" cy="127" r="14"><title>1월 · 신규 콘텐츠 7편</title></circle>
+                  <circle cx="126" cy="100" r="14"><title>2월 · 신규 콘텐츠 10편</title></circle>
+                  <circle cx="222" cy="136" r="14"><title>3월 · 신규 콘텐츠 6편</title></circle>
+                  <circle cx="318" cy="73" r="14"><title>4월 · 신규 콘텐츠 13편</title></circle>
+                  <circle cx="414" cy="91" r="14"><title>5월 · 신규 콘텐츠 11편</title></circle>
+                  <circle cx="510" cy="46" r="14"><title>6월 · 신규 콘텐츠 16편</title></circle>
+                </g>
+              </svg>
+              <div class="line-months"><span>1월</span><span>2월</span><span>3월</span><span>4월</span><span>5월</span><span>6월</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="chart-card">
+          <div class="chart-head">
+            <div class="chart-title">월별 거래액</div>
+            <div class="legend"><span class="legend-item"><i class="legend-dot" style="background:#4fa987"></i>거래액</span></div>
+          </div>
+          <div class="chart-body">
+            <div class="bar-chart single-bars">
+              <div class="y-axis"><span>1억</span><span>7.5천</span><span>5천</span><span>2.5천</span><span>0</span></div>
+              <div class="bar-plot">
+                <div class="bar-group" data-tooltip="1월 · 거래액 42,000,000원"><i class="bar" style="height:42%;background:#8bcab2"></i></div>
+                <div class="bar-group" data-tooltip="2월 · 거래액 58,000,000원"><i class="bar" style="height:58%;background:#79bea4"></i></div>
+                <div class="bar-group" data-tooltip="3월 · 거래액 49,000,000원"><i class="bar" style="height:49%;background:#69b699"></i></div>
+                <div class="bar-group" data-tooltip="4월 · 거래액 72,000,000원"><i class="bar" style="height:72%;background:#5caf90"></i></div>
+                <div class="bar-group" data-tooltip="5월 · 거래액 64,000,000원"><i class="bar" style="height:64%;background:#52aa89"></i></div>
+                <div class="bar-group" data-tooltip="6월 · 거래액 85,000,000원"><i class="bar" style="height:85%;background:#4fa987"></i></div>
+              </div>
+              <div class="bar-labels"><span>1월</span><span>2월</span><span>3월</span><span>4월</span><span>5월</span><span>6월</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="chart-card">
+          <div class="chart-head">
+            <div class="chart-title">콘텐츠 유형 분포</div>
+            <div class="legend">
+              <span class="legend-item"><i class="legend-dot" style="background:#5b8fd9"></i>단일</span>
+              <span class="legend-item"><i class="legend-dot" style="background:#8d83d8"></i>묶음</span>
+              <span class="legend-item"><i class="legend-dot" style="background:#e8b15b"></i>턴키</span>
+            </div>
+          </div>
+          <div class="chart-body">
+            <div class="bar-chart">
+              <div class="y-axis"><span>20</span><span>15</span><span>10</span><span>5</span><span>0</span></div>
+              <div class="bar-plot">
+                <div class="stacked-group" data-tooltip="단일 5 · 묶음 2 · 턴키 2 · 총 9건">
+                  <div class="stacked-bar" style="height:45%">
+                    <i class="stack-segment" style="height:55.6%;background:#5b8fd9"></i>
+                    <i class="stack-segment" style="height:22.2%;background:#8d83d8"></i>
+                    <i class="stack-segment" style="height:22.2%;background:#e8b15b"></i>
+                  </div>
+                </div>
+                <div class="stacked-group" data-tooltip="단일 6 · 묶음 3 · 턴키 2 · 총 11건">
+                  <div class="stacked-bar" style="height:55%">
+                    <i class="stack-segment" style="height:54.5%;background:#5b8fd9"></i>
+                    <i class="stack-segment" style="height:27.3%;background:#8d83d8"></i>
+                    <i class="stack-segment" style="height:18.2%;background:#e8b15b"></i>
+                  </div>
+                </div>
+                <div class="stacked-group" data-tooltip="단일 6 · 묶음 2 · 턴키 2 · 총 10건">
+                  <div class="stacked-bar" style="height:50%">
+                    <i class="stack-segment" style="height:60%;background:#5b8fd9"></i>
+                    <i class="stack-segment" style="height:20%;background:#8d83d8"></i>
+                    <i class="stack-segment" style="height:20%;background:#e8b15b"></i>
+                  </div>
+                </div>
+                <div class="stacked-group" data-tooltip="단일 8 · 묶음 4 · 턴키 2 · 총 14건">
+                  <div class="stacked-bar" style="height:70%">
+                    <i class="stack-segment" style="height:57.1%;background:#5b8fd9"></i>
+                    <i class="stack-segment" style="height:28.6%;background:#8d83d8"></i>
+                    <i class="stack-segment" style="height:14.3%;background:#e8b15b"></i>
+                  </div>
+                </div>
+                <div class="stacked-group" data-tooltip="단일 7 · 묶음 4 · 턴키 2 · 총 13건">
+                  <div class="stacked-bar" style="height:65%">
+                    <i class="stack-segment" style="height:53.8%;background:#5b8fd9"></i>
+                    <i class="stack-segment" style="height:30.8%;background:#8d83d8"></i>
+                    <i class="stack-segment" style="height:15.4%;background:#e8b15b"></i>
+                  </div>
+                </div>
+                <div class="stacked-group" data-tooltip="단일 9 · 묶음 5 · 턴키 3 · 총 17건">
+                  <div class="stacked-bar" style="height:85%">
+                    <i class="stack-segment" style="height:52.9%;background:#5b8fd9"></i>
+                    <i class="stack-segment" style="height:29.4%;background:#8d83d8"></i>
+                    <i class="stack-segment" style="height:17.7%;background:#e8b15b"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="bar-labels"><span>1월</span><span>2월</span><span>3월</span><span>4월</span><span>5월</span><span>6월</span></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="table-card">
+        <div class="table-head">
+          <div class="table-title">월별 상세 지표</div>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>기준월</th>
+                <th>신규 제작사</th>
+                <th>신규 플랫폼사</th>
+                <th>신규 콘텐츠</th>
+                <th><span class="th-label">신규 구매 문의<span class="help-tip" tabindex="0" data-tooltip="단일 구매 문의, 묶음 구매 문의, 턴키 구매 문의를 합산한 건수">?</span></span></th>
+                <th><span class="th-label">거래 성공<span class="help-tip" tabindex="0" data-tooltip="플랫폼사에 메타데이터 권한이 부여된 건수">?</span></span></th>
+                <th><span class="th-label">전환율<span class="help-tip" tabindex="0" data-tooltip="신규 구매 문의 대비 거래 성공 비율 (거래 성공 ÷ 신규 구매 문의 × 100)">?</span></span></th>
+                <th><span class="th-label">거래액<span class="help-tip" tabindex="0" data-tooltip="플랫폼사가 bable에 지급한 금액">?</span></span></th>
+                <th><span class="th-label">bable 수수료<span class="help-tip" tabindex="0" data-tooltip="거래액에서 bable이 가져가는 수수료">?</span></span></th>
+                <th><span class="th-label">제작사 정산액<span class="help-tip" tabindex="0" data-tooltip="bable이 제작사에 최종 지급한 금액">?</span></span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>2026.06</td><td>5개사</td><td>2개사</td><td>16편</td><td>28건</td><td>18건</td><td class="up">64.3%</td><td>85,000,000원</td><td>8,500,000원</td><td>76,500,000원</td></tr>
+              <tr><td>2026.05</td><td>6개사</td><td>3개사</td><td>11편</td><td>23건</td><td>14건</td><td>60.9%</td><td>64,000,000원</td><td>6,400,000원</td><td>57,600,000원</td></tr>
+              <tr><td>2026.04</td><td>4개사</td><td>2개사</td><td>13편</td><td>21건</td><td>16건</td><td class="up">76.2%</td><td>72,000,000원</td><td>7,200,000원</td><td>64,800,000원</td></tr>
+              <tr><td>2026.03</td><td>5개사</td><td>3개사</td><td>6편</td><td>24건</td><td>11건</td><td class="down">45.8%</td><td>49,000,000원</td><td>4,900,000원</td><td>44,100,000원</td></tr>
+              <tr><td>2026.02</td><td>3개사</td><td>2개사</td><td>10편</td><td>20건</td><td>13건</td><td class="up">65.0%</td><td>58,000,000원</td><td>5,800,000원</td><td>52,200,000원</td></tr>
+              <tr><td>2026.01</td><td>2개사</td><td>1개사</td><td>7편</td><td>18건</td><td>9건</td><td>50.0%</td><td>42,000,000원</td><td>4,200,000원</td><td>37,800,000원</td></tr>
+            </tbody>
+            <tfoot>
+              <tr><td>합계</td><td>25개사</td><td>13개사</td><td>63편</td><td>134건</td><td>81건</td><td>60.4%</td><td>370,000,000원</td><td>37,000,000원</td><td>333,000,000원</td></tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+</body>
+</html>
