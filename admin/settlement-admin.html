@@ -558,6 +558,14 @@ td { padding: 9px 12px; vertical-align: middle; }
 .process-review-table .subtotal-row td { background: #fafaf7; font-weight: 700; border-bottom: none; }
 .process-review-foot-note { margin-right: auto; font-size: 11.5px; color: #888; }
 .process-review-actions { display: flex; align-items: center; gap: 8px; }
+.process-review-panel.confirm-step { width: min(460px, 100%); }
+.process-confirm-body { display: none; padding: 36px 32px 30px; text-align: center; }
+.process-confirm-icon { width: 52px; height: 52px; margin: 0 auto 17px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #fff3ed; color: #e85d2c; font-size: 23px; }
+.process-confirm-title { margin: 0; font-size: 19px; font-weight: 700; color: #1a1a18; }
+.process-confirm-desc { margin: 9px auto 20px; max-width: 340px; color: #777268; font-size: 12.5px; line-height: 1.6; }
+.process-confirm-summary { padding: 15px 18px; border: 0.5px solid #e0dfd9; border-radius: 10px; background: #fafaf7; }
+.process-confirm-studio { color: #555; font-size: 12px; }
+.process-confirm-total { margin-top: 5px; color: #1a1a18; font-family: monospace; font-size: 17px; font-weight: 700; }
 
 /* SAVEBAR */
 .savebar { background: #fff; border-top: 0.5px solid #e8e6e0; padding: 10px 18px; display: flex; justify-content: flex-end; gap: 7px; flex-shrink: 0; }
@@ -1068,11 +1076,11 @@ td { padding: 9px 12px; vertical-align: middle; }
     <div class="settlement-modal-panel process-review-panel" onclick="event.stopPropagation()">
       <div class="settlement-modal-head">
         <div>
-          <div class="settlement-modal-title">정산 예정 처리 최종 검토</div>
+          <div class="settlement-modal-title" id="process-review-title">정산 예정 처리 최종 검토</div>
           <div class="settlement-modal-sub" id="process-review-sub"></div>
         </div>
       </div>
-      <div class="settlement-modal-body">
+      <div class="settlement-modal-body" id="process-review-body">
         <div class="process-review-summary">
           <div class="process-review-card process-review-stat"><div class="process-review-k">처리 대상</div><div class="process-review-v" id="process-review-count">0건</div></div>
           <div class="process-review-card process-review-stat"><div class="process-review-k">제작사</div><div class="process-review-v" id="process-review-studio" style="font-family:inherit"></div></div>
@@ -1114,11 +1122,26 @@ td { padding: 9px 12px; vertical-align: middle; }
           </table>
         </div>
       </div>
-      <div class="settlement-modal-foot">
+      <div class="process-confirm-body" id="process-confirm-body">
+        <div class="process-confirm-icon"><i class="ti ti-alert-circle"></i></div>
+        <p class="process-confirm-title">정말 정산 예정 처리를 확정할까요?</p>
+        <p class="process-confirm-desc">확정하면 선택한 내역이 제작사 확인 대기 상태로 이동합니다.</p>
+        <div class="process-confirm-summary">
+          <div class="process-confirm-studio" id="process-confirm-studio"></div>
+          <div class="process-confirm-total" id="process-confirm-total"></div>
+        </div>
+      </div>
+      <div class="settlement-modal-foot" id="process-review-foot">
         <div class="process-review-foot-note">선택한 정산 예정월의 배치로 생성하여 제작사 확인 대기 상태로 이동합니다.</div>
         <div class="process-review-actions">
           <button class="btn" onclick="closeProcessReviewModal()">닫기</button>
           <button class="btn btn-primary" onclick="confirmProcessSelectedDrafts()">정산 예정 처리</button>
+        </div>
+      </div>
+      <div class="settlement-modal-foot" id="process-confirm-foot" style="display:none">
+        <div class="process-review-actions">
+          <button class="btn" onclick="backToProcessReview()">이전</button>
+          <button class="btn btn-primary" onclick="finalizeProcessSelectedDrafts()">정말 확정</button>
         </div>
       </div>
     </div>
@@ -2315,6 +2338,7 @@ function openProcessReviewModal(rows) {
   processReviewRows = rows;
   const studio = rows[0]?.studio || '';
   const total = rows.reduce((sum, row) => sum + row.amount, 0);
+  backToProcessReview();
   document.getElementById('process-review-sub').textContent = `${studio} · ${rows.length}건을 제작사 확인 대기 상태로 이동합니다`;
   document.getElementById('process-review-count').textContent = `${rows.length}건`;
   document.getElementById('process-review-studio').textContent = studio;
@@ -2326,16 +2350,52 @@ function openProcessReviewModal(rows) {
 
 function closeProcessReviewModal() {
   processReviewRows = [];
+  backToProcessReview();
   document.getElementById('process-review-modal').classList.remove('show');
 }
 
 function confirmProcessSelectedDrafts() {
+  const settlementMonthInput = document.getElementById('process-review-month');
+  if (!processReviewRows.length) return;
+  if (!settlementMonthInput.value) {
+    settlementMonthInput.focus();
+    return;
+  }
+  const studio = processReviewRows[0]?.studio || '';
+  const total = processReviewRows.reduce((sum, row) => sum + row.amount, 0);
+  document.getElementById('process-confirm-studio').textContent = `${studio} · ${processReviewRows.length}건 · ${settlementMonthInput.value}`;
+  document.getElementById('process-confirm-total').textContent = formatWon(total);
+  document.getElementById('process-review-title').textContent = '정산 예정 처리 최종 확정';
+  document.getElementById('process-review-sub').textContent = '';
+  document.getElementById('process-review-body').style.display = 'none';
+  document.getElementById('process-review-foot').style.display = 'none';
+  document.getElementById('process-confirm-body').style.display = 'block';
+  document.getElementById('process-confirm-foot').style.display = 'flex';
+  document.querySelector('.process-review-panel').classList.add('confirm-step');
+}
+
+function backToProcessReview() {
+  const panel = document.querySelector('.process-review-panel');
+  if (!panel) return;
+  const studio = processReviewRows[0]?.studio || '';
+  document.getElementById('process-review-title').textContent = '정산 예정 처리 최종 검토';
+  document.getElementById('process-review-sub').textContent = processReviewRows.length
+    ? `${studio} · ${processReviewRows.length}건을 제작사 확인 대기 상태로 이동합니다`
+    : '';
+  document.getElementById('process-review-body').style.display = '';
+  document.getElementById('process-review-foot').style.display = 'flex';
+  document.getElementById('process-confirm-body').style.display = 'none';
+  document.getElementById('process-confirm-foot').style.display = 'none';
+  panel.classList.remove('confirm-step');
+}
+
+function finalizeProcessSelectedDrafts() {
   const movingIds = new Set(processReviewRows.map((row) => row.id));
   if (!movingIds.size) return;
-  const settlementMonthInput = document.getElementById('process-review-month');
-  const settlementMonth = settlementMonthInput.value;
+  const settlementMonth = document.getElementById('process-review-month').value;
   if (!settlementMonth) {
-    settlementMonthInput.focus();
+    backToProcessReview();
+    document.getElementById('process-review-month').focus();
     return;
   }
   const moving = opsDraftRows.filter((row) => movingIds.has(row.id));

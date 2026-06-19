@@ -206,7 +206,7 @@ function AIIntroModal(_ref2) {
     style: {
       margin: 0,
       fontFamily: t.sans,
-      fontSize: 17,
+      fontSize: 18,
       fontWeight: 500,
       color: t.ink,
       letterSpacing: -0.45,
@@ -272,14 +272,14 @@ function AIPlanUploadModal(_ref3) {
     },
     style: {
       width: 380,
-      height: 325,
+      height: 308,
       maxWidth: 'calc(100vw - 48px)',
       maxHeight: 'calc(100vh - 48px)',
       boxSizing: 'border-box',
       background: t.surface,
       borderRadius: 22,
       boxShadow: 'none',
-      padding: '22px 24px 22px',
+      padding: '22px 24px',
       display: 'flex',
       flexDirection: 'column'
     }
@@ -305,7 +305,7 @@ function AIPlanUploadModal(_ref3) {
     }
   }, "BETA")), /*#__PURE__*/React.createElement("p", {
     style: {
-      margin: '3px 0 18px',
+      margin: '3px 0 14px',
       fontFamily: t.sans,
       fontSize: 13,
       color: t.inkMute,
@@ -317,12 +317,12 @@ function AIPlanUploadModal(_ref3) {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      minHeight: 174,
+      minHeight: 148,
       borderRadius: 14,
       border: "1px dashed ".concat(t.lineStrong),
       background: t.surfaceAlt,
       cursor: 'pointer',
-      padding: 18,
+      padding: 14,
       textAlign: 'center',
       marginTop: 0
     }
@@ -364,7 +364,12 @@ function AIPlanUploadModal(_ref3) {
       color: t.inkMute
     }
   }, "\uAE30\uD68D\uC548 PDF \uD30C\uC77C \uC120\uD0DD"), /*#__PURE__*/React.createElement("span", {
-    style: { marginTop: 5, fontFamily: t.sans, fontSize: 11.5, color: t.inkFaint }
+    style: {
+      marginTop: 5,
+      fontFamily: t.sans,
+      fontSize: 11.5,
+      color: t.inkFaint
+    }
   }, "PDF \uD615\uC2DD\uB9CC \uAC00\uB2A5 \u2022 100\uD398\uC774\uC9C0 \uC774\uD558 \u2022 \uCD5C\uB300 100MB")), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',

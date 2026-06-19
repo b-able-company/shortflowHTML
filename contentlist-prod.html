@@ -308,6 +308,42 @@
       font-size: 13px;
     }
 
+    .prod-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 48px;
+    }
+
+    .prod-page-btn {
+      min-width: 18px;
+      height: 24px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #6b7280;
+      font-size: 13px;
+      font-weight: 400;
+      cursor: pointer;
+    }
+
+    .prod-page-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke-width: 2.1;
+    }
+
+    .prod-page-btn.active {
+      color: var(--prod-orange);
+      font-weight: 700;
+    }
+
+    .prod-page-btn:disabled {
+      color: #c0c5cf;
+      cursor: default;
+    }
+
     @media (max-width: 980px) {
       .prod-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -354,6 +390,7 @@
 
     <section class="prod-grid" id="contentGrid" aria-label="내 콘텐츠 목록"></section>
     <div class="empty" id="emptyState">이 상태의 콘텐츠가 없어요.</div>
+    <nav class="prod-pagination" id="prodPagination" aria-label="내 콘텐츠 페이지"></nav>
   </main>
 
   <script>
@@ -363,12 +400,21 @@
       { title: '우리 반 전학생은 아이돌', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'teal', note: '아직 제출 전이에요. 필수 정보를 입력한 뒤 검토 요청해주세요.' },
       { title: '그녀의 두 번째 엔딩', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'indigo', note: '회차 정보가 임시 저장되어 있어요.' },
       { title: '대표님, 계약 연애는 처음이라서요', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'violet', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
-      { title: '달빛 아래 편의점', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'slate', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' }
+      { title: '달빛 아래 편의점', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'slate', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
+      { title: '남편이 AI입니다', type: 'AI', status: 'approved', statusLabel: '승인됨', tone: 'amber', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
+      { title: '퇴사했더니 황제가 됐다', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'rose', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
+      { title: '살인범과 룸메이트가 되었다', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'slate', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
+      { title: '오늘부터 악녀 대행합니다', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'teal', note: '아직 제출 전이에요. 필수 정보를 입력한 뒤 검토 요청해주세요.' },
+      { title: '우주 택배 기사님', type: '숏애니', status: 'approved', statusLabel: '승인됨', tone: 'indigo', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
+      { title: '나의 위험한 파트너', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'violet', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' }
     ];
 
     const grid = document.getElementById('contentGrid');
     const empty = document.getElementById('emptyState');
+    const pagination = document.getElementById('prodPagination');
     let activeFilter = 'all';
+    let activePage = 1;
+    const pageSize = 8;
 
     function filteredContents() {
       if (activeFilter === 'all') return myContents;
@@ -404,10 +450,14 @@
 
     function renderContents() {
       const rows = filteredContents();
+      const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+      activePage = Math.min(activePage, totalPages);
+      const start = (activePage - 1) * pageSize;
+      const pageRows = rows.slice(start, start + pageSize);
 
       empty.style.display = rows.length ? 'none' : 'block';
       grid.style.display = rows.length ? 'grid' : 'none';
-      grid.innerHTML = rows.map(item => `
+      grid.innerHTML = pageRows.map(item => `
         <article class="prod-card status-${item.status}">
           <div class="prod-poster tone-${item.tone}">
             <span class="prod-badge">
@@ -431,14 +481,41 @@
           </div>
         </article>
       `).join('');
+      renderPagination(rows.length ? totalPages : 0);
+    }
+
+    function renderPagination(totalPages) {
+      if (totalPages <= 1) {
+        pagination.innerHTML = '';
+        return;
+      }
+      const prevIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>';
+      const nextIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
+      const pages = Array.from({ length: totalPages }, (_, index) => index + 1).map(page => `
+        <button class="prod-page-btn ${page === activePage ? 'active' : ''}" type="button" data-page="${page}" aria-label="${page}페이지" ${page === activePage ? 'aria-current="page"' : ''}>${page}</button>
+      `).join('');
+      pagination.innerHTML = `
+        <button class="prod-page-btn" type="button" data-page="${activePage - 1}" aria-label="이전 페이지" ${activePage === 1 ? 'disabled' : ''}>${prevIcon}</button>
+        ${pages}
+        <button class="prod-page-btn" type="button" data-page="${activePage + 1}" aria-label="다음 페이지" ${activePage === totalPages ? 'disabled' : ''}>${nextIcon}</button>
+      `;
     }
 
     document.querySelectorAll('.prod-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         activeFilter = tab.dataset.filter;
+        activePage = 1;
         document.querySelectorAll('.prod-tab').forEach(item => item.classList.toggle('active', item === tab));
         renderContents();
       });
+    });
+
+    pagination.addEventListener('click', event => {
+      const button = event.target.closest('button[data-page]');
+      if (!button || button.disabled) return;
+      activePage = Number(button.dataset.page);
+      renderContents();
+      document.querySelector('.prod-toolbar').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
     document.addEventListener('click', event => {
