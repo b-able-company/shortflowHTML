@@ -169,9 +169,6 @@ function WebBasicSection({ form, set, setLangItem, baseLanguage, onAiUpload, t }
                   onMouseLeave={(e) => { e.currentTarget.style.borderColor = t.lineStrong; e.currentTarget.style.background = t.surface; }}
                   style={{ height: 34, padding: '0 13px', borderRadius: 9, border: `0.5px solid ${t.lineStrong}`, background: t.surface, color: '#34363B', cursor: 'pointer', fontFamily: t.sans, fontSize: 13, fontWeight: 650, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7, flexShrink: 0, transition: 'background 140ms ease, border-color 140ms ease' }}
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ACCENT} strokeWidth="1.8">
-                    <path d="M12 3l1.35 4.15L17.5 8.5l-4.15 1.35L12 14l-1.35-4.15L6.5 8.5l4.15-1.35L12 3zM18.5 14l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2z" strokeLinejoin="round" />
-                  </svg>
                   AI 자동 추출
                 </button>
               )}
@@ -275,12 +272,17 @@ function reviewArr(v) {
   return Array.isArray(v) ? v : v ? [v] : [];
 }
 
-function ReviewRow({ label, value, ok = true, t }) {
+function ReviewRow({ label, value, ok = true, required = false, t }) {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '150px minmax(0, 1fr)', minHeight: 38, borderTop: `0.5px solid ${t.line}` }}>
-      <div style={{ display: 'flex', alignItems: 'center', padding: '0 10px', background: '#F7F7F4', borderRight: `0.5px solid ${t.line}`, fontFamily: t.sans, fontSize: 12.5, fontWeight: 700, color: '#5F646D' }}>{label}</div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 10px', fontFamily: t.sans, fontSize: 13.5, fontWeight: ok ? 600 : 500, color: ok ? t.ink : t.inkFaint }}>
-        <span style={{ width: 7, height: 7, borderRadius: 999, background: ok ? ACCENT : t.lineStrong, flexShrink: 0 }} />
+    <div style={{ display: 'grid', gridTemplateColumns: '160px minmax(0, 1fr)', minHeight: 38, borderTop: `0.5px solid ${t.line}` }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 10px', background: '#F7F7F4', borderRight: `0.5px solid ${t.line}`, fontFamily: t.sans, fontSize: 12.5, fontWeight: 700, color: '#5F646D' }}>
+        <span style={{ flex: 1 }}>{label}</span>
+        {required
+          ? <span style={{ fontSize: 10, fontWeight: 700, color: ACCENT, flexShrink: 0 }}>필수</span>
+          : <span style={{ fontSize: 10, fontWeight: 600, color: t.inkFaint, flexShrink: 0 }}>선택</span>
+        }
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', padding: '0 10px', fontFamily: t.sans, fontSize: 13.5, fontWeight: ok ? 500 : 400, color: ok ? t.ink : t.inkFaint }}>
         {value || '미입력'}
       </div>
     </div>
@@ -324,45 +326,45 @@ function WebReviewSection({ form, baseLanguage, t }) {
         </div>
 
         <ReviewGroup title="작품 기본 정보" t={t}>
-          <ReviewRow label="제작 상태" value={enumLabel('productionStatus', form.productionStatus)} ok={!!form.productionStatus} t={t} />
-          <ReviewRow label="원제" value={form.originalTitle} ok={!!form.originalTitle} t={t} />
-          <ReviewRow label="제목" value={tr.title} ok={!!tr.title} t={t} />
-          <ReviewRow label="로그라인" value={tr.logline} ok={!!tr.logline} t={t} />
-          <ReviewRow label="시놉시스" value={tr.synopsis} ok={!!tr.synopsis} t={t} />
-          <ReviewRow label="인물 소개" value={tr.characterDescription} ok={!!tr.characterDescription} t={t} />
-          <ReviewRow label="감독" value={crew.director} ok={isPlanning || !!crew.director} t={t} />
-          <ReviewRow label="작가" value={crew.writer} ok={isPlanning || !!crew.writer} t={t} />
-          <ReviewRow label="출연진" value={crew.cast} ok={isPlanning || !!crew.cast} t={t} />
-          <ReviewRow label="장르" value={genreText} ok={!!genreText} t={t} />
+          <ReviewRow label="제작 상태" value={enumLabel('productionStatus', form.productionStatus)} ok={!!form.productionStatus} required t={t} />
+          <ReviewRow label="원제" value={form.originalTitle} ok={!!form.originalTitle} required t={t} />
+          <ReviewRow label="제목" value={tr.title} ok={!!tr.title} required t={t} />
+          <ReviewRow label="로그라인" value={tr.logline} ok={!!tr.logline} required t={t} />
+          <ReviewRow label="시놉시스" value={tr.synopsis} ok={!!tr.synopsis} required t={t} />
+          <ReviewRow label="인물 소개" value={tr.characterDescription} ok={!!tr.characterDescription} required t={t} />
+          <ReviewRow label="감독" value={crew.director} ok={isPlanning || !!crew.director} required={!isPlanning} t={t} />
+          <ReviewRow label="작가" value={crew.writer} ok={isPlanning || !!crew.writer} required={!isPlanning} t={t} />
+          <ReviewRow label="출연진" value={crew.cast} ok={isPlanning || !!crew.cast} required={!isPlanning} t={t} />
+          <ReviewRow label="장르" value={genreText} ok={!!genreText} required t={t} />
         </ReviewGroup>
 
         <ReviewGroup title="제작 정보" t={t}>
-          <ReviewRow label="미디어 카테고리" value={enumLabel('mediaCategory', form.mediaCategory)} ok={!!form.mediaCategory} t={t} />
-          <ReviewRow label="제작연도" value={form.productionYear ? `${form.productionYear}년` : ''} ok={!!form.productionYear} t={t} />
-          <ReviewRow label="총 회차 수" value={form.episodes ? `${form.episodes}화` : ''} ok={!!form.episodes} t={t} />
-          <ReviewRow label="회차당 러닝타임" value={form.runtime} ok={!!form.runtime} t={t} />
-          <ReviewRow label="총 러닝타임 (분)" value={form.totalRuntime ? `${form.totalRuntime}분` : ''} ok={!!form.totalRuntime} t={t} />
-          <ReviewRow label="콘텐츠 언어" value={enumLabel('contentLanguage', form.contentLanguage)} ok={!!form.contentLanguage} t={t} />
+          <ReviewRow label="미디어 카테고리" value={enumLabel('mediaCategory', form.mediaCategory)} ok={!!form.mediaCategory} required t={t} />
+          <ReviewRow label="제작연도" value={form.productionYear ? `${form.productionYear}년` : ''} ok={!!form.productionYear} required t={t} />
+          <ReviewRow label="총 회차 수" value={form.episodes ? `${form.episodes}화` : ''} ok={!!form.episodes} required t={t} />
+          <ReviewRow label="회차당 러닝타임" value={form.runtime} ok={!!form.runtime} required t={t} />
+          <ReviewRow label="총 러닝타임 (분)" value={form.totalRuntime ? `${form.totalRuntime}분` : ''} ok={!!form.totalRuntime} required t={t} />
+          <ReviewRow label="콘텐츠 언어" value={enumLabel('contentLanguage', form.contentLanguage)} ok={!!form.contentLanguage} required t={t} />
         </ReviewGroup>
 
         <ReviewGroup title="라이선스 · 유통" t={t}>
-          <ReviewRow label="유통권 보유 형태" value={enumLabel('coProduction', form.coProduction)} ok={!!form.coProduction} t={t} />
-          <ReviewRow label="라이선스 유형" value={enumLabel('licenseType', form.licenseType)} ok={!!form.licenseType} t={t} />
-          <ReviewRow label="라이선스 가능 지역" value={enumLabel('licenseTerritory', form.licenseTerritory)} ok={!!form.licenseTerritory} t={t} />
-          <ReviewRow label="유통 이력" value={distributionLabel} ok={!!form.distributionHistory} t={t} />
-          {form.distributionHistory === 'NEW' && <ReviewRow label="희망 릴리즈 일정" value={form.desiredReleaseDate} ok={!!form.desiredReleaseDate} t={t} />}
-          {form.distributionHistory === 'RELEASED' && <ReviewRow label="독점 여부" value={form.exclusive ? '독점' : '비독점'} ok={form.exclusive !== undefined && form.exclusive !== null} t={t} />}
-          {form.distributionHistory === 'RELEASED' && <ReviewRow label="기존 유통 플랫폼" value={form.previousReleases} ok={!!form.previousReleases} t={t} />}
+          <ReviewRow label="유통권 보유 형태" value={enumLabel('coProduction', form.coProduction)} ok={!!form.coProduction} required t={t} />
+          <ReviewRow label="라이선스 유형" value={enumLabel('licenseType', form.licenseType)} ok={!!form.licenseType} required t={t} />
+          <ReviewRow label="라이선스 가능 지역" value={enumLabel('licenseTerritory', form.licenseTerritory)} ok={!!form.licenseTerritory} required t={t} />
+          <ReviewRow label="유통 이력" value={distributionLabel} ok={!!form.distributionHistory} required t={t} />
+          {form.distributionHistory === 'NEW' && <ReviewRow label="희망 릴리즈 일정" value={form.desiredReleaseDate} ok={!!form.desiredReleaseDate} required t={t} />}
+          {form.distributionHistory === 'RELEASED' && <ReviewRow label="독점 여부" value={form.exclusive ? '독점' : '비독점'} ok={form.exclusive !== undefined && form.exclusive !== null} required t={t} />}
+          {form.distributionHistory === 'RELEASED' && <ReviewRow label="기존 유통 플랫폼" value={form.previousReleases} ok={!!form.previousReleases} required t={t} />}
         </ReviewGroup>
 
         <ReviewGroup title="공개 · 등급" t={t}>
           <ReviewRow label="유료 시청 시작 회차" value={form.startPoint ? `${form.startPoint}화부터` : ''} ok={true} t={t} />
-          <ReviewRow label="콘텐츠 유형" value={enumLabel('contentType', form.contentType)} ok={!!form.contentType} t={t} />
-          <ReviewRow label="영상 등급" value={enumLabel('ageRating', form.ageRating)} ok={isPlanning || !!form.ageRating} t={t} />
+          <ReviewRow label="콘텐츠 유형" value={enumLabel('contentType', form.contentType)} ok={!!form.contentType} required t={t} />
+          <ReviewRow label="영상 등급" value={enumLabel('ageRating', form.ageRating)} ok={isPlanning || !!form.ageRating} required={!isPlanning} t={t} />
         </ReviewGroup>
 
         <ReviewGroup title="미디어" t={t}>
-          <ReviewRow label="대표 이미지" value={mainImages.length ? `${mainImages.length}장` : ''} ok={mainImages.length > 0} t={t} />
+          <ReviewRow label="대표 이미지" value={mainImages.length ? `${mainImages.length}장` : ''} ok={mainImages.length > 0} required t={t} />
           <ReviewRow label="무료회차 영상" value={`${freeVideos.length}개`} ok={freeVideos.length > 0} t={t} />
           <ReviewRow label="무료회차 자막" value={`${langLabel} · ${freeSubs.length}개`} ok={freeSubs.length > 0} t={t} />
           <ReviewRow label="티저 영상" value={`${teaserVideos.length}개`} ok={teaserVideos.length > 0} t={t} />

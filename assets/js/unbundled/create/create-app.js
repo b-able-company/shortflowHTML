@@ -436,6 +436,10 @@ function WebStepApp() {
     _React$useState16 = _slicedToArray(_React$useState15, 2),
     aiUploadOpen = _React$useState16[0],
     setAiUploadOpen = _React$useState16[1];
+  var _React$useStateBypass = React.useState(false),
+    _React$useStateBypass2 = _slicedToArray(_React$useStateBypass, 2),
+    devBypass = _React$useStateBypass2[0],
+    setDevBypass = _React$useStateBypass2[1];
   var set = function set(k, v) {
     return setForm(function (f) {
       return _objectSpread(_objectSpread({}, f), {}, _defineProperty({}, k, v));
@@ -611,6 +615,8 @@ function WebStepApp() {
     onSubmit: function onSubmit() {
       return setSubmitOpen(true);
     },
+    missingCount: devBypass ? 0 : window.missingSubmitRequiredItems(form, baseLanguage).length,
+    onDevBypass: function() { setDevBypass(function(v) { return !v; }); },
     t: t
   }), submitOpen && /*#__PURE__*/React.createElement(SubmitModal, {
     form: form,

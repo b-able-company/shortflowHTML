@@ -141,7 +141,7 @@ function SideRail({ steps, current, maxReached, onJump, t }) {
 }
 
 // ─── 하단 액션 바 ──────────────────────────────────────
-function FooterBar({ wizard, current, total, onPrev, onNext, onSave, onSubmit, t, maxW = 1180 }) {
+function FooterBar({ wizard, current, total, onPrev, onNext, onSave, onSubmit, missingCount = 0, onDevBypass, t, maxW = 1180 }) {
   const ghost = {
     height: 42, padding: '0 18px', borderRadius: 9, cursor: 'pointer',
     border: `0.5px solid ${t.lineStrong}`, background: t.surface, color: t.ink,
@@ -176,12 +176,37 @@ function FooterBar({ wizard, current, total, onPrev, onNext, onSave, onSubmit, t
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6" strokeLinecap="round" /></svg>
           </button>
         }
-        {(!wizard || onLast) &&
-        <button onClick={onSubmit} style={primary}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            검토 요청 보내기
-          </button>
-        }
+        {(!wizard || onLast) && (() => {
+          const canSubmit = missingCount === 0;
+          return (
+            <div style={{ position: 'relative', display: 'inline-flex', gap: 8 }} className="submit-wrap">
+              {onDevBypass && !canSubmit && (
+                <button onClick={onDevBypass} style={{ ...ghost, fontSize: 12, color: t.inkFaint, borderStyle: 'dashed' }}>
+                  전체 입력 상태 만들기
+                </button>
+              )}
+              <button
+                onClick={canSubmit ? onSubmit : undefined}
+                disabled={!canSubmit}
+                style={{ ...primary, opacity: canSubmit ? 1 : 0.45, cursor: canSubmit ? 'pointer' : 'not-allowed' }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                검토 요청 보내기
+              </button>
+              {!canSubmit && (
+                <span style={{
+                  position: 'absolute', bottom: 'calc(100% + 8px)', right: 0,
+                  background: 'rgba(15,17,21,0.88)', color: '#fff', fontSize: 12, fontFamily: t.sans,
+                  padding: '6px 10px', borderRadius: 7, whiteSpace: 'nowrap', pointerEvents: 'none',
+                  opacity: 0, transition: 'opacity 0.15s',
+                }} className="submit-tooltip">
+                  필수 항목 {missingCount}개를 먼저 입력해주세요
+                </span>
+              )}
+            </div>
+          );
+        })()}
+        <style>{`.submit-wrap:hover .submit-tooltip { opacity: 1 !important; }`}</style>
       </div>
     </div>);
 
@@ -190,15 +215,34 @@ function FooterBar({ wizard, current, total, onPrev, onNext, onSave, onSubmit, t
 // ─── 제출 확인 모달 ────────────────────────────────────
 function arr(v) {return Array.isArray(v) ? v : v ? [v] : [];}
 
-function SubmitModal({ form, onClose, onConfirm, t }) {
+function hasRequiredValue(value) {
+  if (Array.isArray(value)) return value.length > 0;
+  if (typeof value === 'string') return value.trim().length > 0;
+  return value !== null && value !== undefined && value !== '';
+}
+
+function missingSubmitRequiredItems(form, baseLanguage) {
+  const language = baseLanguage || form.mediaLanguage || LANG_LIST[0];
+  const translation = form.translations.find((item) => item.language === language) || {};
+  const crew = form.crew.find((item) => item.language === language) || {};
+  const missing = [];
+
+  webContentGroups(form).forEach((group) => {
+    group.fields.forEach((field) => {
+      const optionalInPlanning = form.productionStatus === 'PLANNING' && ['director', 'writer', 'cast', 'ageRating'].includes(field.key);
+      const required = field.required !== false && field.key !== 'startPoint' && !optionalInPlanning;
+      if (!required) return;
+      const source = field.source === 'translation' ? translation : field.source === 'crew' ? crew : form;
+      if (!hasRequiredValue(source[field.key])) missing.push(field.label);
+    });
+  });
+
+  if (arr(form.mainImageKey).length === 0) missing.push('대표 이미지');
+  return [...new Set(missing)];
+}
+
+function SubmitModal({ form, baseLanguage, onClose, onConfirm, t }) {
   const [rightsConfirmed, setRightsConfirmed] = React.useState(false);
-  const filledLangs = form.translations.filter((x) => (x.title || '').trim()).map((x) => LANG_SHORT[x.language]);
-  const checks = [
-  { label: '기본 정보', ok: !!form.originalTitle, detail: form.originalTitle },
-  { label: '대표 이미지', ok: arr(form.mainImageKey).length > 0, detail: arr(form.mainImageKey).length ? '1장' : '미등록', required: true },
-  { label: '무료회차 영상', ok: arr(form.freeEpisodeKeys).length > 0, detail: `${arr(form.freeEpisodeKeys).length}개` },
-  { label: '티저 영상', ok: arr(form.teaserKeys).length > 0, detail: `${arr(form.teaserKeys).length}개` },
-  { label: '텍스트 정보', ok: filledLangs.length > 0, detail: filledLangs.join(' · ') || '없음' }];
 
   return (
     <div onClick={onClose} style={{
@@ -213,25 +257,6 @@ function SubmitModal({ form, onClose, onConfirm, t }) {
         <p style={{ margin: '8px 0 22px', fontFamily: t.sans, fontSize: 13.5, color: t.inkMute, lineHeight: 1.6 }}>
           제출 후에는 관리자 검토가 시작되며, 검토 중에는 수정이 제한됩니다.
         </p>
-
-        <div style={{ border: `0.5px solid ${t.line}`, borderRadius: 12, overflow: 'hidden' }}>
-          {checks.map((c, i) =>
-          <div key={c.label} style={{
-            display: 'flex', alignItems: 'center', gap: 11, padding: '12px 15px',
-            borderTop: i ? `0.5px solid ${t.line}` : 'none', background: c.ok ? t.surface : '#FCF7E8'
-          }}>
-              {c.ok ?
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={t.paid} strokeWidth="2.4"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg> :
-
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={t.upcoming} strokeWidth="2.2"><path d="M12 9v4M12 17h.01M10.3 3.9l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3l-8-14a2 2 0 0 0-3.4 0z" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            }
-              <span style={{ flex: 1, fontFamily: t.sans, fontSize: 13.5, fontWeight: 600, color: t.ink }}>
-                {c.label}{c.required && <span style={{ color: ACCENT, marginLeft: 4 }}>*</span>}
-              </span>
-              <span style={{ fontFamily: t.sans, fontSize: 12.5, color: c.ok ? t.inkMute : t.upcoming, fontWeight: c.ok ? 500 : 600 }}>{c.detail}</span>
-            </div>
-          )}
-        </div>
 
         <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginTop: 18, padding: '14px 15px', border: `0.5px solid ${rightsConfirmed ? '#F2C3AE' : t.line}`, borderRadius: 12, background: rightsConfirmed ? '#FFF7F2' : t.surface, cursor: 'pointer' }}>
           <input
@@ -282,4 +307,4 @@ function SubmittedToast({ onClose, t }) {
 
 }
 
-Object.assign(window, { NCHeader, InputLanguageBar, Stepper, SideRail, FooterBar, SubmitModal, SubmittedToast });
+Object.assign(window, { NCHeader, InputLanguageBar, Stepper, SideRail, FooterBar, SubmitModal, SubmittedToast, missingSubmitRequiredItems });

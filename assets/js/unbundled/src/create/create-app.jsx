@@ -115,6 +115,7 @@ function WebStepApp() {
   const [current, setCurrent] = React.useState(1);
   const [savedAt, setSavedAt] = React.useState(null);
   const [submitOpen, setSubmitOpen] = React.useState(false);
+  const [devBypass, setDevBypass] = React.useState(false);
   const [doneOpen, setDoneOpen] = React.useState(false);
   const [aiIntroOpen, setAiIntroOpen] = React.useState(true);
   const [aiUploadOpen, setAiUploadOpen] = React.useState(false);
@@ -184,9 +185,11 @@ function WebStepApp() {
         onNext={() => goTo(Math.min(total, current + 1))}
         onSave={onSave}
         onSubmit={() => setSubmitOpen(true)}
+        missingCount={devBypass ? 0 : window.missingSubmitRequiredItems(form, baseLanguage).length}
+        onDevBypass={() => setDevBypass(v => !v)}
         t={t} />
 
-      {submitOpen && <SubmitModal form={form} t={t} onClose={() => setSubmitOpen(false)} onConfirm={() => { setSubmitOpen(false); setDoneOpen(true); }} />}
+      {submitOpen && <SubmitModal form={form} baseLanguage={baseLanguage} t={t} onClose={() => setSubmitOpen(false)} onConfirm={() => { setSubmitOpen(false); setDoneOpen(true); }} />}
       {doneOpen && <SubmittedToast t={t} onClose={() => setDoneOpen(false)} />}
       {aiIntroOpen && <AIIntroModal t={t} onLater={() => setAiIntroOpen(false)} onTry={() => { setAiIntroOpen(false); setAiUploadOpen(true); }} />}
       {aiUploadOpen && <AIPlanUploadModal t={t} onClose={() => setAiUploadOpen(false)} />}

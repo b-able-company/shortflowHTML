@@ -611,17 +611,7 @@ function WebBasicSection(_ref6) {
         flexShrink: 0,
         transition: 'background 140ms ease, border-color 140ms ease'
       }
-    }, /*#__PURE__*/React.createElement("svg", {
-      width: "14",
-      height: "14",
-      viewBox: "0 0 24 24",
-      fill: "none",
-      stroke: ACCENT,
-      strokeWidth: "1.8"
-    }, /*#__PURE__*/React.createElement("path", {
-      d: "M12 3l1.35 4.15L17.5 8.5l-4.15 1.35L12 14l-1.35-4.15L6.5 8.5l4.15-1.35L12 3zM18.5 14l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2z",
-      strokeLinejoin: "round"
-    })), "AI \uC790\uB3D9 \uCD94\uCD9C")), /*#__PURE__*/React.createElement("div", {
+    }, "AI \uC790\uB3D9 \uCD94\uCD9C")), /*#__PURE__*/React.createElement("div", {
       style: {
         display: 'grid',
         gridTemplateColumns: 'repeat(12, minmax(0, 1fr))',
@@ -883,11 +873,13 @@ function ReviewRow(_ref0) {
     value = _ref0.value,
     _ref0$ok = _ref0.ok,
     ok = _ref0$ok === void 0 ? true : _ref0$ok,
+    _ref0$required = _ref0.required,
+    required = _ref0$required === void 0 ? false : _ref0$required,
     t = _ref0.t;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
-      gridTemplateColumns: '150px minmax(0, 1fr)',
+      gridTemplateColumns: '160px minmax(0, 1fr)',
       minHeight: 38,
       borderTop: "0.5px solid ".concat(t.line)
     }
@@ -895,6 +887,7 @@ function ReviewRow(_ref0) {
     style: {
       display: 'flex',
       alignItems: 'center',
+      gap: 6,
       padding: '0 10px',
       background: '#F7F7F4',
       borderRight: "0.5px solid ".concat(t.line),
@@ -903,26 +896,21 @@ function ReviewRow(_ref0) {
       fontWeight: 700,
       color: '#5F646D'
     }
-  }, label), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", { style: { flex: 1 } }, label),
+    required
+      ? /*#__PURE__*/React.createElement("span", { style: { fontSize: 10, fontWeight: 700, color: ACCENT, flexShrink: 0 } }, "필수")
+      : /*#__PURE__*/React.createElement("span", { style: { fontSize: 10, fontWeight: 600, color: t.inkFaint, flexShrink: 0 } }, "선택")
+  ), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       alignItems: 'center',
-      gap: 8,
       padding: '0 10px',
       fontFamily: t.sans,
       fontSize: 13.5,
-      fontWeight: ok ? 600 : 500,
+      fontWeight: ok ? 500 : 400,
       color: ok ? t.ink : t.inkFaint
     }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      width: 7,
-      height: 7,
-      borderRadius: 999,
-      background: ok ? ACCENT : t.lineStrong,
-      flexShrink: 0
-    }
-  }), value || '미입력'));
+  }, value || '미입력'));
 }
 function ReviewGroup(_ref1) {
   var title = _ref1.title,
@@ -1003,51 +991,61 @@ function WebReviewSection(_ref10) {
     label: "\uC81C\uC791 \uC0C1\uD0DC",
     value: enumLabel('productionStatus', form.productionStatus),
     ok: !!form.productionStatus,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uC6D0\uC81C",
     value: form.originalTitle,
     ok: !!form.originalTitle,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uC81C\uBAA9",
     value: tr.title,
     ok: !!tr.title,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uB85C\uADF8\uB77C\uC778",
     value: tr.logline,
     ok: !!tr.logline,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uC2DC\uB189\uC2DC\uC2A4",
     value: tr.synopsis,
     ok: !!tr.synopsis,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uC778\uBB3C \uC18C\uAC1C",
     value: tr.characterDescription,
     ok: !!tr.characterDescription,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uAC10\uB3C5",
     value: crew.director,
     ok: isPlanning || !!crew.director,
+    required: !isPlanning,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uC791\uAC00",
     value: crew.writer,
     ok: isPlanning || !!crew.writer,
+    required: !isPlanning,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uCD9C\uC5F0\uC9C4",
     value: crew.cast,
     ok: isPlanning || !!crew.cast,
+    required: !isPlanning,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uC7A5\uB974",
     value: genreText,
     ok: !!genreText,
+    required: true,
     t: t
   })), /*#__PURE__*/React.createElement(ReviewGroup, {
     title: "\uC81C\uC791 \uC815\uBCF4",
@@ -1056,31 +1054,37 @@ function WebReviewSection(_ref10) {
     label: "\uBBF8\uB514\uC5B4 \uCE74\uD14C\uACE0\uB9AC",
     value: enumLabel('mediaCategory', form.mediaCategory),
     ok: !!form.mediaCategory,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uC81C\uC791\uC5F0\uB3C4",
     value: form.productionYear ? "".concat(form.productionYear, "\uB144") : '',
     ok: !!form.productionYear,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uCD1D \uD68C\uCC28 \uC218",
     value: form.episodes ? "".concat(form.episodes, "\uD654") : '',
     ok: !!form.episodes,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uD68C\uCC28\uB2F9 \uB7EC\uB2DD\uD0C0\uC784",
     value: form.runtime,
     ok: !!form.runtime,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uCD1D \uB7EC\uB2DD\uD0C0\uC784 (\uBD84)",
     value: form.totalRuntime ? "".concat(form.totalRuntime, "\uBD84") : '',
     ok: !!form.totalRuntime,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uCF58\uD150\uCE20 \uC5B8\uC5B4",
     value: enumLabel('contentLanguage', form.contentLanguage),
     ok: !!form.contentLanguage,
+    required: true,
     t: t
   })), /*#__PURE__*/React.createElement(ReviewGroup, {
     title: "\uB77C\uC774\uC120\uC2A4 \xB7 \uC720\uD1B5",
@@ -1089,36 +1093,43 @@ function WebReviewSection(_ref10) {
     label: "\uC720\uD1B5\uAD8C \uBCF4\uC720 \uD615\uD0DC",
     value: enumLabel('coProduction', form.coProduction),
     ok: !!form.coProduction,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uB77C\uC774\uC120\uC2A4 \uC720\uD615",
     value: enumLabel('licenseType', form.licenseType),
     ok: !!form.licenseType,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uB77C\uC774\uC120\uC2A4 \uAC00\uB2A5 \uC9C0\uC5ED",
     value: enumLabel('licenseTerritory', form.licenseTerritory),
     ok: !!form.licenseTerritory,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uC720\uD1B5 \uC774\uB825",
     value: distributionLabel,
     ok: !!form.distributionHistory,
+    required: true,
     t: t
   }), form.distributionHistory === 'NEW' && /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uD76C\uB9DD \uB9B4\uB9AC\uC988 \uC77C\uC815",
     value: form.desiredReleaseDate,
     ok: !!form.desiredReleaseDate,
+    required: true,
     t: t
   }), form.distributionHistory === 'RELEASED' && /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uB3C5\uC810 \uC5EC\uBD80",
     value: form.exclusive ? '독점' : '비독점',
     ok: form.exclusive !== undefined && form.exclusive !== null,
+    required: true,
     t: t
   }), form.distributionHistory === 'RELEASED' && /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uAE30\uC874 \uC720\uD1B5 \uD50C\uB7AB\uD3FC",
     value: form.previousReleases,
     ok: !!form.previousReleases,
+    required: true,
     t: t
   })), /*#__PURE__*/React.createElement(ReviewGroup, {
     title: "\uACF5\uAC1C \xB7 \uB4F1\uAE09",
@@ -1127,16 +1138,19 @@ function WebReviewSection(_ref10) {
     label: "\uC720\uB8CC \uC2DC\uCCAD \uC2DC\uC791 \uD68C\uCC28",
     value: form.startPoint ? "".concat(form.startPoint, "\uD654\uBD80\uD130") : '',
     ok: true,
+    required: false,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uCF58\uD150\uCE20 \uC720\uD615",
     value: enumLabel('contentType', form.contentType),
     ok: !!form.contentType,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uC601\uC0C1 \uB4F1\uAE09",
     value: enumLabel('ageRating', form.ageRating),
     ok: isPlanning || !!form.ageRating,
+    required: !isPlanning,
     t: t
   })), /*#__PURE__*/React.createElement(ReviewGroup, {
     title: "\uBBF8\uB514\uC5B4",
@@ -1145,31 +1159,37 @@ function WebReviewSection(_ref10) {
     label: "\uB300\uD45C \uC774\uBBF8\uC9C0",
     value: mainImages.length ? "".concat(mainImages.length, "\uC7A5") : '',
     ok: mainImages.length > 0,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uBB34\uB8CC\uD68C\uCC28 \uC601\uC0C1",
     value: "".concat(freeVideos.length, "\uAC1C"),
     ok: freeVideos.length > 0,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uBB34\uB8CC\uD68C\uCC28 \uC790\uB9C9",
     value: "".concat(langLabel, " \xB7 ").concat(freeSubs.length, "\uAC1C"),
     ok: freeSubs.length > 0,
+    required: false,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uD2F0\uC800 \uC601\uC0C1",
     value: "".concat(teaserVideos.length, "\uAC1C"),
     ok: teaserVideos.length > 0,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uD2F0\uC800 \uC790\uB9C9",
     value: "".concat(langLabel, " \xB7 ").concat(teaserSubs.length, "\uAC1C"),
     ok: teaserSubs.length > 0,
+    required: false,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uAD00\uB828 \uC774\uBBF8\uC9C0",
     value: "".concat(contentImages.length, "\uC7A5"),
     ok: contentImages.length > 0,
+    required: true,
     t: t
   }))));
 }
