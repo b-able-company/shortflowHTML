@@ -902,13 +902,6 @@ td { padding: 9px 12px; vertical-align: middle; }
                   </button>
                 </div>
                 <div class="confirm-compose bundle-confirm-form" id="bundle-confirm-compose">
-                  <div class="form-grid">
-                    <div class="fg"><label>통화</label><select><option selected>USD</option><option>KRW</option></select></div>
-                    <div class="fg"><label>번들 최종 총가격</label><input value="$130,000" /></div>
-                    <div class="fg"><label>공개 지역</label><input value="중화권 전체" /></div>
-                    <div class="fg"><label>릴리즈 기간</label><input value="2년" /></div>
-                  </div>
-                  <div class="fg"><label>라이선스 권리 범위</label><input value="SVOD, AVOD, 프로모션 클립 사용권 포함" /></div>
                   <table class="content-pick-table bundle-table">
                     <colgroup>
                       <col />
@@ -926,7 +919,7 @@ td { padding: 9px 12px; vertical-align: middle; }
                         <th></th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="bundle-confirm-contents">
                       <tr>
                         <td><div class="tname">The Last Letter</div></td>
                         <td><input value="40,000" aria-label="The Last Letter 최종 가격" /></td>
@@ -950,6 +943,16 @@ td { padding: 9px 12px; vertical-align: middle; }
                       </tr>
                     </tbody>
                   </table>
+                  <div class="add-content-row">
+                    <button class="btn btn-upload" onclick="openContentModal('bundle')"><i class="ti ti-plus"></i> 콘텐츠 추가</button>
+                  </div>
+                  <div class="form-grid contract-fields">
+                    <div class="fg"><label>통화</label><select><option selected>USD</option><option>KRW</option></select></div>
+                    <div class="fg"><label>번들 최종 총가격</label><input value="$130,000" /></div>
+                    <div class="fg"><label>공개 지역</label><input value="중화권 전체" /></div>
+                    <div class="fg"><label>릴리즈 기간</label><input value="2년" /></div>
+                  </div>
+                  <div class="fg"><label>라이선스 권리 범위</label><input value="SVOD, AVOD, 프로모션 클립 사용권 포함" /></div>
                   <div style="display:flex;justify-content:flex-end">
                     <button class="btn btn-primary"><i class="ti ti-send"></i> 발송</button>
                   </div>
@@ -1202,7 +1205,7 @@ td { padding: 9px 12px; vertical-align: middle; }
                         <th></th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="turnkey-confirm-contents">
                       <tr>
                         <td><div class="tname">The Last Letter</div><div class="tsub">NextWave Studios</div></td>
                         <td><input value="45,000" aria-label="The Last Letter 금액" /></td>
@@ -1227,7 +1230,7 @@ td { padding: 9px 12px; vertical-align: middle; }
                     </tbody>
                   </table>
                   <div class="add-content-row">
-                    <button class="btn btn-upload" onclick="openContentModal()"><i class="ti ti-plus"></i> 콘텐츠 추가</button>
+                    <button class="btn btn-upload" onclick="openContentModal('turnkey')"><i class="ti ti-plus"></i> 콘텐츠 추가</button>
                   </div>
 
                   <div class="form-grid contract-fields">
@@ -1324,12 +1327,12 @@ td { padding: 9px 12px; vertical-align: middle; }
         <button class="btn-close-panel" onclick="closeContentModal()"><i class="ti ti-x"></i></button>
       </div>
       <div class="modal-body">
-        <div class="modal-search"><i class="ti ti-search"></i><input placeholder="콘텐츠명, 제작사 검색" /></div>
+        <div class="modal-search"><i class="ti ti-search"></i><input id="content-modal-search" placeholder="콘텐츠명, 제작사 검색" oninput="filterContentModal(this.value)" /></div>
         <div class="result-list">
-          <div class="result-item"><div><div class="result-name">The Last Letter</div><div class="result-meta">NextWave Studios</div></div><div class="result-meta">NextWave Studios</div><div class="result-meta">Romance</div><button class="btn btn-added" disabled>추가됨</button></div>
-          <div class="result-item"><div><div class="result-name">Midnight Tokyo Drift</div><div class="result-meta">ShortReel (US)</div></div><div class="result-meta">ShortReel (US)</div><div class="result-meta">Action</div><button class="btn btn-primary" onclick="markAdded(this)">추가</button></div>
-          <div class="result-item"><div><div class="result-name">Bloom Again</div><div class="result-meta">PaperLens</div></div><div class="result-meta">PaperLens</div><div class="result-meta">Drama</div><button class="btn btn-primary" onclick="markAdded(this)">추가</button></div>
-          <div class="result-item"><div><div class="result-name">Seven Suns</div><div class="result-meta">BrightFrame</div></div><div class="result-meta">BrightFrame</div><div class="result-meta">Thriller</div><button class="btn btn-primary" onclick="markAdded(this)">추가</button></div>
+          <div class="result-item" data-title="The Last Letter" data-company="NextWave Studios"><div><div class="result-name">The Last Letter</div><div class="result-meta">NextWave Studios</div></div><div class="result-meta">NextWave Studios</div><div class="result-meta">Romance</div><button class="btn btn-primary" onclick="addPickedContent(this)">추가</button></div>
+          <div class="result-item" data-title="Midnight Tokyo Drift" data-company="ShortReel (US)"><div><div class="result-name">Midnight Tokyo Drift</div><div class="result-meta">ShortReel (US)</div></div><div class="result-meta">ShortReel (US)</div><div class="result-meta">Action</div><button class="btn btn-primary" onclick="addPickedContent(this)">추가</button></div>
+          <div class="result-item" data-title="Bloom Again" data-company="PaperLens"><div><div class="result-name">Bloom Again</div><div class="result-meta">PaperLens</div></div><div class="result-meta">PaperLens</div><div class="result-meta">Drama</div><button class="btn btn-primary" onclick="addPickedContent(this)">추가</button></div>
+          <div class="result-item" data-title="Seven Suns" data-company="BrightFrame"><div><div class="result-name">Seven Suns</div><div class="result-meta">BrightFrame</div></div><div class="result-meta">BrightFrame</div><div class="result-meta">Thriller</div><button class="btn btn-primary" onclick="addPickedContent(this)">추가</button></div>
         </div>
       </div>
     </div>
@@ -1496,7 +1499,14 @@ function grantMeta() {
   const st = document.getElementById('p-status');
   if (st) { st.className = 'bdg b-meta'; st.textContent = '메타데이터 부여'; }
 }
-function openContentModal() {
+let contentModalTarget = 'turnkey';
+
+function openContentModal(target = 'turnkey') {
+  contentModalTarget = target === 'bundle' ? 'bundle' : 'turnkey';
+  const search = document.getElementById('content-modal-search');
+  if (search) search.value = '';
+  filterContentModal('');
+  syncContentModalButtons();
   document.getElementById('content-modal')?.classList.add('show');
 }
 
@@ -1505,14 +1515,65 @@ function closeContentModal(event) {
   document.getElementById('content-modal')?.classList.remove('show');
 }
 
-function markAdded(btn) {
-  btn.textContent = '추가됨';
-  btn.className = 'btn btn-added';
-  btn.disabled = true;
+function targetContentBody() {
+  return document.getElementById(contentModalTarget === 'bundle'
+    ? 'bundle-confirm-contents'
+    : 'turnkey-confirm-contents');
+}
+
+function pickedContentTitles() {
+  return Array.from(targetContentBody()?.querySelectorAll('.tname') || [])
+    .map(node => node.textContent.trim());
+}
+
+function syncContentModalButtons() {
+  const picked = new Set(pickedContentTitles());
+  document.querySelectorAll('#content-modal .result-item').forEach(item => {
+    const button = item.querySelector('button');
+    const added = picked.has(item.dataset.title);
+    button.textContent = added ? '추가됨' : '추가';
+    button.className = added ? 'btn btn-added' : 'btn btn-primary';
+    button.disabled = added;
+  });
+}
+
+function filterContentModal(query) {
+  const keyword = String(query || '').trim().toLowerCase();
+  document.querySelectorAll('#content-modal .result-item').forEach(item => {
+    const haystack = `${item.dataset.title} ${item.dataset.company}`.toLowerCase();
+    item.style.display = !keyword || haystack.includes(keyword) ? '' : 'none';
+  });
+}
+
+function addPickedContent(btn) {
+  const item = btn.closest('.result-item');
+  const body = targetContentBody();
+  if (!item || !body || pickedContentTitles().includes(item.dataset.title)) return;
+  const title = item.dataset.title;
+  const company = item.dataset.company;
+  const row = document.createElement('tr');
+  row.innerHTML = contentModalTarget === 'bundle'
+    ? `
+      <td><div class="tname">${title}</div><div class="tsub">${company}</div></td>
+      <td><input value="" placeholder="0" aria-label="${title} 최종 가격" /></td>
+      <td><select aria-label="${title} 권리"><option>독점</option><option selected>비독점</option></select></td>
+      <td><select aria-label="${title} 정산 방식"><option selected>RS</option><option>MG_RS</option><option>FLAT_FEE</option></select></td>
+      <td class="col-remove"><button class="btn btn-icon" onclick="removePickedContent(this)"><i class="ti ti-trash"></i></button></td>`
+    : `
+      <td><div class="tname">${title}</div><div class="tsub">${company}</div></td>
+      <td><input value="" placeholder="0" aria-label="${title} 금액" /></td>
+      <td><select aria-label="${title} 권리"><option>독점</option><option selected>비독점</option></select></td>
+      <td><select aria-label="${title} 정산방식"><option selected>RS</option><option>MG+RS</option><option>Flat fee</option></select></td>
+      <td class="col-remove"><button class="btn btn-icon" onclick="removePickedContent(this)"><i class="ti ti-trash"></i></button></td>`;
+  body.appendChild(row);
+  syncContentModalButtons();
 }
 
 function removePickedContent(btn) {
   btn.closest('tr')?.remove();
+  if (document.getElementById('content-modal')?.classList.contains('show')) {
+    syncContentModalButtons();
+  }
 }
 
 if (['platform', 'bundle', 'turnkey'].includes(location.hash.slice(1))) {
