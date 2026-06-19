@@ -32,10 +32,11 @@ function webContentGroups(form) {
     { title: '제작 정보', fields: [
       { key: 'mediaCategory', label: '미디어 카테고리', kind: 'seg', enumKey: 'mediaCategory', cols: 6 },
       { key: 'productionYear', label: '제작연도', kind: 'num', suffix: '년', cols: 6 },
-      { key: 'episodes', label: '총 회차 수', kind: 'num', suffix: '화', cols: 6 },
-      { key: 'runtime', label: '회차당 러닝타임', kind: 'text', ph: '예: 1~3분, 90초', cols: 6 },
-      { key: 'totalRuntime', label: '총 러닝타임 (분)', kind: 'num', cols: 6 },
-      { key: 'contentLanguage', label: '콘텐츠 언어', kind: 'seg', enumKey: 'contentLanguage', hint: '원본 언어', cols: 6 },
+      { key: 'isAiGenerated', label: 'AI 생성 콘텐츠 여부', kind: 'checkbox', cols: 6, required: false, hint: '생성형 AI로 영상 또는 주요 이미지를 제작한 경우 체크해주세요.' },
+      { key: 'contentLanguage', label: '콘텐츠 언어', kind: 'seg', enumKey: 'contentLanguage', hint: '원본 언어', cols: 6, divider: true },
+      { key: 'episodes', label: '총 회차 수', kind: 'num', suffix: '화', cols: 4 },
+      { key: 'runtime', label: '회차당 러닝타임', kind: 'text', ph: '예: 1~3분, 90초', cols: 4, divider: true },
+      { key: 'totalRuntime', label: '총 러닝타임 (분)', kind: 'num', cols: 4, divider: true },
     ]},
     { title: '라이선스 · 유통', fields: license },
     { title: '공개 · 등급', fields: [
@@ -79,6 +80,16 @@ function WebControl({ f, form, set, setLangItem, activeLanguage, translation, cr
       </div>
     );
     case 'choice': return <InlineRadioChoice options={ENUMS[f.enumKey]} value={v} onChange={change} t={t} />;
+    case 'checkbox': return (
+      <label style={{ minHeight: 36, display: 'inline-flex', alignItems: 'center', gap: 9, cursor: 'pointer', fontFamily: t.sans, fontSize: 13, color: t.ink }}>
+        <input
+          type="checkbox"
+          checked={Boolean(v)}
+          onChange={(event) => change(event.target.checked)}
+          style={{ width: 16, height: 16, margin: 0, accentColor: ACCENT, cursor: 'pointer' }}
+        />
+      </label>
+    );
     case 'chips': return <ChipMulti options={GENRES} value={v} onChange={change} t={t} />;
     case 'date': return <DateInput value={v} onChange={change} t={t} />;
     case 'toggle': return <SelectMenu options={[{ v: true, label: '독점' }, { v: false, label: '비독점' }]} value={v} onChange={change} t={t} placeholder="선택" />;
@@ -112,7 +123,7 @@ function ControlCap({ kind, children }) {
 }
 
 // 한 행 최대 두 필드. 각 필드는 라벨 왼쪽, 입력 오른쪽으로 읽힌다.
-function RowField({ label, hint, required, cols = 6, inset = false, roomy = false, t, children }) {
+function RowField({ label, hint, required, cols = 6, inset = false, strongDivider = false, roomy = false, t, children }) {
   const [hintOpen, setHintOpen] = React.useState(false);
   return (
     <div style={{
@@ -120,7 +131,7 @@ function RowField({ label, hint, required, cols = 6, inset = false, roomy = fals
       display: 'grid', gridTemplateColumns: '150px minmax(0, 1fr)',
       gap: 0, alignItems: 'stretch', padding: 0,
       borderTop: `0.5px solid ${t.line}`,
-      borderLeft: inset ? `0.5px solid ${t.line}` : 'none',
+      borderLeft: inset ? `${strongDivider ? 1 : 0.5}px solid ${t.line}` : 'none',
     }}>
       <div onMouseEnter={() => hint && setHintOpen(true)} onMouseLeave={() => setHintOpen(false)} style={{ position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', gap: 2, minWidth: 0, alignSelf: 'stretch', minHeight: roomy ? 88 : 36, background: '#F7F7F4', borderRadius: 0, padding: '0 10px', borderRight: `0.5px solid ${t.line}`, cursor: 'default' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 5, minWidth: 0 }}>
@@ -157,7 +168,7 @@ function WebBasicSection({ form, set, setLangItem, baseLanguage, onAiUpload, t }
   const groups = webContentGroups(form);
   return (
     <SectionCard id="sec-basic" title="콘텐츠 정보" desc={null} t={t}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 26 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
         {groups.map((g) => (
           <div key={g.title} style={{ padding: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
@@ -176,12 +187,12 @@ function WebBasicSection({ form, set, setLangItem, baseLanguage, onAiUpload, t }
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, minmax(0, 1fr))', gap: 0, borderLeft: `0.5px solid ${t.line}`, borderRight: `0.5px solid ${t.line}`, borderBottom: `0.5px solid ${t.line}` }}>
               {g.fields.map((f, fi) => {
                 const cols = fieldCols(f);
-                const inset = cols < 12 && !fieldStartsRow(g.fields, fi);
+                const inset = f.divider || (cols < 12 && !fieldStartsRow(g.fields, fi));
                 const roomy = f.kind === 'chips' || f.kind === 'area';
                 const optionalInPlanning = form.productionStatus === 'PLANNING' && ['director', 'writer', 'cast', 'ageRating'].includes(f.key);
                 const required = f.required !== false && f.key !== 'startPoint' && !optionalInPlanning;
                 return (
-                  <RowField key={`${f.source || 'form'}-${f.key}`} label={f.label} hint={f.hint} required={required} cols={cols} inset={inset} roomy={roomy} t={t}>
+                  <RowField key={`${f.source || 'form'}-${f.key}`} label={f.label} hint={f.hint} required={required} cols={cols} inset={inset} strongDivider={!!f.divider} roomy={roomy} t={t}>
                     <ControlCap kind={f.kind}>
                       <WebControl f={f} form={form} set={set} setLangItem={setLangItem} activeLanguage={activeLanguage} translation={translation} crew={crew} t={t} />
                     </ControlCap>
@@ -276,14 +287,24 @@ function ReviewRow({ label, value, ok = true, required = false, t }) {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '160px minmax(0, 1fr)', minHeight: 38, borderTop: `0.5px solid ${t.line}` }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 10px', background: '#F7F7F4', borderRight: `0.5px solid ${t.line}`, fontFamily: t.sans, fontSize: 12.5, fontWeight: 700, color: '#5F646D' }}>
-        <span style={{ flex: 1 }}>{label}</span>
-        {required
-          ? <span style={{ fontSize: 10, fontWeight: 700, color: ACCENT, flexShrink: 0 }}>필수</span>
-          : <span style={{ fontSize: 10, fontWeight: 600, color: t.inkFaint, flexShrink: 0 }}>선택</span>
-        }
+        <span>{label}</span>
+        {required && <span style={{ fontSize: 12, fontWeight: 700, color: ACCENT, flexShrink: 0 }}>*</span>}
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', padding: '0 10px', fontFamily: t.sans, fontSize: 13.5, fontWeight: ok ? 500 : 400, color: ok ? t.ink : t.inkFaint }}>
-        {value || '미입력'}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 10px', fontFamily: t.sans, fontSize: 13.5, fontWeight: ok ? 500 : 400, color: ok ? t.ink : t.inkFaint }}>
+        <span style={{
+          width: 16, height: 16, borderRadius: 999, flexShrink: 0,
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          background: ok ? ACCENT : 'transparent',
+          border: `1px solid ${ok ? ACCENT : t.lineStrong}`,
+          color: '#FFFFFF'
+        }}>
+          {ok && (
+            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M2.5 6.2 5 8.5 9.5 3.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          )}
+        </span>
+        <span>{value || '미입력'}</span>
       </div>
     </div>
   );
@@ -300,7 +321,7 @@ function ReviewGroup({ title, children, t }) {
   );
 }
 
-function WebReviewSection({ form, baseLanguage, t }) {
+function WebReviewSection({ form, baseLanguage, rightsConfirmed, onRightsChange, t }) {
   const lang = baseLanguage || LANG_LIST[0];
   const langLabel = LANG_SHORT[lang] || lang;
   const tr = form.translations.find((x) => x.language === lang) || {};
@@ -317,11 +338,11 @@ function WebReviewSection({ form, baseLanguage, t }) {
 
   return (
     <SectionCard id="sec-review" title="검토 요청" desc={null} t={t}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 26 }}>
-        <div style={{ padding: '16px 18px', border: `0.5px solid ${t.line}`, borderRadius: 12, background: '#FFF9F5' }}>
-          <div style={{ fontFamily: t.sans, fontSize: 14, fontWeight: 800, color: t.ink, letterSpacing: -0.2 }}>요청 전 마지막 확인</div>
-          <div style={{ marginTop: 5, fontFamily: t.sans, fontSize: 12.5, color: t.inkMute, lineHeight: 1.55 }}>
-            아래 전체 항목으로 관리자 검토를 요청합니다. 부족한 항목이 있으면 이전 단계로 돌아가 보완할 수 있어요.
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+        <div style={{ padding: '13px 16px', border: `0.5px solid ${t.line}`, borderRadius: 10, background: '#F4F4F1', display: 'flex', alignItems: 'center', gap: 9 }}>
+          <span aria-hidden="true" style={{ width: 18, height: 18, borderRadius: 999, border: `1px solid ${t.inkMute}`, color: t.inkMute, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: t.sans, fontSize: 11, fontWeight: 700 }}>!</span>
+          <div style={{ fontFamily: t.sans, fontSize: 13, fontWeight: 550, color: '#555A63', lineHeight: 1.5 }}>
+            검토 요청을 전송하기 전에 입력한 내용을 마지막으로 확인해주세요.
           </div>
         </div>
 
@@ -341,10 +362,11 @@ function WebReviewSection({ form, baseLanguage, t }) {
         <ReviewGroup title="제작 정보" t={t}>
           <ReviewRow label="미디어 카테고리" value={enumLabel('mediaCategory', form.mediaCategory)} ok={!!form.mediaCategory} required t={t} />
           <ReviewRow label="제작연도" value={form.productionYear ? `${form.productionYear}년` : ''} ok={!!form.productionYear} required t={t} />
+          <ReviewRow label="AI 생성 콘텐츠 여부" value={form.isAiGenerated ? '예' : '아니오'} ok={true} t={t} />
+          <ReviewRow label="콘텐츠 언어" value={enumLabel('contentLanguage', form.contentLanguage)} ok={!!form.contentLanguage} required t={t} />
           <ReviewRow label="총 회차 수" value={form.episodes ? `${form.episodes}화` : ''} ok={!!form.episodes} required t={t} />
           <ReviewRow label="회차당 러닝타임" value={form.runtime} ok={!!form.runtime} required t={t} />
           <ReviewRow label="총 러닝타임 (분)" value={form.totalRuntime ? `${form.totalRuntime}분` : ''} ok={!!form.totalRuntime} required t={t} />
-          <ReviewRow label="콘텐츠 언어" value={enumLabel('contentLanguage', form.contentLanguage)} ok={!!form.contentLanguage} required t={t} />
         </ReviewGroup>
 
         <ReviewGroup title="라이선스 · 유통" t={t}>
@@ -366,11 +388,31 @@ function WebReviewSection({ form, baseLanguage, t }) {
         <ReviewGroup title="미디어" t={t}>
           <ReviewRow label="대표 이미지" value={mainImages.length ? `${mainImages.length}장` : ''} ok={mainImages.length > 0} required t={t} />
           <ReviewRow label="무료회차 영상" value={`${freeVideos.length}개`} ok={freeVideos.length > 0} t={t} />
-          <ReviewRow label="무료회차 자막" value={`${langLabel} · ${freeSubs.length}개`} ok={freeSubs.length > 0} t={t} />
+          <ReviewRow label="무료회차 자막" value={`${freeSubs.length}개`} ok={freeSubs.length > 0} t={t} />
           <ReviewRow label="티저 영상" value={`${teaserVideos.length}개`} ok={teaserVideos.length > 0} t={t} />
-          <ReviewRow label="티저 자막" value={`${langLabel} · ${teaserSubs.length}개`} ok={teaserSubs.length > 0} t={t} />
+          <ReviewRow label="티저 자막" value={`${teaserSubs.length}개`} ok={teaserSubs.length > 0} t={t} />
           <ReviewRow label="관련 이미지" value={`${contentImages.length}장`} ok={contentImages.length > 0} t={t} />
         </ReviewGroup>
+
+        <div style={{ padding: '20px 22px', border: `0.5px solid ${t.line}`, borderRadius: 12, background: t.surface }}>
+          <p style={{ margin: '0 0 7px', fontFamily: t.sans, fontSize: 13.5, color: '#555A63', fontWeight: 450, lineHeight: 1.65 }}>
+            당사는 해당 작품의 저작권자 또는 적법한 권리자이며, 작품을 이용허락할 수 있는 권한을 보유하고 있음을 보증합니다.
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+            <span style={{ fontFamily: t.sans, fontSize: 13.5, color: '#555A63', fontWeight: 450, lineHeight: 1.65 }}>
+              또한 이를 입증할 자료를 제출할 수 있음을 확인합니다.
+            </span>
+            <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginLeft: 'auto', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={rightsConfirmed}
+                onChange={(event) => onRightsChange(event.target.checked)}
+                style={{ width: 16, height: 16, margin: 0, accentColor: ACCENT, cursor: 'pointer' }}
+              />
+              <span style={{ fontFamily: t.sans, fontSize: 12.5, color: t.ink, fontWeight: 600 }}>위 내용을 확인하고 동의합니다.</span>
+            </label>
+          </div>
+        </div>
       </div>
     </SectionCard>
   );

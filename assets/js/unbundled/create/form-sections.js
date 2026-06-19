@@ -156,29 +156,39 @@ function webContentGroups(form) {
       suffix: '년',
       cols: 6
     }, {
-      key: 'episodes',
-      label: '총 회차 수',
-      kind: 'num',
-      suffix: '화',
-      cols: 6
-    }, {
-      key: 'runtime',
-      label: '회차당 러닝타임',
-      kind: 'text',
-      ph: '예: 1~3분, 90초',
-      cols: 6
-    }, {
-      key: 'totalRuntime',
-      label: '총 러닝타임 (분)',
-      kind: 'num',
-      cols: 6
+      key: 'isAiGenerated',
+      label: 'AI 생성 콘텐츠 여부',
+      kind: 'checkbox',
+      cols: 6,
+      required: false,
+      hint: '생성형 AI로 영상 또는 주요 이미지를 제작한 경우 체크해주세요.'
     }, {
       key: 'contentLanguage',
       label: '콘텐츠 언어',
       kind: 'seg',
       enumKey: 'contentLanguage',
       hint: '원본 언어',
-      cols: 6
+      cols: 6,
+      divider: true
+    }, {
+      key: 'episodes',
+      label: '총 회차 수',
+      kind: 'num',
+      suffix: '화',
+      cols: 4
+    }, {
+      key: 'runtime',
+      label: '회차당 러닝타임',
+      kind: 'text',
+      ph: '예: 1~3분, 90초',
+      cols: 4,
+      divider: true
+    }, {
+      key: 'totalRuntime',
+      label: '총 러닝타임 (분)',
+      kind: 'num',
+      cols: 4,
+      divider: true
     }]
   }, {
     title: '라이선스 · 유통',
@@ -299,6 +309,32 @@ function WebControl(_ref) {
         onChange: change,
         t: t
       });
+    case 'checkbox':
+      return /*#__PURE__*/React.createElement("label", {
+        style: {
+          minHeight: 36,
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 9,
+          cursor: 'pointer',
+          fontFamily: t.sans,
+          fontSize: 13,
+          color: t.ink
+        }
+      }, /*#__PURE__*/React.createElement("input", {
+        type: "checkbox",
+        checked: Boolean(v),
+        onChange: function onChange(event) {
+          return change(event.target.checked);
+        },
+        style: {
+          width: 16,
+          height: 16,
+          margin: 0,
+          accentColor: ACCENT,
+          cursor: 'pointer'
+        }
+      }));
     case 'chips':
       return /*#__PURE__*/React.createElement(ChipMulti, {
         options: GENRES,
@@ -419,6 +455,8 @@ function RowField(_ref5) {
     cols = _ref5$cols === void 0 ? 6 : _ref5$cols,
     _ref5$inset = _ref5.inset,
     inset = _ref5$inset === void 0 ? false : _ref5$inset,
+    _ref5$strongDivider = _ref5.strongDivider,
+    strongDivider = _ref5$strongDivider === void 0 ? false : _ref5$strongDivider,
     _ref5$roomy = _ref5.roomy,
     roomy = _ref5$roomy === void 0 ? false : _ref5$roomy,
     t = _ref5.t,
@@ -437,7 +475,7 @@ function RowField(_ref5) {
       alignItems: 'stretch',
       padding: 0,
       borderTop: "0.5px solid ".concat(t.line),
-      borderLeft: inset ? "0.5px solid ".concat(t.line) : 'none'
+      borderLeft: inset ? "".concat(strongDivider ? 1 : 0.5, "px solid ").concat(t.line) : 'none'
     }
   }, /*#__PURE__*/React.createElement("div", {
     onMouseEnter: function onMouseEnter() {
@@ -560,7 +598,7 @@ function WebBasicSection(_ref6) {
     style: {
       display: 'flex',
       flexDirection: 'column',
-      gap: 26
+      gap: 32
     }
   }, groups.map(function (g) {
     return /*#__PURE__*/React.createElement("div", {
@@ -622,7 +660,7 @@ function WebBasicSection(_ref6) {
       }
     }, g.fields.map(function (f, fi) {
       var cols = fieldCols(f);
-      var inset = cols < 12 && !fieldStartsRow(g.fields, fi);
+      var inset = f.divider || cols < 12 && !fieldStartsRow(g.fields, fi);
       var roomy = f.kind === 'chips' || f.kind === 'area';
       var optionalInPlanning = form.productionStatus === 'PLANNING' && ['director', 'writer', 'cast', 'ageRating'].includes(f.key);
       var required = f.required !== false && f.key !== 'startPoint' && !optionalInPlanning;
@@ -633,6 +671,7 @@ function WebBasicSection(_ref6) {
         required: required,
         cols: cols,
         inset: inset,
+        strongDivider: !!f.divider,
         roomy: roomy,
         t: t
       }, /*#__PURE__*/React.createElement(ControlCap, {
@@ -896,21 +935,49 @@ function ReviewRow(_ref0) {
       fontWeight: 700,
       color: '#5F646D'
     }
-  }, /*#__PURE__*/React.createElement("span", { style: { flex: 1 } }, label),
-    required
-      ? /*#__PURE__*/React.createElement("span", { style: { fontSize: 10, fontWeight: 700, color: ACCENT, flexShrink: 0 } }, "필수")
-      : /*#__PURE__*/React.createElement("span", { style: { fontSize: 10, fontWeight: 600, color: t.inkFaint, flexShrink: 0 } }, "선택")
-  ), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", null, label), required && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      fontWeight: 700,
+      color: ACCENT,
+      flexShrink: 0
+    }
+  }, "*")), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       alignItems: 'center',
+      gap: 8,
       padding: '0 10px',
       fontFamily: t.sans,
       fontSize: 13.5,
       fontWeight: ok ? 500 : 400,
       color: ok ? t.ink : t.inkFaint
     }
-  }, value || '미입력'));
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      width: 16,
+      height: 16,
+      borderRadius: 999,
+      flexShrink: 0,
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: ok ? ACCENT : 'transparent',
+      border: "1px solid ".concat(ok ? ACCENT : t.lineStrong),
+      color: '#FFFFFF'
+    }
+  }, ok && /*#__PURE__*/React.createElement("svg", {
+    width: "10",
+    height: "10",
+    viewBox: "0 0 12 12",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M2.5 6.2 5 8.5 9.5 3.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }))), /*#__PURE__*/React.createElement("span", null, value || '미입력')));
 }
 function ReviewGroup(_ref1) {
   var title = _ref1.title,
@@ -930,6 +997,8 @@ function ReviewGroup(_ref1) {
 function WebReviewSection(_ref10) {
   var form = _ref10.form,
     baseLanguage = _ref10.baseLanguage,
+    rightsConfirmed = _ref10.rightsConfirmed,
+    onRightsChange = _ref10.onRightsChange,
     t = _ref10.t;
   var lang = baseLanguage || LANG_LIST[0];
   var langLabel = LANG_SHORT[lang] || lang;
@@ -959,32 +1028,43 @@ function WebReviewSection(_ref10) {
     style: {
       display: 'flex',
       flexDirection: 'column',
-      gap: 26
+      gap: 32
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      padding: '16px 18px',
+      padding: '13px 16px',
       border: "0.5px solid ".concat(t.line),
-      borderRadius: 12,
-      background: '#FFF9F5'
+      borderRadius: 10,
+      background: '#F4F4F1',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 9
     }
-  }, /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", {
+    "aria-hidden": "true",
     style: {
-      fontFamily: t.sans,
-      fontSize: 14,
-      fontWeight: 800,
-      color: t.ink,
-      letterSpacing: -0.2
-    }
-  }, "\uC694\uCCAD \uC804 \uB9C8\uC9C0\uB9C9 \uD655\uC778"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: 5,
-      fontFamily: t.sans,
-      fontSize: 12.5,
+      width: 18,
+      height: 18,
+      borderRadius: 999,
+      border: "1px solid ".concat(t.inkMute),
       color: t.inkMute,
-      lineHeight: 1.55
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0,
+      fontFamily: t.sans,
+      fontSize: 11,
+      fontWeight: 700
     }
-  }, "\uC544\uB798 \uC804\uCCB4 \uD56D\uBAA9\uC73C\uB85C \uAD00\uB9AC\uC790 \uAC80\uD1A0\uB97C \uC694\uCCAD\uD569\uB2C8\uB2E4. \uBD80\uC871\uD55C \uD56D\uBAA9\uC774 \uC788\uC73C\uBA74 \uC774\uC804 \uB2E8\uACC4\uB85C \uB3CC\uC544\uAC00 \uBCF4\uC644\uD560 \uC218 \uC788\uC5B4\uC694.")), /*#__PURE__*/React.createElement(ReviewGroup, {
+  }, "!"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: t.sans,
+      fontSize: 13,
+      fontWeight: 550,
+      color: '#555A63',
+      lineHeight: 1.5
+    }
+  }, "\uAC80\uD1A0 \uC694\uCCAD\uC744 \uC804\uC1A1\uD558\uAE30 \uC804\uC5D0 \uC785\uB825\uD55C \uB0B4\uC6A9\uC744 \uB9C8\uC9C0\uB9C9\uC73C\uB85C \uD655\uC778\uD574\uC8FC\uC138\uC694.")), /*#__PURE__*/React.createElement(ReviewGroup, {
     title: "\uC791\uD488 \uAE30\uBCF8 \uC815\uBCF4",
     t: t
   }, /*#__PURE__*/React.createElement(ReviewRow, {
@@ -1063,6 +1143,17 @@ function WebReviewSection(_ref10) {
     required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
+    label: "AI \uC0DD\uC131 \uCF58\uD150\uCE20 \uC5EC\uBD80",
+    value: form.isAiGenerated ? '예' : '아니오',
+    ok: true,
+    t: t
+  }), /*#__PURE__*/React.createElement(ReviewRow, {
+    label: "\uCF58\uD150\uCE20 \uC5B8\uC5B4",
+    value: enumLabel('contentLanguage', form.contentLanguage),
+    ok: !!form.contentLanguage,
+    required: true,
+    t: t
+  }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uCD1D \uD68C\uCC28 \uC218",
     value: form.episodes ? "".concat(form.episodes, "\uD654") : '',
     ok: !!form.episodes,
@@ -1078,12 +1169,6 @@ function WebReviewSection(_ref10) {
     label: "\uCD1D \uB7EC\uB2DD\uD0C0\uC784 (\uBD84)",
     value: form.totalRuntime ? "".concat(form.totalRuntime, "\uBD84") : '',
     ok: !!form.totalRuntime,
-    required: true,
-    t: t
-  }), /*#__PURE__*/React.createElement(ReviewRow, {
-    label: "\uCF58\uD150\uCE20 \uC5B8\uC5B4",
-    value: enumLabel('contentLanguage', form.contentLanguage),
-    ok: !!form.contentLanguage,
     required: true,
     t: t
   })), /*#__PURE__*/React.createElement(ReviewGroup, {
@@ -1138,7 +1223,6 @@ function WebReviewSection(_ref10) {
     label: "\uC720\uB8CC \uC2DC\uCCAD \uC2DC\uC791 \uD68C\uCC28",
     value: form.startPoint ? "".concat(form.startPoint, "\uD654\uBD80\uD130") : '',
     ok: true,
-    required: false,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uCF58\uD150\uCE20 \uC720\uD615",
@@ -1165,33 +1249,87 @@ function WebReviewSection(_ref10) {
     label: "\uBB34\uB8CC\uD68C\uCC28 \uC601\uC0C1",
     value: "".concat(freeVideos.length, "\uAC1C"),
     ok: freeVideos.length > 0,
-    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uBB34\uB8CC\uD68C\uCC28 \uC790\uB9C9",
-    value: "".concat(langLabel, " \xB7 ").concat(freeSubs.length, "\uAC1C"),
+    value: "".concat(freeSubs.length, "\uAC1C"),
     ok: freeSubs.length > 0,
-    required: false,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uD2F0\uC800 \uC601\uC0C1",
     value: "".concat(teaserVideos.length, "\uAC1C"),
     ok: teaserVideos.length > 0,
-    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uD2F0\uC800 \uC790\uB9C9",
-    value: "".concat(langLabel, " \xB7 ").concat(teaserSubs.length, "\uAC1C"),
+    value: "".concat(teaserSubs.length, "\uAC1C"),
     ok: teaserSubs.length > 0,
-    required: false,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uAD00\uB828 \uC774\uBBF8\uC9C0",
     value: "".concat(contentImages.length, "\uC7A5"),
     ok: contentImages.length > 0,
-    required: true,
     t: t
-  }))));
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '20px 22px',
+      border: "0.5px solid ".concat(t.line),
+      borderRadius: 12,
+      background: t.surface
+    }
+  }, /*#__PURE__*/React.createElement("p", {
+    style: {
+      margin: '0 0 7px',
+      fontFamily: t.sans,
+      fontSize: 13.5,
+      color: '#555A63',
+      fontWeight: 450,
+      lineHeight: 1.65
+    }
+  }, "\uB2F9\uC0AC\uB294 \uD574\uB2F9 \uC791\uD488\uC758 \uC800\uC791\uAD8C\uC790 \uB610\uB294 \uC801\uBC95\uD55C \uAD8C\uB9AC\uC790\uC774\uBA70, \uC791\uD488\uC744 \uC774\uC6A9\uD5C8\uB77D\uD560 \uC218 \uC788\uB294 \uAD8C\uD55C\uC744 \uBCF4\uC720\uD558\uACE0 \uC788\uC74C\uC744 \uBCF4\uC99D\uD569\uB2C8\uB2E4."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 12,
+      flexWrap: 'wrap'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: t.sans,
+      fontSize: 13.5,
+      color: '#555A63',
+      fontWeight: 450,
+      lineHeight: 1.65
+    }
+  }, "\uB610\uD55C \uC774\uB97C \uC785\uC99D\uD560 \uC790\uB8CC\uB97C \uC81C\uCD9C\uD560 \uC218 \uC788\uC74C\uC744 \uD655\uC778\uD569\uB2C8\uB2E4."), /*#__PURE__*/React.createElement("label", {
+    style: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 8,
+      marginLeft: 'auto',
+      cursor: 'pointer'
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "checkbox",
+    checked: rightsConfirmed,
+    onChange: function onChange(event) {
+      return onRightsChange(event.target.checked);
+    },
+    style: {
+      width: 16,
+      height: 16,
+      margin: 0,
+      accentColor: ACCENT,
+      cursor: 'pointer'
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: t.sans,
+      fontSize: 12.5,
+      color: t.ink,
+      fontWeight: 600
+    }
+  }, "\uC704 \uB0B4\uC6A9\uC744 \uD655\uC778\uD558\uACE0 \uB3D9\uC758\uD569\uB2C8\uB2E4."))))));
 }
 function WebPageHeader(_ref11) {
   var t = _ref11.t,

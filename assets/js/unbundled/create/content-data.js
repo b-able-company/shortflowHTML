@@ -23,6 +23,13 @@ var ENUMS = {
     v: 'ANIMATION',
     label: '애니메이션'
   }],
+  aiGenerated: [{
+    v: false,
+    label: '아니오'
+  }, {
+    v: true,
+    label: '예'
+  }],
   contentLanguage: [{
     v: 'KO',
     label: '한국어'
@@ -214,6 +221,7 @@ var INITIAL_FORM = {
   totalRuntime: 120,
   productionStatus: 'COMPLETED',
   mediaCategory: 'DRAMA',
+  isAiGenerated: false,
   genreCodes: ['ROMANCE', 'MELODRAMA', 'REVENGE'],
   contentLanguage: 'KO',
   exclusive: true,

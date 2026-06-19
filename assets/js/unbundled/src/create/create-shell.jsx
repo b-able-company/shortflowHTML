@@ -165,13 +165,13 @@ function FooterBar({ wizard, current, total, onPrev, onNext, onSave, onSubmit, m
             이전
           </button>
         }
+        <div style={{ flex: 1 }} />
         <button onClick={onSave} style={ghost}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><path d="M17 21v-8H7v8M7 3v5h8" /></svg>
           임시저장
         </button>
-        <div style={{ flex: 1 }} />
         {wizard && !onLast &&
-        <button onClick={onNext} style={primary}>
+        <button onClick={onNext} style={{ ...primary, background: '#1F2125', color: '#FFFFFF' }}>
             다음
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6" strokeLinecap="round" /></svg>
           </button>
@@ -243,6 +243,7 @@ function missingSubmitRequiredItems(form, baseLanguage) {
 
 function SubmitModal({ form, baseLanguage, onClose, onConfirm, t }) {
   const [rightsConfirmed, setRightsConfirmed] = React.useState(false);
+  const [submitHover, setSubmitHover] = React.useState(false);
 
   return (
     <div onClick={onClose} style={{
@@ -250,38 +251,53 @@ function SubmitModal({ form, baseLanguage, onClose, onConfirm, t }) {
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24
     }}>
       <div onClick={(e) => e.stopPropagation()} style={{
-        width: 560, maxWidth: '100%', maxHeight: '88vh', overflow: 'auto', background: t.surface,
-        borderRadius: 18, boxShadow: '0 30px 80px rgba(0,0,0,0.3)', padding: '28px 30px 26px'
+        position: 'relative', width: 420, maxWidth: '100%', maxHeight: '88vh', overflow: 'auto', background: t.surface,
+        borderRadius: 18, boxShadow: '0 24px 70px rgba(0,0,0,0.24)', padding: '30px 28px 26px', textAlign: 'center'
       }}>
-        <h2 style={{ margin: 0, fontFamily: t.sans, fontSize: 20, fontWeight: 700, color: t.ink, letterSpacing: -0.4 }}>검토 요청을 보낼까요?</h2>
-        <p style={{ margin: '8px 0 22px', fontFamily: t.sans, fontSize: 13.5, color: t.inkMute, lineHeight: 1.6 }}>
-          제출 후에는 관리자 검토가 시작되며, 검토 중에는 수정이 제한됩니다.
+        <button
+          type="button"
+          aria-label="닫기"
+          onClick={onClose}
+          style={{ position: 'absolute', top: 14, right: 16, width: 30, height: 30, padding: 0, border: 'none', borderRadius: 8, background: 'transparent', color: t.inkMute, cursor: 'pointer', fontFamily: t.sans, fontSize: 22, lineHeight: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+        >×</button>
+        <div style={{ width: 60, height: 60, margin: '0 auto 18px', borderRadius: 16, background: '#F4F4F1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img
+            src="images/contentAddCheck.png"
+            alt=""
+            style={{ width: 44, height: 44, display: 'block', objectFit: 'contain' }}
+          />
+        </div>
+
+        <h2 style={{ margin: 0, fontFamily: t.sans, fontSize: 19, fontWeight: 650, color: t.ink, letterSpacing: -0.35 }}>권리 보유 내용을 확인해주세요</h2>
+        <p style={{ margin: '10px auto 20px', maxWidth: 350, fontFamily: t.sans, fontSize: 13.5, color: '#555A63', fontWeight: 500, lineHeight: 1.7 }}>
+          당사는 해당 작품의 저작권자 또는 적법한 권리자이며, 작품을 이용허락할 수 있는 권한을 보유하고 있음을 보증합니다. 또한 이를 입증할 자료를 제출할 수 있음을 확인합니다.
         </p>
 
-        <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginTop: 18, padding: '14px 15px', border: `0.5px solid ${rightsConfirmed ? '#F2C3AE' : t.line}`, borderRadius: 12, background: rightsConfirmed ? '#FFF7F2' : t.surface, cursor: 'pointer' }}>
+        <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, width: '100%', marginTop: 2, cursor: 'pointer' }}>
           <input
             type="checkbox"
             checked={rightsConfirmed}
             onChange={(e) => setRightsConfirmed(e.target.checked)}
-            style={{ width: 16, height: 16, marginTop: 2, flexShrink: 0, accentColor: ACCENT, cursor: 'pointer' }}
+            style={{ width: 16, height: 16, margin: 0, flexShrink: 0, accentColor: ACCENT, cursor: 'pointer' }}
           />
-          <span style={{ fontFamily: t.sans, fontSize: 12.5, color: t.inkMute, lineHeight: 1.6, textAlign: 'left' }}>
-            당사는 모든 권리를 보유하고 있거나 해당 작품의 저작권자 또는 적법한 권리자임을 보증하며, 해당 작품을 이용허락할 수 있는 적법한 권한을 보유하고 있음을 보증한다. 또한, 이를 입증할 수 있는 자료를 제출할 수 있음을 확인합니다.
-          </span>
+          <span style={{ fontFamily: t.sans, fontSize: 12.5, color: t.ink, fontWeight: 600 }}>위 내용을 확인하고 동의합니다.</span>
         </label>
 
-        <div style={{ display: 'flex', gap: 10, marginTop: 18 }}>
-          <button onClick={onClose} style={{
-            flex: 1, height: 44, borderRadius: 10, cursor: 'pointer', border: `0.5px solid ${t.lineStrong}`,
-            background: t.surface, color: t.ink, fontFamily: t.sans, fontSize: 14, fontWeight: 600
-          }}>취소</button>
-          <button disabled={!rightsConfirmed} onClick={onConfirm} style={{
-            flex: 1, height: 44, borderRadius: 10, border: 'none',
-            background: rightsConfirmed ? ACCENT : t.lineStrong, color: rightsConfirmed ? '#FFF7EE' : t.inkFaint, fontFamily: t.sans, fontSize: 14, fontWeight: 700, cursor: rightsConfirmed ? 'pointer' : 'not-allowed',
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 12 }}>
+          <button
+            disabled={!rightsConfirmed}
+            onClick={onConfirm}
+            onMouseEnter={() => rightsConfirmed && setSubmitHover(true)}
+            onMouseLeave={() => setSubmitHover(false)}
+            style={{
+            width: '100%', height: 40, borderRadius: 10,
+            border: submitHover ? 'none' : `0.5px solid ${rightsConfirmed ? t.lineStrong : t.line}`,
+            background: submitHover ? ACCENT : t.surface,
+            color: submitHover ? '#FFF7EE' : rightsConfirmed ? t.ink : t.inkFaint,
+            fontFamily: t.sans, fontSize: 14, fontWeight: 600, cursor: rightsConfirmed ? 'pointer' : 'not-allowed',
+            transition: 'background 160ms ease, color 160ms ease, border-color 160ms ease'
           }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            검토 요청 보내기
+            검토 요청
           </button>
         </div>
       </div>

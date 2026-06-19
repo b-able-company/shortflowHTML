@@ -381,6 +381,7 @@
             <button class="chip active" data-value="전체">전체</button>
             <button class="chip" data-value="숏드라마">숏드라마</button>
             <button class="chip" data-value="숏애니">숏애니</button>
+            <button class="chip" data-value="AI">AI</button>
           </div>
         </div>
         <div class="filter-line" data-filter="releaseType">
@@ -470,7 +471,7 @@
       { title: '죽었다가 회귀한 톱스타', genres: ['타임슬립', '액션'], year: '2025', language: '한국어', type: '숏드라마', favorite: false, poster: 'p3', image: 'images/죽었다가회귀한.png', href: 'content-detail.html', posterTitle: '남편이 돌아왔다' },
       { title: '우리 집에 킬러가 산다', genres: ['스릴러', '코미디'], year: '2025', language: '영어', type: '숏드라마', favorite: true, poster: 'p4', image: 'images/우리집에킬러가.png', href: 'content-detail.html', posterTitle: '귀신님 잘 부탁드립니다' },
       { title: '오늘부터 악녀 대행합니다', genres: ['로맨스', '코미디'], year: '2024', language: '한국어', type: '숏드라마', favorite: true, poster: 'p5', image: 'images/오늘부터악녀대행.png', href: 'content-detail.html', posterTitle: '오늘부터 악녀 대행합니다' },
-      { title: '남편이 AI입니다', genres: ['로맨스', 'SF', '코미디'], year: '2024', language: '한국어', type: '숏드라마', favorite: true, poster: 'p6', image: 'images/남편이AI.png', href: 'content-detail.html', posterTitle: '남편이 AI입니다' },
+      { title: '남편이 AI입니다', genres: ['로맨스', 'SF', '코미디'], year: '2024', language: '한국어', type: 'AI', favorite: true, poster: 'p6', image: 'images/남편이AI.png', href: 'content-detail.html', posterTitle: '남편이 AI입니다' },
       { title: '퇴사했더니 황제가 됐다', genres: ['판타지', '타임슬립', '사극'], year: '2023', language: '한국어', type: '숏드라마', favorite: false, poster: 'p7', image: 'images/퇴사했더니황제.png', href: 'content-detail.html', posterTitle: '퇴사했더니 황제가 됐다' },
       { title: '살인범과 룸메이트가 되었다', genres: ['스릴러', '미스터리'], year: '2026', language: '한국어', type: '숏드라마', favorite: true, poster: 'p8', image: 'images/살인범과룸메이트.png', href: 'content-detail.html', posterTitle: '살인범과 룸메이트가 되었다' },
       { title: '내 남편의 비밀 계정', genres: ['복수', '스릴러'], year: '2025', language: '한국어', type: '숏드라마', favorite: false, poster: 'p9', href: 'content-detail.html', posterTitle: '비밀 계정' },
@@ -484,12 +485,12 @@
     ];
 
     const state = {
-      section: '전체',
-      releaseType: '전체',
-      productionStage: '전체',
-      genre: '전체',
-      year: '전체',
-      language: '전체',
+      section: [],
+      releaseType: [],
+      productionStage: [],
+      genre: [],
+      year: [],
+      language: [],
       favoriteOnly: false,
       sort: 'popular',
       query: '',
@@ -516,12 +517,12 @@
 
     function render() {
       let items = contents.filter((item) => {
-        if (state.section !== '전체' && item.section !== state.section) return false;
-        if (state.releaseType !== '전체' && item.releaseType !== state.releaseType) return false;
-        if (state.productionStage !== '전체' && item.productionStage !== state.productionStage) return false;
-        if (state.genre !== '전체' && !item.genres.includes(state.genre)) return false;
-        if (state.year !== '전체' && item.year !== state.year) return false;
-        if (state.language !== '전체' && item.language !== state.language) return false;
+        if (state.section.length && !state.section.includes(item.section)) return false;
+        if (state.releaseType.length && !state.releaseType.includes(item.releaseType)) return false;
+        if (state.productionStage.length && !state.productionStage.includes(item.productionStage)) return false;
+        if (state.genre.length && !state.genre.some((genre) => item.genres.includes(genre))) return false;
+        if (state.year.length && !state.year.includes(item.year)) return false;
+        if (state.language.length && !state.language.includes(item.language)) return false;
         if (state.favoriteOnly && !item.favorite) return false;
         if (state.query && !item.title.toLowerCase().includes(state.query.toLowerCase())) return false;
         return true;
@@ -585,8 +586,26 @@
       const chip = event.target.closest('.chip');
       if (!chip) return;
       const group = chip.closest('.filter-line');
-      state[group.dataset.filter] = chip.dataset.value;
-      group.querySelectorAll('.chip').forEach((item) => item.classList.toggle('active', item === chip));
+      const filterKey = group.dataset.filter;
+      const value = chip.dataset.value;
+
+      if (value === '전체') {
+        state[filterKey] = [];
+      } else {
+        const selected = state[filterKey];
+        state[filterKey] = selected.includes(value)
+          ? selected.filter((item) => item !== value)
+          : [...selected, value];
+      }
+
+      const activeValues = state[filterKey];
+      group.querySelectorAll('.chip').forEach((item) => {
+        const active = item.dataset.value === '전체'
+          ? activeValues.length === 0
+          : activeValues.includes(item.dataset.value);
+        item.classList.toggle('active', active);
+        item.setAttribute('aria-pressed', String(active));
+      });
       resetPage();
       render();
     });

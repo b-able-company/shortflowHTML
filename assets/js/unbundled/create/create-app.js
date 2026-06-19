@@ -422,24 +422,24 @@ function WebStepApp() {
     setSavedAt = _React$useState0[1];
   var _React$useState1 = React.useState(false),
     _React$useState10 = _slicedToArray(_React$useState1, 2),
-    submitOpen = _React$useState10[0],
-    setSubmitOpen = _React$useState10[1];
+    devBypass = _React$useState10[0],
+    setDevBypass = _React$useState10[1];
   var _React$useState11 = React.useState(false),
     _React$useState12 = _slicedToArray(_React$useState11, 2),
     doneOpen = _React$useState12[0],
     setDoneOpen = _React$useState12[1];
-  var _React$useState13 = React.useState(true),
+  var _React$useState13 = React.useState(false),
     _React$useState14 = _slicedToArray(_React$useState13, 2),
-    aiIntroOpen = _React$useState14[0],
-    setAiIntroOpen = _React$useState14[1];
-  var _React$useState15 = React.useState(false),
+    rightsConfirmed = _React$useState14[0],
+    setRightsConfirmed = _React$useState14[1];
+  var _React$useState15 = React.useState(true),
     _React$useState16 = _slicedToArray(_React$useState15, 2),
-    aiUploadOpen = _React$useState16[0],
-    setAiUploadOpen = _React$useState16[1];
-  var _React$useStateBypass = React.useState(false),
-    _React$useStateBypass2 = _slicedToArray(_React$useStateBypass, 2),
-    devBypass = _React$useStateBypass2[0],
-    setDevBypass = _React$useStateBypass2[1];
+    aiIntroOpen = _React$useState16[0],
+    setAiIntroOpen = _React$useState16[1];
+  var _React$useState17 = React.useState(false),
+    _React$useState18 = _slicedToArray(_React$useState17, 2),
+    aiUploadOpen = _React$useState18[0],
+    setAiUploadOpen = _React$useState18[1];
   var set = function set(k, v) {
     return setForm(function (f) {
       return _objectSpread(_objectSpread({}, f), {}, _defineProperty({}, k, v));
@@ -459,6 +459,8 @@ function WebStepApp() {
     setLangItem: setLangItem,
     langList: selectedLangs,
     baseLanguage: baseLanguage,
+    rightsConfirmed: rightsConfirmed,
+    onRightsChange: setRightsConfirmed,
     onAiUpload: function onAiUpload() {
       return setAiUploadOpen(true);
     },
@@ -613,21 +615,15 @@ function WebStepApp() {
     },
     onSave: onSave,
     onSubmit: function onSubmit() {
-      return setSubmitOpen(true);
+      return setDoneOpen(true);
     },
-    missingCount: devBypass ? 0 : window.missingSubmitRequiredItems(form, baseLanguage).length,
-    onDevBypass: function() { setDevBypass(function(v) { return !v; }); },
+    missingCount: (devBypass ? 0 : window.missingSubmitRequiredItems(form, baseLanguage).length) + (current === total && !rightsConfirmed ? 1 : 0),
+    onDevBypass: function onDevBypass() {
+      return setDevBypass(function (v) {
+        return !v;
+      });
+    },
     t: t
-  }), submitOpen && /*#__PURE__*/React.createElement(SubmitModal, {
-    form: form,
-    t: t,
-    onClose: function onClose() {
-      return setSubmitOpen(false);
-    },
-    onConfirm: function onConfirm() {
-      setSubmitOpen(false);
-      setDoneOpen(true);
-    }
   }), doneOpen && /*#__PURE__*/React.createElement(SubmittedToast, {
     t: t,
     onClose: function onClose() {
