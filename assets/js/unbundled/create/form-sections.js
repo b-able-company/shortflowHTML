@@ -624,32 +624,41 @@ function WebBasicSection(_ref6) {
     })), g.title === '작품 기본 정보' && /*#__PURE__*/React.createElement("button", {
       onClick: onAiUpload,
       onMouseEnter: function onMouseEnter(e) {
-        e.currentTarget.style.borderColor = '#D9A38E';
-        e.currentTarget.style.background = '#FFF9F6';
+        e.currentTarget.style.opacity = '0.82';
       },
       onMouseLeave: function onMouseLeave(e) {
-        e.currentTarget.style.borderColor = t.lineStrong;
-        e.currentTarget.style.background = t.surface;
+        e.currentTarget.style.opacity = '1';
       },
       style: {
         height: 34,
         padding: '0 13px',
         borderRadius: 9,
-        border: "0.5px solid ".concat(t.lineStrong),
-        background: t.surface,
-        color: '#34363B',
+        border: 'none',
+        background: ACCENT,
+        color: '#FFF7EE',
         cursor: 'pointer',
         fontFamily: t.sans,
         fontSize: 13,
-        fontWeight: 650,
+        fontWeight: 600,
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
         gap: 7,
         flexShrink: 0,
-        transition: 'background 140ms ease, border-color 140ms ease'
+        transition: 'opacity 140ms ease'
       }
-    }, "AI \uC790\uB3D9 \uCD94\uCD9C")), /*#__PURE__*/React.createElement("div", {
+    }, "AI \uC790\uB3D9 \uCD94\uCD9C", /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 9,
+        fontWeight: 700,
+        letterSpacing: 0.4,
+        background: 'rgba(255,255,255,0.22)',
+        color: '#FFF7EE',
+        padding: '2px 5px',
+        borderRadius: 4,
+        lineHeight: 1.4
+      }
+    }, "BETA"))), /*#__PURE__*/React.createElement("div", {
       style: {
         display: 'grid',
         gridTemplateColumns: 'repeat(12, minmax(0, 1fr))',

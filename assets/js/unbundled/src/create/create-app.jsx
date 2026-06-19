@@ -61,7 +61,7 @@ function AIIntroModal({ onLater, onTry, t }) {
         <button aria-label="닫기" onClick={onLater} style={{ position: 'absolute', top: 12, right: 12, zIndex: 2, width: 34, height: 34, borderRadius: 999, border: 'none', background: 'rgba(255,255,255,0.82)', color: t.inkMute, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontFamily: t.sans, fontSize: 22, lineHeight: 1 }}>×</button>
         <img src="images/기획서팝업.png" alt="" style={{ width: '100%', height: 166, objectFit: 'cover', display: 'block', flexShrink: 0 }} />
         <div style={{ flex: 1, padding: '22px 28px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-          <h2 style={{ margin: 0, fontFamily: t.sans, fontSize: 20, fontWeight: 600, color: t.ink, letterSpacing: -0.45, textAlign: 'center' }}>AI 기획서 자동 추출</h2>
+          <h2 style={{ margin: 0, fontFamily: t.sans, fontSize: 17, fontWeight: 500, color: t.ink, letterSpacing: -0.45, textAlign: 'center' }}>AI 기획서 자동 추출</h2>
           <p style={{ margin: '9px 0 0', maxWidth: 300, fontFamily: t.sans, fontSize: 13.5, color: t.inkMute, lineHeight: 1.65, textAlign: 'center' }}>
             기획안을 업로드하면 제목, 시놉시스, 장르 등 주요 정보가 자동으로 입력됩니다.
           </p>
@@ -84,20 +84,20 @@ function AIIntroModal({ onLater, onTry, t }) {
 function AIPlanUploadModal({ onClose, t }) {
   return (
     <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 2100, background: 'rgba(15,17,21,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-      <div onClick={(e) => e.stopPropagation()} style={{ width: 380, height: 350, maxWidth: 'calc(100vw - 48px)', maxHeight: 'calc(100vh - 48px)', boxSizing: 'border-box', background: t.surface, borderRadius: 22, boxShadow: 'none', padding: '22px 24px 22px', display: 'flex', flexDirection: 'column' }}>
-        <h2 style={{ margin: 0, fontFamily: t.sans, fontSize: 20, fontWeight: 650, color: t.ink, letterSpacing: -0.4 }}>AI 기획서 자동 추출</h2>
-        <p style={{ margin: '8px 0 18px', fontFamily: t.sans, fontSize: 13, color: t.inkMute, lineHeight: 1.6 }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ width: 380, height: 325, maxWidth: 'calc(100vw - 48px)', maxHeight: 'calc(100vh - 48px)', boxSizing: 'border-box', background: t.surface, borderRadius: 22, boxShadow: 'none', padding: '22px 24px 22px', display: 'flex', flexDirection: 'column' }}>
+        <h2 style={{ margin: 0, fontFamily: t.sans, fontSize: 17, fontWeight: 500, color: t.ink, letterSpacing: -0.4, display: 'flex', alignItems: 'center', gap: 6 }}>AI 기획서 자동 추출<span style={{ fontSize: 9, fontWeight: 700, letterSpacing: 0.4, color: ACCENT, lineHeight: 1.4 }}>BETA</span></h2>
+        <p style={{ margin: '3px 0 18px', fontFamily: t.sans, fontSize: 13, color: t.inkMute, lineHeight: 1.6 }}>
           기획안 PDF를 업로드 해주세요.
         </p>
-        <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 158, borderRadius: 14, border: `1px dashed ${t.lineStrong}`, background: t.surfaceAlt, cursor: 'pointer', padding: 18, textAlign: 'center' }}>
+        <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 174, borderRadius: 14, border: `1px dashed ${t.lineStrong}`, background: t.surfaceAlt, cursor: 'pointer', padding: 18, textAlign: 'center', marginTop: 0 }}>
           <input type="file" accept=".pdf,application/pdf" style={{ display: 'none' }} />
           <span style={{ width: 38, height: 38, borderRadius: 999, background: t.surface, border: `0.5px solid ${t.line}`, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: ACCENT, marginBottom: 10 }}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9"><path d="M12 16V4M7 9l5-5 5 5M5 20h14" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </span>
-          <span style={{ fontFamily: t.sans, fontSize: 13.5, fontWeight: 550, color: t.ink }}>기획안 PDF 파일 선택</span>
-          <span style={{ marginTop: 5, fontFamily: t.sans, fontSize: 12.5, color: t.inkFaint }}>PDF 파일만 업로드할 수 있어요</span>
+          <span style={{ fontFamily: t.sans, fontSize: 13.5, fontWeight: 450, color: t.inkMute }}>기획안 PDF 파일 선택</span>
+          <span style={{ marginTop: 5, fontFamily: t.sans, fontSize: 11.5, color: t.inkFaint }}>PDF 형식만 가능 • 100페이지 이하 • 최대 100MB</span>
         </label>
-        <div style={{ display: 'flex', gap: 10, marginTop: 'auto' }}>
+        <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
           <button onClick={onClose} style={{ flex: '1 1 0', height: 40, borderRadius: 10, cursor: 'pointer', border: `0.5px solid ${t.lineStrong}`, background: t.surface, color: t.ink, fontFamily: t.sans, fontSize: 14, fontWeight: 650 }}>취소</button>
           <button onClick={onClose} style={{ flex: '1 1 0', height: 40, borderRadius: 10, cursor: 'pointer', border: 'none', background: ACCENT, color: '#FFF7EE', fontFamily: t.sans, fontSize: 14, fontWeight: 800 }}>추출하기</button>
         </div>

@@ -176,11 +176,12 @@ function WebBasicSection({ form, set, setLangItem, baseLanguage, onAiUpload, t }
               {g.title === '작품 기본 정보' && (
                 <button
                   onClick={onAiUpload}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#D9A38E'; e.currentTarget.style.background = '#FFF9F6'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = t.lineStrong; e.currentTarget.style.background = t.surface; }}
-                  style={{ height: 34, padding: '0 13px', borderRadius: 9, border: `0.5px solid ${t.lineStrong}`, background: t.surface, color: '#34363B', cursor: 'pointer', fontFamily: t.sans, fontSize: 13, fontWeight: 650, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7, flexShrink: 0, transition: 'background 140ms ease, border-color 140ms ease' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.82'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; }}
+                  style={{ height: 34, padding: '0 13px', borderRadius: 9, border: 'none', background: ACCENT, color: '#FFF7EE', cursor: 'pointer', fontFamily: t.sans, fontSize: 13, fontWeight: 600, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7, flexShrink: 0, transition: 'opacity 140ms ease' }}
                 >
                   AI 자동 추출
+                  <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: 0.4, background: 'rgba(255,255,255,0.22)', color: '#FFF7EE', padding: '2px 5px', borderRadius: 4, lineHeight: 1.4 }}>BETA</span>
                 </button>
               )}
             </div>

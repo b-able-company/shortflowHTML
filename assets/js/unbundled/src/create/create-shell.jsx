@@ -166,10 +166,10 @@ function FooterBar({ wizard, current, total, onPrev, onNext, onSave, onSubmit, m
           </button>
         }
         <div style={{ flex: 1 }} />
-        <button onClick={onSave} style={ghost}>
+        {!onLast && <button onClick={onSave} style={ghost}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><path d="M17 21v-8H7v8M7 3v5h8" /></svg>
           임시저장
-        </button>
+        </button>}
         {wizard && !onLast &&
         <button onClick={onNext} style={{ ...primary, background: '#1F2125', color: '#FFFFFF' }}>
             다음
@@ -309,16 +309,43 @@ function SubmitModal({ form, baseLanguage, onClose, onConfirm, t }) {
 function SubmittedToast({ onClose, t }) {
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 2000, background: 'rgba(15,17,21,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-      <div style={{ width: 420, maxWidth: '100%', background: t.surface, borderRadius: 18, boxShadow: '0 30px 80px rgba(0,0,0,0.3)', padding: '34px 30px', textAlign: 'center' }}>
-        <div style={{ width: 56, height: 56, borderRadius: 999, background: t.paidTint, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={t.paid} strokeWidth="2.4"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      <>
+        <style>{`
+          @keyframes nc-pop {
+            0%   { transform: scale(0.72); opacity: 0; }
+            55%  { transform: scale(1.06); opacity: 1; }
+            80%  { transform: scale(0.97); }
+            100% { transform: scale(1); }
+          }
+          @keyframes nc-circle {
+            from { stroke-dashoffset: 166; }
+            to   { stroke-dashoffset: 0; }
+          }
+          @keyframes nc-check {
+            from { stroke-dashoffset: 32; }
+            to   { stroke-dashoffset: 0; }
+          }
+          @keyframes nc-fadein {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+          }
+        `}</style>
+        <div style={{ width: 330, height: 300, maxWidth: '100%', background: t.surface, borderRadius: 18, boxShadow: 'none', padding: '32px 26px 24px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', animation: 'nc-pop 0.32s cubic-bezier(0.34,1.56,0.64,1) forwards' }}>
+          <svg width="60" height="60" viewBox="0 0 60 60" style={{ marginBottom: 16, flexShrink: 0 }}>
+            <circle cx="30" cy="30" r="26" fill="#FFF3EC" stroke={ACCENT} strokeWidth="1.5"
+              strokeDasharray="163.4" strokeDashoffset="163.4" strokeLinecap="round"
+              style={{ animation: 'nc-circle 0.32s ease-out 0.04s forwards', transformOrigin: '30px 30px', transform: 'rotate(-90deg)' }} />
+            <path d="M19 30l8 8 14-15" fill="none" stroke={ACCENT} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"
+              strokeDasharray="32" strokeDashoffset="32"
+              style={{ animation: 'nc-check 0.2s ease-out 0.3s forwards' }} />
+          </svg>
+          <h2 style={{ margin: 0, fontFamily: t.sans, fontSize: 18, fontWeight: 700, color: t.ink, animation: 'nc-fadein 0.22s ease 0.4s both' }}>검토 요청을 보냈어요</h2>
+          <p style={{ margin: '8px 0 0', fontFamily: t.sans, fontSize: 13, color: t.inkMute, lineHeight: 1.6, animation: 'nc-fadein 0.22s ease 0.48s both' }}>
+            관리자 검토가 시작됩니다.<br />진행 상황은 워크플로우에서 확인할 수 있어요.
+          </p>
+          <button onClick={onClose} style={{ marginTop: 'auto', width: '100%', height: 42, borderRadius: 10, cursor: 'pointer', border: `1px solid ${t.line}`, background: t.surface, color: t.ink, fontFamily: t.sans, fontSize: 14, fontWeight: 600, animation: 'nc-fadein 0.22s ease 0.54s both' }}>내 콘텐츠로</button>
         </div>
-        <h2 style={{ margin: 0, fontFamily: t.sans, fontSize: 19, fontWeight: 700, color: t.ink }}>검토 요청을 보냈어요</h2>
-        <p style={{ margin: '8px 0 22px', fontFamily: t.sans, fontSize: 13.5, color: t.inkMute, lineHeight: 1.6 }}>
-          관리자 검토가 시작됩니다. 진행 상황은 워크플로우에서 확인할 수 있어요.
-        </p>
-        <button onClick={onClose} style={{ height: 42, padding: '0 24px', borderRadius: 10, cursor: 'pointer', border: 'none', background: ACCENT, color: '#FFF7EE', fontFamily: t.sans, fontSize: 14, fontWeight: 700 }}>내 콘텐츠로</button>
-      </div>
+      </>
     </div>);
 
 }

@@ -206,8 +206,8 @@ function AIIntroModal(_ref2) {
     style: {
       margin: 0,
       fontFamily: t.sans,
-      fontSize: 20,
-      fontWeight: 600,
+      fontSize: 17,
+      fontWeight: 500,
       color: t.ink,
       letterSpacing: -0.45,
       textAlign: 'center'
@@ -272,7 +272,7 @@ function AIPlanUploadModal(_ref3) {
     },
     style: {
       width: 380,
-      height: 350,
+      height: 325,
       maxWidth: 'calc(100vw - 48px)',
       maxHeight: 'calc(100vh - 48px)',
       boxSizing: 'border-box',
@@ -287,14 +287,25 @@ function AIPlanUploadModal(_ref3) {
     style: {
       margin: 0,
       fontFamily: t.sans,
-      fontSize: 20,
-      fontWeight: 650,
+      fontSize: 17,
+      fontWeight: 500,
       color: t.ink,
-      letterSpacing: -0.4
+      letterSpacing: -0.4,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 6
     }
-  }, "AI \uAE30\uD68D\uC11C \uC790\uB3D9 \uCD94\uCD9C"), /*#__PURE__*/React.createElement("p", {
+  }, "AI \uAE30\uD68D\uC11C \uC790\uB3D9 \uCD94\uCD9C", /*#__PURE__*/React.createElement("span", {
     style: {
-      margin: '8px 0 18px',
+      fontSize: 9,
+      fontWeight: 700,
+      letterSpacing: 0.4,
+      color: ACCENT,
+      lineHeight: 1.4
+    }
+  }, "BETA")), /*#__PURE__*/React.createElement("p", {
+    style: {
+      margin: '3px 0 18px',
       fontFamily: t.sans,
       fontSize: 13,
       color: t.inkMute,
@@ -306,13 +317,14 @@ function AIPlanUploadModal(_ref3) {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      minHeight: 158,
+      minHeight: 174,
       borderRadius: 14,
       border: "1px dashed ".concat(t.lineStrong),
       background: t.surfaceAlt,
       cursor: 'pointer',
       padding: 18,
-      textAlign: 'center'
+      textAlign: 'center',
+      marginTop: 0
     }
   }, /*#__PURE__*/React.createElement("input", {
     type: "file",
@@ -348,21 +360,16 @@ function AIPlanUploadModal(_ref3) {
     style: {
       fontFamily: t.sans,
       fontSize: 13.5,
-      fontWeight: 550,
-      color: t.ink
+      fontWeight: 450,
+      color: t.inkMute
     }
   }, "\uAE30\uD68D\uC548 PDF \uD30C\uC77C \uC120\uD0DD"), /*#__PURE__*/React.createElement("span", {
-    style: {
-      marginTop: 5,
-      fontFamily: t.sans,
-      fontSize: 12.5,
-      color: t.inkFaint
-    }
-  }, "PDF \uD30C\uC77C\uB9CC \uC5C5\uB85C\uB4DC\uD560 \uC218 \uC788\uC5B4\uC694")), /*#__PURE__*/React.createElement("div", {
+    style: { marginTop: 5, fontFamily: t.sans, fontSize: 11.5, color: t.inkFaint }
+  }, "PDF \uD615\uC2DD\uB9CC \uAC00\uB2A5 \u2022 100\uD398\uC774\uC9C0 \uC774\uD558 \u2022 \uCD5C\uB300 100MB")), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 10,
-      marginTop: 'auto'
+      marginTop: 14
     }
   }, /*#__PURE__*/React.createElement("button", {
     onClick: onClose,

@@ -459,7 +459,7 @@ function FooterBar(_ref5) {
     style: {
       flex: 1
     }
-  }), /*#__PURE__*/React.createElement("button", {
+  }), !onLast && /*#__PURE__*/React.createElement("button", {
     onClick: onSave,
     style: ghost
   }, /*#__PURE__*/React.createElement("svg", {
@@ -755,69 +755,55 @@ function SubmittedToast(_ref7) {
       justifyContent: 'center',
       padding: 24
     }
-  }, /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("style", null, "\n          @keyframes nc-pop {\n            0%   { transform: scale(0.72); opacity: 0; }\n            55%  { transform: scale(1.06); opacity: 1; }\n            80%  { transform: scale(0.97); }\n            100% { transform: scale(1); }\n          }\n          @keyframes nc-circle {\n            from { stroke-dashoffset: 166; }\n            to   { stroke-dashoffset: 0; }\n          }\n          @keyframes nc-check {\n            from { stroke-dashoffset: 32; }\n            to   { stroke-dashoffset: 0; }\n          }\n          @keyframes nc-fadein {\n            from { opacity: 0; transform: translateY(6px); }\n            to   { opacity: 1; transform: translateY(0); }\n          }\n        "), /*#__PURE__*/React.createElement("div", {
     style: {
-      width: 420,
+      width: 330,
+      height: 300,
       maxWidth: '100%',
       background: t.surface,
       borderRadius: 18,
-      boxShadow: '0 30px 80px rgba(0,0,0,0.3)',
-      padding: '34px 30px',
-      textAlign: 'center'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      width: 56,
-      height: 56,
-      borderRadius: 999,
-      background: t.paidTint,
-      display: 'inline-flex',
+      boxShadow: 'none',
+      padding: '32px 26px 24px',
+      textAlign: 'center',
+      display: 'flex',
+      flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: 16
+      animation: 'nc-pop 0.32s cubic-bezier(0.34,1.56,0.64,1) forwards'
     }
   }, /*#__PURE__*/React.createElement("svg", {
-    width: "28",
-    height: "28",
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: t.paid,
-    strokeWidth: "2.4"
-  }, /*#__PURE__*/React.createElement("path", {
-    d: "M20 6L9 17l-5-5",
+    width: "60",
+    height: "60",
+    viewBox: "0 0 60 60",
+    style: { marginBottom: 16, flexShrink: 0 }
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "30",
+    cy: "30",
+    r: "26",
+    fill: '#FFF3EC',
+    stroke: ACCENT,
+    strokeWidth: "1.5",
+    strokeDasharray: "163.4",
+    strokeDashoffset: "163.4",
     strokeLinecap: "round",
-    strokeLinejoin: "round"
-  }))), /*#__PURE__*/React.createElement("h2", {
-    style: {
-      margin: 0,
-      fontFamily: t.sans,
-      fontSize: 19,
-      fontWeight: 700,
-      color: t.ink
-    }
+    style: { animation: 'nc-circle 0.32s ease-out 0.04s forwards', transformOrigin: '30px 30px', transform: 'rotate(-90deg)' }
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M19 30l8 8 14-15",
+    fill: "none",
+    stroke: ACCENT,
+    strokeWidth: "2.4",
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    strokeDasharray: "32",
+    strokeDashoffset: "32",
+    style: { animation: 'nc-check 0.2s ease-out 0.3s forwards' }
+  })), /*#__PURE__*/React.createElement("h2", {
+    style: { margin: 0, fontFamily: t.sans, fontSize: 18, fontWeight: 700, color: t.ink, animation: 'nc-fadein 0.22s ease 0.4s both' }
   }, "\uAC80\uD1A0 \uC694\uCCAD\uC744 \uBCF4\uB0C8\uC5B4\uC694"), /*#__PURE__*/React.createElement("p", {
-    style: {
-      margin: '8px 0 22px',
-      fontFamily: t.sans,
-      fontSize: 13.5,
-      color: t.inkMute,
-      lineHeight: 1.6
-    }
-  }, "\uAD00\uB9AC\uC790 \uAC80\uD1A0\uAC00 \uC2DC\uC791\uB429\uB2C8\uB2E4. \uC9C4\uD589 \uC0C1\uD669\uC740 \uC6CC\uD06C\uD50C\uB85C\uC6B0\uC5D0\uC11C \uD655\uC778\uD560 \uC218 \uC788\uC5B4\uC694."), /*#__PURE__*/React.createElement("button", {
+    style: { margin: '8px 0 0', fontFamily: t.sans, fontSize: 13, color: t.inkMute, lineHeight: 1.6, animation: 'nc-fadein 0.22s ease 0.48s both' }
+  }, "\uAD00\uB9AC\uC790 \uAC80\uD1A0\uAC00 \uC2DC\uC791\uB429\uB2C8\uB2E4.", /*#__PURE__*/React.createElement("br", null), "\uC9C4\uD589 \uC0C1\uD669\uC740 \uC6CC\uD06C\uD50C\uB85C\uC6B0\uC5D0\uC11C \uD655\uC778\uD560 \uC218 \uC788\uC5B4\uC694."), /*#__PURE__*/React.createElement("button", {
     onClick: onClose,
-    style: {
-      height: 42,
-      padding: '0 24px',
-      borderRadius: 10,
-      cursor: 'pointer',
-      border: 'none',
-      background: ACCENT,
-      color: '#FFF7EE',
-      fontFamily: t.sans,
-      fontSize: 14,
-      fontWeight: 700
-    }
-  }, "\uB0B4 \uCF58\uD150\uCE20\uB85C")));
+    style: { marginTop: 'auto', width: '100%', height: 42, borderRadius: 10, cursor: 'pointer', border: "1px solid ".concat(t.line), background: t.surface, color: t.ink, fontFamily: t.sans, fontSize: 14, fontWeight: 600, animation: 'nc-fadein 0.22s ease 0.54s both' }
+  }, "\uB0B4 \uCF58\uD150\uCE20\uB85C"))));
 }
 Object.assign(window, {
   NCHeader: NCHeader,
