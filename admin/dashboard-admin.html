@@ -42,9 +42,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .topbar-date { font-size: 12px; color: #888; }
 
 /* BODY */
-.body { flex: 1; overflow-y: auto; padding: 20px 30px 30px; display: flex; gap: 22px; align-items: flex-start; width: 100%; }
-.dash-main-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 22px; }
-.dash-side-col { width: 300px; min-width: 300px; display: flex; flex-direction: column; gap: 22px; }
+.body { flex: 1; overflow-y: auto; padding: 20px 30px 30px; display: grid; grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr); grid-template-areas: "focus recent" "settlement recent"; gap: 22px; align-items: stretch; width: 100%; }
 
 /* CARDS */
 .card { background: #fff; border: 0.5px solid #e8e6e0; border-radius: 10px; overflow: hidden; }
@@ -55,7 +53,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .card-action:hover { color: #333; }
 
 /* FOCUS */
-.focus-card { grid-column: 1; }
+.focus-card { grid-area: focus; }
 .focus-head-meta { display: flex; align-items: center; gap: 8px; }
 .sort-sel { font-size: 11px; padding: 2px 7px; border: 0.5px solid #e0dfd9; border-radius: 5px; background: #fff; color: #666; outline: none; cursor: pointer; font-family: inherit; }
 .focus-filters { padding: 10px 22px; background: #fff; border-bottom: 0.5px solid #f0efe9; display: flex; align-items: center; gap: 8px; overflow-x: auto; }
@@ -90,21 +88,24 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .focus-page-btn.active { border-color: #1a1a18; background: #1a1a18; color: #fff; font-weight: 600; }
 .focus-page-btn:disabled { color: #ccc; cursor: default; border-color: #ecebe7; }
 
-/* WORKFLOW STATUS */
-.wf-card { grid-column: 1; }
-.wf-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; padding: 14px 22px; }
-.wf-step { background: #f7f6f2; border-radius: 7px; padding: 7px 8px 6px; text-align: center; }
-.wf-step-label { font-size: 9.5px; color: #aaa; font-weight: 500; letter-spacing: 0.03em; margin-bottom: 6px; text-transform: uppercase; }
-.wf-step-num { font-size: 18px; font-weight: 600; color: #1a1a18; }
-.wf-step-type { font-size: 9.5px; color: #bbb; margin-top: 3px; }
-.wf-step.highlight .wf-step-label { color: #854F0B; }
-.wf-step.highlight { background: #FAEEDA; }
-.wf-step.highlight .wf-step-num { color: #854F0B; }
+/* SETTLEMENT STATUS */
+.settlement-overview { grid-area: settlement; }
+.settlement-flow { padding: 16px 22px 18px; display: grid; grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr) 42px minmax(0, 1fr); align-items: center; }
+.settlement-stage { min-height: 88px; padding: 15px 18px; border-radius: 9px; background: #f7f6f2; display: flex; align-items: center; gap: 14px; }
+.settlement-stage.scheduled { background: #FAEEDA; }
+.settlement-stage-icon { width: 38px; height: 38px; border-radius: 10px; background: #eceae4; color: #777; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.settlement-stage.scheduled .settlement-stage-icon { background: #f3ddb7; color: #854F0B; }
+.settlement-stage.complete-wait .settlement-stage-icon { background: #EAF3DE; color: #3B6D11; }
+.settlement-stage-label { color: #777; font-size: 12px; font-weight: 550; }
+.settlement-stage-value { margin-top: 6px; color: #1a1a18; font-size: 22px; line-height: 1; font-weight: 650; }
+.settlement-stage-value small { margin-left: 3px; color: #777; font-size: 12px; font-weight: 500; }
+.settlement-stage-meta { margin-top: 5px; color: #aaa; font-size: 10.5px; }
+.settlement-arrow { color: #c8c6bf; font-size: 19px; text-align: center; }
 
 /* RECENT */
-.recent-card { grid-column: 1; }
-.recent-list { display: flex; flex-direction: column; }
-.recent-item { display: flex; align-items: center; gap: 9px; padding: 7px 22px; border-bottom: 0.5px solid #f5f4f0; }
+.recent-card { grid-area: recent; display: flex; flex-direction: column; }
+.recent-list { flex: 1; display: flex; flex-direction: column; }
+.recent-item { display: flex; align-items: center; gap: 9px; padding: 10px 18px; border-bottom: 0.5px solid #f5f4f0; }
 .recent-item:last-child { border-bottom: none; }
 .rt { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
 .rt-approve  { background: #EAF3DE; color: #3B6D11; }
@@ -114,27 +115,18 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .rt-credit   { background: #E6F1FB; color: #185FA5; }
 .rt-close    { background: #f0efe9; color: #888; }
 .recent-main { flex: 1; min-width: 0; font-size: 12px; color: #1a1a18; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.recent-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.recent-right { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
 .recent-who { font-size: 11px; color: #888; }
 .recent-time { font-size: 11px; color: #bbb; white-space: nowrap; }
 
-/* SETTLEMENT PREVIEW */
-.settle-card { grid-column: 2; }
-.settle-month { display: flex; align-items: center; gap: 6px; padding: 10px 16px 0; }
-.settle-month select { font-size: 12px; padding: 3px 7px; border: 0.5px solid #e0dfd9; border-radius: 5px; background: #fff; color: #555; outline: none; cursor: pointer; font-family: inherit; }
-.settle-list { padding: 8px 0; }
-.settle-item { padding: 9px 16px; border-bottom: 0.5px solid #f5f4f0; cursor: pointer; }
-.settle-item:last-child { border-bottom: none; }
-.settle-item:hover { background: #fafaf7; }
-.settle-company { font-size: 12.5px; font-weight: 500; color: #1a1a18; }
-.settle-breakdown { font-size: 11px; color: #aaa; margin-top: 2px; }
-.settle-amount { font-size: 13px; font-weight: 600; color: #1a1a18; font-family: monospace; }
-.settle-status { font-size: 10px; padding: 1px 6px; border-radius: 4px; font-weight: 500; }
-.ss-scheduled { background: #FAEEDA; color: #854F0B; }
-.ss-completed { background: #EAF3DE; color: #3B6D11; }
-.settle-total { padding: 10px 16px; border-top: 0.5px solid #e8e6e0; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
-.settle-total-label { color: #aaa; }
-.settle-total-amt { font-size: 14px; font-weight: 600; font-family: monospace; color: #1a1a18; }
+@media (max-width: 1050px) {
+  .body { grid-template-columns: 1fr; grid-template-areas: "focus" "settlement" "recent"; }
+}
+
+@media (max-width: 760px) {
+  .settlement-flow { grid-template-columns: 1fr; gap: 8px; }
+  .settlement-arrow { transform: rotate(90deg); }
+}
 
 /* scrollbar */
 ::-webkit-scrollbar { width: 4px; }
@@ -209,8 +201,41 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 
   <div class="body">
 
-    <!-- 좌측 칼럼 wrapper -->
-    <div class="dash-main-col">
+    <!-- 정산 현황 -->
+    <div class="card settlement-overview">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-receipt"></i> 정산 현황</div>
+        <a class="card-action" href="settlement-admin.html#settlement" style="text-decoration:none">정산처리 바로가기 <i class="ti ti-chevron-right" style="font-size:12px"></i></a>
+      </div>
+      <div class="settlement-flow">
+        <div class="settlement-stage">
+          <div class="settlement-stage-icon"><i class="ti ti-hourglass"></i></div>
+          <div>
+            <div class="settlement-stage-label">정산 대기</div>
+            <div class="settlement-stage-value">7<small>건</small></div>
+            <div class="settlement-stage-meta">정산 요청 전 확인 필요</div>
+          </div>
+        </div>
+        <div class="settlement-arrow"><i class="ti ti-arrow-right"></i></div>
+        <div class="settlement-stage scheduled">
+          <div class="settlement-stage-icon"><i class="ti ti-calendar-dollar"></i></div>
+          <div>
+            <div class="settlement-stage-label">정산 예정</div>
+            <div class="settlement-stage-value">5<small>건</small></div>
+            <div class="settlement-stage-meta">51,940,000원</div>
+          </div>
+        </div>
+        <div class="settlement-arrow"><i class="ti ti-arrow-right"></i></div>
+        <div class="settlement-stage complete-wait">
+          <div class="settlement-stage-icon"><i class="ti ti-circle-check"></i></div>
+          <div>
+            <div class="settlement-stage-label">완료 처리 대기</div>
+            <div class="settlement-stage-value">3<small>건</small></div>
+            <div class="settlement-stage-meta">입금 확인 후 완료 처리</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- FOCUS -->
     <div class="card focus-card">
@@ -229,7 +254,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
           <span class="focus-filter-count" data-count="content">0</span>
         </button>
         <button class="focus-filter" type="button" data-filter="revision" aria-pressed="false">
-          <span class="focus-filter-dot" style="background:#185FA5"></span>수정 요청 대기
+          <span class="focus-filter-dot" style="background:#185FA5"></span>수정 요청
           <span class="focus-filter-count" data-count="revision">0</span>
         </button>
         <button class="focus-filter" type="button" data-filter="inquiry" aria-pressed="false">
@@ -241,45 +266,6 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
       <div class="focus-pagination" id="focus-pagination"></div>
     </div>
 
-    <!-- 워크플로우 현황 -->
-    <div class="card wf-card">
-      <div class="card-head">
-        <div class="card-title"><i class="ti ti-git-branch"></i> 워크플로우 현황</div>
-        <div style="display:flex;gap:5px">
-          <span style="font-size:11px;padding:2px 7px;border-radius:4px;background:#E6F1FB;color:#185FA5;cursor:pointer">단일</span>
-          <span style="font-size:11px;padding:2px 7px;border-radius:4px;background:#f0efe9;color:#888;cursor:pointer">묶음</span>
-          <span style="font-size:11px;padding:2px 7px;border-radius:4px;background:#FAEEDA;color:#854F0B;cursor:pointer">턴키</span>
-        </div>
-      </div>
-      <div class="wf-grid">
-        <div class="wf-step highlight">
-          <div class="wf-step-label">INQUIRY</div>
-          <div class="wf-step-num">5</div>
-          <div class="wf-step-type">신규 구매의사</div>
-        </div>
-        <div class="wf-step">
-          <div class="wf-step-label">CONFIRM</div>
-          <div class="wf-step-num">8</div>
-          <div class="wf-step-type">컨펌 발송됨</div>
-        </div>
-        <div class="wf-step">
-          <div class="wf-step-label">ACK</div>
-          <div class="wf-step-num">6</div>
-          <div class="wf-step-type">플랫폼 확인</div>
-        </div>
-        <div class="wf-step">
-          <div class="wf-step-label">META</div>
-          <div class="wf-step-num">3</div>
-          <div class="wf-step-type">메타 부여됨</div>
-        </div>
-        <div class="wf-step">
-          <div class="wf-step-label">CLOSED</div>
-          <div class="wf-step-num" style="color:#aaa">1</div>
-          <div class="wf-step-type">이번 달</div>
-        </div>
-      </div>
-    </div>
-
     <!-- RECENT -->
     <div class="card recent-card">
       <div class="card-head">
@@ -288,27 +274,6 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
       </div>
       <div class="recent-list" id="recent-list"></div>
     </div>
-
-    </div><!-- /좌측 칼럼 wrapper -->
-
-    <!-- 우측 칼럼 wrapper -->
-    <div class="dash-side-col">
-
-    <!-- 이번 달 정산 예정 -->
-    <div class="card" style="cursor:pointer" onclick="">
-      <div class="card-head">
-        <div class="card-title"><i class="ti ti-receipt"></i> 이번 달 정산 예정</div>
-      </div>
-      <div style="padding:12px 22px;display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <div style="font-size:21px;font-weight:600;color:#1a1a18;font-family:monospace">$51,940</div>
-          <div style="font-size:10.5px;color:#aaa;margin-top:4px">3개 제작사 · 2025-03 · SCHEDULED</div>
-        </div>
-        <i class="ti ti-chevron-right" style="font-size:14px;color:#ccc"></i>
-      </div>
-    </div>
-
-    </div><!-- /우측 칼럼 wrapper -->
 
   </div>
 </div>

@@ -42,7 +42,10 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .section:last-child { margin-bottom: 0; }
 
 /* SUMMARY */
-.summary-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 22px; }
+.summary-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.summary-label { color: #777; font-size: 12px; font-weight: 550; }
+.summary-period { padding: 5px 9px; border-radius: 6px; background: #eae8e2; color: #555; font-size: 11px; font-weight: 550; }
+.summary-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 18px; }
 .metric-card { position: relative; min-height: 132px; padding: 22px 25px 20px; background: #fff; border-radius: 11px; display: flex; flex-direction: column; }
 .metric-top { display: block; padding-right: 48px; }
 .metric-name { font-size: 13.5px; color: #777; font-weight: 500; }
@@ -62,23 +65,54 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .tone-yellow { background: #fff8dc; color: #9a7716; }
 
 /* CHARTS */
-.chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
-.chart-card { background: #fff; border-radius: 10px; min-height: 270px; overflow: hidden; }
+.analysis-section { padding-top: 2px; }
+.analysis-card { background: #fff; border-radius: 10px; overflow: hidden; }
+.analysis-head { min-height: 58px; padding: 0 20px; border-bottom: 1px solid #eceae5; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.analysis-period { display: flex; align-items: center; gap: 10px; }
+.analysis-period-label { color: #999; font-size: 11px; }
+.analysis-tabs { display: flex; align-items: center; gap: 4px; }
+.analysis-tabs { gap: 6px; }
+.analysis-tab { height: 31px; padding: 0 13px; border: 0; border-radius: 7px; background: transparent; color: #777; font-family: inherit; font-size: 13.5px; cursor: pointer; white-space: nowrap; }
+.analysis-tab:hover { color: #333; }
+.analysis-tab.active { background: #1a1a18; color: #fff; font-weight: 600; }
+.analysis-period { position: relative; }
+.analysis-period::after { content: ""; position: absolute; right: 12px; top: 50%; width: 6px; height: 6px; border-right: 1.5px solid #777; border-bottom: 1.5px solid #777; transform: translateY(-68%) rotate(45deg); pointer-events: none; }
+.analysis-period-select { width: 94px; height: 30px; padding: 0 32px 0 12px; border: 1px solid #dcdad4; border-radius: 7px; background: #fff; color: #444; font-family: inherit; font-size: 12.5px; font-weight: 550; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; }
+.analysis-period-select:focus { border-color: #99968e; }
+.chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; padding: 28px; }
+.chart-grid.chart-table-grid { grid-template-columns: 1fr; }
+.legacy-chart-grid { display: none; }
+.chart-card { background: #fff; border: 1px solid #e5e3dd; border-radius: 10px; min-height: 270px; overflow: hidden; }
+.chart-card.chart-wide { grid-column: 1 / -1; }
 .chart-head { height: 50px; padding: 0 30px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .chart-title { font-size: 15px; font-weight: 600; color: #333; }
 .legend { display: flex; align-items: center; gap: 11px; font-size: 10px; color: #888; white-space: nowrap; }
 .legend-item { display: inline-flex; align-items: center; gap: 4px; }
 .legend-dot { width: 7px; height: 7px; border-radius: 2px; }
-.chart-body { height: 216px; padding: 12px 30px 16px; }
+.chart-content { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr); }
+.chart-main { min-width: 0; }
+.chart-body { height: 232px; padding: 16px 30px 18px; }
+.chart-values { height: 282px; background: #faf9f6; overflow-y: auto; }
+.chart-values table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.chart-values th { position: sticky; top: 0; z-index: 1; height: 34px; padding: 0 18px; background: #f2f1ed; color: #999; font-size: 10px; font-weight: 500; text-align: right; }
+.chart-values th:first-child, .chart-values td:first-child { width: 72px; text-align: left; }
+.chart-values td { height: 32px; padding: 0 18px; color: #555; font-size: 10.5px; text-align: right; white-space: nowrap; }
+.chart-values tbody tr:nth-child(even) { background: rgba(235,233,227,.42); }
+.chart-values tbody tr:hover { background: #fcfbf8; }
 .bar-chart { height: 100%; display: grid; grid-template-columns: 30px 1fr; grid-template-rows: 1fr 22px; }
 .y-axis { grid-row: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 1px 8px 0 0; font-size: 9px; color: #bbb; text-align: right; }
 .bar-plot { grid-column: 2; position: relative; display: flex; align-items: flex-end; justify-content: space-around; border-bottom: 0.5px solid #dddcd6; background: repeating-linear-gradient(to bottom, #fff 0, #fff calc(25% - 1px), #f1f0eb 25%); }
 .bar-group { position: relative; width: 14%; height: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 4px; cursor: help; }
-.bar-group::after { content: attr(data-tooltip); position: absolute; z-index: 10; left: 50%; bottom: calc(100% - 8px); width: max-content; padding: 7px 9px; border-radius: 6px; background: #292925; color: #fff; font-size: 10.5px; line-height: 1.4; white-space: nowrap; opacity: 0; visibility: hidden; transform: translate(-50%, 4px); transition: 120ms ease; pointer-events: none; box-shadow: 0 5px 16px rgba(0,0,0,.12); }
+.bar-group::after { content: attr(data-tooltip); position: absolute; z-index: 10; left: 50%; top: 8px; width: max-content; max-width: 210px; padding: 8px 10px; border-radius: 6px; background: #292925; color: #fff; font-size: 10.5px; line-height: 1.5; white-space: pre-line; text-align: left; opacity: 0; visibility: hidden; transform: translate(-50%, 4px); transition: 120ms ease; pointer-events: none; box-shadow: 0 5px 16px rgba(0,0,0,.12); }
 .bar-group:hover::after { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+.bar-group::after, .stacked-group::after { display: none; }
 .bar { width: 12px; min-height: 3px; border-radius: 4px 4px 1px 1px; transition: opacity 120ms ease; }
 .bar:hover { opacity: .72; }
 .bar-labels { grid-column: 2; display: flex; justify-content: space-around; align-items: end; font-size: 9.5px; color: #aaa; }
+.dynamic-bars .bar-group { flex: 1; width: auto; }
+.dynamic-bars .bar { width: min(14px, 32%); }
+.dynamic-bars.period-12 .bar { width: min(9px, 30%); }
+.dynamic-bars.period-12 .bar-labels { font-size: 8.5px; }
 .single-bars .bar { width: 26px; }
 .stacked-group { position: relative; width: 14%; height: 100%; display: flex; align-items: flex-end; justify-content: center; cursor: help; }
 .stacked-group::after { content: attr(data-tooltip); position: absolute; z-index: 10; left: 50%; bottom: calc(100% - 8px); width: max-content; padding: 7px 9px; border-radius: 6px; background: #292925; color: #fff; font-size: 10.5px; line-height: 1.4; white-space: nowrap; opacity: 0; visibility: hidden; transform: translate(-50%, 4px); transition: 120ms ease; pointer-events: none; box-shadow: 0 5px 16px rgba(0,0,0,.12); }
@@ -89,23 +123,55 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .line-wrap { height: 100%; min-height: 0; display: flex; flex-direction: column; }
 .line-svg { flex: 1; width: 100%; min-height: 0; display: block; overflow: hidden; }
 .line-months { height: 22px; display: flex; justify-content: space-between; padding: 5px 8px 0 28px; color: #aaa; font-size: 9.5px; }
+.dynamic-line-svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.dynamic-line-point { cursor: help; }
+.stacked-dynamic { width: 26px; display: flex; flex-direction: column-reverse; border-radius: 5px 5px 1px 1px; overflow: hidden; }
+.chart-hover-tooltip { position: fixed; z-index: 9999; max-width: 230px; padding: 8px 10px; border-radius: 7px; background: #292925; color: #fff; font-size: 10.5px; line-height: 1.5; white-space: pre-line; text-align: left; pointer-events: none; opacity: 0; visibility: hidden; transform: translateY(3px); transition: opacity 100ms ease, transform 100ms ease; box-shadow: 0 5px 16px rgba(0,0,0,.16); }
+.chart-hover-tooltip.show { opacity: 1; visibility: visible; transform: translateY(0); }
+
+/* PIPELINE */
+.pipeline-board { grid-column: 1 / -1; min-width: 0; }
+.pipeline-board-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.pipeline-board-title { color: #333; font-size: 15px; font-weight: 600; }
+.pipeline-board-meta { color: #aaa; font-size: 11px; }
+.pipeline-stages { display: grid; grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1fr) 48px minmax(0, 1fr) 48px minmax(0, 1fr); align-items: center; margin-bottom: 22px; }
+.pipeline-stage { min-height: 84px; padding: 15px 17px; border: 1px solid #e3e1db; border-radius: 10px; background: #fff; cursor: pointer; font-family: inherit; text-align: left; }
+.pipeline-stage:hover { border-color: #aaa79f; }
+.pipeline-stage.active { border-color: #8e8b84; background: #f7f6f2; }
+.pipeline-stage-name { display: flex; align-items: center; gap: 7px; color: #444; font-size: 11.5px; font-weight: 600; }
+.pipeline-stage-dot { width: 7px; height: 7px; border-radius: 2px; }
+.pipeline-stage-value { margin-top: 11px; color: #111; font-size: 26px; line-height: 1; font-weight: 650; }
+.pipeline-stage-value small { margin-left: 3px; color: #777; font-size: 11px; font-weight: 500; }
+.pipeline-rate { display: flex; align-items: center; justify-content: center; color: #aaa; }
+.pipeline-rate i { color: #aaa; font-size: 13px; }
+.pipeline-table-wrap { border: 1px solid #e3e1db; border-radius: 10px; overflow: hidden; }
+.pipeline-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.pipeline-table th { height: 34px; padding: 0 16px; background: #f5f4f0; color: #aaa; font-size: 10px; font-weight: 500; text-align: left; }
+.pipeline-table td { height: 40px; padding: 0 16px; border-top: 1px solid #eceae5; color: #555; font-size: 11.5px; }
+.pipeline-table td:first-child { color: #222; font-weight: 550; }
+.pipeline-table th:nth-child(3), .pipeline-table td:nth-child(3) { width: 120px; }
+.pipeline-table th:last-child, .pipeline-table td:last-child { width: 130px; text-align: right; }
+.pipeline-region { color: #666; font-size: 11.5px; white-space: normal; line-height: 1.4; }
+.pipeline-stay { color: #666; font-weight: 550; }
+.pipeline-stay.overdue { color: #c94f46; font-weight: 650; }
 
 /* TABLE */
-.table-card { background: #fff; border-radius: 10px; overflow: hidden; padding-bottom: 20px; }
-.table-head { height: 50px; padding: 0 22px; display: flex; align-items: center; }
+.table-card { background: #fff; border-radius: 10px; overflow: hidden; }
+.analysis-section .table-card { margin-top: 24px; }
+.table-head { height: 60px; padding: 0 22px; border-bottom: 1px solid #e3e1db; display: flex; align-items: center; justify-content: space-between; }
 .table-title { color: #333; font-size: 15px; font-weight: 600; }
-.table-wrap { margin: 0 20px; border: 1px solid #e3e1db; border-radius: 8px; overflow-x: auto; }
-.data-table { width: 100%; min-width: 1300px; table-layout: fixed; border-collapse: collapse; white-space: nowrap; }
-.data-table th { height: 42px; padding: 0 14px; background: #faf9f6; border: 1px solid #e3e1db; color: #777; font-size: 12px; font-weight: 500; text-align: right; }
-.data-table th, .data-table td { width: 10%; }
-.data-table th:first-child, .data-table td:first-child { text-align: left; }
-.data-table td { height: 46px; padding: 0 14px; border: 1px solid #e3e1db; color: #555; font-size: 12.5px; text-align: right; }
-.data-table tr > :first-child { border-left: 0; }
-.data-table tr > :last-child { border-right: 0; }
-.data-table thead tr:first-child > * { border-top: 0; }
-.data-table tfoot tr:last-child > * { border-bottom: 0; }
+.table-period-control { position: relative; display: flex; align-items: center; }
+.table-period-control::after { content: ""; position: absolute; right: 12px; top: 50%; width: 6px; height: 6px; border-right: 1.5px solid #777; border-bottom: 1.5px solid #777; transform: translateY(-68%) rotate(45deg); pointer-events: none; }
+.table-year-select { width: 92px; height: 30px; padding: 0 32px 0 12px; border: 1px solid #dcdad4; border-radius: 7px; background: #fff; color: #444; font-family: inherit; font-size: 12.5px; font-weight: 550; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; }
+.table-year-select:focus { border-color: #99968e; }
+.table-wrap { margin: 0; border: 0; border-radius: 0; overflow-x: auto; }
+.data-table { width: 100%; min-width: 1320px; table-layout: fixed; border-collapse: collapse; white-space: nowrap; }
+.data-table th { height: 42px; padding: 0 14px; background: #f5f4f0; border: 0; border-bottom: 1px solid #e3e1db; color: #888; font-size: 11px; font-weight: 500; text-align: right; }
+.data-table th, .data-table td { width: 8.73%; }
+.data-table th:first-child, .data-table td:first-child { width: 76px; text-align: left; }
+.data-table td { height: 46px; padding: 0 14px; border: 0; border-bottom: 1px solid #e3e1db; color: #555; font-size: 12.5px; text-align: right; }
 .data-table tbody tr:hover { background: #fcfbf8; }
-.data-table tfoot td { background: #faf9f6; color: #222; font-weight: 650; }
+.data-table tfoot td { border-bottom: 0; background: #fff; color: #222; font-weight: 650; }
 .up { color: #23845d !important; font-weight: 600; }
 .down { color: #c65f55 !important; font-weight: 600; }
 .th-label { display: inline-flex; align-items: center; justify-content: flex-end; gap: 5px; }
@@ -117,7 +183,14 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
   .summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (max-width: 860px) {
-  .summary-grid, .chart-grid { grid-template-columns: 1fr 1fr; }
+  .summary-grid { grid-template-columns: 1fr 1fr; }
+  .chart-grid { grid-template-columns: 1fr; }
+  .analysis-head { align-items: flex-start; flex-direction: column; }
+  .analysis-tabs { overflow-x: auto; width: 100%; }
+  .pipeline-stages { grid-template-columns: 1fr; gap: 8px; }
+  .pipeline-rate { transform: rotate(90deg); }
+  .chart-content { grid-template-columns: 1fr; }
+  .chart-values { height: auto; max-height: 282px; }
 }
 
 ::-webkit-scrollbar { width: 4px; }
@@ -190,6 +263,10 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 
   <div class="body">
     <section class="section">
+      <div class="summary-head">
+        <div class="summary-label">월간 핵심 지표</div>
+        <div class="summary-period">2026년 6월 기준</div>
+      </div>
       <div class="summary-grid">
         <article class="metric-card">
           <div class="metric-top">
@@ -209,6 +286,14 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
         </article>
         <article class="metric-card">
           <div class="metric-top">
+            <span class="metric-name">활성 플랫폼 수</span>
+            <span class="metric-icon tone-blue"><i class="ti ti-activity"></i></span>
+          </div>
+          <strong class="metric-value">9<span style="font-size:13px;margin-left:2px">개사</span></strong>
+          <div class="metric-change"><i class="ti ti-trending-up"></i><strong>+2</strong><span>전월 대비</span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-top">
             <span class="metric-name">등록 콘텐츠 수</span>
             <span class="metric-icon tone-orange"><i class="ti ti-photo-video"></i></span>
           </div>
@@ -225,17 +310,34 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
         </article>
         <article class="metric-card">
           <div class="metric-top">
-            <span class="metric-name">누적 거래액</span>
+            <span class="metric-name">6월 거래액</span>
             <span class="metric-icon tone-yellow"><i class="ti ti-coins"></i></span>
           </div>
-          <strong class="metric-value">4.2<span style="font-size:13px;margin-left:2px">억원</span></strong>
+          <strong class="metric-value">8,500<span style="font-size:13px;margin-left:2px">만원</span></strong>
           <div class="metric-change"><i class="ti ti-trending-up"></i><strong>+8,500만</strong><span>전월 대비</span></div>
         </article>
       </div>
     </section>
 
-    <section class="section">
-      <div class="chart-grid">
+    <section class="section analysis-section">
+      <div class="analysis-card">
+        <div class="analysis-head">
+          <div class="analysis-tabs" role="tablist" aria-label="그래프 분석 항목">
+            <button class="analysis-tab active" type="button" data-analysis="growth" aria-selected="true">성장</button>
+            <button class="analysis-tab" type="button" data-analysis="conversion" aria-selected="false">거래</button>
+            <button class="analysis-tab" type="button" data-analysis="settlement" aria-selected="false">정산</button>
+            <button class="analysis-tab" type="button" data-analysis="pipeline" aria-selected="false">파이프라인</button>
+          </div>
+          <div class="analysis-period">
+            <select class="analysis-period-select" id="analysis-period-select" aria-label="그래프 조회 기간">
+              <option value="3">3개월</option>
+              <option value="6">6개월</option>
+              <option value="12" selected>1년</option>
+            </select>
+          </div>
+        </div>
+        <div class="chart-grid" id="analysis-charts"></div>
+        <div class="chart-grid legacy-chart-grid">
         <article class="chart-card">
           <div class="chart-head">
             <div class="chart-title">월별 신규 가입 회사 추이</div>
@@ -379,13 +481,17 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
             </div>
           </div>
         </article>
+        </div>
       </div>
-    </section>
-
-    <section class="section">
       <div class="table-card">
         <div class="table-head">
           <div class="table-title">월별 상세 지표</div>
+          <div class="table-period-control">
+            <select class="table-year-select" id="table-year-select" aria-label="월별 상세 지표 연도">
+              <option value="2026" selected>2026</option>
+              <option value="2025">2025</option>
+            </select>
+          </div>
         </div>
         <div class="table-wrap">
           <table class="data-table">
@@ -395,30 +501,470 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
                 <th>신규 제작사</th>
                 <th>신규 플랫폼사</th>
                 <th>신규 콘텐츠</th>
-                <th><span class="th-label">신규 구매 문의<span class="help-tip" tabindex="0" data-tooltip="단일 구매 문의, 묶음 구매 문의, 턴키 구매 문의를 합산한 건수">?</span></span></th>
+                <th><span class="th-label">구매 문의<span class="help-tip" tabindex="0" data-tooltip="단일 구매 문의, 묶음 구매 문의, 턴키 구매 문의를 합산한 건수">?</span></span></th>
                 <th><span class="th-label">거래 성공<span class="help-tip" tabindex="0" data-tooltip="플랫폼사에 메타데이터 권한이 부여된 건수">?</span></span></th>
-                <th><span class="th-label">전환율<span class="help-tip" tabindex="0" data-tooltip="신규 구매 문의 대비 거래 성공 비율 (거래 성공 ÷ 신규 구매 문의 × 100)">?</span></span></th>
+                <th><span class="th-label">전환율<span class="help-tip" tabindex="0" data-tooltip="구매 문의 대비 거래 성공 비율 (거래 성공 ÷ 구매 문의 × 100)">?</span></span></th>
                 <th><span class="th-label">거래액<span class="help-tip" tabindex="0" data-tooltip="플랫폼사가 bable에 지급한 금액">?</span></span></th>
                 <th><span class="th-label">bable 수수료<span class="help-tip" tabindex="0" data-tooltip="거래액에서 bable이 가져가는 수수료">?</span></span></th>
                 <th><span class="th-label">제작사 정산액<span class="help-tip" tabindex="0" data-tooltip="bable이 제작사에 최종 지급한 금액">?</span></span></th>
               </tr>
             </thead>
-            <tbody>
-              <tr><td>2026.06</td><td>5개사</td><td>2개사</td><td>16편</td><td>28건</td><td>18건</td><td class="up">64.3%</td><td>85,000,000원</td><td>8,500,000원</td><td>76,500,000원</td></tr>
-              <tr><td>2026.05</td><td>6개사</td><td>3개사</td><td>11편</td><td>23건</td><td>14건</td><td>60.9%</td><td>64,000,000원</td><td>6,400,000원</td><td>57,600,000원</td></tr>
-              <tr><td>2026.04</td><td>4개사</td><td>2개사</td><td>13편</td><td>21건</td><td>16건</td><td class="up">76.2%</td><td>72,000,000원</td><td>7,200,000원</td><td>64,800,000원</td></tr>
-              <tr><td>2026.03</td><td>5개사</td><td>3개사</td><td>6편</td><td>24건</td><td>11건</td><td class="down">45.8%</td><td>49,000,000원</td><td>4,900,000원</td><td>44,100,000원</td></tr>
-              <tr><td>2026.02</td><td>3개사</td><td>2개사</td><td>10편</td><td>20건</td><td>13건</td><td class="up">65.0%</td><td>58,000,000원</td><td>5,800,000원</td><td>52,200,000원</td></tr>
-              <tr><td>2026.01</td><td>2개사</td><td>1개사</td><td>7편</td><td>18건</td><td>9건</td><td>50.0%</td><td>42,000,000원</td><td>4,200,000원</td><td>37,800,000원</td></tr>
-            </tbody>
-            <tfoot>
-              <tr><td>합계</td><td>25개사</td><td>13개사</td><td>63편</td><td>134건</td><td>81건</td><td>60.4%</td><td>370,000,000원</td><td>37,000,000원</td><td>333,000,000원</td></tr>
-            </tfoot>
+            <tbody id="monthly-table-body"></tbody>
+            <tfoot id="monthly-table-foot"></tfoot>
           </table>
         </div>
       </div>
     </section>
   </div>
 </div>
+<script>
+const monthlyKpiData = [
+  { month:'2025.01', producer:1, platform:1, content:4, inquiry:11, success:5, firstRun:4, secondRun:1, amount:28000000, fee:2800000, payout:25200000, active:16, single:3, bundle:1, turnkey:1 },
+  { month:'2025.02', producer:2, platform:1, content:6, inquiry:13, success:6, firstRun:4, secondRun:2, amount:32000000, fee:3200000, payout:28800000, active:18, single:3, bundle:2, turnkey:1 },
+  { month:'2025.03', producer:2, platform:1, content:5, inquiry:12, success:7, firstRun:5, secondRun:2, amount:35000000, fee:3500000, payout:31500000, active:19, single:4, bundle:2, turnkey:1 },
+  { month:'2025.04', producer:3, platform:1, content:7, inquiry:15, success:8, firstRun:6, secondRun:2, amount:38000000, fee:3800000, payout:34200000, active:21, single:5, bundle:2, turnkey:1 },
+  { month:'2025.05', producer:2, platform:2, content:6, inquiry:16, success:9, firstRun:6, secondRun:3, amount:43000000, fee:4300000, payout:38700000, active:22, single:5, bundle:3, turnkey:1 },
+  { month:'2025.06', producer:3, platform:1, content:8, inquiry:18, success:10, firstRun:7, secondRun:3, amount:47000000, fee:4700000, payout:42300000, active:24, single:6, bundle:3, turnkey:1 },
+  { month:'2025.07', producer:2, platform:1, content:5, inquiry:14, success:7, firstRun:5, secondRun:2, amount:36000000, fee:3600000, payout:32400000, active:24, single:4, bundle:2, turnkey:1 },
+  { month:'2025.08', producer:3, platform:1, content:8, inquiry:17, success:9, firstRun:6, secondRun:3, amount:41000000, fee:4100000, payout:36900000, active:27, single:5, bundle:3, turnkey:1 },
+  { month:'2025.09', producer:2, platform:2, content:7, inquiry:16, success:8, firstRun:6, secondRun:2, amount:39000000, fee:3900000, payout:35100000, active:29, single:5, bundle:2, turnkey:1 },
+  { month:'2025.10', producer:4, platform:1, content:9, inquiry:19, success:11, firstRun:8, secondRun:3, amount:52000000, fee:5200000, payout:46800000, active:33, single:6, bundle:3, turnkey:2 },
+  { month:'2025.11', producer:3, platform:2, content:8, inquiry:21, success:12, firstRun:8, secondRun:4, amount:57000000, fee:5700000, payout:51300000, active:36, single:7, bundle:3, turnkey:2 },
+  { month:'2025.12', producer:4, platform:2, content:10, inquiry:22, success:13, firstRun:9, secondRun:4, amount:61000000, fee:6100000, payout:54900000, active:39, single:7, bundle:4, turnkey:2 },
+  { month:'2026.01', producer:2, platform:1, content:7, inquiry:18, success:9, firstRun:6, secondRun:3, amount:42000000, fee:4200000, payout:37800000, active:42, single:5, bundle:2, turnkey:2 },
+  { month:'2026.02', producer:3, platform:2, content:10, inquiry:20, success:13, firstRun:9, secondRun:4, amount:58000000, fee:5800000, payout:52200000, active:46, single:6, bundle:4, turnkey:3 },
+  { month:'2026.03', producer:5, platform:3, content:6, inquiry:24, success:11, firstRun:8, secondRun:3, amount:49000000, fee:4900000, payout:44100000, active:44, single:6, bundle:3, turnkey:2 },
+  { month:'2026.04', producer:4, platform:2, content:13, inquiry:21, success:16, firstRun:11, secondRun:5, amount:72000000, fee:7200000, payout:64800000, active:50, single:8, bundle:5, turnkey:3 },
+  { month:'2026.05', producer:6, platform:3, content:11, inquiry:23, success:14, firstRun:10, secondRun:4, amount:64000000, fee:6400000, payout:57600000, active:54, single:7, bundle:4, turnkey:3 },
+  { month:'2026.06', producer:5, platform:2, content:16, inquiry:28, success:18, firstRun:13, secondRun:5, amount:85000000, fee:8500000, payout:76500000, active:61, single:9, bundle:5, turnkey:4 },
+];
+
+monthlyKpiData.forEach((row, index) => {
+  row.workflowCount = row.inquiry;
+  row.totalIp = Math.round(42 + (45 * index / (monthlyKpiData.length - 1)));
+  row.mgAmount = row.amount * .55;
+  row.mgIpCount = row.firstRun;
+});
+
+const chartGroups = {
+  growth: [
+    { title:'월별 신규 가입 회사', series:[['제작사','producer','#5b8fd9'],['플랫폼사','platform','#a9c8ec']], unit:'개사' },
+    { title:'월별 콘텐츠 등록', series:[['신규 콘텐츠','content','#8d83d8']], unit:'편' },
+    { title:'월별 신규 구매 문의', series:[['구매 문의','inquiry','#d18a52']], unit:'건' },
+    { title:'월간 활성 회사', series:[['활성 회사','active','#4fa987']], unit:'개사' },
+  ],
+  conversion: [
+    { title:'구매 문의 유형', series:[['단일','single','#5b8fd9'],['묶음','bundle','#8d83d8'],['턴키','turnkey','#e8b15b']], unit:'건' },
+    { title:'월별 거래 성공', series:[['거래 성공','success','#4fa987']], unit:'건' },
+    { title:'월별 거래 전환율', series:[['전환율','conversion','#d18a52']], unit:'%', percent:true },
+    { title:'문의 대비 미전환', series:[['미전환','unconverted','#c9a6a1']], unit:'건' },
+  ],
+  settlement: [
+    { title:'월별 거래액', series:[['거래액','amount','#4fa987']], unit:'원', money:true },
+    { title:'월별 bable 수수료', series:[['bable 수수료','fee','#5b8fd9']], unit:'원', money:true },
+    { title:'월별 제작사 정산액', series:[['제작사 정산액','payout','#8d83d8']], unit:'원', money:true },
+    { title:'월별 정산 처리 건수', series:[['처리 건수','success','#e8b15b']], unit:'건' },
+  ],
+  pipeline: [
+    { title:'월별 신규 구매 문의', series:[['구매 문의','inquiry','#5b8fd9']], unit:'건' },
+    { title:'월별 거래 성공', series:[['거래 성공','success','#4fa987']], unit:'건' },
+    { title:'월별 진행 중 거래', series:[['진행 중','unconverted','#d18a52']], unit:'건' },
+    { title:'월별 파이프라인 전환율', series:[['전환율','conversion','#8d83d8']], unit:'%', percent:true },
+  ],
+};
+
+const pipelineDeals = [
+  { title:'Contract Marriage', platform:'MoboReels', region:'중국 · 동남아', date:'2026.05.02', stayDays:51, stage:'proposal' },
+  { title:'Office Romance Rules', platform:'ManMan', region:'중국', date:'2026.05.23', stayDays:30, stage:'proposal' },
+  { title:"The Heir’s Nanny", platform:'GoodShort', region:'동남아 · 미국', date:'2026.05.24', stayDays:29, stage:'negotiation' },
+  { title:'Revenge in Heels', platform:'Vidio Drama', region:'동남아', date:'2026.05.10', stayDays:43, stage:'negotiation' },
+  { title:'My Ex is My Boss', platform:'ReelShort', region:'미국', date:'2026.05.26', stayDays:27, stage:'review' },
+  { title:'Stolen Identity', platform:'DramaBox', region:'미국', date:'2026.05.12', stayDays:41, stage:'review' },
+  { title:'Falling for the Villain', platform:'RedShort', region:'중국', date:'2026.05.28', completedDate:'2026.06.14', stage:'complete' },
+  { title:'Sweet Trap', platform:'WeTV SEA', region:'동남아 · 중국 · 미국', date:'2026.05.29', stayDays:24, stage:'proposal' },
+  { title:"Billionaire’s Babysitter", platform:'FlexTV', region:'미국', date:'2026.05.30', completedDate:'2026.06.18', stage:'complete' },
+];
+
+let activeAnalysis = 'growth';
+let activePeriod = 12;
+let activeTableYear = '2026';
+let activePipelineStage = 'proposal';
+
+function valueFor(row, key) {
+  if (key === 'conversion') return row.inquiry ? row.success / row.inquiry * 100 : 0;
+  if (key === 'unconverted') return row.inquiry - row.success;
+  return row[key];
+}
+
+function compactNumber(value, money = false) {
+  if (money) {
+    if (value >= 100000000) return `${(value / 100000000).toFixed(1)}억`;
+    if (value >= 10000000) return `${Math.round(value / 1000000)}백만`;
+    return `${Math.round(value / 10000)}만`;
+  }
+  return Number.isInteger(value) ? String(value) : value.toFixed(1);
+}
+
+function fullValue(value, chart) {
+  if (chart.money) return `${Math.round(value).toLocaleString('ko-KR')}원`;
+  if (chart.percent) return `${value.toFixed(1)}%`;
+  return `${Math.round(value).toLocaleString('ko-KR')}${chart.unit}`;
+}
+
+function renderChartValueTable(rows, series, { percent = false, money = false, unit = '', calculation = null } = {}) {
+  if (calculation) {
+    return `<div class="chart-values">
+      <table style="min-width:390px">
+        <thead><tr><th>기준월</th><th>${calculation.numeratorLabel}</th><th>${calculation.denominatorLabel}</th><th>${calculation.resultLabel}</th></tr></thead>
+        <tbody>${rows.slice().reverse().map(row => {
+          const numerator = calculation.numerator(row);
+          const denominator = calculation.denominator(row);
+          const result = calculation.result(row);
+          return `<tr>
+            <td>${row.month}</td>
+            <td>${calculation.formatNumerator(numerator)}</td>
+            <td>${calculation.formatDenominator(denominator)}</td>
+            <td>${calculation.formatResult(result)}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>
+    </div>`;
+  }
+  const format = (value, item) => {
+    if (money) return `${Math.round(value).toLocaleString('ko-KR')}원`;
+    if (percent) return `${value.toFixed(1)}%`;
+    return `${Math.round(value).toLocaleString('ko-KR')}${item.unit || unit}`;
+  };
+  const minWidth = Math.max(250, 80 + series.length * 110);
+  return `<div class="chart-values">
+    <table style="min-width:${minWidth}px">
+      <thead><tr><th>기준월</th>${series.map(item => `<th>${item.name}</th>`).join('')}</tr></thead>
+      <tbody>${rows.slice().reverse().map(row => `
+        <tr><td>${row.month}</td>${series.map(item => `<td>${format(item.value(row), item)}</td>`).join('')}</tr>
+      `).join('')}</tbody>
+    </table>
+  </div>`;
+}
+
+function renderPipelineBoard() {
+  const stages = [
+    { id:'proposal', name:'제안 완료', count:9, color:'#9ca0a6' },
+    { id:'negotiation', name:'협상 중', count:6, color:'#a47c00' },
+    { id:'review', name:'계약 검토', count:5, color:'#185FA5' },
+    { id:'complete', name:'계약 완료', count:4, color:'#16713d' },
+  ];
+  const stageHtml = stages.map((stage, index) => {
+    const card = `
+      <button class="pipeline-stage ${stage.id === activePipelineStage ? 'active' : ''}" type="button" data-pipeline-stage="${stage.id}">
+        <div class="pipeline-stage-name"><i class="pipeline-stage-dot" style="background:${stage.color}"></i>${stage.name}</div>
+        <div class="pipeline-stage-value">${stage.count}<small>건</small></div>
+      </button>`;
+    if (index === stages.length - 1) return card;
+    return `${card}<div class="pipeline-rate"><i class="ti ti-chevron-right"></i></div>`;
+  }).join('');
+  const selectedStage = stages.find(stage => stage.id === activePipelineStage);
+  const filteredDeals = pipelineDeals.filter(deal => deal.stage === activePipelineStage);
+  const isComplete = activePipelineStage === 'complete';
+  const rows = filteredDeals.map(deal => `
+    <tr>
+      <td>${deal.title}</td>
+      <td>${deal.platform}</td>
+      <td><span class="pipeline-region">${deal.region}</span></td>
+      <td>${deal.date}</td>
+      <td>${isComplete
+        ? deal.completedDate
+        : `<span class="pipeline-stay ${deal.stayDays >= 30 ? 'overdue' : ''}">${deal.stayDays}일</span>`}</td>
+    </tr>`).join('');
+  return `
+    <div class="pipeline-board">
+      <div class="pipeline-board-head">
+        <div class="pipeline-board-title">진행 중인 딜 파이프라인</div>
+      </div>
+      <div class="pipeline-stages">${stageHtml}</div>
+      <div class="pipeline-table-wrap">
+        <table class="pipeline-table">
+          <thead><tr><th>IP명</th><th>플랫폼명</th><th>지역</th><th>단계 진입일</th><th>${isComplete ? '계약 완료일' : '체류일수'}</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function renderBarCard({ title, rows, series, tableSeries = series, unit, money = false }) {
+  const values = rows.flatMap(row => series.map(item => item.value(row)));
+  const max = Math.max(...values, 1) * 1.15;
+  const legend = series.map(item =>
+    `<span class="legend-item"><i class="legend-dot" style="background:${item.color}"></i>${item.name}</span>`
+  ).join('');
+  const bars = rows.map(row => {
+    const tooltip = series.map(item => `${item.name} ${money ? Math.round(item.value(row)).toLocaleString('ko-KR') + '원' : Math.round(item.value(row)) + unit}`).join(' · ');
+    return `<div class="bar-group" data-tooltip="${row.month} · ${tooltip}">${series.map(item =>
+      `<i class="bar" style="height:${Math.max(3, item.value(row) / max * 100)}%;background:${item.color}"></i>`
+    ).join('')}</div>`;
+  }).join('');
+  const labels = rows.map(row => `<span>${row.month.slice(2).replace('.', '/')}</span>`).join('');
+  const axis = [max, max * .75, max * .5, max * .25, 0]
+    .map(value => `<span>${compactNumber(value, money)}</span>`).join('');
+  return `<article class="chart-card">
+    <div class="chart-content">
+      <div class="chart-main">
+        <div class="chart-head"><div class="chart-title">${title}</div><div class="legend">${legend}</div></div>
+        <div class="chart-body"><div class="bar-chart dynamic-bars period-${activePeriod}">
+          <div class="y-axis">${axis}</div><div class="bar-plot">${bars}</div><div class="bar-labels">${labels}</div>
+        </div></div>
+      </div>
+      ${renderChartValueTable(rows, tableSeries, { money, unit })}
+    </div>
+  </article>`;
+}
+
+function renderLineCard({ title, rows, series, percent = false, money = false, fill = false, wide = false, calculation = null }) {
+  const width = 540;
+  const left = 38;
+  const right = 520;
+  const top = 15;
+  const bottom = 170;
+  const values = rows.flatMap(row => series.map(item => item.value(row)));
+  const max = percent ? 100 : Math.max(...values, 1) * 1.15;
+  const xAt = index => rows.length === 1 ? (left + right) / 2 : left + (right - left) * index / (rows.length - 1);
+  const yAt = value => bottom - (bottom - top) * value / max;
+  const grid = [0, .25, .5, .75, 1].map(rate => {
+    const y = bottom - (bottom - top) * rate;
+    const value = max * rate;
+    return `<line x1="${left}" y1="${y}" x2="${right}" y2="${y}" stroke="#f0efe9"/>
+      <text x="2" y="${y + 3}" fill="#bbb" font-size="9">${percent ? Math.round(value) + '%' : compactNumber(value, money)}</text>`;
+  }).join('');
+  const lines = series.map((item, seriesIndex) => {
+    const points = rows.map((row, index) => `${xAt(index)},${yAt(item.value(row))}`).join(' ');
+    const area = fill && seriesIndex === 0
+      ? `<polygon points="${left},${bottom} ${points} ${right},${bottom}" fill="${item.color}" opacity=".12"/>`
+      : '';
+    const circles = rows.map((row, index) => {
+      const value = item.value(row);
+      const label = money ? `${Math.round(value).toLocaleString('ko-KR')}원` : percent ? `${value.toFixed(1)}%` : `${Math.round(value)}${item.unit || ''}`;
+      return `
+        <circle cx="${xAt(index)}" cy="${yAt(value)}" r="4" fill="#fff" stroke="${item.color}" stroke-width="2"/>
+        <circle class="dynamic-line-point" cx="${xAt(index)}" cy="${yAt(value)}" r="13" fill="transparent" stroke="none" data-tooltip="${row.month} · ${item.name} ${label}"/>`;
+    }).join('');
+    return `${area}<polyline points="${points}" fill="none" stroke="${item.color}" stroke-width="2"/>${circles}`;
+  }).join('');
+  const labels = rows.map((row, index) =>
+    `<text x="${xAt(index)}" y="192" text-anchor="middle" fill="#aaa" font-size="${activePeriod === 12 ? 8 : 9}">${row.month.slice(2).replace('.', '/')}</text>`
+  ).join('');
+  const legend = series.map(item =>
+    `<span class="legend-item"><i class="legend-dot" style="background:${item.color}"></i>${item.name}</span>`
+  ).join('');
+  return `<article class="chart-card ${wide ? 'chart-wide' : ''}">
+    <div class="chart-content">
+      <div class="chart-main">
+        <div class="chart-head"><div class="chart-title">${title}</div><div class="legend">${legend}</div></div>
+        <div class="chart-body"><svg class="dynamic-line-svg" viewBox="0 0 ${width} 200" preserveAspectRatio="none">${grid}${lines}${labels}</svg></div>
+      </div>
+      ${renderChartValueTable(rows, series, { percent, money, calculation })}
+    </div>
+  </article>`;
+}
+
+function renderStackedCard({ title, rows }) {
+  const series = [
+    { name:'MG', color:'#5b8fd9', value:row => row.amount * .55 },
+    { name:'FlatFee', color:'#8d83d8', value:row => row.amount * .25 },
+    { name:'RS', color:'#e8b15b', value:row => row.amount * .20 },
+  ];
+  const max = Math.max(...rows.map(row => row.amount), 1) * 1.15;
+  const bars = rows.map(row => {
+    const tooltip = series.map(item => `${item.name} ${Math.round(item.value(row)).toLocaleString('ko-KR')}원`).join('&#10;');
+    return `<div class="bar-group" data-tooltip="${row.month} · 총 ${row.amount.toLocaleString('ko-KR')}원&#10;${tooltip}">
+      <div class="stacked-dynamic" style="height:${row.amount / max * 100}%">${series.map(item =>
+        `<i class="stack-segment" style="height:${item.value(row) / row.amount * 100}%;background:${item.color}"></i>`
+      ).join('')}</div>
+    </div>`;
+  }).join('');
+  const labels = rows.map(row => `<span>${row.month.slice(2).replace('.', '/')}</span>`).join('');
+  const axis = [max, max * .75, max * .5, max * .25, 0].map(value => `<span>${compactNumber(value, true)}</span>`).join('');
+  const legend = series.map(item => `<span class="legend-item"><i class="legend-dot" style="background:${item.color}"></i>${item.name}</span>`).join('');
+  const tableSeries = [
+    { name:'총 거래액', value:row => row.amount },
+    ...series,
+  ];
+  return `<article class="chart-card">
+    <div class="chart-content">
+      <div class="chart-main">
+        <div class="chart-head"><div class="chart-title">${title}</div><div class="legend">${legend}</div></div>
+        <div class="chart-body"><div class="bar-chart dynamic-bars period-${activePeriod}">
+          <div class="y-axis">${axis}</div><div class="bar-plot">${bars}</div><div class="bar-labels">${labels}</div>
+        </div></div>
+      </div>
+      ${renderChartValueTable(rows, tableSeries, { money:true })}
+    </div>
+  </article>`;
+}
+
+function bindPipelineStages() {
+  document.querySelectorAll('[data-pipeline-stage]').forEach(button => {
+    button.addEventListener('click', () => {
+      activePipelineStage = button.dataset.pipelineStage;
+      renderAnalysisCharts();
+    });
+  });
+}
+
+function renderAnalysisCharts() {
+  const rows = monthlyKpiData.slice(-activePeriod);
+  const container = document.getElementById('analysis-charts');
+  if (activeAnalysis === 'pipeline') {
+    container.classList.remove('chart-table-grid');
+    container.innerHTML = renderPipelineBoard();
+    bindPipelineStages();
+    return;
+  }
+  container.classList.add('chart-table-grid');
+  if (activeAnalysis === 'growth') {
+    container.innerHTML =
+      renderBarCard({
+        title:'월별 신규 가입 추이', rows, unit:'개사',
+        series:[
+          { name:'제작사', color:'#285ea8', value:row => row.producer },
+          { name:'플랫폼사', color:'#9bbce4', value:row => row.platform },
+        ],
+      }) +
+      renderLineCard({
+        title:'월별 콘텐츠 등록 추이', rows, fill:true,
+        series:[{ name:'신규 콘텐츠', color:'#a06f00', unit:'편', value:row => row.content }],
+      });
+    return;
+  }
+  if (activeAnalysis === 'conversion') {
+    container.innerHTML =
+      renderBarCard({
+        title:'월별 거래 완료 수', rows, unit:'건',
+        series:[{ name:'거래 완료', color:'#4fa987', value:row => row.success }],
+        tableSeries:[
+          { name:'First Run', color:'#4fa987', unit:'건', value:row => row.firstRun },
+          { name:'Second Run', color:'#9bc9b7', unit:'건', value:row => row.secondRun },
+          { name:'거래 완료', color:'#23845d', unit:'건', value:row => row.success },
+        ],
+      }) +
+      renderLineCard({
+        title:'제안→거래 전환율', rows, percent:true,
+        series:[{ name:'제안→거래', color:'#285ea8', value:row => row.inquiry ? row.success / row.inquiry * 100 : 0 }],
+        calculation:{
+          numeratorLabel:'거래 성공', denominatorLabel:'구매 문의', resultLabel:'전환율',
+          numerator:row => row.success, denominator:row => row.inquiry,
+          result:row => row.inquiry ? row.success / row.inquiry * 100 : 0,
+          formatNumerator:value => `${value}건`, formatDenominator:value => `${value}건`, formatResult:value => `${value.toFixed(1)}%`,
+        },
+      }) +
+      renderLineCard({
+        title:'IP→제안 전환율', rows, percent:true, wide:true,
+        series:[{ name:'IP→제안', color:'#d18a52', value:row => row.totalIp ? row.workflowCount / row.totalIp * 100 : 0 }],
+        calculation:{
+          numeratorLabel:'Workflow 생성', denominatorLabel:'전체 등록 IP', resultLabel:'전환율',
+          numerator:row => row.workflowCount, denominator:row => row.totalIp,
+          result:row => row.totalIp ? row.workflowCount / row.totalIp * 100 : 0,
+          formatNumerator:value => `${value}건`, formatDenominator:value => `${value}편`, formatResult:value => `${value.toFixed(1)}%`,
+        },
+      });
+    return;
+  }
+  container.innerHTML =
+    renderStackedCard({ title:'월별 거래액 (MG · FlatFee · RS)', rows }) +
+    renderLineCard({
+      title:'IP당 평균 MG 단가', rows, money:true,
+      series:[{ name:'평균 MG', color:'#8d83d8', value:row => row.mgIpCount ? row.mgAmount / row.mgIpCount : 0 }],
+      calculation:{
+        numeratorLabel:'MG 총액', denominatorLabel:'MG 적용 IP', resultLabel:'평균 단가',
+        numerator:row => row.mgAmount, denominator:row => row.mgIpCount,
+        result:row => row.mgIpCount ? row.mgAmount / row.mgIpCount : 0,
+        formatNumerator:value => `${Math.round(value).toLocaleString('ko-KR')}원`,
+        formatDenominator:value => `${value}편`,
+        formatResult:value => `${Math.round(value).toLocaleString('ko-KR')}원`,
+      },
+    }) +
+    renderLineCard({
+      title:'RS 정산 금액 추이', rows, money:true, fill:true, wide:true,
+      series:[{ name:'RS 정산액', color:'#4fa987', value:row => row.amount * .20 }],
+    });
+}
+
+function renderMonthlyTable() {
+  const rows = monthlyKpiData
+    .filter(row => row.month.startsWith(activeTableYear))
+    .reverse();
+  const body = document.getElementById('monthly-table-body');
+  const foot = document.getElementById('monthly-table-foot');
+  body.innerHTML = rows.map(row => {
+    const conversion = row.inquiry ? row.success / row.inquiry * 100 : 0;
+    return `<tr>
+      <td>${row.month}</td><td>${row.producer}개사</td><td>${row.platform}개사</td><td>${row.content}편</td>
+      <td>${row.inquiry}건</td><td>${row.success}건</td><td>${conversion.toFixed(1)}%</td>
+      <td>${row.amount.toLocaleString('ko-KR')}원</td><td>${row.fee.toLocaleString('ko-KR')}원</td><td>${row.payout.toLocaleString('ko-KR')}원</td>
+    </tr>`;
+  }).join('');
+  const totals = rows.reduce((sum, row) => {
+    ['producer','platform','content','inquiry','success','amount','fee','payout'].forEach(key => sum[key] += row[key]);
+    return sum;
+  }, { producer:0, platform:0, content:0, inquiry:0, success:0, amount:0, fee:0, payout:0 });
+  const conversion = totals.inquiry ? totals.success / totals.inquiry * 100 : 0;
+  foot.innerHTML = `<tr>
+    <td>합계</td><td>${totals.producer}개사</td><td>${totals.platform}개사</td><td>${totals.content}편</td>
+    <td>${totals.inquiry}건</td><td>${totals.success}건</td><td>${conversion.toFixed(1)}%</td>
+    <td>${totals.amount.toLocaleString('ko-KR')}원</td><td>${totals.fee.toLocaleString('ko-KR')}원</td><td>${totals.payout.toLocaleString('ko-KR')}원</td>
+  </tr>`;
+}
+
+document.querySelectorAll('.analysis-tab').forEach(button => {
+  button.addEventListener('click', () => {
+    activeAnalysis = button.dataset.analysis;
+    document.querySelectorAll('.analysis-tab').forEach(item => {
+      const active = item === button;
+      item.classList.toggle('active', active);
+      item.setAttribute('aria-selected', String(active));
+    });
+    renderAnalysisCharts();
+  });
+});
+
+document.getElementById('analysis-period-select').addEventListener('change', event => {
+  activePeriod = Number(event.target.value);
+  renderAnalysisCharts();
+});
+
+document.getElementById('table-year-select').addEventListener('change', event => {
+  activeTableYear = event.target.value;
+  renderMonthlyTable();
+});
+
+const chartTooltip = document.createElement('div');
+chartTooltip.className = 'chart-hover-tooltip';
+document.body.appendChild(chartTooltip);
+
+const analysisCharts = document.getElementById('analysis-charts');
+analysisCharts.addEventListener('pointermove', event => {
+  const target = event.target.closest('[data-tooltip]');
+  if (!target || !analysisCharts.contains(target)) {
+    chartTooltip.classList.remove('show');
+    return;
+  }
+
+  chartTooltip.textContent = target.dataset.tooltip;
+  chartTooltip.classList.add('show');
+
+  const tooltipRect = chartTooltip.getBoundingClientRect();
+  const margin = 12;
+  let left = event.clientX + 14;
+  let top = event.clientY + 14;
+  if (left + tooltipRect.width > window.innerWidth - margin) left = event.clientX - tooltipRect.width - 14;
+  if (top + tooltipRect.height > window.innerHeight - margin) top = event.clientY - tooltipRect.height - 14;
+  chartTooltip.style.left = `${Math.max(margin, left)}px`;
+  chartTooltip.style.top = `${Math.max(margin, top)}px`;
+});
+analysisCharts.addEventListener('pointerleave', () => {
+  chartTooltip.classList.remove('show');
+});
+
+renderAnalysisCharts();
+renderMonthlyTable();
+</script>
 </body>
 </html>

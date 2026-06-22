@@ -166,6 +166,10 @@ html.admin-sidebar-collapsed-pending .sb {
   display: none;
 }
 
+.sb .nav-label {
+  display: none !important;
+}
+
 .sb.collapsed .nav {
   padding: 10px 0;
 }
@@ -246,7 +250,7 @@ a.ni.active:visited {
   justify-content: center;
   gap: 0;
   overflow: visible;
-  font-size: 0;
+  font-size: 0 !important;
   position: relative;
   border-left-width: 0;
 }
