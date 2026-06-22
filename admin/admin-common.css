@@ -10,6 +10,72 @@ body {
   font-family: "Pretendard Variable", "Pretendard", "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
 }
 
+/* Shared admin page header */
+.main > .topbar {
+  position: relative !important;
+  height: 62px !important;
+  padding: 7px 32px 0 !important;
+  border-bottom: 0 !important;
+  background: #f5f4f0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  flex-shrink: 0 !important;
+}
+
+.main > .topbar::after {
+  content: "";
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  bottom: 0;
+  height: 0.5px;
+  background: #d6d4cd;
+}
+
+.admin-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #1a1a18;
+  font-size: 19px;
+  font-weight: 550;
+  line-height: 1;
+}
+
+.admin-breadcrumb-separator {
+  color: #bbb;
+  font-weight: 400;
+}
+
+.admin-breadcrumb-current {
+  color: #777;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Primary section switching is handled by the sidebar navigation. */
+.main > .view > .tabbar {
+  display: none !important;
+}
+
+/* Keep every admin page within the same content bounds as the dashboard. */
+.main > .body,
+.main > .content,
+.main > .profile-body,
+.main > .view > .ops-layout,
+.main > .view > .completed-layout {
+  width: 100%;
+  min-width: 0;
+  padding: 20px 30px 30px !important;
+}
+
+html.admin-sidebar-collapsed-pending .sb {
+  width: var(--admin-sidebar-collapsed-width);
+  min-width: var(--admin-sidebar-collapsed-width);
+  visibility: hidden;
+}
+
 .sb {
   transition: width 160ms ease, min-width 160ms ease;
 }
@@ -128,6 +194,11 @@ body {
 
 .ni {
   text-decoration: none;
+  font-size: 13.5px !important;
+}
+
+.sub .ni {
+  font-size: 12.5px !important;
 }
 
 a.ni {
@@ -284,9 +355,75 @@ a.ni.active:visited {
 
 /* Management pages use split list/detail panes. Give them room from the shell edges. */
 .main .split {
-  padding: 16px 18px 18px;
-  gap: 14px;
+  width: 100%;
+  min-width: 0;
+  padding: 20px 30px 30px;
+  gap: 22px;
   background: #f5f4f0;
+}
+
+.main .split.admin-resizable-split {
+  gap: 0;
+}
+
+.admin-split-resizer {
+  position: relative;
+  width: 22px;
+  min-width: 22px;
+  align-self: stretch;
+  cursor: col-resize;
+  touch-action: none;
+  user-select: none;
+  flex: 0 0 22px;
+}
+
+.admin-split-resizer::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: 50%;
+  width: 2px;
+  border-radius: 2px;
+  background: #d6d4cd;
+  transform: translateX(-50%);
+  transition: width 120ms ease, background 120ms ease;
+}
+
+.admin-split-resizer::after {
+  content: "···";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  padding: 5px 2px;
+  border-radius: 5px;
+  background: #f5f4f0;
+  color: #aaa;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: .55;
+  letter-spacing: -1px;
+  writing-mode: vertical-rl;
+  transform: translate(-50%, -50%);
+}
+
+.admin-split-resizer:hover::before,
+.admin-split-resizer.dragging::before {
+  width: 3px;
+  background: #99968e;
+}
+
+body.admin-split-resizing {
+  cursor: col-resize !important;
+  user-select: none !important;
+}
+
+.main .split.admin-resizable-split > .lp {
+  min-width: 300px;
+}
+
+.main .split.admin-resizable-split > .dp {
+  min-width: 320px;
 }
 
 .main .split > .lp,
@@ -649,6 +786,14 @@ th.status-col {
   .main .split {
     padding: 10px;
     gap: 10px;
+  }
+
+  .main .split.admin-resizable-split {
+    gap: 10px;
+  }
+
+  .admin-split-resizer {
+    display: none;
   }
 
   .main .split > .dp {
