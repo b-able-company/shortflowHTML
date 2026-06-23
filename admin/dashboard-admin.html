@@ -42,44 +42,46 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .topbar-date { font-size: 12px; color: #888; }
 
 /* BODY */
-.body { flex: 1; overflow-y: auto; padding: 20px 30px 30px; display: grid; grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr); grid-template-areas: "focus recent" "settlement recent"; gap: 22px; align-items: start; width: 100%; }
+.body { flex: 1; overflow-y: auto; padding: 20px 30px 30px; display: grid; grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr); grid-template-areas: "operations side"; gap: 22px; align-items: start; width: 100%; }
+.operations-left { grid-area: operations; display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.operations-right { grid-area: side; display: flex; flex-direction: column; gap: 22px; min-width: 0; }
 
 /* CARDS */
 .card { background: #fff; border: 0.5px solid #e8e6e0; border-radius: 10px; overflow: hidden; }
-.card-head { padding: 10px 22px; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; justify-content: space-between; }
-.card-title { font-size: 11.5px; font-weight: 500; color: #888; letter-spacing: 0.03em; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
-.card-title i { font-size: 13px; }
-.card-action { font-size: 11px; color: #888; cursor: pointer; display: flex; align-items: center; gap: 3px; }
+.card-head { min-height: 50px; padding: 0 22px; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; justify-content: space-between; }
+.card-title { font-size: 14px; font-weight: 550; color: #777; letter-spacing: 0.02em; text-transform: uppercase; display: flex; align-items: center; gap: 7px; }
+.card-title i { font-size: 16px; }
+.card-action { font-size: 11.5px; color: #888; cursor: pointer; display: flex; align-items: center; gap: 3px; }
 .card-action:hover { color: #333; }
 
 /* FOCUS */
-.focus-card { grid-area: focus; }
+.focus-card { order: 1; }
 .focus-head-meta { display: flex; align-items: center; gap: 8px; }
 .sort-sel { font-size: 11px; padding: 2px 7px; border: 0.5px solid #e0dfd9; border-radius: 5px; background: #fff; color: #666; outline: none; cursor: pointer; font-family: inherit; }
-.focus-filters { padding: 10px 22px; background: #fff; border-bottom: 0.5px solid #f0efe9; display: flex; align-items: center; gap: 8px; overflow-x: auto; }
-.focus-filter-title { margin-right: auto; padding-right: 18px; display: flex; align-items: center; gap: 6px; color: #888; font-size: 11.5px; font-weight: 500; letter-spacing: .03em; white-space: nowrap; }
-.focus-filter-title i { font-size: 13px; }
-.focus-filter-title span { color: #bbb; font-size: 11px; font-weight: 400; letter-spacing: 0; }
-.focus-filter { border: 0; border-radius: 7px; padding: 6px 9px; background: #f5f4f0; color: #777; font-family: inherit; font-size: 11px; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
-.focus-filter:hover { background: #eeede8; color: #333; }
-.focus-filter.active { background: #e2e0da; color: #1a1a18; font-weight: 600; }
+.focus-filters { min-height: 50px; padding: 8px 22px; background: #fff; border-bottom: 0.5px solid #f0efe9; display: flex; align-items: center; gap: 8px; overflow-x: auto; }
+.focus-filter-title { margin-right: auto; padding-right: 18px; display: flex; align-items: center; gap: 7px; color: #777; font-size: 14px; font-weight: 550; letter-spacing: .02em; white-space: nowrap; }
+.focus-filter-title i { font-size: 16px; }
+.focus-filter-title span { color: #bbb; font-size: 11.5px; font-weight: 400; letter-spacing: 0; }
+.focus-filter { min-height: 32px; border: 0; border-radius: 12px; padding: 7px 12px; background: rgba(245,244,240,.82); color: #717171; font-family: inherit; font-size: 12px; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; box-shadow: inset 0 1px 0 rgba(255,255,255,.72); transition: background .16s ease, color .16s ease, transform .16s ease; }
+.focus-filter:hover { background: #efeee9; color: #333; }
+.focus-filter:active { transform: scale(.98); }
+.focus-filter.active { background: #e5e4df; color: #1d1d1f; font-weight: 600; box-shadow: inset 0 1px 0 rgba(255,255,255,.85), 0 1px 2px rgba(0,0,0,.04); }
 .focus-filter-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-.focus-filter-count { min-width: 17px; height: 17px; padding: 0 5px; border-radius: 9px; background: rgba(255,255,255,.72); color: #777; display: inline-flex; align-items: center; justify-content: center; font-size: 9.5px; font-weight: 600; }
-.focus-list { display: flex; flex-direction: column; }
-.focus-item { display: flex; align-items: center; gap: 10px; padding: 10px 22px; border-bottom: 0.5px solid #f5f4f0; cursor: pointer; }
+.focus-filter-count { min-width: 19px; height: 19px; padding: 0 5px; border-radius: 10px; background: rgba(255,255,255,.82); color: #6e6e73; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; box-shadow: inset 0 0 0 .5px rgba(0,0,0,.04); }
+.focus-list { min-height: 464px; display: flex; flex-direction: column; }
+.focus-item { min-height: 58px; display: flex; align-items: center; gap: 12px; padding: 12px 22px; border-bottom: 0.5px solid #f1f0ec; cursor: pointer; transition: background .15s ease; }
 .focus-item:last-child { border-bottom: none; }
 .focus-item:hover { background: #fafaf7; }
-.focus-num { font-size: 11px; color: #ccc; font-weight: 500; width: 18px; flex-shrink: 0; }
-.focus-tag { font-size: 10px; padding: 2px 7px; border-radius: 5px; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
-.ft-revision  { background: #E6F1FB; color: #185FA5; }
-.ft-content   { background: #FAEEDA; color: #854F0B; }
-.ft-inquiry   { background: #EDE9FE; color: #534AB7; }
-.ft-user      { background: #EAF3DE; color: #3B6D11; }
+.focus-num { width: 22px; flex: 0 0 22px; font-size: 12px; color: #ccc; font-weight: 500; }
+.focus-tag { width: 76px; min-height: 26px; padding: 5px 8px; border: 0; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; line-height: 1.35; white-space: nowrap; flex: 0 0 76px; box-shadow: inset 0 1px 0 rgba(255,255,255,.5); }
+.ft-revision  { background: rgba(230,241,251,.78); color: #266a9f; }
+.ft-content   { background: rgba(250,238,218,.82); color: #936016; }
+.ft-inquiry   { background: rgba(237,233,254,.82); color: #6559b5; }
+.ft-user      { background: rgba(234,243,222,.82); color: #4a781f; }
 .focus-info { flex: 1; min-width: 0; }
-.focus-title { font-size: 12.5px; font-weight: 500; color: #1a1a18; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.focus-meta { font-size: 10.5px; color: #aaa; margin-top: 2px; }
-.focus-age { font-size: 10.5px; color: #bbb; white-space: nowrap; flex-shrink: 0; }
-.focus-btn { font-size: 11px; padding: 4px 10px; border-radius: 6px; border: 0.5px solid #e0dfd9; cursor: pointer; background: #1a1a18; color: #fff; font-family: inherit; white-space: nowrap; flex-shrink: 0; }
+.focus-title { font-size: 13.5px; font-weight: 500; color: #1a1a18; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.focus-age { font-size: 11.5px; color: #bbb; white-space: nowrap; flex-shrink: 0; }
+.focus-btn { min-height: 32px; padding: 6px 14px; border-radius: 8px; border: 0; cursor: pointer; background: #1a1a18; color: #fff; font-family: inherit; font-size: 12px; white-space: nowrap; flex-shrink: 0; }
 .focus-empty { padding: 32px 16px; text-align: center; color: #ccc; font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .focus-empty i { font-size: 24px; }
 .focus-pagination { padding: 9px 22px; border-top: 0.5px solid #f0efe9; display: flex; align-items: center; justify-content: center; gap: 4px; }
@@ -89,38 +91,118 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .focus-page-btn:disabled { color: #ccc; cursor: default; border-color: #ecebe7; }
 
 /* SETTLEMENT STATUS */
-.settlement-overview { grid-area: settlement; }
-.settlement-flow { padding: 12px 18px 14px; display: grid; grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr) 34px minmax(0, 1fr); align-items: center; }
-.settlement-stage { min-height: 72px; padding: 11px 14px; border-radius: 9px; background: #f7f6f2; display: flex; align-items: center; gap: 11px; }
+.settlement-flow { padding: 12px 18px 14px; display: grid; grid-template-columns: 1fr; gap: 7px; }
+.settlement-stage { min-height: 72px; padding: 11px 26px; border-radius: 9px; background: #f7f6f2; display: flex; align-items: center; gap: 16px; }
+.settlement-stage > div:last-child { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .settlement-stage.scheduled { background: #FAEEDA; }
-.settlement-stage-icon { width: 32px; height: 32px; border-radius: 9px; background: #eceae4; color: #777; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.settlement-stage-icon { width: 42px; height: 42px; border-radius: 11px; background: #eceae4; color: #777; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
 .settlement-stage.scheduled .settlement-stage-icon { background: #f3ddb7; color: #854F0B; }
 .settlement-stage.complete-wait .settlement-stage-icon { background: #EAF3DE; color: #3B6D11; }
-.settlement-stage-label { color: #777; font-size: 12px; font-weight: 550; }
-.settlement-stage-value { margin-top: 3px; color: #1a1a18; font-size: 19px; line-height: 1; font-weight: 650; }
-.settlement-stage-value small { margin-left: 3px; color: #777; font-size: 12px; font-weight: 500; }
-.settlement-stage-meta { margin-top: 3px; color: #aaa; font-size: 10.5px; }
-.settlement-arrow { color: #c8c6bf; font-size: 19px; text-align: center; }
+.settlement-stage-label { color: #777; font-size: 13px; font-weight: 550; }
+.settlement-stage-value { margin-left: auto; color: #1a1a18; font-size: 20px; line-height: 1; font-weight: 650; white-space: nowrap; }
+.settlement-stage-value small { margin-left: 3px; color: #777; font-size: 13px; font-weight: 500; }
+.settlement-arrow { height: 14px; color: #c8c6bf; font-size: 17px; text-align: center; transform: rotate(90deg); display: flex; align-items: center; justify-content: center; }
+
+/* DEAL PIPELINE */
+.pipeline-overview { order: 3; }
+.pipeline-body { padding: 16px 18px 18px; overflow-x: auto; }
+.pipeline-content { min-width: 760px; }
+.pipeline-stages { display: grid; grid-template-columns: minmax(0, 1fr) 30px minmax(0, 1fr) 30px minmax(0, 1fr); align-items: center; margin-bottom: 16px; }
+.pipeline-stage { min-height: 68px; padding: 11px 13px; border: 1px solid #e3e1db; border-radius: 9px; background: #fff; cursor: pointer; font-family: inherit; text-align: left; }
+.pipeline-stage:hover { border-color: #aaa79f; }
+.pipeline-stage.active { border-color: #8e8b84; background: #f7f6f2; }
+.pipeline-stage-name { display: flex; align-items: center; gap: 6px; color: #555; font-size: 11.5px; font-weight: 600; white-space: nowrap; }
+.pipeline-stage-dot { width: 6px; height: 6px; border-radius: 2px; flex-shrink: 0; }
+.pipeline-stage-value { display: block; margin-top: 8px; color: #111; font-size: 22px; line-height: 1; font-weight: 650; }
+.pipeline-stage-value small { margin-left: 3px; color: #777; font-size: 11px; font-weight: 500; }
+.pipeline-rate { display: flex; align-items: center; justify-content: center; color: #aaa; }
+.pipeline-rate i { font-size: 12px; }
+.pipeline-table-wrap { min-height: 223px; border: 1px solid #e3e1db; border-radius: 9px; overflow: hidden; }
+.pipeline-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.pipeline-table th { height: 32px; padding: 0 12px; background: #f5f4f0; color: #999; font-size: 11.5px; font-weight: 500; text-align: left; }
+.pipeline-table td { height: 38px; padding: 0 12px; border-top: 1px solid #eceae5; color: #555; font-size: 12.5px; }
+.pipeline-table td:first-child { color: #222; font-weight: 550; }
+.pipeline-table.deal-detail-table th,
+.pipeline-table.deal-detail-table td { width: auto; }
+.pipeline-table.deal-detail-table th:nth-child(1),
+.pipeline-table.deal-detail-table td:nth-child(1) { width: 15%; }
+.pipeline-table.deal-detail-table th:nth-child(2),
+.pipeline-table.deal-detail-table td:nth-child(2) { width: 10%; }
+.pipeline-table.deal-detail-table th:nth-child(3),
+.pipeline-table.deal-detail-table td:nth-child(3) { width: 25%; }
+.pipeline-table.deal-detail-table th:nth-child(4),
+.pipeline-table.deal-detail-table td:nth-child(4) { width: 16%; }
+.pipeline-table.deal-detail-table th:nth-child(5),
+.pipeline-table.deal-detail-table td:nth-child(5) { width: 19%; }
+.pipeline-table.deal-detail-table th:nth-child(6),
+.pipeline-table.deal-detail-table td:nth-child(6) { width: 15%; }
+.pipeline-deal-type { display: inline-flex; align-items: center; min-height: 20px; padding: 0 7px; border-radius: 5px; background: #f0efeb; color: #555; font-size: 11px; font-weight: 550; }
+.pipeline-deal-type.bundle { background: #eeeaf8; color: #6256a6; }
+.pipeline-deal-type.turnkey { background: #faedd8; color: #916214; }
+.pipeline-deal-content { color: #222; font-weight: 550; }
+.pipeline-budget { color: #444; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pipeline-region { color: #666; white-space: normal; line-height: 1.4; }
+.pipeline-pagination { min-height: 34px; display: flex; align-items: flex-end; justify-content: center; gap: 14px; }
+.pipeline-page-number { padding: 4px 2px 1px; border: 0; border-bottom: 1px solid transparent; background: transparent; color: #aaa; font-family: inherit; font-size: 11px; cursor: pointer; }
+.pipeline-page-number:hover { color: #444; }
+.pipeline-page-number.active { border-bottom-color: #222; color: #222; font-weight: 650; }
 
 /* RECENT */
-.recent-card { grid-area: recent; }
 .recent-list { display: flex; flex-direction: column; }
 .recent-item { display: flex; align-items: center; gap: 9px; padding: 10px 18px; border-bottom: 0.5px solid #f5f4f0; }
 .recent-item:last-child { border-bottom: none; }
-.rt { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
+.rt { font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
 .rt-approve  { background: #EAF3DE; color: #3B6D11; }
 .rt-reject   { background: #FCEBEB; color: #A32D2D; }
 .rt-meta     { background: #EDE9FE; color: #534AB7; }
 .rt-confirm  { background: #FAEEDA; color: #854F0B; }
 .rt-credit   { background: #E6F1FB; color: #185FA5; }
 .rt-close    { background: #f0efe9; color: #888; }
-.recent-main { flex: 1; min-width: 0; font-size: 12px; color: #1a1a18; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.recent-main { flex: 1; min-width: 0; font-size: 13px; color: #1a1a18; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .recent-right { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
-.recent-who { font-size: 11px; color: #888; }
-.recent-time { font-size: 11px; color: #bbb; white-space: nowrap; }
+.recent-who { font-size: 12px; color: #888; }
+.recent-time { font-size: 12px; color: #bbb; white-space: nowrap; }
+
+/* TURNKEY INTENT */
+.turnkey-message-list { display: flex; flex-direction: column; }
+.turnkey-message { display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; column-gap: 12px; row-gap: 4px; padding: 15px 18px; border-bottom: 0.5px solid #efeee9; color: inherit; text-decoration: none; transition: background .15s ease; }
+.turnkey-message:last-child { border-bottom: 0; }
+.turnkey-message:hover { background: #faf9f6; }
+.turnkey-avatar { grid-row: 1 / 3; width: 42px; height: 42px; border-radius: 50%; background: #eef3f5; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+.turnkey-message:nth-child(2) .turnkey-avatar { background: #f5efe8; }
+.turnkey-message:nth-child(3) .turnkey-avatar { background: #efedf7; }
+.turnkey-company { min-width: 0; color: #222; font-size: 13px; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.turnkey-date { color: #aaa; font-size: 11px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.turnkey-summary { grid-column: 2 / 4; color: #888; font-size: 11.5px; line-height: 1.45; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* CONTENT VIEW RANKING */
+.ranking-head { gap: 12px; }
+.ranking-tabs { display: flex; align-items: center; gap: 3px; padding: 3px; border-radius: 7px; background: #f3f2ee; }
+.ranking-tab { height: 24px; padding: 0 8px; border: 0; border-radius: 5px; background: transparent; color: #888; font-family: inherit; font-size: 11px; cursor: pointer; white-space: nowrap; }
+.ranking-tab.active { background: #fff; color: #222; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.ranking-table-wrap { overflow: hidden; }
+.ranking-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.ranking-table th { height: 32px; padding: 0 10px; background: #f7f6f2; color: #999; font-size: 11px; font-weight: 500; text-align: left; white-space: nowrap; }
+.ranking-table td { height: 38px; padding: 0 10px; border-top: 0.5px solid #efeee9; color: #555; font-size: 12px; }
+.ranking-table th:nth-child(1), .ranking-table td:nth-child(1) { width: 58px; text-align: center; }
+.ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { width: auto; }
+.ranking-table th:nth-child(3), .ranking-table td:nth-child(3) { width: 86px; }
+.ranking-table th:nth-child(4), .ranking-table td:nth-child(4) { width: 82px; text-align: right; }
+.ranking-table th:first-child, .ranking-table td:first-child { padding-left: 16px; }
+.ranking-table th:last-child, .ranking-table td:last-child { padding-right: 16px; }
+.ranking-rank { color: #999; font-weight: 600; }
+.ranking-rank.top { color: #1a1a18; font-size: 13px; }
+.ranking-episode { color: #666; font-size: 11.5px; white-space: nowrap; }
+.ranking-title { display: block; color: #222; font-weight: 550; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ranking-views { color: #222; font-variant-numeric: tabular-nums; font-weight: 550; white-space: nowrap; }
+.ranking-pagination { min-height: 44px; padding: 8px 14px; border-top: 0.5px solid #efeee9; display: flex; align-items: center; justify-content: center; gap: 4px; }
+.ranking-page-btn { width: 28px; height: 28px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: #666; font-family: inherit; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.ranking-page-btn:hover:not(:disabled) { background: #f3f2ee; color: #222; }
+.ranking-page-btn:disabled { color: #ccc; cursor: default; }
+.ranking-page-status { min-width: 70px; color: #aaa; font-size: 10.5px; text-align: center; }
 
 @media (max-width: 1050px) {
-  .body { grid-template-columns: 1fr; grid-template-areas: "focus" "settlement" "recent"; }
+  .body { grid-template-columns: 1fr; grid-template-areas: "operations" "side"; }
 }
 
 @media (max-width: 760px) {
@@ -201,39 +283,14 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 
   <div class="body">
 
-    <!-- 정산 현황 -->
-    <div class="card settlement-overview">
+    <div class="operations-left">
+    <!-- 진행 중인 딜 파이프라인 -->
+    <div class="card pipeline-overview">
       <div class="card-head">
-        <div class="card-title"><i class="ti ti-receipt"></i> 정산 현황</div>
-        <a class="card-action" href="settlement-admin.html#settlement" style="text-decoration:none">정산처리 바로가기 <i class="ti ti-chevron-right" style="font-size:12px"></i></a>
+        <div class="card-title"><i class="ti ti-git-branch"></i> 진행 중인 딜 파이프라인</div>
       </div>
-      <div class="settlement-flow">
-        <div class="settlement-stage">
-          <div class="settlement-stage-icon"><i class="ti ti-hourglass"></i></div>
-          <div>
-            <div class="settlement-stage-label">정산 대기</div>
-            <div class="settlement-stage-value">7<small>건</small></div>
-            <div class="settlement-stage-meta">정산 요청 전 확인 필요</div>
-          </div>
-        </div>
-        <div class="settlement-arrow"><i class="ti ti-arrow-right"></i></div>
-        <div class="settlement-stage scheduled">
-          <div class="settlement-stage-icon"><i class="ti ti-calendar-dollar"></i></div>
-          <div>
-            <div class="settlement-stage-label">정산 예정</div>
-            <div class="settlement-stage-value">5<small>건</small></div>
-            <div class="settlement-stage-meta">51,940,000원</div>
-          </div>
-        </div>
-        <div class="settlement-arrow"><i class="ti ti-arrow-right"></i></div>
-        <div class="settlement-stage complete-wait">
-          <div class="settlement-stage-icon"><i class="ti ti-circle-check"></i></div>
-          <div>
-            <div class="settlement-stage-label">완료 처리 대기</div>
-            <div class="settlement-stage-value">3<small>건</small></div>
-            <div class="settlement-stage-meta">입금 확인 후 완료 처리</div>
-          </div>
-        </div>
+      <div class="pipeline-body">
+        <div class="pipeline-content" id="pipeline-content"></div>
       </div>
     </div>
 
@@ -265,14 +322,98 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
       <div class="focus-list" id="focus-list"></div>
       <div class="focus-pagination" id="focus-pagination"></div>
     </div>
+    </div>
 
-    <!-- RECENT -->
-    <div class="card recent-card">
-      <div class="card-head">
-        <div class="card-title"><i class="ti ti-clock"></i> 최근 처리 이력</div>
-        <div class="card-action">전체 보기 <i class="ti ti-chevron-right" style="font-size:12px"></i></div>
+    <div class="operations-right">
+      <!-- 정산 현황 -->
+      <div class="card settlement-overview">
+        <div class="card-head">
+          <div class="card-title"><i class="ti ti-receipt"></i> 정산 현황</div>
+          <a class="card-action" href="settlement-admin.html#settlement" style="text-decoration:none">정산처리 바로가기 <i class="ti ti-chevron-right" style="font-size:12px"></i></a>
+        </div>
+        <div class="settlement-flow">
+          <div class="settlement-stage">
+            <div class="settlement-stage-icon"><i class="ti ti-hourglass"></i></div>
+            <div>
+              <div class="settlement-stage-label">정산 대기</div>
+              <div class="settlement-stage-value">7<small>건</small></div>
+            </div>
+          </div>
+          <div class="settlement-arrow"><i class="ti ti-arrow-right"></i></div>
+          <div class="settlement-stage scheduled">
+            <div class="settlement-stage-icon"><i class="ti ti-calendar-dollar"></i></div>
+            <div>
+              <div class="settlement-stage-label">정산 예정</div>
+              <div class="settlement-stage-value">5<small>건</small></div>
+            </div>
+          </div>
+          <div class="settlement-arrow"><i class="ti ti-arrow-right"></i></div>
+          <div class="settlement-stage complete-wait">
+            <div class="settlement-stage-icon"><i class="ti ti-circle-check"></i></div>
+            <div>
+              <div class="settlement-stage-label">완료 처리 대기</div>
+              <div class="settlement-stage-value">3<small>건</small></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="recent-list" id="recent-list"></div>
+
+      <!-- TURNKEY INTENT -->
+      <div class="card turnkey-card">
+        <div class="card-head">
+          <div class="card-title"><i class="ti ti-messages"></i> 턴키 판매 의사</div>
+          <a class="card-action" href="turnkey-intent-admin.html" style="text-decoration:none">전체 보기 <i class="ti ti-chevron-right" style="font-size:12px"></i></a>
+        </div>
+        <div class="turnkey-message-list">
+          <a class="turnkey-message" href="turnkey-intent-admin.html">
+            <span class="turnkey-avatar" aria-hidden="true">👤</span>
+            <strong class="turnkey-company">NextWave Studios</strong>
+            <time class="turnkey-date">06.23</time>
+            <span class="turnkey-summary">로맨스 숏드라마 5편의 턴키 판매를 희망합니다.</span>
+          </a>
+          <a class="turnkey-message" href="turnkey-intent-admin.html">
+            <span class="turnkey-avatar" aria-hidden="true">👤</span>
+            <strong class="turnkey-company">PaperLens</strong>
+            <time class="turnkey-date">06.21</time>
+            <span class="turnkey-summary">동남아 대상 복수극 패키지 판매 조건을 문의합니다.</span>
+          </a>
+          <a class="turnkey-message" href="turnkey-intent-admin.html">
+            <span class="turnkey-avatar" aria-hidden="true">👤</span>
+            <strong class="turnkey-company">Blueframe Studio</strong>
+            <time class="turnkey-date">06.18</time>
+            <span class="turnkey-summary">AI 숏애니 3편의 일괄 판매 검토를 요청합니다.</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- CONTENT VIEW RANKING -->
+      <div class="card ranking-card">
+        <div class="card-head ranking-head">
+          <div class="card-title"><i class="ti ti-chart-bar"></i> 콘텐츠 조회수 랭킹</div>
+          <div class="ranking-tabs" role="tablist" aria-label="조회수 집계 기간">
+            <button class="ranking-tab active" type="button" data-ranking-period="total" aria-selected="true">누적</button>
+            <button class="ranking-tab" type="button" data-ranking-period="month" aria-selected="false">최근 1개월</button>
+          </div>
+        </div>
+        <div class="ranking-table-wrap">
+          <table class="ranking-table">
+            <thead>
+              <tr><th>순위</th><th>콘텐츠명</th><th>회차</th><th>조회수</th></tr>
+            </thead>
+            <tbody id="ranking-list"></tbody>
+          </table>
+        </div>
+        <div class="ranking-pagination" id="ranking-pagination"></div>
+      </div>
+
+      <!-- RECENT -->
+      <div class="card recent-card">
+        <div class="card-head">
+          <div class="card-title"><i class="ti ti-clock"></i> 최근 처리 이력</div>
+          <div class="card-action">전체 보기 <i class="ti ti-chevron-right" style="font-size:12px"></i></div>
+        </div>
+        <div class="recent-list" id="recent-list"></div>
+      </div>
     </div>
 
   </div>
@@ -299,13 +440,67 @@ let activeFocusPage = 1;
 const focusPageSize = 8;
 
 const recentItems = [
-  { type:'콘텐츠 승인', cls:'rt-approve', main:'Echo of Spring 승인 처리', who:'Lee Admin', time:'14:55' },
-  { type:'유저 승인', cls:'rt-approve', main:'이준혁 (NextWave) 승인', who:'Lee Admin', time:'14:42' },
-  { type:'거래 종료', cls:'rt-close', main:'Cinderella in Tokyo — ReelShort · $42,500', who:'Lee Admin', time:'12:18' },
-  { type:'크레딧 충전', cls:'rt-credit', main:'BrightFrame +$12,000', who:'Lee Admin', time:'11:05' },
-  { type:'컨펌 발송', cls:'rt-confirm', main:'Seven Suns → Viki 컨펌 메시지 발송', who:'Lee Admin', time:'10:30' },
-  { type:'수정 거절', cls:'rt-reject', main:'The Last Letter 수정 요청 거절', who:'Lee Admin', time:'09:15' },
+  { type:'콘텐츠 승인', cls:'rt-approve', main:'Echo of Spring 승인 처리', who:'김관리', time:'14:55' },
+  { type:'유저 승인', cls:'rt-approve', main:'이준혁 (NextWave) 승인', who:'박리자', time:'14:42' },
+  { type:'거래 종료', cls:'rt-close', main:'Cinderella in Tokyo — ReelShort · $42,500', who:'김관리', time:'12:18' },
+  { type:'크레딧 충전', cls:'rt-credit', main:'BrightFrame +$12,000', who:'박리자', time:'11:05' },
+  { type:'컨펌 발송', cls:'rt-confirm', main:'Seven Suns → Viki 컨펌 메시지 발송', who:'김관리', time:'10:30' },
+  { type:'수정 거절', cls:'rt-reject', main:'The Last Letter 수정 요청 거절', who:'박리자', time:'09:15' },
 ];
+
+const contentViewItems = [
+  { kind:'에피소드', title:'대표님이 내 전남친입니다', episode:'12화', total:184320, month:28410 },
+  { kind:'예고편', title:'재벌집 막내 비서', episode:'1', total:171580, month:31920 },
+  { kind:'에피소드', title:'죽었다가 회귀한 톱스타', episode:'8화', total:163940, month:24680 },
+  { kind:'에피소드', title:'우리 집에 킬러가 산다', episode:'3화', total:152760, month:22140 },
+  { kind:'예고편', title:'오늘부터 악녀 대행합니다', episode:'1', total:148230, month:27650 },
+  { kind:'에피소드', title:'남편이 AI입니다', episode:'15화', total:139870, month:19830 },
+  { kind:'에피소드', title:'Contract Marriage', episode:'6화', total:132410, month:17420 },
+  { kind:'예고편', title:'The Last Letter', episode:'1', total:126980, month:20310 },
+  { kind:'에피소드', title:'Reverse Cinderella', episode:'10화', total:119540, month:15870 },
+  { kind:'에피소드', title:'Midnight Tokyo Drift', episode:'4화', total:112860, month:14320 },
+  { kind:'예고편', title:'Bloom Again', episode:'1', total:105730, month:18140 },
+  { kind:'에피소드', title:'Secret Contract', episode:'7화', total:98420, month:12680 },
+  { kind:'에피소드', title:'Love Reset', episode:'2화', total:91780, month:11950 },
+  { kind:'예고편', title:'After the Rain', episode:'1', total:86540, month:16490 },
+  { kind:'에피소드', title:'Seven Days', episode:'11화', total:80210, month:10870 },
+  { kind:'에피소드', title:'My Boss Is a Vampire', episode:'5화', total:74680, month:9860 },
+  { kind:'예고편', title:'Office Romance Rules', episode:'1', total:69120, month:13440 },
+  { kind:'에피소드', title:'Sweet Trap', episode:'9화', total:62870, month:8920 },
+  { kind:'에피소드', title:'Stolen Identity', episode:'1화', total:57430, month:8150 },
+  { kind:'예고편', title:'Falling for the Villain', episode:'1', total:51980, month:10740 },
+];
+
+let activeRankingPeriod = 'total';
+let activeRankingPage = 1;
+const rankingPageSize = 10;
+
+const pipelineDeals = [
+  { platform:'MoboReels', type:'단일', typeClass:'single', dealContent:'Contract Marriage', budget:'80,000,000원', region:'중국 · 동남아', date:'2026.05.02', stage:'proposal' },
+  { platform:'ManMan', type:'묶음', typeClass:'bundle', dealContent:'Office Romance Rules 외 4개', budget:'250,000,000원', region:'중국', date:'2026.05.23', stage:'proposal' },
+  { platform:'WeTV SEA', type:'턴키', typeClass:'turnkey', dealContent:'Sweet Trap 외 7개', budget:'400,000,000원', region:'동남아 · 중국 · 미국', date:'2026.05.29', stage:'proposal' },
+  { platform:'DramaBox', type:'단일', typeClass:'single', dealContent:'Bloom Again', budget:'70,000,000원', region:'미국', date:'2026.06.01', stage:'proposal' },
+  { platform:'FlexTV', type:'묶음', typeClass:'bundle', dealContent:'Secret Contract 외 2개', budget:'160,000,000원', region:'미국 · 캐나다', date:'2026.06.03', stage:'proposal' },
+  { platform:'ReelShort', type:'턴키', typeClass:'turnkey', dealContent:'Love Reset 외 5개', budget:'330,000,000원', region:'영어권', date:'2026.06.05', stage:'proposal' },
+  { platform:'ShortMax', type:'단일', typeClass:'single', dealContent:'After the Rain', budget:'85,000,000원', region:'일본', date:'2026.06.07', stage:'proposal' },
+  { platform:'Viki', type:'묶음', typeClass:'bundle', dealContent:'Seven Days 외 3개', budget:'210,000,000원', region:'동남아', date:'2026.06.09', stage:'proposal' },
+  { platform:'GoodShort', type:'단일', typeClass:'single', dealContent:'My Boss Is a Vampire', budget:'90,000,000원', region:'미국 · 영국', date:'2026.06.11', stage:'proposal' },
+  { platform:'GoodShort', type:'단일', typeClass:'single', dealContent:"The Heir’s Nanny", proposedAmount:'95,000,000원', region:'동남아 · 미국', date:'2026.05.24', stage:'negotiation' },
+  { platform:'Vidio Drama', type:'묶음', typeClass:'bundle', dealContent:'Revenge in Heels 외 2개', proposedAmount:'180,000,000원', region:'동남아', date:'2026.05.10', stage:'negotiation' },
+  { platform:'MoboReels', type:'턴키', typeClass:'turnkey', dealContent:'Midnight Tokyo Drift 외 6개', proposedAmount:'350,000,000원', region:'중국 · 동남아', date:'2026.05.27', stage:'negotiation' },
+  { platform:'DramaBox', type:'단일', typeClass:'single', dealContent:'The Last Letter', proposedAmount:'105,000,000원', region:'미국', date:'2026.06.02', stage:'negotiation' },
+  { platform:'FlexTV', type:'묶음', typeClass:'bundle', dealContent:'Reverse Cinderella 외 3개', proposedAmount:'220,000,000원', region:'미국 · 캐나다', date:'2026.06.06', stage:'negotiation' },
+  { platform:'ManMan', type:'단일', typeClass:'single', dealContent:'Office Romance Rules', proposedAmount:'88,000,000원', region:'중국', date:'2026.06.10', stage:'negotiation' },
+  { platform:'ReelShort', type:'턴키', typeClass:'turnkey', dealContent:'My Ex is My Boss 외 5개', confirmedAmount:'320,000,000원', region:'미국', date:'2026.05.26', stage:'review' },
+  { platform:'DramaBox', type:'단일', typeClass:'single', dealContent:'Stolen Identity', confirmedAmount:'110,000,000원', region:'미국 · 캐나다', date:'2026.05.12', stage:'review' },
+  { platform:'RedShort', type:'묶음', typeClass:'bundle', dealContent:'Falling for the Villain 외 3개', confirmedAmount:'240,000,000원', region:'중국', date:'2026.05.30', stage:'review' },
+  { platform:'WeTV SEA', type:'턴키', typeClass:'turnkey', dealContent:'Sweet Trap 외 7개', confirmedAmount:'380,000,000원', region:'동남아', date:'2026.06.04', stage:'review' },
+  { platform:'Viki', type:'단일', typeClass:'single', dealContent:'Seven Suns', confirmedAmount:'98,000,000원', region:'미국 · 동남아', date:'2026.06.08', stage:'review' },
+];
+
+let activePipelineStage = 'proposal';
+let activePipelinePage = 1;
+const pipelinePageSize = 5;
 
 function renderFocus() {
   const list = document.getElementById('focus-list');
@@ -327,7 +522,6 @@ function renderFocus() {
       <span class="focus-tag ${item.tagClass}">${item.tag}</span>
       <div class="focus-info">
         <div class="focus-title">${item.title}</div>
-        <div class="focus-meta">${item.meta}</div>
       </div>
       <span class="focus-age">${item.age}</span>
       <button class="focus-btn">검토 →</button>
@@ -390,9 +584,125 @@ function renderRecent() {
     </div>`).join('');
 }
 
+function renderRanking() {
+  const sortedItems = contentViewItems
+    .slice()
+    .sort((a, b) => b[activeRankingPeriod] - a[activeRankingPeriod]);
+  const totalPages = Math.ceil(sortedItems.length / rankingPageSize);
+  activeRankingPage = Math.min(activeRankingPage, totalPages);
+  const start = (activeRankingPage - 1) * rankingPageSize;
+  document.getElementById('ranking-list').innerHTML = sortedItems
+    .slice(start, start + rankingPageSize)
+    .map((item, index) => {
+      const rank = start + index + 1;
+      return `
+        <tr>
+          <td><span class="ranking-rank ${rank <= 3 ? 'top' : ''}">${rank}</span></td>
+          <td><span class="ranking-title" title="${item.title}">${item.title}</span></td>
+          <td><span class="ranking-episode">${item.kind} ${item.episode}</span></td>
+          <td><span class="ranking-views">${item[activeRankingPeriod].toLocaleString('ko-KR')}</span></td>
+        </tr>`;
+    }).join('');
+  const pagination = document.getElementById('ranking-pagination');
+  pagination.innerHTML = `
+    <button class="ranking-page-btn" type="button" data-ranking-page="1" ${activeRankingPage === 1 ? 'disabled' : ''} aria-label="이전 순위"><i class="ti ti-chevron-left"></i></button>
+    <span class="ranking-page-status">${start + 1}–${Math.min(start + rankingPageSize, sortedItems.length)}위</span>
+    <button class="ranking-page-btn" type="button" data-ranking-page="2" ${activeRankingPage === totalPages ? 'disabled' : ''} aria-label="다음 순위"><i class="ti ti-chevron-right"></i></button>`;
+  pagination.querySelectorAll('[data-ranking-page]:not(:disabled)').forEach(button => {
+    button.addEventListener('click', () => {
+      activeRankingPage = Number(button.dataset.rankingPage);
+      renderRanking();
+    });
+  });
+}
+
+function initRankingTabs() {
+  document.querySelectorAll('[data-ranking-period]').forEach(button => {
+    button.addEventListener('click', () => {
+      activeRankingPeriod = button.dataset.rankingPeriod;
+      activeRankingPage = 1;
+      document.querySelectorAll('[data-ranking-period]').forEach(item => {
+        const active = item === button;
+        item.classList.toggle('active', active);
+        item.setAttribute('aria-selected', String(active));
+      });
+      renderRanking();
+    });
+  });
+}
+
+function renderPipeline() {
+  const stages = [
+    { id:'proposal', name:'제안 완료', color:'#9ca0a6' },
+    { id:'negotiation', name:'컨펌메세지 발송', color:'#a47c00' },
+    { id:'review', name:'컨펌메세지 확인', color:'#185FA5' },
+  ];
+  const stageHtml = stages.map((stage, index) => {
+    const card = `
+      <button class="pipeline-stage ${stage.id === activePipelineStage ? 'active' : ''}" type="button" data-pipeline-stage="${stage.id}">
+        <span class="pipeline-stage-name"><i class="pipeline-stage-dot" style="background:${stage.color}"></i>${stage.name}</span>
+        <span class="pipeline-stage-value">${pipelineDeals.filter(deal => deal.stage === stage.id).length}<small>건</small></span>
+      </button>`;
+    return index === stages.length - 1
+      ? card
+      : `${card}<span class="pipeline-rate"><i class="ti ti-chevron-right"></i></span>`;
+  }).join('');
+  const deals = pipelineDeals
+    .filter(deal => deal.stage === activePipelineStage)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const totalPages = Math.ceil(deals.length / pipelinePageSize);
+  activePipelinePage = Math.min(activePipelinePage, totalPages);
+  const pageStart = (activePipelinePage - 1) * pipelinePageSize;
+  const visibleDeals = deals.slice(pageStart, pageStart + pipelinePageSize);
+  const isProposal = activePipelineStage === 'proposal';
+  const isNegotiation = activePipelineStage === 'negotiation';
+  const rows = visibleDeals.map(deal => `
+    <tr>
+      <td>${deal.platform}</td>
+      <td><span class="pipeline-deal-type ${deal.typeClass}">${deal.type}</span></td>
+      <td><span class="pipeline-deal-content">${deal.dealContent}</span></td>
+      <td><span class="pipeline-budget">${isProposal ? deal.budget : isNegotiation ? deal.proposedAmount : deal.confirmedAmount}</span></td>
+      <td><span class="pipeline-region">${deal.region}</span></td>
+      <td>${deal.date}</td>
+    </tr>`).join('');
+  const amountLabel = isProposal ? '희망 예산' : isNegotiation ? '제안 금액' : '확정 금액';
+  const regionLabel = isProposal ? '희망 지역' : isNegotiation ? '제안 지역' : '지역';
+  const tableHead = `<tr><th>플랫폼사명</th><th>타입</th><th>딜 내용</th><th>${amountLabel}</th><th>${regionLabel}</th><th>단계 진입일</th></tr>`;
+  document.getElementById('pipeline-content').innerHTML = `
+    <div class="pipeline-stages">${stageHtml}</div>
+    <div class="pipeline-table-wrap">
+      <table class="pipeline-table deal-detail-table">
+        <thead>${tableHead}</thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div class="pipeline-pagination">
+      ${Array.from({ length: totalPages }, (_, index) => {
+        const page = index + 1;
+        return `<button class="pipeline-page-number ${page === activePipelinePage ? 'active' : ''}" type="button" data-pipeline-page="${page}" ${page === activePipelinePage ? 'aria-current="page"' : ''}>${page}</button>`;
+      }).join('')}
+    </div>`;
+  document.querySelectorAll('[data-pipeline-stage]').forEach(button => {
+    button.addEventListener('click', () => {
+      activePipelineStage = button.dataset.pipelineStage;
+      activePipelinePage = 1;
+      renderPipeline();
+    });
+  });
+  document.querySelectorAll('[data-pipeline-page]').forEach(button => {
+    button.addEventListener('click', () => {
+      activePipelinePage = Number(button.dataset.pipelinePage);
+      renderPipeline();
+    });
+  });
+}
+
 initQueueFilters();
 renderFocus();
 renderRecent();
+renderPipeline();
+initRankingTabs();
+renderRanking();
 </script>
 </body>
 </html>

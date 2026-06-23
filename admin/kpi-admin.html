@@ -164,6 +164,35 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .pipeline-table td { height: 40px; padding: 0 16px; border-top: 1px solid #eceae5; color: #555; font-size: 12.5px; }
 .pipeline-table td:first-child { color: #222; font-weight: 550; }
 .pipeline-table th, .pipeline-table td { width: 20%; }
+.pipeline-table.deal-detail-table th,
+.pipeline-table.deal-detail-table td { width: auto; }
+.pipeline-table.deal-detail-table th:nth-child(1),
+.pipeline-table.deal-detail-table td:nth-child(1) { width: 15%; }
+.pipeline-table.deal-detail-table th:nth-child(2),
+.pipeline-table.deal-detail-table td:nth-child(2) { width: 10%; }
+.pipeline-table.deal-detail-table th:nth-child(3),
+.pipeline-table.deal-detail-table td:nth-child(3) { width: 25%; }
+.pipeline-table.deal-detail-table th:nth-child(4),
+.pipeline-table.deal-detail-table td:nth-child(4) { width: 16%; }
+.pipeline-table.deal-detail-table th:nth-child(5),
+.pipeline-table.deal-detail-table td:nth-child(5) { width: 19%; }
+.pipeline-table.deal-detail-table th:nth-child(6),
+.pipeline-table.deal-detail-table td:nth-child(6) { width: 15%; }
+.pipeline-table.metadata-table th,
+.pipeline-table.metadata-table td { width: auto; }
+.pipeline-table.metadata-table th:nth-child(1),
+.pipeline-table.metadata-table td:nth-child(1) { width: 22%; }
+.pipeline-table.metadata-table th:nth-child(2),
+.pipeline-table.metadata-table td:nth-child(2) { width: 14%; }
+.pipeline-table.metadata-table th:nth-child(3),
+.pipeline-table.metadata-table td:nth-child(3) { width: 44%; }
+.pipeline-table.metadata-table th:nth-child(4),
+.pipeline-table.metadata-table td:nth-child(4) { width: 20%; }
+.pipeline-deal-type { display: inline-flex; align-items: center; min-height: 22px; padding: 0 8px; border-radius: 5px; background: #f0efeb; color: #555; font-size: 11px; font-weight: 550; }
+.pipeline-deal-type.bundle { background: #eeeaf8; color: #6256a6; }
+.pipeline-deal-type.turnkey { background: #faedd8; color: #916214; }
+.pipeline-deal-content { color: #222; font-weight: 550; }
+.pipeline-budget { color: #444; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .pipeline-region { color: #666; font-size: 11.5px; white-space: normal; line-height: 1.4; }
 .pipeline-stay { color: #666; font-weight: 550; }
 .pipeline-stay.overdue { color: #c94f46; font-weight: 650; }
@@ -334,18 +363,8 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
             <button class="analysis-tab active" type="button" data-analysis="growth" aria-selected="true">성장</button>
             <button class="analysis-tab" type="button" data-analysis="conversion" aria-selected="false">거래</button>
             <button class="analysis-tab" type="button" data-analysis="settlement" aria-selected="false">정산</button>
-            <button class="analysis-tab" type="button" data-analysis="region" aria-selected="false">국가별</button>
-            <button class="analysis-tab" type="button" data-analysis="pipeline" aria-selected="false">파이프라인</button>
           </div>
           <div style="display:flex;align-items:center;gap:8px;">
-            <div class="analysis-period" id="country-filter" style="display:none">
-              <select class="analysis-period-select" id="country-select" aria-label="국가 필터">
-                <option value="all">전체</option>
-                <option value="china">중국</option>
-                <option value="sea">동남아</option>
-                <option value="us">미국</option>
-              </select>
-            </div>
             <div class="analysis-period">
               <select class="analysis-period-select" id="analysis-period-select" aria-label="그래프 조회 기간">
               <option value="3">3개월</option>
@@ -593,20 +612,19 @@ const chartGroups = {
 };
 
 const pipelineDeals = [
-  { title:'Contract Marriage', platform:'MoboReels', region:'중국 · 동남아', date:'2026.05.02', stayDays:51, stage:'proposal' },
-  { title:'Office Romance Rules', platform:'ManMan', region:'중국', date:'2026.05.23', stayDays:30, stage:'proposal' },
-  { title:"The Heir’s Nanny", platform:'GoodShort', region:'동남아 · 미국', date:'2026.05.24', stayDays:29, stage:'negotiation' },
-  { title:'Revenge in Heels', platform:'Vidio Drama', region:'동남아', date:'2026.05.10', stayDays:43, stage:'negotiation' },
-  { title:'My Ex is My Boss', platform:'ReelShort', region:'미국', date:'2026.05.26', stayDays:27, stage:'review' },
-  { title:'Stolen Identity', platform:'DramaBox', region:'미국', date:'2026.05.12', stayDays:41, stage:'review' },
-  { title:'Falling for the Villain', platform:'RedShort', region:'중국', date:'2026.05.28', completedDate:'2026.06.14', stage:'complete' },
-  { title:'Sweet Trap', platform:'WeTV SEA', region:'동남아 · 중국 · 미국', date:'2026.05.29', stayDays:24, stage:'proposal' },
-  { title:"Billionaire’s Babysitter", platform:'FlexTV', region:'미국', date:'2026.05.30', completedDate:'2026.06.18', stage:'complete' },
+  { title:'Contract Marriage', platform:'MoboReels', type:'단일', typeClass:'single', dealContent:'Contract Marriage', budget:'80,000,000원', region:'중국 · 동남아', date:'2026.05.02', stayDays:51, stage:'proposal' },
+  { title:'Office Romance Rules', platform:'ManMan', type:'묶음', typeClass:'bundle', dealContent:'Office Romance Rules 외 4개', budget:'250,000,000원', region:'중국', date:'2026.05.23', stayDays:30, stage:'proposal' },
+  { title:"The Heir’s Nanny", platform:'GoodShort', type:'단일', typeClass:'single', dealContent:"The Heir’s Nanny", proposedAmount:'95,000,000원', region:'동남아 · 미국', date:'2026.05.24', stage:'negotiation' },
+  { title:'Revenge in Heels', platform:'Vidio Drama', type:'묶음', typeClass:'bundle', dealContent:'Revenge in Heels 외 2개', proposedAmount:'180,000,000원', region:'동남아', date:'2026.05.10', stage:'negotiation' },
+  { title:'My Ex is My Boss', platform:'ReelShort', type:'턴키', typeClass:'turnkey', dealContent:'My Ex is My Boss 외 5개', confirmedAmount:'320,000,000원', region:'미국', date:'2026.05.26', stage:'review' },
+  { title:'Stolen Identity', platform:'DramaBox', type:'단일', typeClass:'single', dealContent:'Stolen Identity', confirmedAmount:'110,000,000원', region:'미국 · 캐나다', date:'2026.05.12', stage:'review' },
+  { title:'Falling for the Villain', platform:'RedShort', type:'묶음', typeClass:'bundle', dealContent:'Falling for the Villain 외 3개', date:'2026.05.28', stage:'complete' },
+  { title:'Sweet Trap', platform:'WeTV SEA', type:'턴키', typeClass:'turnkey', dealContent:'Sweet Trap 외 7개', budget:'400,000,000원', region:'동남아 · 중국 · 미국', date:'2026.05.29', stayDays:24, stage:'proposal' },
+  { title:"Billionaire’s Babysitter", platform:'FlexTV', type:'단일', typeClass:'single', dealContent:"Billionaire’s Babysitter", date:'2026.05.30', stage:'complete' },
 ];
 
 let activeAnalysis = 'growth';
 let activePeriod = 12;
-let activeCountry = 'all';
 let activeTableYear = '2026';
 let activePipelineStage = 'proposal';
 
@@ -692,21 +710,6 @@ function restoreRsTable() {
   if (el && rsOriginalHtml !== null) { el.innerHTML = rsOriginalHtml; rsOriginalHtml = null; }
 }
 
-const regionRows = [
-  { month:'2025.07', chinaInquiry:6,  seaInquiry:4,  usInquiry:2,  chinaSuccess:3,  seaSuccess:2,  usSuccess:1,  chinaMg:14000000, seaMg:9000000,  usMg:5000000,  chinaRs:2400000, seaRs:1400000, usRs:600000  },
-  { month:'2025.08', chinaInquiry:7,  seaInquiry:5,  usInquiry:2,  chinaSuccess:4,  seaSuccess:2,  usSuccess:1,  chinaMg:16000000, seaMg:10000000, usMg:6000000,  chinaRs:2700000, seaRs:1600000, usRs:700000  },
-  { month:'2025.09', chinaInquiry:8,  seaInquiry:4,  usInquiry:3,  chinaSuccess:4,  seaSuccess:2,  usSuccess:1,  chinaMg:17000000, seaMg:11000000, usMg:7000000,  chinaRs:2900000, seaRs:1700000, usRs:800000  },
-  { month:'2025.10', chinaInquiry:9,  seaInquiry:6,  usInquiry:3,  chinaSuccess:5,  seaSuccess:3,  usSuccess:2,  chinaMg:20000000, seaMg:13000000, usMg:9000000,  chinaRs:3400000, seaRs:2100000, usRs:1100000 },
-  { month:'2025.11', chinaInquiry:10, seaInquiry:6,  usInquiry:4,  chinaSuccess:5,  seaSuccess:4,  usSuccess:2,  chinaMg:22000000, seaMg:14000000, usMg:10000000, chinaRs:3700000, seaRs:2300000, usRs:1200000 },
-  { month:'2025.12', chinaInquiry:11, seaInquiry:7,  usInquiry:4,  chinaSuccess:6,  seaSuccess:4,  usSuccess:2,  chinaMg:25000000, seaMg:16000000, usMg:11000000, chinaRs:4200000, seaRs:2600000, usRs:1300000 },
-  { month:'2026.01', chinaInquiry:8,  seaInquiry:5,  usInquiry:3,  chinaSuccess:4,  seaSuccess:2,  usSuccess:1,  chinaMg:18000000, seaMg:12000000, usMg:8000000,  chinaRs:3200000, seaRs:1800000, usRs:900000  },
-  { month:'2026.02', chinaInquiry:11, seaInquiry:7,  usInquiry:2,  chinaSuccess:6,  seaSuccess:4,  usSuccess:1,  chinaMg:24000000, seaMg:16000000, usMg:7000000,  chinaRs:4100000, seaRs:2400000, usRs:800000  },
-  { month:'2026.03', chinaInquiry:14, seaInquiry:8,  usInquiry:4,  chinaSuccess:7,  seaSuccess:4,  usSuccess:2,  chinaMg:28000000, seaMg:18000000, usMg:12000000, chinaRs:5300000, seaRs:3100000, usRs:1500000 },
-  { month:'2026.04', chinaInquiry:10, seaInquiry:9,  usInquiry:5,  chinaSuccess:5,  seaSuccess:5,  usSuccess:3,  chinaMg:21000000, seaMg:20000000, usMg:15000000, chinaRs:3800000, seaRs:3400000, usRs:1900000 },
-  { month:'2026.05', chinaInquiry:12, seaInquiry:8,  usInquiry:3,  chinaSuccess:7,  seaSuccess:5,  usSuccess:2,  chinaMg:27000000, seaMg:19000000, usMg:11000000, chinaRs:4900000, seaRs:3200000, usRs:1400000 },
-  { month:'2026.06', chinaInquiry:15, seaInquiry:10, usInquiry:6,  chinaSuccess:9,  seaSuccess:6,  usSuccess:4,  chinaMg:34000000, seaMg:23000000, usMg:18000000, chinaRs:6200000, seaRs:3900000, usRs:2400000 },
-];
-
 function valueFor(row, key) {
   if (key === 'conversion') return row.inquiry ? row.success / row.inquiry * 100 : 0;
   if (key === 'unconverted') return row.inquiry - row.success;
@@ -767,9 +770,9 @@ function renderChartValueTable(rows, series, { percent = false, money = false, u
 function renderPipelineBoard() {
   const stages = [
     { id:'proposal', name:'제안 완료', count:9, color:'#9ca0a6' },
-    { id:'negotiation', name:'협상 중', count:6, color:'#a47c00' },
-    { id:'review', name:'계약 검토', count:5, color:'#185FA5' },
-    { id:'complete', name:'계약 완료', count:4, color:'#16713d' },
+    { id:'negotiation', name:'컨펌메세지 발송', count:6, color:'#a47c00' },
+    { id:'review', name:'컨펌메세지 확인', count:5, color:'#185FA5' },
+    { id:'complete', name:'메타데이터 부여', count:4, color:'#16713d' },
   ];
   const stageHtml = stages.map((stage, index) => {
     const card = `
@@ -780,19 +783,31 @@ function renderPipelineBoard() {
     if (index === stages.length - 1) return card;
     return `${card}<div class="pipeline-rate"><i class="ti ti-chevron-right"></i></div>`;
   }).join('');
-  const selectedStage = stages.find(stage => stage.id === activePipelineStage);
   const filteredDeals = pipelineDeals.filter(deal => deal.stage === activePipelineStage).sort((a, b) => a.date.localeCompare(b.date));
+  const isProposal = activePipelineStage === 'proposal';
+  const isNegotiation = activePipelineStage === 'negotiation';
   const isComplete = activePipelineStage === 'complete';
-  const rows = filteredDeals.map(deal => `
-    <tr>
-      <td>${deal.date}</td>
-      <td>${deal.title}</td>
-      <td>${deal.platform}</td>
-      <td><span class="pipeline-region">${deal.region}</span></td>
-      <td>${isComplete
-        ? deal.completedDate
-        : `<span class="pipeline-stay ${deal.stayDays >= 30 ? 'overdue' : ''}">${deal.stayDays}일</span>`}</td>
-    </tr>`).join('');
+  const rows = filteredDeals.map(deal => isComplete ? `
+      <tr>
+        <td>${deal.platform}</td>
+        <td><span class="pipeline-deal-type ${deal.typeClass}">${deal.type}</span></td>
+        <td><span class="pipeline-deal-content">${deal.dealContent}</span></td>
+        <td>${deal.date}</td>
+      </tr>` : `
+      <tr>
+        <td>${deal.platform}</td>
+        <td><span class="pipeline-deal-type ${deal.typeClass}">${deal.type}</span></td>
+        <td><span class="pipeline-deal-content">${deal.dealContent}</span></td>
+        <td><span class="pipeline-budget">${isProposal ? deal.budget : isNegotiation ? deal.proposedAmount : deal.confirmedAmount}</span></td>
+        <td><span class="pipeline-region">${deal.region}</span></td>
+        <td>${deal.date}</td>
+      </tr>`).join('');
+  const amountLabel = isProposal ? '희망 예산' : isNegotiation ? '제안 금액' : '확정 금액';
+  const regionLabel = isProposal ? '희망 지역' : isNegotiation ? '제안 지역' : '지역';
+  const tableHead = isComplete
+    ? '<tr><th>플랫폼사명</th><th>타입</th><th>딜 내용</th><th>단계 진입일</th></tr>'
+    : `<tr><th>플랫폼사명</th><th>타입</th><th>딜 내용</th><th>${amountLabel}</th><th>${regionLabel}</th><th>단계 진입일</th></tr>`;
+  const tableClass = isComplete ? 'metadata-table' : 'deal-detail-table';
   return `
     <div class="pipeline-board">
       <div class="pipeline-board-head">
@@ -800,8 +815,8 @@ function renderPipelineBoard() {
       </div>
       <div class="pipeline-stages">${stageHtml}</div>
       <div class="pipeline-table-wrap">
-        <table class="pipeline-table">
-          <thead><tr><th>단계 진입일</th><th>IP명</th><th>플랫폼명</th><th>지역</th><th>${isComplete ? '계약 완료일' : '체류일수'}</th></tr></thead>
+        <table class="pipeline-table ${tableClass}">
+          <thead>${tableHead}</thead>
           <tbody>${rows}</tbody>
         </table>
       </div>
@@ -931,12 +946,6 @@ function bindPipelineStages() {
 function renderAnalysisCharts() {
   const rows = monthlyKpiData.slice(-activePeriod);
   const container = document.getElementById('analysis-charts');
-  if (activeAnalysis === 'pipeline') {
-    container.classList.remove('chart-table-grid');
-    container.innerHTML = renderPipelineBoard();
-    bindPipelineStages();
-    return;
-  }
   container.classList.add('chart-table-grid');
   if (activeAnalysis === 'growth') {
     container.innerHTML =
@@ -984,40 +993,6 @@ function renderAnalysisCharts() {
           formatNumerator:value => `${value}건`, formatDenominator:value => `${value}편`, formatResult:value => `${value.toFixed(1)}%`,
         },
       });
-    return;
-  }
-  if (activeAnalysis === 'region') {
-    container.classList.add('chart-table-grid');
-    const rrows = regionRows.slice(-activePeriod);
-    const allSeries = {
-      inquiry: [
-        { name:'중국', color:'#e05b5b', value:row => row.chinaInquiry },
-        { name:'동남아', color:'#5b8fd9', value:row => row.seaInquiry },
-        { name:'미국', color:'#4fa987', value:row => row.usInquiry },
-      ],
-      success: [
-        { name:'중국', color:'#e05b5b', value:row => row.chinaSuccess },
-        { name:'동남아', color:'#5b8fd9', value:row => row.seaSuccess },
-        { name:'미국', color:'#4fa987', value:row => row.usSuccess },
-      ],
-      mg: [
-        { name:'중국', color:'#e05b5b', value:row => row.chinaMg },
-        { name:'동남아', color:'#5b8fd9', value:row => row.seaMg },
-        { name:'미국', color:'#4fa987', value:row => row.usMg },
-      ],
-      rs: [
-        { name:'중국', color:'#e05b5b', value:row => row.chinaRs },
-        { name:'동남아', color:'#5b8fd9', value:row => row.seaRs },
-        { name:'미국', color:'#4fa987', value:row => row.usRs },
-      ],
-    };
-    const countryIndex = { china:0, sea:1, us:2 };
-    const pickSeries = (s) => activeCountry === 'all' ? s : [s[countryIndex[activeCountry]]];
-    container.innerHTML =
-      renderLineCard({ title:'월별 제안 수', rows:rrows, series:pickSeries(allSeries.inquiry) }) +
-      renderLineCard({ title:'월별 거래 완료 수', rows:rrows, series:pickSeries(allSeries.success) }) +
-      renderLineCard({ title:'월별 MG 금액', rows:rrows, money:true, series:pickSeries(allSeries.mg) }) +
-      renderLineCard({ title:'월별 RS 정산 금액', rows:rrows, money:true, fill: activeCountry !== 'all', series:pickSeries(allSeries.rs) });
     return;
   }
   container.innerHTML =
@@ -1074,14 +1049,8 @@ document.querySelectorAll('.analysis-tab').forEach(button => {
       item.classList.toggle('active', active);
       item.setAttribute('aria-selected', String(active));
     });
-    document.getElementById('country-filter').style.display = activeAnalysis === 'region' ? 'block' : 'none';
     renderAnalysisCharts();
   });
-});
-
-document.getElementById('country-select').addEventListener('change', event => {
-  activeCountry = event.target.value;
-  renderAnalysisCharts();
 });
 
 document.getElementById('analysis-period-select').addEventListener('change', event => {
