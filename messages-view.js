@@ -1,5 +1,5 @@
 (function () {
-  const { escapeHtml, previewText, profileCard } = window.ShortflowCommon;
+  const { escapeHtml, previewText } = window.ShortflowCommon;
   const { messageItems } = window.ShortflowData;
 
   function renderStatus(label) {
@@ -24,10 +24,21 @@
     return '<img src="images/wlogo.png" alt="">';
   }
 
-  function renderMessageList(selectedId) {
+  function renderMessageList(selectedId, activeType, filteredItems) {
+    const inquiryTypes = [...new Set(messageItems.map(message => message.inquiryType || '컨시어지판매'))];
     return `
       <section class="list-card message-list">
-        ${messageItems.map(message => `
+        <div class="message-filter-bar">
+          <div class="message-type-select-wrap">
+            <select class="message-type-filter" aria-label="문의 유형 필터">
+              <option value="all" ${activeType === 'all' ? 'selected' : ''}>전체 문의 유형</option>
+              ${inquiryTypes.map(type => `
+                <option value="${escapeHtml(type)}" ${activeType === type ? 'selected' : ''}>${escapeHtml(type)}</option>
+              `).join('')}
+            </select>
+          </div>
+        </div>
+        ${filteredItems.map(message => `
           <button class="message-item ${message.id === selectedId ? 'selected' : ''}" data-message-id="${message.id}">
             <span class="message-item-top">
               <span class="message-top-left">
@@ -41,7 +52,7 @@
               <span class="message-comment-slot">${renderCommentBadge(message)}</span>
             </span>
           </button>
-        `).join('')}
+        `).join('') || '<div class="message-empty">해당 유형의 문의가 없습니다.</div>'}
       </section>
     `;
   }
@@ -80,12 +91,15 @@
   }
 
   function renderMessagesView(state) {
-    const selected = messageItems.find(item => item.id === state.selectedMessageId) || messageItems[0];
+    const activeType = state.messageTypeFilter || 'all';
+    const filteredItems = activeType === 'all'
+      ? messageItems
+      : messageItems.filter(item => (item.inquiryType || '컨시어지판매') === activeType);
+    const selected = filteredItems.find(item => item.id === state.selectedMessageId) || filteredItems[0] || messageItems[0];
     return `
       <div class="dashboard-grid messages-grid">
         <aside class="left-column">
-          ${profileCard({ showSearch: false })}
-          ${renderMessageList(selected.id)}
+          ${renderMessageList(selected.id, activeType, filteredItems)}
         </aside>
         <section class="right-column message-right">
           ${renderMessageDetail(selected)}

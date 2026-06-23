@@ -2,6 +2,7 @@
   const appState = {
     tab: 'workflow',
     workflowSearch: '',
+    messageTypeFilter: 'all',
     selectedWorkflowId: null,
     selectedMessageId: 'm1',
   };

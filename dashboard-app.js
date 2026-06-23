@@ -59,6 +59,18 @@
     }
   });
 
+  root.addEventListener('change', event => {
+    if (event.target.matches('.message-type-filter')) {
+      appState.messageTypeFilter = event.target.value;
+      const firstMatch = window.ShortflowData.messageItems.find(message =>
+        appState.messageTypeFilter === 'all'
+        || (message.inquiryType || '컨시어지판매') === appState.messageTypeFilter
+      );
+      if (firstMatch) appState.selectedMessageId = firstMatch.id;
+      render();
+    }
+  });
+
   syncTabFromUrl();
   render();
 })();

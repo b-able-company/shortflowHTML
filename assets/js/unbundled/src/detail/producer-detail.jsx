@@ -283,7 +283,6 @@ function PreviewSection({ t }) {
                 }}><PlayIcon size={17} /></span>
                 <div>
                   <div style={{ fontSize: 15, fontWeight: 800 }}>{video.title}</div>
-                  <div style={{ marginTop: 5, fontSize: 12, color: 'rgba(255,255,255,0.72)' }}>조회수 {video.views.toLocaleString('ko-KR')}</div>
                 </div>
               </button>
             ))}
@@ -308,7 +307,6 @@ function PreviewSection({ t }) {
                 }}><PlayIcon size={16} /></span>
                 <div>
                   <div style={{ fontSize: 18, fontWeight: 800, color: '#fff' }}>{episode.title}</div>
-                  <div style={{ marginTop: 5, fontSize: 12, color: 'rgba(255,255,255,0.72)' }}>조회수 {episode.views.toLocaleString('ko-KR')}</div>
                 </div>
               </button>
             ))}

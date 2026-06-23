@@ -651,13 +651,7 @@ function PreviewSection(_ref9) {
         fontSize: 15,
         fontWeight: 800
       }
-    }, video.title), /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginTop: 5,
-        fontSize: 12,
-        color: 'rgba(255,255,255,0.72)'
-      }
-    }, "\uC870\uD68C\uC218 ", video.views.toLocaleString('ko-KR'))));
+    }, video.title)));
   }))), /*#__PURE__*/React.createElement("section", {
     style: {
       minWidth: 0,
@@ -736,13 +730,7 @@ function PreviewSection(_ref9) {
         fontWeight: 800,
         color: '#fff'
       }
-    }, episode.title), /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginTop: 5,
-        fontSize: 12,
-        color: 'rgba(255,255,255,0.72)'
-      }
-    }, "\uC870\uD68C\uC218 ", episode.views.toLocaleString('ko-KR'))));
+    }, episode.title)));
   })))), modalItem && /*#__PURE__*/React.createElement("div", {
     onClick: function onClick() {
       return setModalItem(null);

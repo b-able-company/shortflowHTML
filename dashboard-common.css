@@ -883,6 +883,55 @@ button {
   overflow: hidden;
 }
 
+.message-filter-bar {
+  padding: 12px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.message-type-select-wrap {
+  position: relative;
+}
+
+.message-type-select-wrap::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 13px;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid var(--ink-muted);
+  border-bottom: 1.5px solid var(--ink-muted);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+
+.message-type-filter {
+  width: 100%;
+  height: 34px;
+  padding: 0 34px 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fafaf8;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 12px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.message-type-filter:focus {
+  border-color: #a9abb0;
+}
+
+.message-empty {
+  padding: 36px 16px;
+  color: var(--ink-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
 .message-item {
   width: 100%;
   padding: 14px;

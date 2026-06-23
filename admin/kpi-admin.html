@@ -44,7 +44,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 /* SUMMARY */
 .summary-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .summary-label { color: #777; font-size: 12px; font-weight: 550; }
-.summary-period { padding: 5px 9px; border-radius: 6px; background: #eae8e2; color: #555; font-size: 11px; font-weight: 550; }
+.summary-period { color: #777; font-size: 11px; font-weight: 550; }
 .summary-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; }
 .metric-card { position: relative; min-height: 132px; padding: 22px 25px 20px; background: #fff; border-radius: 11px; display: flex; flex-direction: column; }
 .metric-top { display: block; padding-right: 48px; }
@@ -66,7 +66,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 
 /* CHARTS */
 .analysis-section { padding-top: 2px; }
-.analysis-card { background: #fff; border-radius: 10px; overflow: hidden; }
+.analysis-card { background: #fff; border-radius: 10px; overflow-x: auto; }
 .analysis-head { min-height: 58px; padding: 0 20px; border-bottom: 1px solid #eceae5; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
 .analysis-period { display: flex; align-items: center; gap: 10px; }
 .analysis-period-label { color: #999; font-size: 11px; }
@@ -79,7 +79,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .analysis-period::after { content: ""; position: absolute; right: 12px; top: 50%; width: 6px; height: 6px; border-right: 1.5px solid #777; border-bottom: 1.5px solid #777; transform: translateY(-68%) rotate(45deg); pointer-events: none; }
 .analysis-period-select { width: 94px; height: 30px; padding: 0 32px 0 12px; border: 1px solid #dcdad4; border-radius: 7px; background: #fff; color: #444; font-family: inherit; font-size: 12.5px; font-weight: 550; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; }
 .analysis-period-select:focus { border-color: #99968e; }
-.chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; padding: 28px; align-items: start; }
+.chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; padding: 28px; align-items: start; min-width: 860px; }
 .chart-grid.chart-table-grid { grid-template-columns: 1fr; }
 .legacy-chart-grid { display: none; }
 .chart-card { background: #fff; border: 1px solid #e5e3dd; border-radius: 10px; min-height: 270px; overflow: hidden; }
@@ -130,6 +130,15 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .drilldown-back { display: flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border: 1px solid #d6d4cd; border-radius: 5px; background: #fff; color: #555; font-family: inherit; font-size: 11px; cursor: pointer; white-space: nowrap; }
 .drilldown-back:hover { background: #f0efe9; }
 .drilldown-month { font-size: 11px; color: #888; }
+.rs-drilldown-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.chart-values .rs-drilldown-table th,
+.chart-values .rs-drilldown-table td { box-sizing: border-box; width: auto; padding-left: 18px; padding-right: 18px; }
+.chart-values .rs-drilldown-table th:first-child,
+.chart-values .rs-drilldown-table td:first-child { width: auto; }
+.rs-drilldown-table th:nth-child(-n+3),
+.rs-drilldown-table td:nth-child(-n+3) { text-align: left; }
+.rs-drilldown-table th:last-child,
+.rs-drilldown-table td:last-child { text-align: right; }
 .stacked-dynamic { width: 26px; display: flex; flex-direction: column-reverse; border-radius: 5px 5px 1px 1px; overflow: hidden; }
 .chart-hover-tooltip { position: fixed; z-index: 9999; max-width: 230px; padding: 8px 10px; border-radius: 7px; background: #292925; color: #fff; font-size: 10.5px; line-height: 1.5; white-space: pre-line; text-align: left; pointer-events: none; opacity: 0; visibility: hidden; transform: translateY(3px); transition: opacity 100ms ease, transform 100ms ease; box-shadow: 0 5px 16px rgba(0,0,0,.16); }
 .chart-hover-tooltip.show { opacity: 1; visibility: visible; transform: translateY(0); }
@@ -653,10 +662,10 @@ function showRsDrilldown(month) {
   el.innerHTML = `
     <div class="drilldown-head">
       <button class="drilldown-back" onclick="restoreRsTable()">← 전체</button>
-      <span class="drilldown-month">${month} RS 내역</span>
+      <span class="drilldown-month" style="margin-left:auto">${month}</span>
     </div>
-    <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
-      <colgroup><col style="width:32%"><col style="width:22%"><col style="width:20%"><col style="width:26%"></colgroup>
+    <table class="rs-drilldown-table">
+      <colgroup><col style="width:34%"><col style="width:22%"><col style="width:20%"><col style="width:24%"></colgroup>
       <thead><tr>
         <th style="position:sticky;top:34px;z-index:1;height:32px;padding:0 18px;background:#f2f1ed;color:#999;font-size:11px;font-weight:500;text-align:left;">IP명</th>
         <th style="position:sticky;top:34px;z-index:1;height:32px;padding:0 18px;background:#f2f1ed;color:#999;font-size:11px;font-weight:500;text-align:left;">플랫폼</th>
@@ -684,6 +693,12 @@ function restoreRsTable() {
 }
 
 const regionRows = [
+  { month:'2025.07', chinaInquiry:6,  seaInquiry:4,  usInquiry:2,  chinaSuccess:3,  seaSuccess:2,  usSuccess:1,  chinaMg:14000000, seaMg:9000000,  usMg:5000000,  chinaRs:2400000, seaRs:1400000, usRs:600000  },
+  { month:'2025.08', chinaInquiry:7,  seaInquiry:5,  usInquiry:2,  chinaSuccess:4,  seaSuccess:2,  usSuccess:1,  chinaMg:16000000, seaMg:10000000, usMg:6000000,  chinaRs:2700000, seaRs:1600000, usRs:700000  },
+  { month:'2025.09', chinaInquiry:8,  seaInquiry:4,  usInquiry:3,  chinaSuccess:4,  seaSuccess:2,  usSuccess:1,  chinaMg:17000000, seaMg:11000000, usMg:7000000,  chinaRs:2900000, seaRs:1700000, usRs:800000  },
+  { month:'2025.10', chinaInquiry:9,  seaInquiry:6,  usInquiry:3,  chinaSuccess:5,  seaSuccess:3,  usSuccess:2,  chinaMg:20000000, seaMg:13000000, usMg:9000000,  chinaRs:3400000, seaRs:2100000, usRs:1100000 },
+  { month:'2025.11', chinaInquiry:10, seaInquiry:6,  usInquiry:4,  chinaSuccess:5,  seaSuccess:4,  usSuccess:2,  chinaMg:22000000, seaMg:14000000, usMg:10000000, chinaRs:3700000, seaRs:2300000, usRs:1200000 },
+  { month:'2025.12', chinaInquiry:11, seaInquiry:7,  usInquiry:4,  chinaSuccess:6,  seaSuccess:4,  usSuccess:2,  chinaMg:25000000, seaMg:16000000, usMg:11000000, chinaRs:4200000, seaRs:2600000, usRs:1300000 },
   { month:'2026.01', chinaInquiry:8,  seaInquiry:5,  usInquiry:3,  chinaSuccess:4,  seaSuccess:2,  usSuccess:1,  chinaMg:18000000, seaMg:12000000, usMg:8000000,  chinaRs:3200000, seaRs:1800000, usRs:900000  },
   { month:'2026.02', chinaInquiry:11, seaInquiry:7,  usInquiry:2,  chinaSuccess:6,  seaSuccess:4,  usSuccess:1,  chinaMg:24000000, seaMg:16000000, usMg:7000000,  chinaRs:4100000, seaRs:2400000, usRs:800000  },
   { month:'2026.03', chinaInquiry:14, seaInquiry:8,  usInquiry:4,  chinaSuccess:7,  seaSuccess:4,  usSuccess:2,  chinaMg:28000000, seaMg:18000000, usMg:12000000, chinaRs:5300000, seaRs:3100000, usRs:1500000 },
@@ -1006,7 +1021,7 @@ function renderAnalysisCharts() {
     return;
   }
   container.innerHTML =
-    renderStackedCard({ title:'월별 거래액 (MG · FlatFee · RS)', rows }) +
+    renderStackedCard({ title:'월별 거래액', rows }) +
     renderLineCard({
       title:'IP당 평균 MG 단가', rows, money:true,
       series:[{ name:'평균 MG', color:'#8d83d8', value:row => row.mgIpCount ? row.mgAmount / row.mgIpCount : 0 }],
