@@ -54,28 +54,39 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:13px;color:var(--tex
 .topbar-left{font-size:14px;font-weight:500}
 .topbar-right{font-size:12px;color:var(--text-muted)}
 .content{padding:24px;flex:1;overflow-y:auto}
-.page-title{font-size:18px;font-weight:600;margin-bottom:3px}
-.page-sub{font-size:13px;color:var(--text-secondary);margin-bottom:20px}
-
 /* Filter */
-.filter-area{margin-bottom:16px}
-.filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.filter-area{padding:8px 24px;background:rgba(255,255,255,.88);border:1px solid rgba(0,0,0,.07);border-radius:20px;margin-bottom:18px;box-shadow:0 8px 30px rgba(0,0,0,.045),0 1px 2px rgba(0,0,0,.025);backdrop-filter:blur(18px)}
+.filter-row{display:flex;align-items:center;gap:18px;min-height:72px;padding:12px 0}
+.filter-row+.filter-row{border-top:1px solid #ededeb}
+.filter-label{width:76px;flex:0 0 76px;font-size:12px;font-weight:600;color:#777;letter-spacing:-.01em}
+.filter-controls{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.filter-spacer{flex:1}
+.search-box{position:relative;display:block;flex:1;max-width:720px}
+.search-box i{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:17px;color:#999;pointer-events:none}
+.search-box input{width:100%;height:46px;border:1px solid #dededb;border-radius:14px;background:#f7f7f5;padding:0 16px 0 43px;font:inherit;font-size:13px;outline:none;transition:background .16s,border-color .16s,box-shadow .16s}
+.search-box input::placeholder{color:#aaa}
+.search-box input:focus{background:#fff;border-color:#a7a7a3;box-shadow:0 0 0 4px rgba(0,0,0,.045)}
+.native-select{height:44px;min-width:156px;border:1px solid #dededb;border-radius:13px;background:#f7f7f5;padding:0 36px 0 14px;color:var(--text-primary);font:inherit;font-size:12.5px;outline:none;cursor:pointer;transition:background .16s,border-color .16s,box-shadow .16s}
+.native-select:hover{background:#fff;border-color:#c5c5c1}
+.native-select:focus{background:#fff;border-color:#a7a7a3;box-shadow:0 0 0 4px rgba(0,0,0,.04)}
 
-.date-range{display:flex;align-items:center;border:1px solid var(--border-mid);border-radius:8px;background:var(--surface);overflow:hidden;height:36px}
-.date-range input[type=date]{border:none;outline:none;background:transparent;font-size:12px;font-family:inherit;color:var(--text-primary);padding:0 12px;height:100%;cursor:pointer;width:136px}
-.date-range input[type=date]:first-child{border-right:1px solid var(--border-mid)}
+.date-range{display:flex;align-items:center;gap:0;border:1px solid #dededb;border-radius:13px;background:#f7f7f5;overflow:hidden;height:44px;transition:background .16s,border-color .16s}
+.date-range:hover{background:#fff;border-color:#c5c5c1}
+.date-range input[type=date]{border:none;outline:none;background:transparent;font-size:12.5px;font-family:inherit;color:var(--text-primary);padding:0 14px;height:100%;cursor:pointer;width:156px}
+.date-range input[type=date]:first-child{border-right:1px solid #dededb}
+.date-separator{font-size:12px;color:#aaa}
 
 /* Custom select */
 .custom-select{position:relative;display:inline-block}
-.cs-btn{display:flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:1px solid var(--border-mid);border-radius:8px;background:var(--surface);color:var(--text-primary);font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:border-color .15s}
-.cs-btn:hover{border-color:#aaa}
-.cs-btn.open{border-color:#888;border-bottom-left-radius:0;border-bottom-right-radius:0}
+.cs-btn{display:flex;align-items:center;gap:7px;height:44px;min-width:156px;padding:0 14px;border:1px solid #dededb;border-radius:13px;background:#f7f7f5;color:var(--text-primary);font-size:12.5px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:background .16s,border-color .16s,box-shadow .16s}
+.cs-btn:hover{background:#fff;border-color:#c5c5c1}
+.cs-btn.open{background:#fff;border-color:#a7a7a3;box-shadow:0 0 0 4px rgba(0,0,0,.04)}
 .cs-btn.has-value{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
 .cs-btn.has-value .cs-arrow{opacity:.5}
 .cs-arrow{font-size:10px;color:var(--text-muted);margin-left:4px;transition:transform .15s;line-height:1}
 .cs-btn.open .cs-arrow{transform:rotate(180deg)}
 
-.cs-dropdown{display:none;position:absolute;top:100%;left:0;z-index:200;background:var(--surface);border:1px solid #888;border-top:none;border-radius:0 0 8px 8px;min-width:210px;max-height:300px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.1)}
+.cs-dropdown{display:none;position:absolute;top:calc(100% + 8px);left:0;z-index:200;background:rgba(255,255,255,.98);border:1px solid #dededb;border-radius:14px;min-width:230px;max-height:320px;overflow-y:auto;box-shadow:0 18px 50px rgba(0,0,0,.14)}
 .cs-dropdown.open{display:block}
 .cs-group-label{font-size:10px;font-weight:600;letter-spacing:.08em;color:var(--text-muted);padding:10px 12px 4px;text-transform:uppercase}
 .cs-option{display:flex;align-items:center;gap:7px;padding:7px 12px;font-size:12px;color:var(--text-primary);cursor:pointer}
@@ -85,36 +96,43 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:13px;color:var(--tex
 .cs-option.selected .cs-check{opacity:1}
 .cs-divider{border:none;border-top:1px solid var(--border);margin:3px 0}
 
-.btn-reset{height:36px;padding:0 12px;border:1px solid var(--border-mid);border-radius:8px;background:transparent;color:var(--text-secondary);font-size:12px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s}
-.btn-reset:hover{background:var(--surface);border-color:#aaa;color:var(--text-primary)}
+.btn-reset{height:38px;padding:0 13px;border:0;border-radius:11px;background:transparent;color:#888;font-size:12px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s}
+.btn-reset:hover{background:#f1f1ee;color:var(--text-primary)}
 
 /* Active tags */
-.active-tags{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:10px}
+.active-tags{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.active-tags:not(:empty){padding:12px 0 15px 94px;border-top:1px solid #ededeb}
 .filter-tag{display:flex;align-items:center;gap:5px;background:#1a1a1a;color:#fff;font-size:12px;padding:5px 11px;border-radius:20px}
 .tag-x{cursor:pointer;opacity:.5;font-size:12px;line-height:1}
 .tag-x:hover{opacity:1}
 
 /* Result meta */
-.result-meta{font-size:12px;color:var(--text-secondary);margin-bottom:10px}
+.result-bar{display:flex;align-items:center;justify-content:space-between;margin:0 2px 9px}
+.result-meta{font-size:12px;color:var(--text-secondary)}
 .result-meta strong{color:var(--text-primary);font-weight:600}
+.result-guide{font-size:11px;color:var(--text-muted)}
 
 /* Table */
-.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
-table{width:100%;border-collapse:collapse;table-layout:fixed}
-colgroup .c-dt{width:170px}
-colgroup .c-admin{width:150px}
-colgroup .c-type{width:190px}
-colgroup .c-target{width:170px}
+.table-wrap{background:var(--surface);border:1px solid #deded9;border-radius:10px;overflow:auto;box-shadow:0 1px 2px rgba(0,0,0,.025)}
+table{width:100%;min-width:900px;border-collapse:collapse;table-layout:fixed}
+colgroup .c-dt{width:132px}
+colgroup .c-admin{width:128px}
+colgroup .c-type{width:160px}
+colgroup .c-target{width:155px}
 colgroup .c-desc{}
-thead tr{background:#fafaf8}
-th{font-size:11px;font-weight:500;color:var(--text-muted);text-align:left;padding:10px 18px;border-bottom:1px solid var(--border);letter-spacing:.03em}
-td{padding:11px 18px;border-bottom:1px solid var(--border);vertical-align:middle}
+thead{position:sticky;top:0;z-index:3}
+thead tr{background:#f7f7f4}
+th{font-size:10.5px;font-weight:600;color:#777;text-align:left;padding:11px 16px;border-bottom:1px solid #deded9;letter-spacing:.025em}
+td{padding:13px 16px;border-bottom:1px solid #ecece8;vertical-align:middle}
 tbody tr:last-child td{border-bottom:none}
-tbody tr:hover td{background:#fafaf8}
-.dt-date{display:inline;font-size:12px}
-.dt-time{display:inline;margin-left:6px;font-size:12px;color:var(--text-secondary)}
-.admin-name{font-size:12px}
-.badge{display:inline-block;font-size:11px;font-weight:500;padding:2px 8px;border-radius:9px;white-space:nowrap}
+tbody tr{transition:background .12s}
+tbody tr:hover td{background:#fafaf7}
+tbody tr.day-start:not(:first-child) td{border-top:1px solid #d5d5cf}
+.dt-date{font-size:11.5px;font-weight:550;color:#4d4d4d}
+.dt-time{margin-top:3px;font-size:11px;color:var(--text-muted);font-variant-numeric:tabular-nums}
+.admin-name{font-size:12px;font-weight:500}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:550;padding:4px 8px;border-radius:6px;white-space:nowrap}
+.badge::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.58}
 .b-content{background:#E6F1FB;color:#0C447C}
 .b-user{background:#EEEDFE;color:#3C3489}
 .b-workflow{background:#E1F5EE;color:#085041}
@@ -122,15 +140,75 @@ tbody tr:hover td{background:#fafaf8}
 .b-credit{background:#FAECE7;color:#712B13}
 .b-perf{background:#EAF3DE;color:#27500A}
 .b-modify{background:#FBEAF0;color:#72243E}
-.target{font-size:12px;color:var(--text-secondary);font-family:'SF Mono','Fira Code',monospace;background:var(--bg);padding:3px 8px;border-radius:5px;border:1px solid var(--border)}
-.desc{font-size:12px;line-height:1.5}
+.target{display:inline;font-size:11px;color:#666;font-family:'SF Mono','Fira Code',monospace;background:transparent;padding:0;border:0;border-radius:0;letter-spacing:-.01em}
+.desc{font-size:12px;line-height:1.5;color:#333}
+.desc-title{font-weight:550;color:#1d1d1d}
+.desc-sub{color:var(--text-secondary);margin-left:5px}
+.empty-state{display:none;text-align:center;padding:54px 20px;color:var(--text-secondary)}
+.empty-state i{display:block;font-size:28px;color:#bbb;margin-bottom:8px}
+.empty-state strong{display:block;color:var(--text-primary);font-size:13px;margin-bottom:4px}
 
 /* Pagination */
 .pag-wrap{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px}
-.pag-btn{min-width:30px;height:30px;padding:0 9px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer;background:transparent;color:var(--text-secondary);font-family:inherit}
-.pag-btn:hover{background:var(--bg);border-color:var(--border-mid);color:var(--text-primary)}
-.pag-btn.on{background:#1a1a1a;color:#fff;border-color:#1a1a1a;font-weight:500}
+.pag-btn{min-width:26px;height:30px;padding:0 7px;display:flex;align-items:center;justify-content:center;border:0;border-radius:0;font-size:12px;cursor:pointer;background:transparent;color:#888;font-family:inherit}
+.pag-btn:hover{background:transparent;color:#111}
+.pag-btn:disabled{cursor:default}
+.pag-btn:disabled:hover{background:transparent;color:#aaa}
+.pag-btn.on{background:transparent;color:#111;border-bottom:1px solid #111;font-weight:650}
 .pag-dots{min-width:22px;text-align:center;font-size:12px;color:var(--text-muted)}
+
+/* Restrained audit-search treatment */
+.filter-area{padding:0;background:#fff;border:0;border-radius:0;margin-bottom:22px;box-shadow:none;backdrop-filter:none}
+.filter-head{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid #dfe1e6}
+.filter-title{font-size:13px;font-weight:650;color:#222}
+.filter-note{font-size:11px;color:#9297a2}
+.filter-row{gap:28px;min-height:72px;padding:17px 28px}
+.filter-row+.filter-row{border-top:0}
+.filter-label{width:92px;flex-basis:92px;color:#444}
+.search-box{flex:0 1 480px;max-width:480px}
+.search-box i{display:none}
+.search-box input{height:38px;border:1px solid #cfd3da;border-radius:2px;background:#fff;padding:0 12px;font-size:12px}
+.search-box input:focus{border-color:#666;box-shadow:0 0 0 2px rgba(0,0,0,.06)}
+.native-select{height:38px;min-width:170px;border:1px solid #cfd3da;border-radius:2px;background:#fff;padding-left:12px;font-size:12px}
+.native-select:hover,.native-select:focus{background:#fff;border-color:#777;box-shadow:none}
+.date-range{height:38px;border:0;border-radius:0;background:transparent;overflow:visible;gap:28px}
+.date-range:hover{background:transparent;border-color:transparent}
+.date-tilde{margin:0 -18px;color:#8f949e;font-size:12px}
+.date-range input[type=date]{height:38px;width:158px;border:1px solid #cfd3da!important;border-radius:2px;background:#fff;padding:0 10px;font-size:12px}
+.date-range input[type=date]:focus{border-color:#666!important}
+.date-range input[type=date]+input{position:relative}
+.quick-ranges{display:flex;align-items:center;margin-left:8px;border:1px solid #cfd3da}
+.quick-range{height:36px;padding:0 13px;border:0;border-right:1px solid #dedede;background:#fff;color:#555;font:inherit;font-size:11.5px;cursor:pointer;white-space:nowrap}
+.quick-range:last-child{border-right:0}
+.quick-range:hover{background:#f4f4f4;color:#111}
+.quick-range.active{background:#222;color:#fff}
+.cs-btn{justify-content:space-between;height:38px;min-width:190px;border:1px solid #cfd3da;border-radius:2px;background:#fff;padding:0 11px;font-size:12px;box-shadow:none}
+.cs-btn>svg{display:none}
+.cs-btn:hover,.cs-btn.open{background:#fff;border-color:#777;box-shadow:none}
+.cs-btn.has-value{background:#fff;color:#222;border-color:#666}
+.cs-dropdown{top:calc(100% + 2px);border:1px solid #aaa;border-radius:2px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12)}
+.filter-actions{display:flex;align-items:center;justify-content:center;gap:8px;padding:22px 28px 24px;border-top:1px solid #dfe1e6;background:#fff}
+.btn-search,.btn-reset{height:38px;min-width:112px;padding:0 18px;border:0;border-radius:1px;font-size:12px;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn-search{background:#222;color:#fff;font-weight:600}
+.btn-search:hover{background:#000}
+.btn-reset{background:#a9abb0;color:#fff}
+.btn-reset:hover{background:#93969c;color:#fff}
+.active-tags{display:none}
+.active-tags:not(:empty){padding:10px 18px 10px 138px;border-top:1px solid #eceef1}
+.filter-tag{background:#f1f1f1;color:#333;border:1px solid #d8d8d8;font-size:11px;padding:4px 9px;border-radius:2px}
+.table-wrap{border:0;border-top:1px solid #d8d8d8;border-bottom:1px solid #d8d8d8;border-radius:0;box-shadow:none}
+thead tr{background:#f1f1f1}
+th{font-size:11px;font-weight:650;color:#555;padding:12px 24px;border-bottom-color:#d8d8d8}
+td{padding-left:24px;padding-right:24px}
+
+@media(max-width:980px){
+  .filter-row{align-items:flex-start;gap:8px;flex-direction:column;padding:15px 0}
+  .filter-row{padding-left:14px;padding-right:14px}
+  .filter-label{width:auto;flex-basis:auto}
+  .filter-controls{width:100%;flex-wrap:wrap}
+  .search-box{width:100%;max-width:none}
+  .active-tags:not(:empty){padding-left:0}
+}
 </style>
 </head>
 <body>
@@ -192,8 +270,32 @@ tbody tr:hover td{background:#fafaf8}
 
   <div class="content">
     <div class="filter-area">
+      <div class="filter-head">
+        <span class="filter-title">검색 조건</span>
+        <span class="filter-note">관리 이력 조회 조건을 설정해 주세요.</span>
+      </div>
       <div class="filter-row">
+        <div class="filter-label">조회 기간</div>
+        <div class="filter-controls">
+          <div class="date-range">
+            <input type="date" id="date-from" value="2026-05-01" aria-label="조회 시작일">
+            <span class="date-tilde">~</span>
+            <input type="date" id="date-to" value="2026-05-14" aria-label="조회 종료일">
+          </div>
+          <div class="quick-ranges" aria-label="빠른 조회 기간">
+            <button class="quick-range" type="button" data-range="today">오늘</button>
+            <button class="quick-range" type="button" data-range="7">일주일</button>
+            <button class="quick-range" type="button" data-range="15">15일</button>
+            <button class="quick-range" type="button" data-range="1m">한 달</button>
+            <button class="quick-range" type="button" data-range="3m">세 달</button>
+            <button class="quick-range" type="button" data-range="6m">여섯 달</button>
+          </div>
+        </div>
+      </div>
 
+      <div class="filter-row">
+        <div class="filter-label">상세 필터</div>
+        <div class="filter-controls">
           <!-- 액션 유형 -->
           <div class="custom-select" id="cs-action">
             <button class="cs-btn" onclick="toggleDropdown('cs-action')">
@@ -250,19 +352,36 @@ tbody tr:hover td{background:#fafaf8}
             </div>
           </div>
 
-          <!-- 날짜 -->
-          <div class="date-range">
-            <input type="date" id="date-from" value="2026-05-01">
-            <input type="date" id="date-to" value="2026-05-14">
-          </div>
-
-          <button class="btn-reset" onclick="resetAll()">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-            초기화
-          </button>
+          <select class="native-select" id="admin-filter" aria-label="관리자 필터">
+            <option value="">전체 관리자</option>
+            <option value="박관리">박관리</option>
+            <option value="김리자">김리자</option>
+            <option value="이운영">이운영</option>
+          </select>
         </div>
+      </div>
+
+      <div class="filter-row">
+        <div class="filter-label">내용 검색</div>
+        <div class="filter-controls">
+          <label class="search-box">
+            <i class="ti ti-search"></i>
+            <input type="search" id="log-search" placeholder="처리 내용에 포함된 키워드를 입력하세요">
+          </label>
+        </div>
+      </div>
 
       <div class="active-tags" id="active-tags"></div>
+
+      <div class="filter-actions">
+        <button class="btn-search" type="button" onclick="filterLogs()">검색</button>
+        <button class="btn-reset" type="button" onclick="resetAll()">검색 조건 초기화</button>
+      </div>
+    </div>
+
+    <div class="result-bar">
+      <div class="result-meta">총 <strong id="result-count">12</strong>건의 이력</div>
+      <div class="result-guide">최신 처리 순</div>
     </div>
 
     <div class="table-wrap">
@@ -271,32 +390,29 @@ tbody tr:hover td{background:#fafaf8}
         <thead>
           <tr><th>처리 일시</th><th>관리자</th><th>액션 유형</th><th>대상</th><th>내용</th></tr>
         </thead>
-        <tbody>
-          <tr><td><div class="dt-date">2026-05-14</div><div class="dt-time">10:32</div></td><td><span class="admin-name">Lee Admin</span></td><td><span class="badge b-content">콘텐츠 승인</span></td><td><span class="target">CONTENT #42</span></td><td class="desc">콘텐츠 승인 — 사랑의 불시착</td></tr>
-          <tr><td><div class="dt-date">2026-05-14</div><div class="dt-time">09:51</div></td><td><span class="admin-name">Lee Admin</span></td><td><span class="badge b-user">유저 승인</span></td><td><span class="target">USER #109</span></td><td class="desc">유저 승인 — 이준혁 (NextWave Studios)</td></tr>
-          <tr><td><div class="dt-date">2026-05-14</div><div class="dt-time">09:20</div></td><td><span class="admin-name">Kim Admin</span></td><td><span class="badge b-workflow">컨펌 전송</span></td><td><span class="target">WORKFLOW #18</span></td><td class="desc">컨펌 전송 — Seven Suns → Viki</td></tr>
-          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">17:44</div></td><td><span class="admin-name">Lee Admin</span></td><td><span class="badge b-workflow">메타데이터 권한</span></td><td><span class="target">WORKFLOW #15</span></td><td class="desc">메타데이터 권한 부여 — Netflix Korea</td></tr>
-          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">16:05</div></td><td><span class="admin-name">Park Admin</span></td><td><span class="badge b-settle">계약 생성</span></td><td><span class="target">CONTRACT #31</span></td><td class="desc">계약 생성 — (주)스튜디오드래곤 RS 계약</td></tr>
-          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">14:30</div></td><td><span class="admin-name">Lee Admin</span></td><td><span class="badge b-credit">크레딧 충전</span></td><td><span class="target">COMPANY #7</span></td><td class="desc">크레딧 충전 — BrightFrame +$12,000</td></tr>
-          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">12:18</div></td><td><span class="admin-name">Lee Admin</span></td><td><span class="badge b-workflow">거래 종료</span></td><td><span class="target">WORKFLOW #12</span></td><td class="desc">거래 종료 — Cinderella in Tokyo · ReelShort</td></tr>
-          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">11:05</div></td><td><span class="admin-name">Kim Admin</span></td><td><span class="badge b-modify">수정 요청 거절</span></td><td><span class="target">CONTENT #38</span></td><td class="desc">수정 요청 거절 — The Last Letter</td></tr>
-          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">09:55</div></td><td><span class="admin-name">Park Admin</span></td><td><span class="badge b-settle">RS 데이터 입력</span></td><td><span class="target">CONTRACT #28</span></td><td class="desc">RS 데이터 입력 — 2026-04 정산</td></tr>
-          <tr><td><div class="dt-date">2026-05-12</div><div class="dt-time">15:22</div></td><td><span class="admin-name">Park Admin</span></td><td><span class="badge b-perf">퍼포먼스 입력</span></td><td><span class="target">CONTENT #29</span></td><td class="desc">퍼포먼스 데이터 입력 — 2026-04 지표</td></tr>
-          <tr><td><div class="dt-date">2026-05-12</div><div class="dt-time">14:10</div></td><td><span class="admin-name">Lee Admin</span></td><td><span class="badge b-content">콘텐츠 거절</span></td><td><span class="target">CONTENT #41</span></td><td class="desc">콘텐츠 거절 — Bloom Again (사유: 메타데이터 누락)</td></tr>
-          <tr><td><div class="dt-date">2026-05-12</div><div class="dt-time">11:30</div></td><td><span class="admin-name">Kim Admin</span></td><td><span class="badge b-workflow">묶음 거래 컨펌</span></td><td><span class="target">WORKFLOW #20</span></td><td class="desc">묶음 거래 컨펌 전송 — Midnight Tokyo Drift · BUNDLE</td></tr>
+        <tbody id="log-body">
+          <tr><td><div class="dt-date">2026-05-14</div><div class="dt-time">10:32</div></td><td><span class="admin-name">박관리</span></td><td><span class="badge b-content">콘텐츠 승인</span></td><td><span class="target">CONTENT #42</span></td><td class="desc">콘텐츠 승인 — 사랑의 불시착</td></tr>
+          <tr><td><div class="dt-date">2026-05-14</div><div class="dt-time">09:51</div></td><td><span class="admin-name">박관리</span></td><td><span class="badge b-user">유저 승인</span></td><td><span class="target">USER #109</span></td><td class="desc">유저 승인 — 이준혁 (NextWave Studios)</td></tr>
+          <tr><td><div class="dt-date">2026-05-14</div><div class="dt-time">09:20</div></td><td><span class="admin-name">김리자</span></td><td><span class="badge b-workflow">컨펌 전송</span></td><td><span class="target">WORKFLOW #18</span></td><td class="desc">컨펌 전송 — Seven Suns → Viki</td></tr>
+          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">17:44</div></td><td><span class="admin-name">박관리</span></td><td><span class="badge b-workflow">메타데이터 권한</span></td><td><span class="target">WORKFLOW #15</span></td><td class="desc">메타데이터 권한 부여 — Netflix Korea</td></tr>
+          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">16:05</div></td><td><span class="admin-name">이운영</span></td><td><span class="badge b-settle">계약 생성</span></td><td><span class="target">CONTRACT #31</span></td><td class="desc">계약 생성 — (주)스튜디오드래곤 RS 계약</td></tr>
+          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">14:30</div></td><td><span class="admin-name">박관리</span></td><td><span class="badge b-credit">크레딧 충전</span></td><td><span class="target">COMPANY #7</span></td><td class="desc">크레딧 충전 — BrightFrame +$12,000</td></tr>
+          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">12:18</div></td><td><span class="admin-name">박관리</span></td><td><span class="badge b-workflow">거래 종료</span></td><td><span class="target">WORKFLOW #12</span></td><td class="desc">거래 종료 — Cinderella in Tokyo · ReelShort</td></tr>
+          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">11:05</div></td><td><span class="admin-name">김리자</span></td><td><span class="badge b-modify">수정 요청 거절</span></td><td><span class="target">CONTENT #38</span></td><td class="desc">수정 요청 거절 — The Last Letter</td></tr>
+          <tr><td><div class="dt-date">2026-05-13</div><div class="dt-time">09:55</div></td><td><span class="admin-name">이운영</span></td><td><span class="badge b-settle">RS 데이터 입력</span></td><td><span class="target">CONTRACT #28</span></td><td class="desc">RS 데이터 입력 — 2026-04 정산</td></tr>
+          <tr><td><div class="dt-date">2026-05-12</div><div class="dt-time">15:22</div></td><td><span class="admin-name">이운영</span></td><td><span class="badge b-perf">퍼포먼스 입력</span></td><td><span class="target">CONTENT #29</span></td><td class="desc">퍼포먼스 데이터 입력 — 2026-04 지표</td></tr>
+          <tr><td><div class="dt-date">2026-05-12</div><div class="dt-time">14:10</div></td><td><span class="admin-name">박관리</span></td><td><span class="badge b-content">콘텐츠 거절</span></td><td><span class="target">CONTENT #41</span></td><td class="desc">콘텐츠 거절 — Bloom Again (사유: 메타데이터 누락)</td></tr>
+          <tr><td><div class="dt-date">2026-05-12</div><div class="dt-time">11:30</div></td><td><span class="admin-name">김리자</span></td><td><span class="badge b-workflow">묶음 거래 컨펌</span></td><td><span class="target">WORKFLOW #20</span></td><td class="desc">묶음 거래 컨펌 전송 — Midnight Tokyo Drift · BUNDLE</td></tr>
         </tbody>
       </table>
+      <div class="empty-state" id="empty-state">
+        <i class="ti ti-file-search"></i>
+        <strong>조건에 맞는 이력이 없습니다</strong>
+        검색어나 필터를 변경해 보세요.
+      </div>
     </div>
 
-    <div class="pag-wrap">
-      <button class="pag-btn">이전</button>
-      <button class="pag-btn on">1</button>
-      <button class="pag-btn">2</button>
-      <button class="pag-btn">3</button>
-      <span class="pag-dots">…</span>
-      <button class="pag-btn">13</button>
-      <button class="pag-btn">다음</button>
-    </div>
+    <div class="pag-wrap" id="pagination"></div>
   </div>
 </div>
 
@@ -304,6 +420,28 @@ tbody tr:hover td{background:#fafaf8}
 const state={'cs-action':[]};
 const defaults={'cs-action':'액션 유형'};
 const defaultDates={from:'2026-05-01',to:'2026-05-14'};
+const PAGE_SIZE=10;
+let currentPage=1;
+let filteredRows=[];
+
+const actionValues={
+  '유저 승인':'user-approve',
+  '유저 거절':'user-reject',
+  '유저 정보수정':'user-edit',
+  '콘텐츠 승인':'content-approve',
+  '콘텐츠 거절':'content-reject',
+  '콘텐츠 수정':'content-edit',
+  '콘텐츠 삭제':'content-delete',
+  '메타데이터 권한':'meta-grant',
+  '컨펌 전송':'confirm-send',
+  '거래 종료':'wf-close',
+  '계약 생성':'ct-create',
+  '크레딧 충전':'credit-charge',
+  '수정 요청 거절':'modify-reject',
+  'RS 데이터 입력':'rs-input',
+  '퍼포먼스 입력':'perf-input',
+  '묶음 거래 컨펌':'bundle'
+};
 
 function toggleDropdown(id){
   const dd=document.getElementById('dd-'+id.replace('cs-',''));
@@ -353,7 +491,8 @@ function updateSelectLabel(id){
     return;
   }
   btn.classList.add('has-value');
-  label.textContent=defaults[id];
+  const first=el.querySelector(`.cs-option[data-value="${selected[0]}"]`)?.textContent.trim();
+  label.textContent=selected.length===1?first:`액션 유형 ${selected.length}개`;
 }
 
 function renderTags(){
@@ -396,13 +535,142 @@ function renderDateTag(wrap){
 function resetDates(){
   document.getElementById('date-from').value=defaultDates.from;
   document.getElementById('date-to').value=defaultDates.to;
+  clearQuickRange();
   renderTags();
 }
 
 function resetAll(){
   Object.keys(state).forEach(id=>clearSelect(id));
-  resetDates();
+  document.getElementById('date-from').value=defaultDates.from;
+  document.getElementById('date-to').value=defaultDates.to;
+  document.getElementById('log-search').value='';
+  document.getElementById('admin-filter').value='';
+  clearQuickRange();
   renderTags();
+  filterLogs();
+}
+
+function formatDate(date){
+  const year=date.getFullYear();
+  const month=String(date.getMonth()+1).padStart(2,'0');
+  const day=String(date.getDate()).padStart(2,'0');
+  return `${year}-${month}-${day}`;
+}
+
+function clearQuickRange(){
+  document.querySelectorAll('.quick-range').forEach(button=>button.classList.remove('active'));
+}
+
+function setQuickRange(value,button){
+  const to=new Date();
+  const from=new Date(to);
+
+  if(value==='7')from.setDate(from.getDate()-6);
+  if(value==='15')from.setDate(from.getDate()-14);
+  if(value==='1m')from.setMonth(from.getMonth()-1);
+  if(value==='3m')from.setMonth(from.getMonth()-3);
+  if(value==='6m')from.setMonth(from.getMonth()-6);
+
+  document.getElementById('date-from').value=formatDate(from);
+  document.getElementById('date-to').value=formatDate(to);
+  clearQuickRange();
+  button.classList.add('active');
+  renderTags();
+}
+
+function enhanceRows(){
+  const rows=[...document.querySelectorAll('#log-body tr')];
+  rows.forEach(row=>{
+    const cells=row.cells;
+    const date=cells[0].querySelector('.dt-date')?.textContent.trim()||'';
+    const admin=cells[1].textContent.trim();
+    const action=cells[2].textContent.trim();
+    row.dataset.date=date;
+    row.dataset.admin=admin;
+    row.dataset.action=actionValues[action]||'';
+    row.dataset.search=cells[4].textContent.toLowerCase();
+
+    const desc=cells[4].textContent.trim();
+    const separator=desc.indexOf(' — ');
+    cells[4].textContent='';
+    const title=document.createElement('span');
+    title.className='desc-title';
+    title.textContent=separator>-1?desc.slice(0,separator):desc;
+    cells[4].appendChild(title);
+    if(separator>-1){
+      const sub=document.createElement('span');
+      sub.className='desc-sub';
+      sub.textContent='— '+desc.slice(separator+3);
+      cells[4].appendChild(sub);
+    }
+  });
+
+}
+
+function filterLogs(){
+  const query=document.getElementById('log-search').value.trim().toLowerCase();
+  const admin=document.getElementById('admin-filter').value;
+  const from=document.getElementById('date-from').value;
+  const to=document.getElementById('date-to').value;
+  const actions=state['cs-action'];
+
+  filteredRows=[...document.querySelectorAll('#log-body tr')].filter(row=>{
+    const matchesQuery=!query||row.dataset.search.includes(query);
+    const matchesAdmin=!admin||row.dataset.admin===admin;
+    const matchesAction=!actions.length||actions.includes(row.dataset.action);
+    const matchesFrom=!from||row.dataset.date>=from;
+    const matchesTo=!to||row.dataset.date<=to;
+    return matchesQuery&&matchesAdmin&&matchesAction&&matchesFrom&&matchesTo;
+  });
+
+  currentPage=1;
+  document.getElementById('result-count').textContent=filteredRows.length;
+  renderPage();
+}
+
+function renderPage(){
+  const allRows=[...document.querySelectorAll('#log-body tr')];
+  allRows.forEach(row=>{
+    row.hidden=true;
+    row.classList.remove('day-start');
+  });
+
+  const pageCount=Math.max(1,Math.ceil(filteredRows.length/PAGE_SIZE));
+  if(currentPage>pageCount)currentPage=pageCount;
+  const visible=filteredRows.slice((currentPage-1)*PAGE_SIZE,currentPage*PAGE_SIZE);
+  let previousDate='';
+  visible.forEach(row=>{
+    row.hidden=false;
+    if(previousDate&&previousDate!==row.dataset.date)row.classList.add('day-start');
+    previousDate=row.dataset.date;
+  });
+
+  document.getElementById('empty-state').style.display=filteredRows.length?'none':'block';
+  renderPagination(pageCount);
+}
+
+function renderPagination(pageCount){
+  const wrap=document.getElementById('pagination');
+  wrap.innerHTML='';
+  if(filteredRows.length<=PAGE_SIZE)return;
+
+  const addButton=(label,page,active=false,disabled=false)=>{
+    const button=document.createElement('button');
+    button.className='pag-btn'+(active?' on':'');
+    button.textContent=label;
+    button.disabled=disabled;
+    if(disabled)button.style.opacity='.35';
+    button.addEventListener('click',()=>{
+      currentPage=page;
+      renderPage();
+      document.querySelector('.table-wrap').scrollIntoView({behavior:'smooth',block:'start'});
+    });
+    wrap.appendChild(button);
+  };
+
+  addButton('이전',Math.max(1,currentPage-1),false,currentPage===1);
+  for(let page=1;page<=pageCount;page++)addButton(String(page),page,page===currentPage);
+  addButton('다음',Math.min(pageCount,currentPage+1),false,currentPage===pageCount);
 }
 
 document.addEventListener('click',e=>{
@@ -410,6 +678,17 @@ document.addEventListener('click',e=>{
 });
 document.getElementById('date-from').addEventListener('change',renderTags);
 document.getElementById('date-to').addEventListener('change',renderTags);
+document.getElementById('date-from').addEventListener('change',clearQuickRange);
+document.getElementById('date-to').addEventListener('change',clearQuickRange);
+document.querySelectorAll('.quick-range').forEach(button=>{
+  button.addEventListener('click',()=>setQuickRange(button.dataset.range,button));
+});
+document.getElementById('log-search').addEventListener('keydown',event=>{
+  if(event.key==='Enter')filterLogs();
+});
+
+enhanceRows();
+filterLogs();
 </script>
 </body>
 </html>

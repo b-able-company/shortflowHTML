@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
 <link rel="stylesheet" href="admin-common.css"/>
 <script src="admin-common.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5f4f0; display: flex; height: 100vh; overflow: hidden; font-size: 13px; color: #1a1a18; }
@@ -79,6 +80,10 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .analysis-period::after { content: ""; position: absolute; right: 12px; top: 50%; width: 6px; height: 6px; border-right: 1.5px solid #777; border-bottom: 1.5px solid #777; transform: translateY(-68%) rotate(45deg); pointer-events: none; }
 .analysis-period-select { width: 94px; height: 30px; padding: 0 32px 0 12px; border: 1px solid #dcdad4; border-radius: 7px; background: #fff; color: #444; font-family: inherit; font-size: 12.5px; font-weight: 550; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; }
 .analysis-period-select:focus { border-color: #99968e; }
+.growth-mode-toggle { display: flex; align-items: center; border: 1px solid #dcdad4; border-radius: 7px; overflow: hidden; }
+.growth-mode-btn { height: 30px; padding: 0 13px; border: 0; background: transparent; color: #777; font-family: inherit; font-size: 12.5px; font-weight: 550; cursor: pointer; white-space: nowrap; }
+.growth-mode-btn:hover { color: #333; }
+.growth-mode-btn.active { background: #1a1a18; color: #fff; }
 .chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; padding: 28px; align-items: start; min-width: 860px; }
 .chart-grid.chart-table-grid { grid-template-columns: 1fr; }
 .legacy-chart-grid { display: none; }
@@ -92,6 +97,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .chart-content { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr); }
 .chart-main { min-width: 0; }
 .chart-body { height: 232px; padding: 16px 48px 18px; }
+.chart-body-line { height: 232px; padding: 8px 16px 0; }
 .chart-values { height: 282px; background: #faf9f6; overflow-y: auto; }
 .chart-values table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .chart-values th { position: sticky; top: 0; z-index: 1; height: 34px; padding: 0 18px; background: #f2f1ed; color: #999; font-size: 11px; font-weight: 500; text-align: right; }
@@ -129,6 +135,8 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .drilldown-head { display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 18px; background: #f2f1ed; border-bottom: 1px solid #e5e3dd; position: sticky; top: 0; z-index: 1; }
 .drilldown-back { display: flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border: 1px solid #d6d4cd; border-radius: 5px; background: #fff; color: #555; font-family: inherit; font-size: 11px; cursor: pointer; white-space: nowrap; }
 .drilldown-back:hover { background: #f0efe9; }
+.rs-drilldown-row { cursor: pointer; }
+.rs-drilldown-row:hover td { background: #f5f4f0; }
 .drilldown-month { font-size: 11px; color: #888; }
 .rs-drilldown-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .chart-values .rs-drilldown-table th,
@@ -366,6 +374,10 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
             <button class="analysis-tab" type="button" data-analysis="settlement" aria-selected="false">정산</button>
           </div>
           <div style="display:flex;align-items:center;gap:8px;">
+            <div class="growth-mode-toggle" id="growth-mode-toggle" style="display:none">
+              <button class="growth-mode-btn active" type="button" data-mode="monthly">월별</button>
+              <button class="growth-mode-btn" type="button" data-mode="cumulative">누적</button>
+            </div>
             <div class="analysis-period">
               <select class="analysis-period-select" id="analysis-period-select" aria-label="그래프 조회 기간">
               <option value="6">6개월</option>
@@ -624,6 +636,10 @@ const pipelineDeals = [
 ];
 
 let activeAnalysis = 'growth';
+let growthMode = 'monthly';
+let apexChartInstances = [];
+let pendingApexCharts = [];
+let apexChartCounter = 0;
 let activePeriod = 12;
 let activeTableYear = '2026';
 let activePipelineStage = 'proposal';
@@ -757,11 +773,12 @@ function renderChartValueTable(rows, series, { percent = false, money = false, u
     return `${Math.round(value).toLocaleString('ko-KR')}${item.unit || unit}`;
   };
   const minWidth = Math.max(250, 80 + series.length * 110);
+  const drillable = !!valuesId && valuesId === 'rs-chart-values';
   return `<div class="chart-values"${idAttr}>
     <table style="min-width:${minWidth}px">
       <thead><tr><th>기준월</th>${series.map(item => `<th>${item.name}</th>`).join('')}</tr></thead>
       <tbody>${rows.slice().reverse().map(row => `
-        <tr><td>${row.month}</td>${series.map(item => `<td>${format(item.value(row), item)}</td>`).join('')}</tr>
+        <tr${drillable ? ` class="rs-drilldown-row" data-month="${row.month}"` : ''}><td${drillable ? ' class="rs-month-cell"' : ''}>${row.month}</td>${series.map(item => `<td>${format(item.value(row), item)}</td>`).join('')}</tr>
       `).join('')}</tbody>
     </table>
   </div>`;
@@ -824,67 +841,25 @@ function renderPipelineBoard() {
 }
 
 function renderBarCard({ title, rows, series, tableSeries = series, unit, money = false }) {
-  const values = rows.flatMap(row => series.map(item => item.value(row)));
-  const max = Math.max(...values, 1) * 1.15;
+  const chartId = `apex-bar-${++apexChartCounter}`;
+  pendingApexCharts.push({ id: chartId, rows, series, unit, money, type: 'bar' });
   const legend = series.map(item =>
     `<span class="legend-item"><i class="legend-dot" style="background:${item.color}"></i>${item.name}</span>`
   ).join('');
-  const bars = rows.map(row => {
-    const tooltip = series.map(item => `${item.name} ${money ? Math.round(item.value(row)).toLocaleString('ko-KR') + '원' : Math.round(item.value(row)) + unit}`).join(' · ');
-    return `<div class="bar-group" data-tooltip="${row.month} · ${tooltip}">${series.map(item =>
-      `<i class="bar" style="height:${Math.max(3, item.value(row) / max * 100)}%;background:${item.color}"></i>`
-    ).join('')}</div>`;
-  }).join('');
-  const labels = rows.map(row => `<span>${row.month.slice(2).replace('.', '/')}</span>`).join('');
-  const axis = [max, max * .75, max * .5, max * .25, 0]
-    .map(value => `<span>${compactNumber(value, money)}</span>`).join('');
   return `<article class="chart-card">
     <div class="chart-content">
       <div class="chart-main">
         <div class="chart-head"><div class="chart-title">${title}</div><div class="legend">${legend}</div></div>
-        <div class="chart-body"><div class="bar-chart dynamic-bars period-${activePeriod}">
-          <div class="y-axis">${axis}</div><div class="bar-plot">${bars}</div><div class="bar-labels">${labels}</div>
-        </div></div>
+        <div class="chart-body chart-body-line"><div id="${chartId}"></div></div>
       </div>
       ${renderChartValueTable(rows, tableSeries, { money, unit })}
     </div>
   </article>`;
 }
 
-function renderLineCard({ title, rows, series, percent = false, money = false, fill = false, wide = false, calculation = null, drilldownId = null }) {
-  const width = 540;
-  const left = 38;
-  const right = 520;
-  const top = 15;
-  const bottom = 170;
-  const values = rows.flatMap(row => series.map(item => item.value(row)));
-  const max = percent ? 100 : Math.max(...values, 1) * 1.15;
-  const xAt = index => rows.length === 1 ? (left + right) / 2 : left + (right - left) * index / (rows.length - 1);
-  const yAt = value => bottom - (bottom - top) * value / max;
-  const grid = [0, .25, .5, .75, 1].map(rate => {
-    const y = bottom - (bottom - top) * rate;
-    const value = max * rate;
-    return `<line x1="${left}" y1="${y}" x2="${right}" y2="${y}" stroke="#f0efe9"/>
-      <text x="2" y="${y + 3}" fill="#bbb" font-size="9">${percent ? Math.round(value) + '%' : compactNumber(value, money)}</text>`;
-  }).join('');
-  const lines = series.map((item, seriesIndex) => {
-    const points = rows.map((row, index) => `${xAt(index)},${yAt(item.value(row))}`).join(' ');
-    const area = fill && seriesIndex === 0
-      ? `<polygon points="${left},${bottom} ${points} ${right},${bottom}" fill="${item.color}" opacity=".12"/>`
-      : '';
-    const circles = rows.map((row, index) => {
-      const value = item.value(row);
-      const label = money ? `${Math.round(value).toLocaleString('ko-KR')}원` : percent ? `${value.toFixed(1)}%` : `${Math.round(value)}${item.unit || ''}`;
-      return `
-        <circle cx="${xAt(index)}" cy="${yAt(value)}" r="4" fill="#fff" stroke="${item.color}" stroke-width="2"/>
-        <circle class="dynamic-line-point${drilldownId ? ' drilldown-point' : ''}" cx="${xAt(index)}" cy="${yAt(value)}" r="13" fill="transparent" stroke="none" data-tooltip="${row.month} · ${item.name} ${label}"${drilldownId ? ` data-drilldown-month="${row.month}"` : ''}/>`;
-
-    }).join('');
-    return `${area}<polyline points="${points}" fill="none" stroke="${item.color}" stroke-width="2"/>${circles}`;
-  }).join('');
-  const labels = rows.map((row, index) =>
-    `<text x="${xAt(index)}" y="192" text-anchor="middle" fill="#aaa" font-size="${activePeriod === 12 ? 8 : 9}">${row.month.slice(2).replace('.', '/')}</text>`
-  ).join('');
+function renderLineCard({ title, rows, series, percent = false, money = false, fill = false, wide = false, straight = false, calculation = null, drilldownId = null }) {
+  const chartId = `apex-line-${++apexChartCounter}`;
+  pendingApexCharts.push({ id: chartId, rows, series, percent, money, fill, straight, drilldownId });
   const legend = series.map(item =>
     `<span class="legend-item"><i class="legend-dot" style="background:${item.color}"></i>${item.name}</span>`
   ).join('');
@@ -892,42 +867,110 @@ function renderLineCard({ title, rows, series, percent = false, money = false, f
     <div class="chart-content">
       <div class="chart-main">
         <div class="chart-head"><div class="chart-title">${title}</div><div class="legend">${legend}</div></div>
-        <div class="chart-body"><svg class="dynamic-line-svg" viewBox="0 0 ${width} 200" preserveAspectRatio="none">${grid}${lines}${labels}</svg></div>
+        <div class="chart-body chart-body-line"><div id="${chartId}"></div></div>
       </div>
       ${renderChartValueTable(rows, series, { percent, money, calculation, valuesId: drilldownId })}
     </div>
   </article>`;
 }
 
+function initPendingApexCharts() {
+  apexChartInstances.forEach(c => { try { c.destroy(); } catch(e) {} });
+  apexChartInstances = [];
+  pendingApexCharts.forEach(({ id, rows, series, percent, money, fill, straight, unit, type, drilldownId }) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const categories = rows.map(row => row.month.slice(2).replace('.', '/'));
+    const commonXAxis = {
+      categories,
+      labels: { style: { fontSize: '10px', colors: '#aaa' }, rotate: 0 },
+      axisBorder: { show: false }, axisTicks: { show: false }, tooltip: { enabled: false }
+    };
+    const commonYAxis = {
+      labels: {
+        style: { fontSize: '10px', colors: '#bbb' },
+        formatter: val => percent ? `${Math.round(val)}%` : money ? compactNumber(val, true) : String(Math.round(val))
+      }
+    };
+    const commonTooltip = {
+      theme: 'dark',
+      y: { formatter: (val, { seriesIndex }) => {
+        const item = series[seriesIndex];
+        if (money) return `${Math.round(val).toLocaleString('ko-KR')}원`;
+        if (percent) return `${val.toFixed(1)}%`;
+        return `${Math.round(val)}${item?.unit || unit || ''}`;
+      }}
+    };
+    const commonGrid = { borderColor: '#f0efe9', padding: { left: 4, right: 8, bottom: -8 } };
+
+    let options;
+    if (type === 'bar') {
+      options = {
+        series: series.map(item => ({ name: item.name, data: rows.map(row => Math.round(item.value(row) * 10) / 10) })),
+        chart: {
+          type: 'bar', height: 216, toolbar: { show: false }, zoom: { enabled: false },
+          animations: { enabled: true, speed: 400 },
+          fontFamily: '-apple-system, Helvetica Neue, sans-serif', background: 'transparent', offsetY: -22,
+        },
+        plotOptions: { bar: { columnWidth: activePeriod === 12 ? '55%' : '45%', borderRadius: 3, borderRadiusApplication: 'end' } },
+        colors: series.map(item => item.color),
+        xaxis: commonXAxis, yaxis: commonYAxis, grid: commonGrid, tooltip: commonTooltip,
+        legend: { show: false }, dataLabels: { enabled: false },
+        fill: { opacity: 1 },
+      };
+    } else if (type === 'stacked') {
+      options = {
+        series: series.map(item => ({ name: item.name, data: rows.map(row => Math.round(item.value(row))) })),
+        chart: {
+          type: 'bar', height: 216, stacked: true, toolbar: { show: false }, zoom: { enabled: false },
+          animations: { enabled: true, speed: 400 },
+          fontFamily: '-apple-system, Helvetica Neue, sans-serif', background: 'transparent', offsetY: -22,
+        },
+        plotOptions: { bar: { columnWidth: activePeriod === 12 ? '55%' : '45%', borderRadius: 3, borderRadiusApplication: 'end', borderRadiusWhenStacked: 'last' } },
+        colors: series.map(item => item.color),
+        xaxis: commonXAxis, yaxis: commonYAxis, grid: commonGrid, tooltip: commonTooltip,
+        legend: { show: false }, dataLabels: { enabled: false },
+        fill: { opacity: 1 },
+      };
+    } else {
+      options = {
+        series: series.map(item => ({ name: item.name, data: rows.map(row => Math.round(item.value(row) * 10) / 10) })),
+        chart: {
+          type: 'area', height: 216, toolbar: { show: false }, zoom: { enabled: false },
+          animations: { enabled: true, speed: 500 },
+          fontFamily: '-apple-system, Helvetica Neue, sans-serif', background: 'transparent', offsetY: -22,
+          events: {}
+        },
+        stroke: { curve: straight ? 'straight' : 'smooth', width: 2 },
+        fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: fill ? 0.18 : 0, opacityTo: 0.01, stops: [0, 100] } },
+        colors: series.map(item => item.color),
+        markers: { size: 4, strokeWidth: 2, strokeColors: series.map(item => item.color), fillColor: '#fff', hover: { size: 6 } },
+        xaxis: commonXAxis, yaxis: commonYAxis, grid: commonGrid, tooltip: commonTooltip,
+        legend: { show: false }, dataLabels: { enabled: false },
+      };
+    }
+    const chart = new ApexCharts(el, options);
+    chart.render();
+    apexChartInstances.push(chart);
+  });
+  pendingApexCharts = [];
+}
+
 function renderStackedCard({ title, rows }) {
+  const chartId = `apex-stacked-${++apexChartCounter}`;
   const series = [
     { name:'MG', color:'#5b8fd9', value:row => row.amount * .55 },
     { name:'FlatFee', color:'#8d83d8', value:row => row.amount * .25 },
     { name:'RS', color:'#e8b15b', value:row => row.amount * .20 },
   ];
-  const max = Math.max(...rows.map(row => row.amount), 1) * 1.15;
-  const bars = rows.map(row => {
-    const tooltip = series.map(item => `${item.name} ${Math.round(item.value(row)).toLocaleString('ko-KR')}원`).join('&#10;');
-    return `<div class="bar-group" data-tooltip="${row.month} · 총 ${row.amount.toLocaleString('ko-KR')}원&#10;${tooltip}">
-      <div class="stacked-dynamic" style="height:${row.amount / max * 100}%">${series.map(item =>
-        `<i class="stack-segment" style="height:${item.value(row) / row.amount * 100}%;background:${item.color}"></i>`
-      ).join('')}</div>
-    </div>`;
-  }).join('');
-  const labels = rows.map(row => `<span>${row.month.slice(2).replace('.', '/')}</span>`).join('');
-  const axis = [max, max * .75, max * .5, max * .25, 0].map(value => `<span>${compactNumber(value, true)}</span>`).join('');
+  pendingApexCharts.push({ id: chartId, rows, series, money: true, type: 'stacked' });
   const legend = series.map(item => `<span class="legend-item"><i class="legend-dot" style="background:${item.color}"></i>${item.name}</span>`).join('');
-  const tableSeries = [
-    { name:'총 거래액', value:row => row.amount },
-    ...series,
-  ];
+  const tableSeries = [{ name:'총 거래액', value:row => row.amount }, ...series];
   return `<article class="chart-card">
     <div class="chart-content">
       <div class="chart-main">
         <div class="chart-head"><div class="chart-title">${title}</div><div class="legend">${legend}</div></div>
-        <div class="chart-body"><div class="bar-chart dynamic-bars period-${activePeriod}">
-          <div class="y-axis">${axis}</div><div class="bar-plot">${bars}</div><div class="bar-labels">${labels}</div>
-        </div></div>
+        <div class="chart-body chart-body-line"><div id="${chartId}"></div></div>
       </div>
       ${renderChartValueTable(rows, tableSeries, { money:true })}
     </div>
@@ -948,18 +991,41 @@ function renderAnalysisCharts() {
   const container = document.getElementById('analysis-charts');
   container.classList.add('chart-table-grid');
   if (activeAnalysis === 'growth') {
-    container.innerHTML =
-      renderBarCard({
-        title:'월별 신규 가입 추이', rows, unit:'개사',
-        series:[
-          { name:'제작사', color:'#285ea8', value:row => row.producer },
-          { name:'플랫폼사', color:'#9bbce4', value:row => row.platform },
-        ],
-      }) +
-      renderLineCard({
-        title:'월별 콘텐츠 등록 추이', rows, fill:true,
-        series:[{ name:'신규 콘텐츠', color:'#a06f00', unit:'편', value:row => row.content }],
-      });
+    if (growthMode === 'cumulative') {
+      let cumProducer = 0, cumPlatform = 0, cumContent = 0;
+      const cumulativeRows = monthlyKpiData.map(row => {
+        cumProducer += row.producer;
+        cumPlatform += row.platform;
+        cumContent += row.content;
+        return { ...row, cumProducer, cumPlatform, cumContent };
+      }).slice(-activePeriod);
+      container.innerHTML =
+        renderLineCard({
+          title:'신규 가입 누적 추이', rows: cumulativeRows, fill:true, straight:true,
+          series:[
+            { name:'제작사', color:'#285ea8', unit:'개사', value:row => row.cumProducer },
+            { name:'플랫폼사', color:'#4fa987', unit:'개사', value:row => row.cumPlatform },
+          ],
+        }) +
+        renderLineCard({
+          title:'콘텐츠 등록 누적 추이', rows: cumulativeRows, fill:true, straight:true,
+          series:[{ name:'누적 콘텐츠', color:'#a06f00', unit:'편', value:row => row.cumContent }],
+        });
+    } else {
+      container.innerHTML =
+        renderBarCard({
+          title:'월별 신규 가입 추이', rows, unit:'개사',
+          series:[
+            { name:'제작사', color:'#285ea8', value:row => row.producer },
+            { name:'플랫폼사', color:'#4fa987', value:row => row.platform },
+          ],
+        }) +
+        renderLineCard({
+          title:'월별 콘텐츠 등록 추이', rows, fill:true,
+          series:[{ name:'신규 콘텐츠', color:'#a06f00', unit:'편', value:row => row.content }],
+        });
+    }
+    initPendingApexCharts();
     return;
   }
   if (activeAnalysis === 'conversion') {
@@ -991,6 +1057,7 @@ function renderAnalysisCharts() {
           formatNumerator:value => `${value}건`, formatDenominator:value => `${value}편`, formatResult:value => `${value.toFixed(1)}%`,
         },
       });
+    initPendingApexCharts();
     return;
   }
   container.innerHTML =
@@ -1011,6 +1078,11 @@ function renderAnalysisCharts() {
       title:'RS 정산 금액 추이', rows, money:true, fill:true, wide:true, drilldownId:'rs-chart-values',
       series:[{ name:'RS 정산액', color:'#4fa987', value:row => row.amount * .20 }],
     });
+  initPendingApexCharts();
+  document.getElementById('rs-chart-values')?.addEventListener('click', e => {
+    const row = e.target.closest('.rs-drilldown-row');
+    if (row) showRsDrilldown(row.dataset.month);
+  });
 }
 
 function renderMonthlyTable() {
@@ -1039,6 +1111,11 @@ function renderMonthlyTable() {
   </tr>`;
 }
 
+function updateGrowthToggleVisibility() {
+  const toggle = document.getElementById('growth-mode-toggle');
+  if (toggle) toggle.style.display = activeAnalysis === 'growth' ? 'flex' : 'none';
+}
+
 document.querySelectorAll('.analysis-tab').forEach(button => {
   button.addEventListener('click', () => {
     activeAnalysis = button.dataset.analysis;
@@ -1047,8 +1124,17 @@ document.querySelectorAll('.analysis-tab').forEach(button => {
       item.classList.toggle('active', active);
       item.setAttribute('aria-selected', String(active));
     });
+    updateGrowthToggleVisibility();
     renderAnalysisCharts();
   });
+});
+
+document.getElementById('growth-mode-toggle').addEventListener('click', event => {
+  const btn = event.target.closest('.growth-mode-btn');
+  if (!btn) return;
+  growthMode = btn.dataset.mode;
+  document.querySelectorAll('.growth-mode-btn').forEach(b => b.classList.toggle('active', b === btn));
+  renderAnalysisCharts();
 });
 
 document.getElementById('analysis-period-select').addEventListener('change', event => {
@@ -1095,6 +1181,7 @@ analysisCharts.addEventListener('click', event => {
   showRsDrilldown(point.dataset.drilldownMonth);
 });
 
+updateGrowthToggleVisibility();
 renderAnalysisCharts();
 renderMonthlyTable();
 </script>
