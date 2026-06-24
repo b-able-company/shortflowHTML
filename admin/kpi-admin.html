@@ -968,8 +968,6 @@ function renderAnalysisCharts() {
         title:'월별 거래 완료 수', rows, unit:'건',
         series:[{ name:'거래 완료', color:'#4fa987', value:row => row.success }],
         tableSeries:[
-          { name:'First Run', color:'#4fa987', unit:'건', value:row => row.firstRun },
-          { name:'Second Run', color:'#9bc9b7', unit:'건', value:row => row.secondRun },
           { name:'거래 완료', color:'#23845d', unit:'건', value:row => row.success },
         ],
       }) +
