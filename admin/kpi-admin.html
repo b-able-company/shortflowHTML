@@ -91,7 +91,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .legend-dot { width: 7px; height: 7px; border-radius: 2px; }
 .chart-content { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr); }
 .chart-main { min-width: 0; }
-.chart-body { height: 232px; padding: 16px 30px 18px; }
+.chart-body { height: 232px; padding: 16px 48px 18px; }
 .chart-values { height: 282px; background: #faf9f6; overflow-y: auto; }
 .chart-values table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .chart-values th { position: sticky; top: 0; z-index: 1; height: 34px; padding: 0 18px; background: #f2f1ed; color: #999; font-size: 11px; font-weight: 500; text-align: right; }
@@ -208,10 +208,11 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .table-year-select:focus { border-color: #99968e; }
 .table-wrap { margin: 0; border: 0; border-radius: 0; overflow-x: auto; }
 .data-table { width: 100%; min-width: 1320px; table-layout: fixed; border-collapse: collapse; white-space: nowrap; }
-.data-table th { height: 42px; padding: 0 14px; background: #f5f4f0; border: 0; border-bottom: 1px solid #e3e1db; color: #888; font-size: 12px; font-weight: 500; text-align: right; }
+.data-table th { height: 42px; padding: 0 20px; background: #f5f4f0; border: 0; border-bottom: 1px solid #e3e1db; color: #888; font-size: 12px; font-weight: 500; text-align: right; }
 .data-table th, .data-table td { width: 10%; }
-.data-table th:first-child, .data-table td:first-child { text-align: left; }
-.data-table td { height: 46px; padding: 0 14px; border: 0; border-bottom: 1px solid #e3e1db; color: #555; font-size: 13.5px; text-align: right; }
+.data-table th:first-child, .data-table td:first-child { text-align: left; padding-left: 28px; width: 6%; }
+.data-table th:last-child, .data-table td:last-child { padding-right: 28px; }
+.data-table td { height: 46px; padding: 0 20px; border: 0; border-bottom: 1px solid #e3e1db; color: #555; font-size: 13.5px; text-align: right; }
 .data-table tbody tr:hover { background: #fcfbf8; }
 .data-table tfoot td { border-bottom: 0; background: #fff; color: #222; font-weight: 650; }
 .up { color: #23845d !important; font-weight: 600; }

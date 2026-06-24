@@ -91,7 +91,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .focus-page-btn:disabled { color: #ccc; cursor: default; border-color: #ecebe7; }
 
 /* SETTLEMENT STATUS */
-.settlement-stage { padding: 18px 22px; display: flex; align-items: center; gap: 16px; cursor: pointer; text-decoration: none; border: none !important; transition: transform .15s ease, box-shadow .15s ease; }
+.settlement-stage { padding: 24px 22px; display: flex; align-items: center; gap: 16px; cursor: pointer; text-decoration: none; border: none !important; transition: transform .15s ease, box-shadow .15s ease; }
 .settlement-stage:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
 .settlement-stage > div:last-child { flex: 1; display: flex; flex-direction: column; gap: 3px; }
 .settlement-stage.scheduled { background: #fff; }
@@ -327,7 +327,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
       <a class="settlement-stage card" href="settlement-admin.html#pending" style="text-decoration:none">
         <div class="settlement-stage-icon"><i class="ti ti-hourglass"></i></div>
         <div>
-          <div class="settlement-stage-label">정산 대기</div>
+          <div class="settlement-stage-label">정산 예정 처리</div>
           <div class="settlement-stage-value">7<small>건</small></div>
         </div>
         <i class="ti ti-chevron-right settlement-chevron"></i>
@@ -335,7 +335,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
       <a class="settlement-stage scheduled card" href="settlement-admin.html#scheduled" style="text-decoration:none">
         <div class="settlement-stage-icon"><i class="ti ti-calendar-dollar"></i></div>
         <div>
-          <div class="settlement-stage-label">정산 예정</div>
+          <div class="settlement-stage-label">정산 진행중</div>
           <div class="settlement-stage-value">5<small>건</small></div>
         </div>
         <i class="ti ti-chevron-right settlement-chevron"></i>
