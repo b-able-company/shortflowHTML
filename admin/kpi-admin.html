@@ -78,10 +78,10 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .analysis-tab.active { background: #1a1a18; color: #fff; font-weight: 600; }
 .analysis-period { position: relative; }
 .analysis-period::after { content: ""; position: absolute; right: 12px; top: 50%; width: 6px; height: 6px; border-right: 1.5px solid #777; border-bottom: 1.5px solid #777; transform: translateY(-68%) rotate(45deg); pointer-events: none; }
-.analysis-period-select { width: 94px; height: 30px; padding: 0 32px 0 12px; border: 1px solid #dcdad4; border-radius: 7px; background: #fff; color: #444; font-family: inherit; font-size: 12.5px; font-weight: 550; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; }
+.analysis-period-select { width: 94px; height: 32px; padding: 0 28px 0 8px; border: 1px solid #dcdad4; border-radius: 7px; background: #fff; color: #444; font-family: inherit; font-size: 12.5px; font-weight: 550; text-align: center; text-align-last: center; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; }
 .analysis-period-select:focus { border-color: #99968e; }
 .growth-mode-toggle { display: flex; align-items: center; border: 1px solid #dcdad4; border-radius: 7px; overflow: hidden; }
-.growth-mode-btn { height: 30px; padding: 0 13px; border: 0; background: transparent; color: #777; font-family: inherit; font-size: 12.5px; font-weight: 550; cursor: pointer; white-space: nowrap; }
+.growth-mode-btn { width: 58px; height: 30px; padding: 0 16px; border: 0; background: transparent; color: #777; font-family: inherit; font-size: 12.5px; font-weight: 550; cursor: pointer; white-space: nowrap; }
 .growth-mode-btn:hover { color: #333; }
 .growth-mode-btn.active { background: #1a1a18; color: #fff; }
 .chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; padding: 28px; align-items: start; min-width: 860px; }
@@ -212,7 +212,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .table-title { color: #333; font-size: 15px; font-weight: 600; }
 .table-period-control { position: relative; display: flex; align-items: center; }
 .table-period-control::after { content: ""; position: absolute; right: 12px; top: 50%; width: 6px; height: 6px; border-right: 1.5px solid #777; border-bottom: 1.5px solid #777; transform: translateY(-68%) rotate(45deg); pointer-events: none; }
-.table-year-select { width: 92px; height: 30px; padding: 0 32px 0 12px; border: 1px solid #dcdad4; border-radius: 7px; background: #fff; color: #444; font-family: inherit; font-size: 12.5px; font-weight: 550; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; }
+.table-year-select { width: 92px; height: 32px; padding: 0 32px 0 12px; border: 1px solid #dcdad4; border-radius: 7px; background: #fff; color: #444; font-family: inherit; font-size: 12.5px; font-weight: 550; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; }
 .table-year-select:focus { border-color: #99968e; }
 .table-wrap { margin: 0; border: 0; border-radius: 0; overflow-x: auto; }
 .data-table { width: 100%; min-width: 1320px; table-layout: fixed; border-collapse: collapse; white-space: nowrap; }

@@ -115,11 +115,11 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:13px;color:var(--tex
 /* Table */
 .table-wrap{background:var(--surface);border:1px solid #deded9;border-radius:10px;overflow:auto;box-shadow:0 1px 2px rgba(0,0,0,.025)}
 table{width:100%;min-width:900px;border-collapse:collapse;table-layout:fixed}
-colgroup .c-dt{width:132px}
-colgroup .c-admin{width:128px}
-colgroup .c-type{width:160px}
-colgroup .c-target{width:155px}
-colgroup .c-desc{}
+colgroup .c-dt{width:14%}
+colgroup .c-admin{width:10%}
+colgroup .c-type{width:15%}
+colgroup .c-target{width:14%}
+colgroup .c-desc{width:47%}
 thead{position:sticky;top:0;z-index:3}
 thead tr{background:#f7f7f4}
 th{font-size:10.5px;font-weight:600;color:#777;text-align:left;padding:11px 16px;border-bottom:1px solid #deded9;letter-spacing:.025em}
@@ -128,20 +128,14 @@ tbody tr:last-child td{border-bottom:none}
 tbody tr{transition:background .12s}
 tbody tr:hover td{background:#fafaf7}
 tbody tr.day-start:not(:first-child) td{border-top:1px solid #d5d5cf}
-.dt-date{font-size:11.5px;font-weight:550;color:#4d4d4d}
-.dt-time{margin-top:3px;font-size:11px;color:var(--text-muted);font-variant-numeric:tabular-nums}
-.admin-name{font-size:12px;font-weight:500}
-.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:550;padding:4px 8px;border-radius:6px;white-space:nowrap}
-.badge::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.58}
-.b-content{background:#E6F1FB;color:#0C447C}
-.b-user{background:#EEEDFE;color:#3C3489}
-.b-workflow{background:#E1F5EE;color:#085041}
-.b-settle{background:#FAEEDA;color:#633806}
-.b-credit{background:#FAECE7;color:#712B13}
-.b-perf{background:#EAF3DE;color:#27500A}
-.b-modify{background:#FBEAF0;color:#72243E}
-.target{display:inline;font-size:11px;color:#666;font-family:'SF Mono','Fira Code',monospace;background:transparent;padding:0;border:0;border-radius:0;letter-spacing:-.01em}
-.desc{font-size:12px;line-height:1.5;color:#333}
+.dt-date{display:inline;font-size:12.5px;font-weight:550;color:#4d4d4d;white-space:nowrap}
+.dt-time{display:inline;margin:0 0 0 6px;font-size:12.5px;font-weight:550;color:#4d4d4d;font-variant-numeric:tabular-nums;white-space:nowrap}
+.admin-name{font-size:13px;font-weight:500}
+.badge{display:inline;font-size:13px;font-weight:500;padding:0;border-radius:0;background:transparent;color:#444;white-space:nowrap}
+.badge::before{display:none}
+.b-content,.b-user,.b-workflow,.b-settle,.b-credit,.b-perf,.b-modify{background:transparent;color:#444}
+.target{display:inline;font-size:12px;color:#666;font-family:'SF Mono','Fira Code',monospace;background:transparent;padding:0;border:0;border-radius:0;letter-spacing:-.01em}
+.desc{font-size:13px;line-height:1.5;color:#333}
 .desc-title{font-weight:550;color:#1d1d1d}
 .desc-sub{color:var(--text-secondary);margin-left:5px}
 .empty-state{display:none;text-align:center;padding:54px 20px;color:var(--text-secondary)}
@@ -154,12 +148,13 @@ tbody tr.day-start:not(:first-child) td{border-top:1px solid #d5d5cf}
 .pag-btn:hover{background:transparent;color:#111}
 .pag-btn:disabled{cursor:default}
 .pag-btn:disabled:hover{background:transparent;color:#aaa}
-.pag-btn.on{background:transparent;color:#111;border-bottom:1px solid #111;font-weight:650}
+.pag-btn.on{background:rgba(0,0,0,.07);color:#111;border-bottom:0;border-radius:2px;font-weight:650}
 .pag-dots{min-width:22px;text-align:center;font-size:12px;color:var(--text-muted)}
 
 /* Restrained audit-search treatment */
 .filter-area{padding:0;background:#fff;border:0;border-radius:0;margin-bottom:22px;box-shadow:none;backdrop-filter:none}
-.filter-head{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid #dfe1e6}
+.filter-head{position:relative;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:0}
+.filter-head::after{content:"";position:absolute;left:28px;right:28px;bottom:0;height:1px;background:#dfe1e6}
 .filter-title{font-size:13px;font-weight:650;color:#222}
 .filter-note{font-size:11px;color:#9297a2}
 .filter-row{gap:28px;min-height:72px;padding:17px 28px}
@@ -171,6 +166,12 @@ tbody tr.day-start:not(:first-child) td{border-top:1px solid #d5d5cf}
 .search-box input:focus{border-color:#666;box-shadow:0 0 0 2px rgba(0,0,0,.06)}
 .native-select{height:38px;min-width:170px;border:1px solid #cfd3da;border-radius:2px;background:#fff;padding-left:12px;font-size:12px}
 .native-select:hover,.native-select:focus{background:#fff;border-color:#777;box-shadow:none}
+#cs-action{display:none}
+.action-filter-group{display:flex;align-items:center;gap:8px}
+.action-detail-select{min-width:230px}
+.action-detail-select:disabled{background:#f5f5f5;color:#aaa;cursor:not-allowed}
+.admin-filter-wrap{display:flex;align-items:center;margin-left:18px;padding-left:26px;position:relative}
+.admin-filter-wrap::before{content:"";position:absolute;left:0;top:7px;bottom:7px;width:1px;background:#ddd}
 .date-range{height:38px;border:0;border-radius:0;background:transparent;overflow:visible;gap:28px}
 .date-range:hover{background:transparent;border-color:transparent}
 .date-tilde{margin:0 -18px;color:#8f949e;font-size:12px}
@@ -178,7 +179,7 @@ tbody tr.day-start:not(:first-child) td{border-top:1px solid #d5d5cf}
 .date-range input[type=date]:focus{border-color:#666!important}
 .date-range input[type=date]+input{position:relative}
 .quick-ranges{display:flex;align-items:center;margin-left:8px;border:1px solid #cfd3da}
-.quick-range{height:36px;padding:0 13px;border:0;border-right:1px solid #dedede;background:#fff;color:#555;font:inherit;font-size:11.5px;cursor:pointer;white-space:nowrap}
+.quick-range{width:64px;height:36px;padding:0 8px;border:0;border-right:1px solid #dedede;background:#fff;color:#555;font:inherit;font-size:11.5px;cursor:pointer;white-space:nowrap}
 .quick-range:last-child{border-right:0}
 .quick-range:hover{background:#f4f4f4;color:#111}
 .quick-range.active{background:#222;color:#fff}
@@ -187,18 +188,19 @@ tbody tr.day-start:not(:first-child) td{border-top:1px solid #d5d5cf}
 .cs-btn:hover,.cs-btn.open{background:#fff;border-color:#777;box-shadow:none}
 .cs-btn.has-value{background:#fff;color:#222;border-color:#666}
 .cs-dropdown{top:calc(100% + 2px);border:1px solid #aaa;border-radius:2px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12)}
-.filter-actions{display:flex;align-items:center;justify-content:center;gap:8px;padding:22px 28px 24px;border-top:1px solid #dfe1e6;background:#fff}
-.btn-search,.btn-reset{height:38px;min-width:112px;padding:0 18px;border:0;border-radius:1px;font-size:12px;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.filter-actions{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;padding:22px 28px 24px;border-top:0;background:#fff}
+.filter-actions::before{content:"";position:absolute;left:28px;right:28px;top:0;height:1px;background:#dfe1e6}
+.btn-search,.btn-reset{height:38px;min-width:148px;padding:0 24px;border:0;border-radius:1px;font-size:12.5px;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
 .btn-search{background:#222;color:#fff;font-weight:600}
 .btn-search:hover{background:#000}
-.btn-reset{background:#a9abb0;color:#fff}
-.btn-reset:hover{background:#93969c;color:#fff}
+.btn-reset{background:#fff;color:#666;border:1px solid #cfcfcf}
+.btn-reset:hover{background:#f7f7f7;color:#222;border-color:#aaa}
 .active-tags{display:none}
 .active-tags:not(:empty){padding:10px 18px 10px 138px;border-top:1px solid #eceef1}
 .filter-tag{background:#f1f1f1;color:#333;border:1px solid #d8d8d8;font-size:11px;padding:4px 9px;border-radius:2px}
 .table-wrap{border:0;border-top:1px solid #d8d8d8;border-bottom:1px solid #d8d8d8;border-radius:0;box-shadow:none}
-thead tr{background:#f1f1f1}
-th{font-size:11px;font-weight:650;color:#555;padding:12px 24px;border-bottom-color:#d8d8d8}
+thead tr{background:#fff}
+th{font-size:12px;font-weight:650;color:#444;padding:12px 24px;border-bottom-color:#cfcfcf}
 td{padding-left:24px;padding-right:24px}
 
 @media(max-width:980px){
@@ -206,6 +208,9 @@ td{padding-left:24px;padding-right:24px}
   .filter-row{padding-left:14px;padding-right:14px}
   .filter-label{width:auto;flex-basis:auto}
   .filter-controls{width:100%;flex-wrap:wrap}
+  .action-filter-group{flex-wrap:wrap}
+  .admin-filter-wrap{margin-left:0;padding-left:0}
+  .admin-filter-wrap::before{display:none}
   .search-box{width:100%;max-width:none}
   .active-tags:not(:empty){padding-left:0}
 }
@@ -296,6 +301,22 @@ td{padding-left:24px;padding-right:24px}
       <div class="filter-row">
         <div class="filter-label">상세 필터</div>
         <div class="filter-controls">
+          <div class="action-filter-group">
+            <select class="native-select" id="action-category" aria-label="액션 대분류">
+              <option value="">전체 액션 유형</option>
+              <option value="user">유저</option>
+              <option value="content">콘텐츠</option>
+              <option value="modify">수정 요청</option>
+              <option value="company">제작사</option>
+              <option value="workflow">워크플로우</option>
+              <option value="settlement">정산</option>
+              <option value="performance-credit">성과·크레딧</option>
+            </select>
+            <select class="native-select action-detail-select" id="action-detail" aria-label="세부 액션" disabled>
+              <option value="">세부 액션 전체</option>
+            </select>
+          </div>
+
           <!-- 액션 유형 -->
           <div class="custom-select" id="cs-action">
             <button class="cs-btn" onclick="toggleDropdown('cs-action')">
@@ -352,12 +373,14 @@ td{padding-left:24px;padding-right:24px}
             </div>
           </div>
 
-          <select class="native-select" id="admin-filter" aria-label="관리자 필터">
-            <option value="">전체 관리자</option>
-            <option value="박관리">박관리</option>
-            <option value="김리자">김리자</option>
-            <option value="이운영">이운영</option>
-          </select>
+          <div class="admin-filter-wrap">
+            <select class="native-select" id="admin-filter" aria-label="관리자 필터">
+              <option value="">전체 관리자</option>
+              <option value="박관리">박관리</option>
+              <option value="김리자">김리자</option>
+              <option value="이운영">이운영</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -380,7 +403,7 @@ td{padding-left:24px;padding-right:24px}
     </div>
 
     <div class="result-bar">
-      <div class="result-meta">총 <strong id="result-count">12</strong>건의 이력</div>
+      <div class="result-meta">총 <strong id="result-count">20</strong>건의 이력</div>
       <div class="result-guide">최신 처리 순</div>
     </div>
 
@@ -403,6 +426,14 @@ td{padding-left:24px;padding-right:24px}
           <tr><td><div class="dt-date">2026-05-12</div><div class="dt-time">15:22</div></td><td><span class="admin-name">이운영</span></td><td><span class="badge b-perf">퍼포먼스 입력</span></td><td><span class="target">CONTENT #29</span></td><td class="desc">퍼포먼스 데이터 입력 — 2026-04 지표</td></tr>
           <tr><td><div class="dt-date">2026-05-12</div><div class="dt-time">14:10</div></td><td><span class="admin-name">박관리</span></td><td><span class="badge b-content">콘텐츠 거절</span></td><td><span class="target">CONTENT #41</span></td><td class="desc">콘텐츠 거절 — Bloom Again (사유: 메타데이터 누락)</td></tr>
           <tr><td><div class="dt-date">2026-05-12</div><div class="dt-time">11:30</div></td><td><span class="admin-name">김리자</span></td><td><span class="badge b-workflow">묶음 거래 컨펌</span></td><td><span class="target">WORKFLOW #20</span></td><td class="desc">묶음 거래 컨펌 전송 — Midnight Tokyo Drift · BUNDLE</td></tr>
+          <tr><td><div class="dt-date">2026-05-11</div><div class="dt-time">17:40</div></td><td><span class="admin-name">박관리</span></td><td><span class="badge b-content">콘텐츠 수정</span></td><td><span class="target">CONTENT #37</span></td><td class="desc">콘텐츠 수정 — 포스터 및 시놉시스 정보 변경</td></tr>
+          <tr><td><div class="dt-date">2026-05-11</div><div class="dt-time">15:12</div></td><td><span class="admin-name">김리자</span></td><td><span class="badge b-user">유저 거절</span></td><td><span class="target">USER #104</span></td><td class="desc">유저 거절 — 사업자등록증 확인 불가</td></tr>
+          <tr><td><div class="dt-date">2026-05-11</div><div class="dt-time">13:25</div></td><td><span class="admin-name">이운영</span></td><td><span class="badge b-settle">계약 생성</span></td><td><span class="target">CONTRACT #27</span></td><td class="desc">계약 생성 — Blue Moon Studio 라이선스 계약</td></tr>
+          <tr><td><div class="dt-date">2026-05-11</div><div class="dt-time">10:08</div></td><td><span class="admin-name">박관리</span></td><td><span class="badge b-content">콘텐츠 승인</span></td><td><span class="target">CONTENT #36</span></td><td class="desc">콘텐츠 승인 — 비밀의 계절</td></tr>
+          <tr><td><div class="dt-date">2026-05-10</div><div class="dt-time">16:48</div></td><td><span class="admin-name">김리자</span></td><td><span class="badge b-workflow">메타데이터 권한</span></td><td><span class="target">WORKFLOW #11</span></td><td class="desc">메타데이터 권한 부여 — Rakuten Viki</td></tr>
+          <tr><td><div class="dt-date">2026-05-10</div><div class="dt-time">14:02</div></td><td><span class="admin-name">이운영</span></td><td><span class="badge b-credit">크레딧 충전</span></td><td><span class="target">COMPANY #12</span></td><td class="desc">크레딧 충전 — Wave Pictures +$8,500</td></tr>
+          <tr><td><div class="dt-date">2026-05-10</div><div class="dt-time">11:36</div></td><td><span class="admin-name">박관리</span></td><td><span class="badge b-modify">수정 요청 거절</span></td><td><span class="target">CONTENT #33</span></td><td class="desc">수정 요청 거절 — 변경 근거 자료 누락</td></tr>
+          <tr><td><div class="dt-date">2026-05-09</div><div class="dt-time">09:44</div></td><td><span class="admin-name">김리자</span></td><td><span class="badge b-workflow">컨펌 전송</span></td><td><span class="target">WORKFLOW #9</span></td><td class="desc">컨펌 전송 — Spring Again → ShortMax</td></tr>
         </tbody>
       </table>
       <div class="empty-state" id="empty-state">
@@ -420,28 +451,84 @@ td{padding-left:24px;padding-right:24px}
 const state={'cs-action':[]};
 const defaults={'cs-action':'액션 유형'};
 const defaultDates={from:'2026-05-01',to:'2026-05-14'};
-const PAGE_SIZE=10;
+const PAGE_SIZE=15;
 let currentPage=1;
 let filteredRows=[];
 
 const actionValues={
-  '유저 승인':'user-approve',
-  '유저 거절':'user-reject',
-  '유저 정보수정':'user-edit',
-  '콘텐츠 승인':'content-approve',
-  '콘텐츠 거절':'content-reject',
-  '콘텐츠 수정':'content-edit',
-  '콘텐츠 삭제':'content-delete',
-  '메타데이터 권한':'meta-grant',
-  '컨펌 전송':'confirm-send',
-  '거래 종료':'wf-close',
-  '계약 생성':'ct-create',
-  '크레딧 충전':'credit-charge',
-  '수정 요청 거절':'modify-reject',
-  'RS 데이터 입력':'rs-input',
-  '퍼포먼스 입력':'perf-input',
-  '묶음 거래 컨펌':'bundle'
+  '유저 승인':'USER_APPROVE',
+  '유저 거절':'USER_REJECT',
+  '유저 정보수정':'USER_UPDATE',
+  '콘텐츠 승인':'CONTENT_APPROVE',
+  '콘텐츠 거절':'CONTENT_REJECT',
+  '콘텐츠 수정':'CONTENT_UPDATE',
+  '콘텐츠 삭제':'CONTENT_DELETE',
+  '메타데이터 권한':'WORKFLOW_METADATA_GRANT',
+  '컨펌 전송':'WORKFLOW_CONFIRM_SEND',
+  '거래 종료':'WORKFLOW_CLOSE',
+  '계약 생성':'CONTRACT_CREATE',
+  '크레딧 충전':'CREDIT_CHARGE',
+  '수정 요청 거절':'MODIFY_REQUEST_REJECT',
+  'RS 데이터 입력':'SETTLEMENT_ITEM_CREATE',
+  '퍼포먼스 입력':'PERFORMANCE_UPSERT',
+  '묶음 거래 컨펌':'WORKFLOW_BUNDLE_CONFIRM_SEND'
 };
+const actionGroups={
+  user:[
+    ['USER_APPROVE','유저 승인'],
+    ['USER_REJECT','유저 거절'],
+    ['USER_UPDATE','유저 정보 수정'],
+    ['USER_SET_SETUP_REQUIRED','초기 설정 필요 상태 변경']
+  ],
+  content:[
+    ['CONTENT_UPDATE','콘텐츠 수정'],
+    ['CONTENT_APPROVE','콘텐츠 승인'],
+    ['CONTENT_REJECT','콘텐츠 거절'],
+    ['CONTENT_DELETE','콘텐츠 삭제'],
+    ['CONTENT_TRANSFER','콘텐츠 이관'],
+    ['CONTENT_TRANSLATION_SAVE','번역 저장'],
+    ['CONTENT_EPISODE_SAVE','에피소드 저장'],
+    ['CONTENT_TEASER_SAVE','티저 저장'],
+    ['CONTENT_RELEASE_ADD','릴리즈 추가'],
+    ['CONTENT_RELEASE_UPDATE','릴리즈 수정'],
+    ['CONTENT_RELEASE_DELETE','릴리즈 삭제'],
+    ['CONTENT_BABLE_ONLY','Bable 전용 설정'],
+    ['CONTENT_PLATFORM_VISIBLE','플랫폼 공개 설정']
+  ],
+  modify:[
+    ['MODIFY_REQUEST_APPROVE','수정 요청 승인'],
+    ['MODIFY_REQUEST_REJECT','수정 요청 거절']
+  ],
+  company:[['COMPANY_UPDATE','회사 정보 수정']],
+  workflow:[
+    ['WORKFLOW_CONFIRM_SEND','컨펌 전송'],
+    ['WORKFLOW_METADATA_GRANT','메타데이터 권한 부여'],
+    ['WORKFLOW_CLOSE','워크플로우 종료'],
+    ['WORKFLOW_CONTRACT_UPLOAD','계약서 업로드'],
+    ['WORKFLOW_CONTRACT_DELETE','계약서 삭제'],
+    ['WORKFLOW_BUNDLE_CONFIRM_SEND','묶음 거래 컨펌 전송']
+  ],
+  settlement:[
+    ['CONTRACT_CREATE','계약 생성'],
+    ['CONTRACT_UPDATE','계약 수정'],
+    ['CONTRACT_DELETE','계약 삭제'],
+    ['SETTLEMENT_ITEM_CREATE','정산 항목 생성'],
+    ['SETTLEMENT_ITEM_UPDATE','정산 항목 수정'],
+    ['SETTLEMENT_ITEM_DELETE','정산 항목 삭제'],
+    ['SETTLEMENT_BATCH_SCHEDULE','정산 배치 예약'],
+    ['SETTLEMENT_BATCH_COMPLETE','정산 배치 완료']
+  ],
+  'performance-credit':[
+    ['PERFORMANCE_UPSERT','성과 데이터 등록·수정'],
+    ['CREDIT_CHARGE','크레딧 충전'],
+    ['CREDIT_ADJUST','크레딧 조정']
+  ]
+};
+const actionCategoryByValue=Object.fromEntries(
+  Object.entries(actionGroups).flatMap(([category,actions])=>
+    actions.map(([value])=>[value,category])
+  )
+);
 
 function toggleDropdown(id){
   const dd=document.getElementById('dd-'+id.replace('cs-',''));
@@ -545,9 +632,24 @@ function resetAll(){
   document.getElementById('date-to').value=defaultDates.to;
   document.getElementById('log-search').value='';
   document.getElementById('admin-filter').value='';
+  document.getElementById('action-category').value='';
+  updateActionDetails();
   clearQuickRange();
   renderTags();
   filterLogs();
+}
+
+function updateActionDetails(){
+  const category=document.getElementById('action-category').value;
+  const detail=document.getElementById('action-detail');
+  detail.innerHTML='<option value="">세부 액션 전체</option>';
+  (actionGroups[category]||[]).forEach(([value,label])=>{
+    const option=document.createElement('option');
+    option.value=value;
+    option.textContent=label;
+    detail.appendChild(option);
+  });
+  detail.disabled=!category;
 }
 
 function formatDate(date){
@@ -588,6 +690,7 @@ function enhanceRows(){
     row.dataset.date=date;
     row.dataset.admin=admin;
     row.dataset.action=actionValues[action]||'';
+    row.dataset.category=actionCategoryByValue[row.dataset.action]||'';
     row.dataset.search=cells[4].textContent.toLowerCase();
 
     const desc=cells[4].textContent.trim();
@@ -610,17 +713,19 @@ function enhanceRows(){
 function filterLogs(){
   const query=document.getElementById('log-search').value.trim().toLowerCase();
   const admin=document.getElementById('admin-filter').value;
+  const category=document.getElementById('action-category').value;
+  const action=document.getElementById('action-detail').value;
   const from=document.getElementById('date-from').value;
   const to=document.getElementById('date-to').value;
-  const actions=state['cs-action'];
 
   filteredRows=[...document.querySelectorAll('#log-body tr')].filter(row=>{
     const matchesQuery=!query||row.dataset.search.includes(query);
     const matchesAdmin=!admin||row.dataset.admin===admin;
-    const matchesAction=!actions.length||actions.includes(row.dataset.action);
+    const matchesCategory=!category||row.dataset.category===category;
+    const matchesAction=!action||row.dataset.action===action;
     const matchesFrom=!from||row.dataset.date>=from;
     const matchesTo=!to||row.dataset.date<=to;
-    return matchesQuery&&matchesAdmin&&matchesAction&&matchesFrom&&matchesTo;
+    return matchesQuery&&matchesAdmin&&matchesCategory&&matchesAction&&matchesFrom&&matchesTo;
   });
 
   currentPage=1;
@@ -652,7 +757,6 @@ function renderPage(){
 function renderPagination(pageCount){
   const wrap=document.getElementById('pagination');
   wrap.innerHTML='';
-  if(filteredRows.length<=PAGE_SIZE)return;
 
   const addButton=(label,page,active=false,disabled=false)=>{
     const button=document.createElement('button');
@@ -669,7 +773,9 @@ function renderPagination(pageCount){
   };
 
   addButton('이전',Math.max(1,currentPage-1),false,currentPage===1);
-  for(let page=1;page<=pageCount;page++)addButton(String(page),page,page===currentPage);
+  for(let page=1;page<=10;page++){
+    addButton(String(page),page,page===currentPage,page>pageCount);
+  }
   addButton('다음',Math.min(pageCount,currentPage+1),false,currentPage===pageCount);
 }
 
@@ -683,6 +789,7 @@ document.getElementById('date-to').addEventListener('change',clearQuickRange);
 document.querySelectorAll('.quick-range').forEach(button=>{
   button.addEventListener('click',()=>setQuickRange(button.dataset.range,button));
 });
+document.getElementById('action-category').addEventListener('change',updateActionDetails);
 document.getElementById('log-search').addEventListener('keydown',event=>{
   if(event.key==='Enter')filterLogs();
 });
