@@ -93,6 +93,12 @@ function webContentGroups(form) {
       ph: '언어별 제목',
       hint: '현재 사이트 언어로 표시되는 제목입니다. 원제와 언어가 다른 경우 번역 제목을 입력해주세요.'
     }, {
+      key: 'episodes',
+      label: '총 회차 수',
+      kind: 'num',
+      suffix: '화',
+      cols: 6
+    }, {
       key: 'logline',
       label: '로그라인',
       kind: 'text',
@@ -171,23 +177,17 @@ function webContentGroups(form) {
       cols: 6,
       divider: true
     }, {
-      key: 'episodes',
-      label: '총 회차 수',
-      kind: 'num',
-      suffix: '화',
-      cols: 4
-    }, {
       key: 'runtime',
       label: '회차당 러닝타임',
       kind: 'text',
       ph: '예: 1~3분, 90초',
-      cols: 4,
+      cols: 6,
       divider: true
     }, {
       key: 'totalRuntime',
       label: '총 러닝타임 (분)',
       kind: 'num',
-      cols: 4,
+      cols: 6,
       divider: true
     }]
   }, {

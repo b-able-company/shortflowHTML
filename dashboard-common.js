@@ -3,6 +3,9 @@
     tab: 'workflow',
     workflowSearch: '',
     messageTypeFilter: 'all',
+    contractFilter: 'all',
+    contractSearch: '',
+    contractPage: 1,
     selectedWorkflowId: null,
     selectedMessageId: 'm1',
   };

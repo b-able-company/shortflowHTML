@@ -248,6 +248,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
       <a class="ni" href="workflow-admin.html#turnkey">턴키 거래</a>
     </div>
     <a class="ni" href="turnkey-intent-admin.html"><i class="ti ti-clipboard-list"></i> 턴키 판매 의사</a>
+    <a class="ni" href="platform-contract-admin.html"><i class="ti ti-file-dollar"></i> 플랫폼 계약 관리</a>
     <div class="nav-label">운영</div>
     <a class="ni" href="settlement-admin.html"><i class="ti ti-receipt"></i> 정산</a>
     <div class="sub">
@@ -384,18 +385,18 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 
 <script>
 const focusItems = [
-  { type:'content', tag:'콘텐츠 승인', tagClass:'ft-content', title:'The Last Letter', meta:'NextWave Studios · 시놉시스 + 번역 완료', age:'48h 경과' },
-  { type:'revision', tag:'수정 요청', tagClass:'ft-revision', title:'Reverse Cinderella', meta:'OneTake Media · 회차 수 변경', age:'28h 경과' },
-  { type:'inquiry', tag:'구매의사', tagClass:'ft-inquiry', title:'Midnight Tokyo Drift', meta:'ShortReel (US) · PLATFORM', age:'4h 경과' },
-  { type:'user', tag:'유저 승인', tagClass:'ft-user', title:'김은진 (NextWave Studios)', meta:'PRODUCTION · OWNER', age:'2h 경과' },
-  { type:'content', tag:'콘텐츠 승인', tagClass:'ft-content', title:'Bloom Again', meta:'PaperLens · 번역 미완료', age:'1h 경과' },
-  { type:'user', tag:'유저 승인', tagClass:'ft-user', title:'박소연 (Blueframe Studio)', meta:'PRODUCTION · MEMBER', age:'55m 경과' },
-  { type:'revision', tag:'수정 요청', tagClass:'ft-revision', title:'Secret Contract', meta:'Studio M · 포스터 교체', age:'42m 경과' },
-  { type:'inquiry', tag:'구매의사', tagClass:'ft-inquiry', title:'Love Reset', meta:'DramaBox · BUNDLE', age:'35m 경과' },
-  { type:'content', tag:'콘텐츠 승인', tagClass:'ft-content', title:'After the Rain', meta:'Moonlight Pictures · 검토 요청', age:'22m 경과' },
-  { type:'user', tag:'유저 승인', tagClass:'ft-user', title:'최민석 (PlayShort)', meta:'PLATFORM · OWNER', age:'18m 경과' },
-  { type:'revision', tag:'수정 요청', tagClass:'ft-revision', title:'Seven Days', meta:'NextWave Studios · 러닝타임 변경', age:'12m 경과' },
-  { type:'inquiry', tag:'구매의사', tagClass:'ft-inquiry', title:'My Boss Is a Vampire', meta:'ReelNow · TURNKEY', age:'8m 경과' },
+  { type:'content', tag:'콘텐츠 승인', tagClass:'ft-content', title:'별빛 로맨스 ( 제작사: 왓챠 엔터테인먼트 )', meta:'시놉시스 + 번역 완료', age:'48h 경과' },
+  { type:'revision', tag:'수정 요청', tagClass:'ft-revision', title:'역전 신데렐라 ( 제작사: 원테이크 미디어 )', meta:'회차 수 변경', age:'28h 경과' },
+  { type:'inquiry', tag:'구매의사', tagClass:'ft-inquiry', title:'도쿄 미드나잇 / 쇼트릴 US', meta:'PLATFORM', age:'4h 경과' },
+  { type:'user', tag:'유저 승인', tagClass:'ft-user', title:'김은진 ( 넥스트웨이브 스튜디오 )', meta:'PRODUCTION · OWNER', age:'2h 경과' },
+  { type:'content', tag:'콘텐츠 승인', tagClass:'ft-content', title:'다시 피는 봄 ( 제작사: 페이퍼렌즈 )', meta:'번역 미완료', age:'1h 경과' },
+  { type:'user', tag:'유저 승인', tagClass:'ft-user', title:'박소연 ( 블루프레임 스튜디오 )', meta:'PRODUCTION · MEMBER', age:'55m 경과' },
+  { type:'revision', tag:'수정 요청', tagClass:'ft-revision', title:'비밀 계약 ( 제작사: 스튜디오 엠 )', meta:'포스터 교체', age:'42m 경과' },
+  { type:'inquiry', tag:'구매의사', tagClass:'ft-inquiry', title:'러브 리셋 / 드라마박스', meta:'BUNDLE', age:'35m 경과' },
+  { type:'content', tag:'콘텐츠 승인', tagClass:'ft-content', title:'비 온 뒤 맑음 ( 제작사: 문라이트 픽처스 )', meta:'검토 요청', age:'22m 경과' },
+  { type:'user', tag:'유저 승인', tagClass:'ft-user', title:'최민석 ( 플레이쇼트 )', meta:'PLATFORM · OWNER', age:'18m 경과' },
+  { type:'revision', tag:'수정 요청', tagClass:'ft-revision', title:'세븐 데이즈 ( 제작사: 넥스트웨이브 스튜디오 )', meta:'러닝타임 변경', age:'12m 경과' },
+  { type:'inquiry', tag:'구매의사', tagClass:'ft-inquiry', title:'뱀파이어 상사님 / 릴나우', meta:'TURNKEY', age:'8m 경과' },
 ];
 
 let activeFocusFilter = 'all';

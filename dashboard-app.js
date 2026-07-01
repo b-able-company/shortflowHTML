@@ -4,7 +4,8 @@
   const { renderShell } = window.ShortflowNav;
   const { renderWorkflowView } = window.ShortflowWorkflow;
   const { renderMessagesView } = window.ShortflowMessages;
-  const dashboardTabs = new Set(['workflow', 'messages']);
+  const { renderContractsView } = window.ShortflowContracts;
+  const dashboardTabs = new Set(['workflow', 'contracts', 'messages']);
 
   function syncTabFromUrl() {
     const tab = new URLSearchParams(window.location.search).get('tab');
@@ -14,7 +15,9 @@
   function render() {
     const view = appState.tab === 'messages'
       ? renderMessagesView(appState)
-      : renderWorkflowView(appState, { dashboardKind: 'platform' });
+      : appState.tab === 'contracts'
+        ? renderContractsView(appState)
+        : renderWorkflowView(appState, { dashboardKind: 'platform' });
     root.innerHTML = renderShell(view, {
       activePage: 'platform-dashboard',
       activeTab: appState.tab,
@@ -44,6 +47,21 @@
     if (workflowButton) {
       appState.selectedWorkflowId = workflowButton.dataset.workflowId;
       render();
+      return;
+    }
+
+    const contractFilterButton = event.target.closest('[data-contract-filter]');
+    if (contractFilterButton) {
+      appState.contractFilter = contractFilterButton.dataset.contractFilter;
+      appState.contractPage = 1;
+      render();
+      return;
+    }
+
+    const contractPageButton = event.target.closest('[data-contract-page]');
+    if (contractPageButton && !contractPageButton.disabled) {
+      appState.contractPage = Number(contractPageButton.dataset.contractPage) || 1;
+      render();
     }
   });
 
@@ -52,6 +70,17 @@
       appState.workflowSearch = event.target.value;
       render();
       const nextInput = root.querySelector('.content-search');
+      if (nextInput) {
+        nextInput.focus();
+        nextInput.setSelectionRange(nextInput.value.length, nextInput.value.length);
+      }
+    }
+
+    if (event.target.matches('.contract-search')) {
+      appState.contractSearch = event.target.value;
+      appState.contractPage = 1;
+      render();
+      const nextInput = root.querySelector('.contract-search');
       if (nextInput) {
         nextInput.focus();
         nextInput.setSelectionRange(nextInput.value.length, nextInput.value.length);

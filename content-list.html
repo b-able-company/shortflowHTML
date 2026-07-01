@@ -156,34 +156,36 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 16px;
-      margin-top: 72px;
+      gap: 4px;
+      min-height: 34px;
+      margin-top: 24px;
     }
     .page-btn {
-      min-width: 18px;
-      height: 24px;
+      min-width: 28px;
+      height: 28px;
+      padding: 0 8px;
       border: 0;
+      border-radius: 7px;
       background: transparent;
-      color: #6b7280;
+      color: var(--muted);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
-      font-weight: 400;
+      font-size: 12px;
+      font-weight: 700;
       cursor: pointer;
-      padding: 0;
+      font-family: inherit;
     }
-    .page-btn svg {
-      width: 14px;
-      height: 14px;
-      stroke-width: 2.1;
+    .page-btn:hover:not(:disabled) {
+      background: #f1f0ec;
+      color: var(--ink);
     }
     .page-btn.active {
-      color: var(--orange);
-      font-weight: 700;
+      background: rgba(26, 26, 24, 0.09);
+      color: var(--ink);
     }
     .page-btn:disabled {
-      color: #c0c5cf;
+      color: #b8bec8;
       cursor: default;
     }
     .card { min-width: 0; position: relative; }
@@ -348,7 +350,7 @@
     @media (max-width: 720px) {
       .filter-line { grid-template-columns: 1fr; gap: 8px; }
       .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; }
-      .pagination { margin-top: 56px; gap: 14px; }
+      .pagination { margin-top: 24px; gap: 4px; }
       .content-list-main { padding-bottom: 24px; }
       .poster-title { font-size: 22px; }
     }
@@ -566,15 +568,13 @@
         pagination.innerHTML = '';
         return;
       }
-      const prevIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>';
-      const nextIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
       const pages = Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => `
         <button class="page-btn ${page === state.page ? 'active' : ''}" type="button" data-page="${page}" aria-label="${page}페이지" ${page === state.page ? 'aria-current="page"' : ''}>${page}</button>
       `).join('');
       pagination.innerHTML = `
-        <button class="page-btn" type="button" data-page="${state.page - 1}" aria-label="이전 페이지" ${state.page === 1 ? 'disabled' : ''}>${prevIcon}</button>
+        <button class="page-btn" type="button" data-page="${state.page - 1}" aria-label="이전 페이지" ${state.page === 1 ? 'disabled' : ''}>‹</button>
         ${pages}
-        <button class="page-btn" type="button" data-page="${state.page + 1}" aria-label="다음 페이지" ${state.page === totalPages ? 'disabled' : ''}>${nextIcon}</button>
+        <button class="page-btn" type="button" data-page="${state.page + 1}" aria-label="다음 페이지" ${state.page === totalPages ? 'disabled' : ''}>›</button>
       `;
     }
 

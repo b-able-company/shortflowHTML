@@ -59,10 +59,16 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .chip:hover { border-color: #bbb; }
 .chip.on { background: #1a1a18; color: #fff; border-color: #1a1a18; }
 .csub { font-size: 9.5px; margin-left: 2px; background: #FAEEDA; color: #854F0B; padding: 0 4px; border-radius: 6px; }
-.srch { margin-left: auto; position: relative; display: flex; align-items: center; }
+.toolbar-actions { width: 100%; display: flex; align-items: center; gap: 7px; margin-top: 3px; }
+.srch { position: relative; display: flex; align-items: center; flex: 1; min-width: 0; }
 .srch i { position: absolute; left: 7px; font-size: 12px; color: #bbb; pointer-events: none; }
-.srch input { font-size: 11.5px; padding: 4px 8px 4px 25px; border: 0.5px solid #e0dfd9; border-radius: 7px; background: #f7f6f2; width: 170px; outline: none; color: #1a1a18; }
+.srch input { font-size: 11.5px; padding: 6px 8px 6px 25px; border: 0.5px solid #e0dfd9; border-radius: 7px; background: #f7f6f2; width: 100%; min-width: 0; outline: none; color: #1a1a18; }
 .srch input:focus { border-color: #bbb; background: #fff; }
+.content-create-btn { height: 29px; padding: 0 12px; border: 0; border-radius: 7px; background: #1a1a18; color: #fff; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; gap: 5px; flex-shrink: 0; font-size: 11.5px; font-weight: 550; white-space: nowrap; cursor: pointer; }
+.content-create-btn:hover { background: #000; }
+.content-create-section { margin: 18px; padding: 18px; border: 0.5px solid #e8e6e0; border-radius: 9px; background: #fff; }
+.content-create-section + .content-create-section { margin-top: 0; }
+.content-create-title { margin-bottom: 14px; padding-bottom: 9px; border-bottom: 0.5px solid #eeede8; color: #444; font-size: 12px; font-weight: 600; }
 
 /* ── TABLE ── */
 .tscroll { flex: 1; overflow-y: auto; background: #fff; }
@@ -449,6 +455,7 @@ td { padding: 9px 12px; vertical-align: middle; }
       <a class="ni" href="workflow-admin.html#turnkey">턴키 거래</a>
     </div>
     <a class="ni" href="turnkey-intent-admin.html"><i class="ti ti-clipboard-list"></i> 턴키 판매 의사</a>
+    <a class="ni" href="platform-contract-admin.html"><i class="ti ti-file-dollar"></i> 플랫폼 계약 관리</a>
     <div class="nav-label">운영</div>
     <a class="ni" href="settlement-admin.html"><i class="ti ti-receipt"></i> 정산</a>
     <div class="sub">
@@ -491,7 +498,10 @@ td { padding: 9px 12px; vertical-align: middle; }
           <div class="chip" onclick="setChip(this,'APPROVED')">APPROVED</div>
           <div class="chip" onclick="setChip(this,'REJECTED')">REJECTED</div>
           <div class="chip" onclick="setChip(this,'DRAFT')">DRAFT</div>
-          <div class="srch"><i class="ti ti-search"></i><input placeholder="콘텐츠명, 제작사" /></div>
+          <div class="toolbar-actions">
+            <div class="srch"><i class="ti ti-search"></i><input placeholder="콘텐츠명, 제작사" /></div>
+            <button class="content-create-btn" type="button" onclick="showNewContent()"><i class="ti ti-plus"></i> 콘텐츠 생성</button>
+          </div>
         </div>
         <div class="tscroll">
           <table>
@@ -502,6 +512,87 @@ td { padding: 9px 12px; vertical-align: middle; }
       </div>
       <div class="dp" id="dp-contents">
         <div class="empty" id="dp-empty"><i class="ti ti-file-text"></i><p>콘텐츠를 선택해주세요</p></div>
+        <div id="content-new" style="display:none;flex-direction:column;height:100%;">
+          <div class="dh">
+            <div class="dh-top">
+              <div>
+                <div class="dh-title">새 콘텐츠 생성</div>
+                <div class="dh-sub">관리자가 제작사를 지정해 콘텐츠 초안을 생성합니다.</div>
+              </div>
+              <button class="btn-close" type="button" onclick="closeNewContent()"><i class="ti ti-x"></i></button>
+            </div>
+          </div>
+          <div class="dbody">
+            <section class="content-create-section">
+              <div class="content-create-title">기본 정보</div>
+              <div class="form-grid">
+                <div class="fg">
+                  <label>제작사 *</label>
+                  <select id="new-content-company">
+                    <option value="">제작사 선택</option>
+                    <option>NextWave Studios</option>
+                    <option>OneTake Media</option>
+                    <option>PaperLens</option>
+                    <option>BrightFrame</option>
+                  </select>
+                </div>
+                <div class="fg">
+                  <label>콘텐츠명 *</label>
+                  <input id="new-content-title" type="text" placeholder="콘텐츠명을 입력하세요" />
+                </div>
+                <div class="fg">
+                  <label>원제</label>
+                  <input id="new-content-original-title" type="text" placeholder="원제를 입력하세요" />
+                </div>
+                <div class="fg">
+                  <label>제작연도</label>
+                  <input id="new-content-year" type="number" min="1900" max="2100" value="2026" />
+                </div>
+                <div class="fg">
+                  <label>장르</label>
+                  <input id="new-content-genre" type="text" placeholder="예: 드라마, 로맨스" />
+                </div>
+                <div class="fg">
+                  <label>언어</label>
+                  <select id="new-content-language">
+                    <option>한국어</option>
+                    <option>영어</option>
+                    <option>일본어</option>
+                    <option>중국어</option>
+                  </select>
+                </div>
+              </div>
+            </section>
+            <section class="content-create-section">
+              <div class="content-create-title">관리 정보</div>
+              <div class="form-grid">
+                <div class="fg">
+                  <label>생성 상태</label>
+                  <select id="new-content-status">
+                    <option value="DRAFT">DRAFT · 임시저장</option>
+                    <option value="PENDING">PENDING · 검토대기</option>
+                    <option value="APPROVED">APPROVED · 승인</option>
+                  </select>
+                </div>
+                <div class="fg">
+                  <label>제작 상태</label>
+                  <select id="new-content-production-status">
+                    <option>제작 중</option>
+                    <option>제작 완료</option>
+                  </select>
+                </div>
+                <div class="fg" style="grid-column:1/-1">
+                  <label>내부 메모</label>
+                  <textarea id="new-content-note" placeholder="관리자 생성 사유나 전달사항을 입력하세요"></textarea>
+                </div>
+              </div>
+            </section>
+          </div>
+          <div class="savebar">
+            <button class="btn btn-cancel" type="button" onclick="closeNewContent()">취소</button>
+            <button class="btn btn-save" type="button" onclick="createAdminContent()"><i class="ti ti-device-floppy"></i> 콘텐츠 생성</button>
+          </div>
+        </div>
         <div id="dp-detail" style="display:none;flex-direction:column;height:100%;">
           <div class="dh">
             <div class="dh-top">
@@ -1310,11 +1401,90 @@ function renderTable() {
   });
 }
 
+function showNewContent() {
+  selId = null;
+  renderTable();
+  document.getElementById('dp-empty').style.display = 'none';
+  document.getElementById('dp-detail').style.display = 'none';
+  document.getElementById('content-new').style.display = 'flex';
+  document.getElementById('new-content-title').focus();
+}
+
+function closeNewContent() {
+  document.getElementById('content-new').style.display = 'none';
+  document.getElementById('dp-empty').style.display = '';
+}
+
+function resetNewContentForm() {
+  document.getElementById('new-content-company').value = '';
+  document.getElementById('new-content-title').value = '';
+  document.getElementById('new-content-original-title').value = '';
+  document.getElementById('new-content-year').value = String(new Date().getFullYear());
+  document.getElementById('new-content-genre').value = '';
+  document.getElementById('new-content-language').value = '한국어';
+  document.getElementById('new-content-status').value = 'DRAFT';
+  document.getElementById('new-content-production-status').value = '제작 중';
+  document.getElementById('new-content-note').value = '';
+}
+
+function createAdminContent() {
+  const company = document.getElementById('new-content-company').value;
+  const title = document.getElementById('new-content-title').value.trim();
+  if (!company || !title) {
+    alert('제작사와 콘텐츠명을 입력해주세요.');
+    return;
+  }
+
+  const now = new Date();
+  const pad = value => String(value).padStart(2, '0');
+  const date = `${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())}`;
+  const status = document.getElementById('new-content-status').value;
+  const nextId = Math.max(0, ...contents.map(content => content.id)) + 1;
+  const content = {
+    id: nextId,
+    title,
+    origTitle: document.getElementById('new-content-original-title').value.trim() || title,
+    company,
+    genre: document.getElementById('new-content-genre').value.trim() || '미지정',
+    year: document.getElementById('new-content-year').value || String(now.getFullYear()),
+    status,
+    date,
+    poster: '',
+    lang: document.getElementById('new-content-language').value,
+    eps: 0,
+    runtime: 0,
+    totalRuntime: 0,
+    startPoint: 1,
+    rating: '미지정',
+    type: '오리지널',
+    mediaCategory: 'DRAMA',
+    coProduction: 'SOLO',
+    exclusive: false,
+    pstatus: document.getElementById('new-content-production-status').value,
+    driveFolderUrl: '',
+    rejectReason: '',
+    bookmarks: [],
+    timeline: [{
+      dot: status === 'APPROVED' ? 'green' : status === 'PENDING' ? 'blue' : 'gray',
+      text: `관리자가 콘텐츠를 ${status === 'DRAFT' ? '초안으로 생성함' : status === 'PENDING' ? '생성 후 검토 대기로 설정함' : '생성 후 승인함'}`,
+      time: formatContentAdminDate(now),
+    }],
+    mails: [],
+    adminNote: document.getElementById('new-content-note').value.trim(),
+  };
+
+  contents.unshift(content);
+  releaseHistories[nextId] = [];
+  resetNewContentForm();
+  selectContent(nextId);
+}
+
 function selectContent(id) {
   selId = id;
   renderTable();
   const c = contents.find(x => x.id === id);
 
+  document.getElementById('content-new').style.display = 'none';
   document.getElementById('d-poster').innerHTML = posterHtml(c, 'lg');
   document.getElementById('d-title').textContent = c.title;
   document.getElementById('d-sub').textContent = `${c.company} · ${c.genre} · ${c.year}`;
@@ -1372,6 +1542,7 @@ function closeDetail() {
   selId = null;
   renderTable();
   document.getElementById('dp-empty').style.display = '';
+  document.getElementById('content-new').style.display = 'none';
   document.getElementById('dp-detail').style.display = 'none';
 }
 

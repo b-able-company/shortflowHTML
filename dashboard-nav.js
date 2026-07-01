@@ -22,6 +22,7 @@
 
   const platformDashboardTabs = [
     { id: 'workflow', label: '워크플로우', href: 'shortflow-dashboard.html?tab=workflow' },
+    { id: 'contracts', label: '계약 현황', href: 'shortflow-dashboard.html?tab=contracts' },
     { id: 'messages', label: '문의함', href: 'shortflow-dashboard.html?tab=messages' },
   ];
 
