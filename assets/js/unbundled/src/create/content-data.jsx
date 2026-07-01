@@ -138,6 +138,7 @@ const INITIAL_FORM = {
   startPoint: 3,
   ageRating: 'FIFTEEN',
   contentType: 'ORIGINAL',
+  reviewNote: '',
   crew: [
     { language: 'KO', director: '김도윤', writer: '이세아', cast: '한지민 · 박서준' },
     emptyCrew('EN'),

@@ -1353,6 +1353,7 @@ function ReviewGroup(_ref11) {
 }
 function WebReviewSection(_ref12) {
   var form = _ref12.form,
+    set = _ref12.set,
     baseLanguage = _ref12.baseLanguage,
     rightsConfirmed = _ref12.rightsConfirmed,
     onRightsChange = _ref12.onRightsChange,
@@ -1418,7 +1419,7 @@ function WebReviewSection(_ref12) {
       fontFamily: t.sans,
       fontSize: 13,
       fontWeight: 500,
-      color: '#555A63',
+      color: t.ink,
       lineHeight: 1.5
     }
   }, "\uAC80\uD1A0 \uC694\uCCAD\uC744 \uC804\uC1A1\uD558\uAE30 \uC804\uC5D0 \uC785\uB825\uD55C \uB0B4\uC6A9\uC744 \uB9C8\uC9C0\uB9C9\uC73C\uB85C \uD655\uC778\uD574\uC8FC\uC138\uC694.")), /*#__PURE__*/React.createElement(ReviewGroup, {
@@ -1627,19 +1628,80 @@ function WebReviewSection(_ref12) {
     value: "".concat(freeSubs.length, "\uAC1C"),
     ok: freeSubs.length > 0,
     t: t
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 12,
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 9,
+      minWidth: 0
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      width: 6,
+      height: 6,
+      borderRadius: 999,
+      background: ACCENT,
+      flexShrink: 0
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: t.sans,
+      fontSize: 12.5,
+      fontWeight: 700,
+      letterSpacing: 0.4,
+      color: t.inkMute,
+      whiteSpace: 'nowrap'
+    }
+  }, "\uAD00\uB9AC\uC790 \uC804\uB2EC \uBA54\uBAA8")), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: t.sans,
+      fontSize: 11.5,
+      color: t.inkFaint,
+      whiteSpace: 'nowrap'
+    }
+  }, "\uC120\uD0DD")), /*#__PURE__*/React.createElement("textarea", {
+    value: form.reviewNote || '',
+    onChange: function onChange(event) {
+      return set('reviewNote', event.target.value);
+    },
+    placeholder: "\uAC80\uD1A0 \uC2DC \uCC38\uACE0\uD560 \uB0B4\uC6A9\uC774 \uC788\uC73C\uBA74 \uC785\uB825\uD574\uC8FC\uC138\uC694.",
+    rows: 4,
+    style: {
+      width: '100%',
+      minHeight: 110,
+      resize: 'vertical',
+      border: "0.5px solid ".concat(t.line),
+      borderRadius: 12,
+      background: t.surface,
+      padding: '13px 14px',
+      outline: 'none',
+      fontFamily: t.sans,
+      fontSize: 13,
+      fontWeight: 450,
+      color: t.ink,
+      lineHeight: 1.55
+    }
   })), /*#__PURE__*/React.createElement("div", {
     style: {
       padding: '20px 22px',
       border: "0.5px solid ".concat(t.line),
       borderRadius: 12,
-      background: t.surface
+      background: '#F8F7F3'
     }
   }, /*#__PURE__*/React.createElement("p", {
     style: {
       margin: '0 0 7px',
       fontFamily: t.sans,
       fontSize: 13.5,
-      color: '#555A63',
+      color: t.ink,
       fontWeight: 450,
       lineHeight: 1.65
     }
@@ -1654,7 +1716,7 @@ function WebReviewSection(_ref12) {
     style: {
       fontFamily: t.sans,
       fontSize: 13.5,
-      color: '#555A63',
+      color: t.ink,
       fontWeight: 450,
       lineHeight: 1.65
     }

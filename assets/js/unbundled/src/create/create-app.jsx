@@ -25,10 +25,10 @@ function StepRail({ steps, current, maxReached, onJump, t }) {
             <span style={{
               width: 26, height: 26, borderRadius: 999, flexShrink: 0, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               fontFamily: t.mono, fontSize: 12, fontWeight: 700,
-              background: active ? ACCENT : done ? t.surface : t.surfaceAlt,
+              background: active ? ACCENT : done ? t.surfaceAlt : t.surfaceAlt,
               color: active ? '#FFF7EE' : done ? ACCENT : t.inkFaint, border: active ? 'none' : `0.5px solid ${t.line}`,
             }}>
-              {done ? <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={ACCENT} strokeWidth="3"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg> : s.k}
+              {done ? <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={t.inkFaint} strokeWidth="3"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg> : s.k}
             </span>
             <span>
               <div style={{ fontFamily: t.sans, fontSize: 13.5, fontWeight: active ? 700 : 600, color: active ? t.ink : t.inkMute, letterSpacing: -0.2 }}>{s.label}</div>
@@ -63,7 +63,7 @@ function AIIntroModal({ onLater, onTry, t }) {
         <div style={{ flex: 1, padding: '22px 28px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
           <h2 style={{ margin: 0, fontFamily: t.sans, fontSize: 18, fontWeight: 500, color: t.ink, letterSpacing: -0.45, textAlign: 'center' }}>AI 기획서 자동 추출</h2>
           <p style={{ margin: '9px 0 0', maxWidth: 300, fontFamily: t.sans, fontSize: 13.5, color: t.inkMute, lineHeight: 1.65, textAlign: 'center' }}>
-            기획안을 업로드하면 제목, 시놉시스, 장르 등 주요 정보가 자동으로 입력됩니다.
+            기획안을 업로드하면 제목, 시놉시스, 장르 등<br />주요 정보가 자동으로 입력됩니다.
           </p>
           <div style={{ display: 'flex', width: '100%', marginTop: 'auto' }}>
             <button

@@ -571,7 +571,7 @@ function ReviewGroup({ title, children, t }) {
   );
 }
 
-function WebReviewSection({ form, baseLanguage, rightsConfirmed, onRightsChange, t }) {
+function WebReviewSection({ form, set, baseLanguage, rightsConfirmed, onRightsChange, t }) {
   const lang = baseLanguage || LANG_LIST[0];
   const langLabel = LANG_SHORT[lang] || lang;
   const tr = form.translations.find((x) => x.language === lang) || {};
@@ -644,12 +644,43 @@ function WebReviewSection({ form, baseLanguage, rightsConfirmed, onRightsChange,
           <ReviewRow label="무료회차 자막" value={`${freeSubs.length}개`} ok={freeSubs.length > 0} t={t} />
         </ReviewGroup>
 
-        <div style={{ padding: '20px 22px', border: `0.5px solid ${t.line}`, borderRadius: 12, background: t.surface }}>
-          <p style={{ margin: '0 0 7px', fontFamily: t.sans, fontSize: 13.5, color: '#555A63', fontWeight: 450, lineHeight: 1.65 }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 12 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 9, minWidth: 0 }}>
+              <span style={{ width: 6, height: 6, borderRadius: 999, background: ACCENT, flexShrink: 0 }} />
+              <span style={{ fontFamily: t.sans, fontSize: 12.5, fontWeight: 700, letterSpacing: 0.4, color: t.inkMute, whiteSpace: 'nowrap' }}>관리자 전달 메모</span>
+            </div>
+            <span style={{ fontFamily: t.sans, fontSize: 11.5, color: t.inkFaint, whiteSpace: 'nowrap' }}>선택</span>
+          </div>
+          <textarea
+            value={form.reviewNote || ''}
+            onChange={(event) => set('reviewNote', event.target.value)}
+            placeholder="검토 시 참고할 내용이 있으면 입력해주세요."
+            rows={4}
+            style={{
+              width: '100%',
+              minHeight: 110,
+              resize: 'vertical',
+              border: `0.5px solid ${t.line}`,
+              borderRadius: 12,
+              background: t.surface,
+              padding: '13px 14px',
+              outline: 'none',
+              fontFamily: t.sans,
+              fontSize: 13,
+              fontWeight: 450,
+              color: t.ink,
+              lineHeight: 1.55,
+            }}
+          />
+        </div>
+
+        <div style={{ padding: '20px 22px', border: `0.5px solid ${t.line}`, borderRadius: 12, background: '#F8F7F3' }}>
+          <p style={{ margin: '0 0 7px', fontFamily: t.sans, fontSize: 13.5, color: t.ink, fontWeight: 450, lineHeight: 1.65 }}>
             당사는 해당 작품의 저작권자 또는 적법한 권리자이며, 작품을 이용허락할 수 있는 권한을 보유하고 있음을 보증합니다.
           </p>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-            <span style={{ fontFamily: t.sans, fontSize: 13.5, color: '#555A63', fontWeight: 450, lineHeight: 1.65 }}>
+            <span style={{ fontFamily: t.sans, fontSize: 13.5, color: t.ink, fontWeight: 450, lineHeight: 1.65 }}>
               또한 이를 입증할 자료를 제출할 수 있음을 확인합니다.
             </span>
             <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginLeft: 'auto', cursor: 'pointer' }}>

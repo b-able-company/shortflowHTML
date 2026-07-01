@@ -86,16 +86,16 @@ function Stepper({ steps, current, maxReached, onJump, t }) {
                 width: 30, height: 30, borderRadius: 999, flexShrink: 0,
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                 fontFamily: t.mono, fontSize: 13, fontWeight: 600,
-                background: active ? ACCENT : done ? ACCENT_SOFT : t.surfaceAlt,
+                background: active ? ACCENT : done ? t.surfaceAlt : t.surfaceAlt,
                 color: active ? '#FFF7EE' : done ? ACCENT : t.inkFaint,
                 border: active ? 'none' : `0.5px solid ${t.line}`
               }}>
-                {done ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ACCENT} strokeWidth="3"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg> : s.k}
+                {done ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={t.inkFaint} strokeWidth="3"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg> : s.k}
               </span>
               <span style={{ fontFamily: t.sans, fontSize: 12.5, fontWeight: active ? 600 : 500, color: active ? t.ink : done ? t.inkMute : t.inkFaint, letterSpacing: -0.2, whiteSpace: 'nowrap' }}>{s.label}</span>
             </button>
             {i < steps.length - 1 &&
-            <div style={{ flex: 1, height: 2, background: s.k < current ? ACCENT_SOFT : t.line, borderRadius: 2, margin: '15px 16px 0' }} />
+            <div style={{ flex: 1, height: 2, background: s.k < current ? t.lineStrong : t.line, borderRadius: 2, margin: '15px 16px 0' }} />
             }
           </React.Fragment>
         );
@@ -127,7 +127,7 @@ function SideRail({ steps, current, maxReached, onJump, t }) {
               color: active ? '#FFF7EE' : done ? ACCENT : t.inkFaint,
               border: active ? 'none' : `0.5px solid ${t.line}`
             }}>
-              {done ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={ACCENT} strokeWidth="3"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg> : s.k}
+              {done ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={t.inkFaint} strokeWidth="3"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg> : s.k}
             </span>
             <span>
               <div style={{ fontFamily: t.sans, fontSize: 13.5, fontWeight: active ? 700 : 600, color: active ? t.ink : t.inkMute, letterSpacing: -0.2 }}>{s.label}</div>

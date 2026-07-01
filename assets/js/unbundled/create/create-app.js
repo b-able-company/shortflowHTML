@@ -79,7 +79,7 @@ function StepRail(_ref) {
         fontFamily: t.mono,
         fontSize: 12,
         fontWeight: 700,
-        background: active ? ACCENT : done ? t.surface : t.surfaceAlt,
+        background: active ? ACCENT : done ? t.surfaceAlt : t.surfaceAlt,
         color: active ? '#FFF7EE' : done ? ACCENT : t.inkFaint,
         border: active ? 'none' : "0.5px solid ".concat(t.line)
       }
@@ -88,7 +88,7 @@ function StepRail(_ref) {
       height: "12",
       viewBox: "0 0 24 24",
       fill: "none",
-      stroke: ACCENT,
+      stroke: t.inkFaint,
       strokeWidth: "3"
     }, /*#__PURE__*/React.createElement("path", {
       d: "M20 6L9 17l-5-5",
@@ -222,7 +222,7 @@ function AIIntroModal(_ref2) {
       lineHeight: 1.65,
       textAlign: 'center'
     }
-  }, "\uAE30\uD68D\uC548\uC744 \uC5C5\uB85C\uB4DC\uD558\uBA74 \uC81C\uBAA9, \uC2DC\uB189\uC2DC\uC2A4, \uC7A5\uB974 \uB4F1 \uC8FC\uC694 \uC815\uBCF4\uAC00 \uC790\uB3D9\uC73C\uB85C \uC785\uB825\uB429\uB2C8\uB2E4."), /*#__PURE__*/React.createElement("div", {
+  }, "\uAE30\uD68D\uC548\uC744 \uC5C5\uB85C\uB4DC\uD558\uBA74 \uC81C\uBAA9, \uC2DC\uB189\uC2DC\uC2A4, \uC7A5\uB974 \uB4F1", /*#__PURE__*/React.createElement("br", null), "\uC8FC\uC694 \uC815\uBCF4\uAC00 \uC790\uB3D9\uC73C\uB85C \uC785\uB825\uB429\uB2C8\uB2E4."), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       width: '100%',

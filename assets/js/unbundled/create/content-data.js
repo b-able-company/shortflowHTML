@@ -264,6 +264,7 @@ var INITIAL_FORM = {
   startPoint: 3,
   ageRating: 'FIFTEEN',
   contentType: 'ORIGINAL',
+  reviewNote: '',
   crew: [{
     language: 'KO',
     director: '김도윤',

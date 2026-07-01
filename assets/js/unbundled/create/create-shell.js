@@ -256,7 +256,7 @@ function Stepper(_ref3) {
         fontFamily: t.mono,
         fontSize: 13,
         fontWeight: 600,
-        background: active ? ACCENT : done ? ACCENT_SOFT : t.surfaceAlt,
+        background: active ? ACCENT : done ? t.surfaceAlt : t.surfaceAlt,
         color: active ? '#FFF7EE' : done ? ACCENT : t.inkFaint,
         border: active ? 'none' : "0.5px solid ".concat(t.line)
       }
@@ -265,7 +265,7 @@ function Stepper(_ref3) {
       height: "14",
       viewBox: "0 0 24 24",
       fill: "none",
-      stroke: ACCENT,
+      stroke: t.inkFaint,
       strokeWidth: "3"
     }, /*#__PURE__*/React.createElement("path", {
       d: "M20 6L9 17l-5-5",
@@ -284,7 +284,7 @@ function Stepper(_ref3) {
       style: {
         flex: 1,
         height: 2,
-        background: s.k < current ? ACCENT_SOFT : t.line,
+        background: s.k < current ? t.lineStrong : t.line,
         borderRadius: 2,
         margin: '15px 16px 0'
       }
@@ -348,7 +348,7 @@ function SideRail(_ref4) {
       height: "13",
       viewBox: "0 0 24 24",
       fill: "none",
-      stroke: ACCENT,
+      stroke: t.inkFaint,
       strokeWidth: "3"
     }, /*#__PURE__*/React.createElement("path", {
       d: "M20 6L9 17l-5-5",

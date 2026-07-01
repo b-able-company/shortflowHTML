@@ -27,8 +27,9 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .uname { font-size: 11px; color: #fff; font-weight: 500; }
 .uemail { font-size: 10px; color: rgba(255,255,255,0.28); margin-top: 1px; }
 .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
-.topbar { height: 46px; background: #fff; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; padding: 0 18px; flex-shrink: 0; }
+.topbar { height: 46px; background: #fff; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; gap: 10px; padding: 0 18px; flex-shrink: 0; }
 .topbar-title { font-size: 14px; font-weight: 600; }
+.topbar .btn { margin-left: auto; }
 .split { flex: 1; display: flex; overflow: hidden; }
 .lp { width: 620px; min-width: 560px; display: flex; flex-direction: column; border-right: 0.5px solid #e8e6e0; overflow: hidden; background: #fff; }
 .dp { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #fafaf7; }
@@ -184,6 +185,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 <main class="main">
   <div class="topbar">
     <span class="topbar-title">플랫폼 계약 관리</span>
+    <button class="btn btn-primary" type="button" onclick="newContract()"><i class="ti ti-plus"></i> 새 계약 추가</button>
   </div>
   <div class="split">
     <section class="lp">
@@ -198,7 +200,6 @@ td { padding: 9px 12px; vertical-align: middle; }
           </select>
           <div class="srch"><i class="ti ti-search"></i><input id="contract-search" type="search" placeholder="콘텐츠명으로 검색" oninput="renderContracts()" /></div>
         </div>
-        <button class="btn btn-primary" type="button" onclick="newContract()"><i class="ti ti-plus"></i> 새 계약 추가</button>
       </div>
       <div class="table-wrap">
         <table>
