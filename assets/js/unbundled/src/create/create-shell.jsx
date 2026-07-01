@@ -191,7 +191,7 @@ function FooterBar({ wizard, current, total, onPrev, onNext, onSave, onSubmit, m
                 style={{ ...primary, opacity: canSubmit ? 1 : 0.45, cursor: canSubmit ? 'pointer' : 'not-allowed' }}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                검토 요청 보내기
+                검토요청
               </button>
               {!canSubmit && (
                 <span style={{
@@ -330,20 +330,20 @@ function SubmittedToast({ onClose, t }) {
             to   { opacity: 1; transform: translateY(0); }
           }
         `}</style>
-        <div style={{ width: 330, height: 300, maxWidth: '100%', background: t.surface, borderRadius: 18, boxShadow: 'none', padding: '32px 26px 24px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', animation: 'nc-pop 0.32s cubic-bezier(0.34,1.56,0.64,1) forwards' }}>
-          <svg width="60" height="60" viewBox="0 0 60 60" style={{ marginBottom: 16, flexShrink: 0 }}>
-            <circle cx="30" cy="30" r="26" fill="#FFF3EC" stroke={ACCENT} strokeWidth="1.5"
+        <div style={{ width: 330, height: 270, maxWidth: '100%', background: t.surface, borderRadius: 18, boxShadow: 'none', padding: '28px 26px 22px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', animation: 'nc-pop 0.32s cubic-bezier(0.34,1.56,0.64,1) forwards' }}>
+          <svg width="60" height="60" viewBox="0 0 60 60" style={{ marginBottom: 14, flexShrink: 0 }}>
+            <circle cx="30" cy="30" r="26" fill="#FFF3EC" stroke={ACCENT} strokeWidth="2.2"
               strokeDasharray="163.4" strokeDashoffset="163.4" strokeLinecap="round"
-              style={{ animation: 'nc-circle 0.32s ease-out 0.04s forwards', transformOrigin: '30px 30px', transform: 'rotate(-90deg)' }} />
-            <path d="M19 30l8 8 14-15" fill="none" stroke={ACCENT} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"
+              style={{ animation: 'nc-circle 0.22s ease-out 0.02s forwards', transformOrigin: '30px 30px', transform: 'rotate(-90deg)' }} />
+            <path d="M19 30l8 8 14-15" fill="none" stroke={ACCENT} strokeWidth="3.1" strokeLinecap="round" strokeLinejoin="round"
               strokeDasharray="32" strokeDashoffset="32"
-              style={{ animation: 'nc-check 0.2s ease-out 0.3s forwards' }} />
+              style={{ animation: 'nc-check 0.14s ease-out 0.2s forwards' }} />
           </svg>
           <h2 style={{ margin: 0, fontFamily: t.sans, fontSize: 18, fontWeight: 700, color: t.ink, animation: 'nc-fadein 0.22s ease 0.4s both' }}>검토 요청을 보냈어요</h2>
           <p style={{ margin: '8px 0 0', fontFamily: t.sans, fontSize: 13, color: t.inkMute, lineHeight: 1.6, animation: 'nc-fadein 0.22s ease 0.48s both' }}>
             관리자 검토가 시작됩니다.<br />진행 상황은 워크플로우에서 확인할 수 있어요.
           </p>
-          <button onClick={onClose} style={{ marginTop: 'auto', width: '100%', height: 42, borderRadius: 10, cursor: 'pointer', border: `1px solid ${t.line}`, background: t.surface, color: t.ink, fontFamily: t.sans, fontSize: 14, fontWeight: 600, animation: 'nc-fadein 0.22s ease 0.54s both' }}>내 콘텐츠로</button>
+          <button onClick={onClose} style={{ marginTop: 22, width: '100%', height: 42, borderRadius: 10, cursor: 'pointer', border: `1px solid ${t.line}`, background: t.surface, color: t.ink, fontFamily: t.sans, fontSize: 14, fontWeight: 600, animation: 'nc-fadein 0.22s ease 0.54s both' }}>내 콘텐츠로</button>
         </div>
       </>
     </div>);

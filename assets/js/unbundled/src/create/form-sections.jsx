@@ -26,7 +26,7 @@ function webContentGroups(form) {
       { key: 'synopsis', label: '시놉시스', kind: 'area', source: 'translation', rows: 4, cols: 12, ph: '줄거리' },
       { key: 'characterDescription', label: '인물 소개', kind: 'area', source: 'translation', rows: 3, cols: 12, ph: '주요 인물 설명' },
       { key: 'director', label: '감독', kind: 'text', source: 'crew', cols: 6 },
-      { key: 'writer', label: '작가', kind: 'text', source: 'crew', cols: 6 },
+      { key: 'writer', label: '작가', kind: 'text', source: 'crew', cols: 6, divider: true },
       { key: 'cast', label: '출연진', kind: 'text', source: 'crew', cols: 12, ph: '주연 · 조연' },
       { key: 'genreCodes', label: '장르', kind: 'chips', cols: 12, hint: '복수 선택' },
     ]},
@@ -161,6 +161,22 @@ function fieldStartsRow(fields, index) {
   return used % 12 === 0;
 }
 
+function fieldGridPosition(fields, index) {
+  let cursor = 0;
+  for (let i = 0; i < index; i += 1) {
+    const span = fieldCols(fields[i]);
+    if (span > 12 - cursor) cursor = 0;
+    cursor = (cursor + span) % 12;
+  }
+  const cols = fieldCols(fields[index]);
+  const startsRow = cols > 12 - cursor || cursor === 0;
+  if (cols > 12 - cursor) cursor = 0;
+  const after = (cursor + cols) % 12;
+  const nextCols = fields[index + 1] ? fieldCols(fields[index + 1]) : 0;
+  const endsRow = after === 0 || !fields[index + 1] || nextCols > 12 - after;
+  return { after, endsRow, remainder: after === 0 ? 0 : 12 - after, startsRow };
+}
+
 function WebBasicSection({ form, set, setLangItem, baseLanguage, onAiUpload, t }) {
   const activeLanguage = baseLanguage || LANG_LIST[0];
   const translation = form.translations.find((x) => x.language === activeLanguage) || {};
@@ -188,16 +204,21 @@ function WebBasicSection({ form, set, setLangItem, baseLanguage, onAiUpload, t }
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, minmax(0, 1fr))', gap: 0, borderLeft: `0.5px solid ${t.line}`, borderRight: `0.5px solid ${t.line}`, borderBottom: `0.5px solid ${t.line}` }}>
               {g.fields.map((f, fi) => {
                 const cols = fieldCols(f);
-                const inset = f.divider || (cols < 12 && !fieldStartsRow(g.fields, fi));
+                const position = fieldGridPosition(g.fields, fi);
+                const inset = f.divider || (cols < 12 && !position.startsRow);
+                const needsRowFiller = position.endsRow && position.remainder > 0;
                 const roomy = f.kind === 'chips' || f.kind === 'area';
                 const optionalInPlanning = form.productionStatus === 'PLANNING' && ['director', 'writer', 'cast', 'ageRating'].includes(f.key);
                 const required = f.required !== false && f.key !== 'startPoint' && !optionalInPlanning;
                 return (
-                  <RowField key={`${f.source || 'form'}-${f.key}`} label={f.label} hint={f.hint} required={required} cols={cols} inset={inset} strongDivider={!!f.divider} roomy={roomy} t={t}>
-                    <ControlCap kind={f.kind}>
-                      <WebControl f={f} form={form} set={set} setLangItem={setLangItem} activeLanguage={activeLanguage} translation={translation} crew={crew} t={t} />
-                    </ControlCap>
-                  </RowField>
+                  <React.Fragment key={`${f.source || 'form'}-${f.key}`}>
+                    <RowField label={f.label} hint={f.hint} required={required} cols={cols} inset={inset} strongDivider={!!f.divider} roomy={roomy} t={t}>
+                      <ControlCap kind={f.kind}>
+                        <WebControl f={f} form={form} set={set} setLangItem={setLangItem} activeLanguage={activeLanguage} translation={translation} crew={crew} t={t} />
+                      </ControlCap>
+                    </RowField>
+                    {needsRowFiller && <div aria-hidden="true" style={{ gridColumn: `span ${position.remainder}`, borderTop: `0.5px solid ${t.line}` }} />}
+                  </React.Fragment>
                 );
               })}
             </div>
@@ -228,6 +249,226 @@ function SubtitleByLang({ value, onChange, langList, t }) {
   );
 }
 
+function fillSlots(current, files, max) {
+  const next = Array.from({ length: max }, (_, index) => current[index] || null);
+  let cursor = 0;
+  files.forEach((file) => {
+    while (cursor < max && next[cursor]) cursor += 1;
+    if (cursor < max) {
+      next[cursor] = file;
+      cursor += 1;
+    }
+  });
+  return next;
+}
+
+function fillSubtitleSlots(current, files, videos, max) {
+  const next = Array.from({ length: max }, (_, index) => current[index] || null);
+  let cursor = 0;
+  files.forEach((file) => {
+    while (cursor < max && (!videos[cursor] || next[cursor])) cursor += 1;
+    if (cursor < max) {
+      next[cursor] = file;
+      cursor += 1;
+    }
+  });
+  return next;
+}
+
+function moveSlots(values, from, to, max) {
+  const next = Array.from({ length: max }, (_, index) => values[index] || null);
+  const [item] = next.splice(from, 1);
+  next.splice(to, 0, item);
+  return next.slice(0, max);
+}
+
+function compactSlots(values, max) {
+  const files = (Array.isArray(values) ? values : []).filter(Boolean);
+  return [...files, ...Array(Math.max(0, max - files.length)).fill(null)].slice(0, max);
+}
+
+function removeSlot(values, index, max) {
+  const next = Array.from({ length: max }, (_, i) => values[i] || null);
+  next[index] = null;
+  return next;
+}
+
+function EpisodeMediaMapper({
+  videoValue,
+  subtitleValue,
+  onVideoChange,
+  onSubtitleChange,
+  langList,
+  t,
+  max = 10,
+}) {
+  const lang = (langList && langList[0]) || LANG_LIST[0];
+  const rawVideos = Array.isArray(videoValue) ? videoValue : videoValue ? [videoValue] : [];
+  const subtitlesByLang = subtitleValue || {};
+  const rawSubtitles = Array.isArray(subtitlesByLang[lang]) ? subtitlesByLang[lang] : [];
+  const videos = Array.from({ length: max }, (_, index) => rawVideos[index] || null);
+  const subtitles = Array.from({ length: max }, (_, index) => rawSubtitles[index] || null);
+  const rows = videos.map((video, index) => ({ video, subtitle: subtitles[index] || null }));
+  const activeRows = videos.filter(Boolean).length;
+  const pairedCount = rows.filter((row) => row.video && row.subtitle).length;
+  const videoCount = videos.filter(Boolean).length;
+  const subtitleCount = subtitles.filter((subtitle, index) => subtitle && videos[index]).length;
+  const [draggingItem, setDraggingItem] = React.useState(null);
+  const setSubtitles = (next) => onSubtitleChange({ ...subtitlesByLang, [lang]: next });
+  const syncSubtitlesToVideos = (nextVideos, nextSubtitles = subtitles) => {
+    const nextActiveRows = nextVideos.filter(Boolean).length;
+    return Array.from({ length: max }, (_, index) => (index < nextActiveRows ? nextSubtitles[index] || null : null));
+  };
+  const addMany = (kind) => {
+    const room = kind === 'video' ? max - videoCount : videoCount - subtitleCount;
+    if (room <= 0) return;
+    const count = Math.min(3, room);
+    const files = Array.from({ length: count }, () => fakeFile(kind));
+    if (kind === 'video') onVideoChange(fillSlots(videos, files, max));
+    else setSubtitles(fillSubtitleSlots(subtitles, files, videos, max));
+  };
+  const removeFile = (kind, index) => {
+    if (kind === 'video') {
+      const nextVideos = compactSlots(removeSlot(videos, index, max), max);
+      const nextSubtitles = compactSlots(removeSlot(subtitles, index, max), max);
+      onVideoChange(nextVideos);
+      setSubtitles(syncSubtitlesToVideos(nextVideos, nextSubtitles));
+      return;
+    }
+    setSubtitles(removeSlot(subtitles, index, max));
+  };
+  const moveItem = (kind, from, to) => {
+    if (from == null || from === to) return;
+    if (kind === 'video') {
+      const nextVideos = compactSlots(moveSlots(videos, from, to, max), max);
+      onVideoChange(nextVideos);
+      setSubtitles(syncSubtitlesToVideos(nextVideos));
+      return;
+    }
+    if (to >= activeRows) return;
+    setSubtitles(moveSlots(subtitles, from, to, max));
+  };
+  const startDrag = (event, kind, index, enabled) => {
+    if (!enabled) {
+      event.preventDefault();
+      return;
+    }
+    setDraggingItem({ kind, index });
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('text/plain', `${kind}:${index}`);
+  };
+  const dropItem = (event, kind, index) => {
+    event.preventDefault();
+    if (!draggingItem || draggingItem.kind !== kind) return;
+    moveItem(kind, draggingItem.index, index);
+    setDraggingItem(null);
+  };
+  const fileItem = (kind, file, index, enabled) => {
+    const dragging = draggingItem?.kind === kind && draggingItem.index === index;
+    const emptyText = kind === 'video' ? '영상 없음' : enabled ? '자막 없음' : '영상 추가 후 가능';
+    return (
+      <div
+        draggable={!!file}
+        onDragStart={(event) => startDrag(event, kind, index, !!file)}
+        onDragOver={(event) => {
+          if (draggingItem?.kind === kind && draggingItem.index !== index && enabled) event.preventDefault();
+        }}
+        onDrop={(event) => enabled && dropItem(event, kind, index)}
+        onDragEnd={() => setDraggingItem(null)}
+        title={file ? '파일을 잡고 드래그해서 순서 변경' : undefined}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          minWidth: 0,
+          minHeight: 30,
+          padding: 0,
+          borderRadius: 0,
+          border: 'none',
+          background: 'transparent',
+          boxShadow: 'none',
+          opacity: dragging ? 0.64 : enabled ? 1 : 0.46,
+          cursor: file ? 'grab' : 'default',
+        }}
+      >
+        {file ? (
+          <>
+            <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: t.sans, fontSize: 12.5, color: t.ink }}>{file.name}</span>
+            <button type="button" onMouseDown={(event) => event.stopPropagation()} onClick={() => removeFile(kind, index)} aria-label={`${kind === 'video' ? '영상' : '자막'} 제거`} style={{ width: 20, height: 24, border: 'none', background: 'transparent', color: t.inkMute, fontFamily: t.sans, fontSize: 15, lineHeight: '22px', cursor: 'pointer', flexShrink: 0, padding: 0 }}>×</button>
+          </>
+        ) : (
+          <span style={{ fontFamily: t.sans, fontSize: 11.5, color: enabled ? t.inkFaint : t.inkFaint }}>{emptyText}</span>
+        )}
+      </div>
+    );
+  };
+  const mediaBox = (kind) => {
+    const isVideo = kind === 'video';
+    const titleText = isVideo ? '영상 파일' : '자막 파일';
+    const countText = isVideo ? `${videoCount}/${max}` : `${subtitleCount}/${videoCount || 0}`;
+    const disabled = isVideo ? videoCount >= max : videoCount === 0 || subtitleCount >= videoCount;
+    const buttonText = isVideo ? '영상 업로드' : '자막 업로드';
+    const values = isVideo ? videos : subtitles;
+    return (
+      <div style={{ flex: '1 1 280px', minWidth: 0, border: `0.5px solid ${t.line}`, borderRadius: 12, overflow: 'hidden', background: '#fff' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, minHeight: 46, padding: '0 12px', background: t.surfaceAlt, borderBottom: `0.5px solid ${t.line}` }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
+            <span style={{ fontFamily: t.sans, fontSize: 12.5, fontWeight: 700, color: t.ink, whiteSpace: 'nowrap' }}>{titleText}</span>
+            <span style={{ fontFamily: t.sans, fontSize: 11, color: t.inkFaint, whiteSpace: 'nowrap' }}>{countText}개</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => addMany(kind)}
+            disabled={disabled}
+            onMouseEnter={(event) => {
+              if (!disabled) event.currentTarget.style.background = '#FFE5DB';
+            }}
+            onMouseLeave={(event) => {
+              if (!disabled) event.currentTarget.style.background = ACCENT_SOFT;
+            }}
+            style={{
+              height: 29,
+              padding: '0 12px',
+              borderRadius: 999,
+              border: 'none',
+              background: disabled ? '#F7F7F8' : ACCENT_SOFT,
+              color: disabled ? t.inkFaint : ACCENT,
+              fontFamily: t.sans,
+              fontSize: 11.5,
+              fontWeight: 500,
+              cursor: disabled ? 'default' : 'pointer',
+              whiteSpace: 'nowrap',
+              boxShadow: disabled ? 'none' : 'inset 0 0 0 0.5px rgba(232,93,44,0.16)',
+              transition: 'background 140ms ease, box-shadow 140ms ease, color 140ms ease',
+            }}
+          >{buttonText}</button>
+        </div>
+        <div>
+          {values.map((file, index) => {
+            const enabled = isVideo || index < activeRows;
+            return (
+              <div key={index} style={{ display: 'grid', gridTemplateColumns: '58px minmax(0, 1fr)', alignItems: 'center', gap: 10, minHeight: 46, padding: '8px 12px', borderTop: index === 0 ? 'none' : `0.5px solid ${t.line}`, background: enabled ? '#fff' : '#FCFCFA' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ fontFamily: t.mono, fontSize: 12, fontWeight: 700, color: enabled ? t.ink : t.inkFaint }}>EP{String(index + 1).padStart(2, '0')}</span>
+                </div>
+                {fileItem(kind, file, index, enabled)}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+  return (
+    <div>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'stretch', flexWrap: 'wrap' }}>
+        {mediaBox('video')}
+        {mediaBox('subtitle')}
+      </div>
+    </div>
+  );
+}
+
 function SubLabel({ children, hint, t, compact = false }) {
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, margin: compact ? '0 0 9px' : '14px 0 9px' }}>
@@ -237,51 +478,59 @@ function SubLabel({ children, hint, t, compact = false }) {
   );
 }
 
+function DotFieldLabel({ children }) {
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 9 }}>
+      <span style={{ width: 6, height: 6, borderRadius: 999, background: ACCENT, flexShrink: 0 }} />
+      <span>{children}</span>
+    </span>
+  );
+}
+
 function WebMediaSection({ form, set, langList, t }) {
   const ll = langList || LANG_LIST;
-  const subtitleLang = ll[0] || LANG_LIST[0];
-  const subtitleLabel = LANG_SHORT[subtitleLang] || subtitleLang;
   return (
     <SectionCard id="sec-media" title="미디어" desc={null} t={t}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
-        <Field label="대표 이미지" required hint="세로 포스터 1장" t={t}>
+        <Field label={<DotFieldLabel>대표 이미지</DotFieldLabel>} required hint="세로 포스터 1장" t={t}>
           <MediaUpload variant="dropzone" kind="image" multiple={false} max={1} value={form.mainImageKey}
             onChange={(v) => set('mainImageKey', v)} placeholder="대표 이미지 업로드" t={t} />
         </Field>
 
-        <Field label="관련 이미지" hint="최대 10장" t={t}>
+        <Field label={<DotFieldLabel>관련 이미지</DotFieldLabel>} hint="최대 10장" t={t}>
           <MediaUpload variant="dropzone" kind="image" multiple max={10} value={form.contentImageKeys}
             onChange={(v) => set('contentImageKeys', v)} placeholder="스틸컷 · 키아트 업로드" t={t} />
         </Field>
 
-        <div style={{ padding: 18, border: `0.5px solid ${t.line}`, borderRadius: 14, background: '#FCFCFA' }}>
-          <Field label="티저 영상" hint="최대 10개" t={t}>
-            <MediaUpload variant="dropzone" kind="video" multiple max={10} value={form.teaserKeys}
-              onChange={(v) => set('teaserKeys', v)} placeholder="티저 영상 업로드" t={t} />
-          </Field>
-          <div style={{ marginTop: 22, paddingTop: 18, borderTop: `0.5px solid ${t.line}` }}>
-            <SubLabel compact hint={`${subtitleLabel} 자막 파일`} t={t}>티저 자막</SubLabel>
-            <SubtitleByLang value={form.teaserSubtitles} onChange={(v) => set('teaserSubtitles', v)} langList={ll} t={t} />
-          </div>
-        </div>
+        <Field label={<DotFieldLabel>티저 영상·자막</DotFieldLabel>} t={t}>
+          <EpisodeMediaMapper
+            videoValue={form.teaserKeys}
+            subtitleValue={form.teaserSubtitles}
+            onVideoChange={(v) => set('teaserKeys', v)}
+            onSubtitleChange={(v) => set('teaserSubtitles', v)}
+            langList={ll}
+            t={t}
+            max={3}
+          />
+        </Field>
 
-        <div style={{ padding: 18, border: `0.5px solid ${t.line}`, borderRadius: 14, background: '#FCFCFA' }}>
-          <Field label="무료회차 영상" hint="최대 10개" t={t}>
-            <MediaUpload variant="dropzone" kind="video" multiple max={10} value={form.freeEpisodeKeys}
-              onChange={(v) => set('freeEpisodeKeys', v)} placeholder="무료회차 영상 업로드" t={t} />
-          </Field>
-          <div style={{ marginTop: 22, paddingTop: 18, borderTop: `0.5px solid ${t.line}` }}>
-            <SubLabel compact hint={`${subtitleLabel} 자막 파일`} t={t}>무료회차 자막</SubLabel>
-            <SubtitleByLang value={form.freeEpisodeSubtitles} onChange={(v) => set('freeEpisodeSubtitles', v)} langList={ll} t={t} />
-          </div>
-        </div>
+        <Field label={<DotFieldLabel>무료회차 영상·자막</DotFieldLabel>} t={t}>
+          <EpisodeMediaMapper
+            videoValue={form.freeEpisodeKeys}
+            subtitleValue={form.freeEpisodeSubtitles}
+            onVideoChange={(v) => set('freeEpisodeKeys', v)}
+            onSubtitleChange={(v) => set('freeEpisodeSubtitles', v)}
+            langList={ll}
+            t={t}
+          />
+        </Field>
       </div>
     </SectionCard>
   );
 }
 
 function reviewArr(v) {
-  return Array.isArray(v) ? v : v ? [v] : [];
+  return (Array.isArray(v) ? v : v ? [v] : []).filter(Boolean);
 }
 
 function ReviewRow({ label, value, ok = true, required = false, t }) {
@@ -342,7 +591,7 @@ function WebReviewSection({ form, baseLanguage, rightsConfirmed, onRightsChange,
       <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
         <div style={{ padding: '13px 16px', border: `0.5px solid ${t.line}`, borderRadius: 10, background: '#F4F4F1', display: 'flex', alignItems: 'center', gap: 9 }}>
           <span aria-hidden="true" style={{ width: 18, height: 18, borderRadius: 999, border: `1px solid ${t.inkMute}`, color: t.inkMute, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: t.sans, fontSize: 11, fontWeight: 700 }}>!</span>
-          <div style={{ fontFamily: t.sans, fontSize: 13, fontWeight: 550, color: '#555A63', lineHeight: 1.5 }}>
+          <div style={{ fontFamily: t.sans, fontSize: 13, fontWeight: 500, color: '#555A63', lineHeight: 1.5 }}>
             검토 요청을 전송하기 전에 입력한 내용을 마지막으로 확인해주세요.
           </div>
         </div>
@@ -388,11 +637,11 @@ function WebReviewSection({ form, baseLanguage, rightsConfirmed, onRightsChange,
 
         <ReviewGroup title="미디어" t={t}>
           <ReviewRow label="대표 이미지" value={mainImages.length ? `${mainImages.length}장` : ''} ok={mainImages.length > 0} required t={t} />
-          <ReviewRow label="무료회차 영상" value={`${freeVideos.length}개`} ok={freeVideos.length > 0} t={t} />
-          <ReviewRow label="무료회차 자막" value={`${freeSubs.length}개`} ok={freeSubs.length > 0} t={t} />
+          <ReviewRow label="관련 이미지" value={`${contentImages.length}장`} ok={contentImages.length > 0} t={t} />
           <ReviewRow label="티저 영상" value={`${teaserVideos.length}개`} ok={teaserVideos.length > 0} t={t} />
           <ReviewRow label="티저 자막" value={`${teaserSubs.length}개`} ok={teaserSubs.length > 0} t={t} />
-          <ReviewRow label="관련 이미지" value={`${contentImages.length}장`} ok={contentImages.length > 0} t={t} />
+          <ReviewRow label="무료회차 영상" value={`${freeVideos.length}개`} ok={freeVideos.length > 0} t={t} />
+          <ReviewRow label="무료회차 자막" value={`${freeSubs.length}개`} ok={freeSubs.length > 0} t={t} />
         </ReviewGroup>
 
         <div style={{ padding: '20px 22px', border: `0.5px solid ${t.line}`, borderRadius: 12, background: t.surface }}>

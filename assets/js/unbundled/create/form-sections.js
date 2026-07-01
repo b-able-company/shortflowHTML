@@ -1,4 +1,8 @@
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -132,7 +136,8 @@ function webContentGroups(form) {
       label: '작가',
       kind: 'text',
       source: 'crew',
-      cols: 6
+      cols: 6,
+      divider: true
     }, {
       key: 'cast',
       label: '출연진',
@@ -574,6 +579,26 @@ function fieldStartsRow(fields, index) {
   }, 0);
   return used % 12 === 0;
 }
+function fieldGridPosition(fields, index) {
+  var cursor = 0;
+  for (var i = 0; i < index; i += 1) {
+    var span = fieldCols(fields[i]);
+    if (span > 12 - cursor) cursor = 0;
+    cursor = (cursor + span) % 12;
+  }
+  var cols = fieldCols(fields[index]);
+  var startsRow = cols > 12 - cursor || cursor === 0;
+  if (cols > 12 - cursor) cursor = 0;
+  var after = (cursor + cols) % 12;
+  var nextCols = fields[index + 1] ? fieldCols(fields[index + 1]) : 0;
+  var endsRow = after === 0 || !fields[index + 1] || nextCols > 12 - after;
+  return {
+    after: after,
+    endsRow: endsRow,
+    remainder: after === 0 ? 0 : 12 - after,
+    startsRow: startsRow
+  };
+}
 function WebBasicSection(_ref6) {
   var form = _ref6.form,
     set = _ref6.set,
@@ -669,12 +694,15 @@ function WebBasicSection(_ref6) {
       }
     }, g.fields.map(function (f, fi) {
       var cols = fieldCols(f);
-      var inset = f.divider || cols < 12 && !fieldStartsRow(g.fields, fi);
+      var position = fieldGridPosition(g.fields, fi);
+      var inset = f.divider || cols < 12 && !position.startsRow;
+      var needsRowFiller = position.endsRow && position.remainder > 0;
       var roomy = f.kind === 'chips' || f.kind === 'area';
       var optionalInPlanning = form.productionStatus === 'PLANNING' && ['director', 'writer', 'cast', 'ageRating'].includes(f.key);
       var required = f.required !== false && f.key !== 'startPoint' && !optionalInPlanning;
-      return /*#__PURE__*/React.createElement(RowField, {
-        key: "".concat(f.source || 'form', "-").concat(f.key),
+      return /*#__PURE__*/React.createElement(React.Fragment, {
+        key: "".concat(f.source || 'form', "-").concat(f.key)
+      }, /*#__PURE__*/React.createElement(RowField, {
         label: f.label,
         hint: f.hint,
         required: required,
@@ -694,7 +722,13 @@ function WebBasicSection(_ref6) {
         translation: translation,
         crew: crew,
         t: t
-      })));
+      }))), needsRowFiller && /*#__PURE__*/React.createElement("div", {
+        "aria-hidden": "true",
+        style: {
+          gridColumn: "span ".concat(position.remainder),
+          borderTop: "0.5px solid ".concat(t.line)
+        }
+      }));
     })));
   })));
 }
@@ -755,12 +789,359 @@ function SubtitleByLang(_ref7) {
     }));
   }));
 }
-function SubLabel(_ref8) {
-  var children = _ref8.children,
-    hint = _ref8.hint,
+function fillSlots(current, files, max) {
+  var next = Array.from({
+    length: max
+  }, function (_, index) {
+    return current[index] || null;
+  });
+  var cursor = 0;
+  files.forEach(function (file) {
+    while (cursor < max && next[cursor]) cursor += 1;
+    if (cursor < max) {
+      next[cursor] = file;
+      cursor += 1;
+    }
+  });
+  return next;
+}
+function fillSubtitleSlots(current, files, videos, max) {
+  var next = Array.from({
+    length: max
+  }, function (_, index) {
+    return current[index] || null;
+  });
+  var cursor = 0;
+  files.forEach(function (file) {
+    while (cursor < max && (!videos[cursor] || next[cursor])) cursor += 1;
+    if (cursor < max) {
+      next[cursor] = file;
+      cursor += 1;
+    }
+  });
+  return next;
+}
+function moveSlots(values, from, to, max) {
+  var next = Array.from({
+    length: max
+  }, function (_, index) {
+    return values[index] || null;
+  });
+  var _next$splice = next.splice(from, 1),
+    _next$splice2 = _slicedToArray(_next$splice, 1),
+    item = _next$splice2[0];
+  next.splice(to, 0, item);
+  return next.slice(0, max);
+}
+function compactSlots(values, max) {
+  var files = (Array.isArray(values) ? values : []).filter(Boolean);
+  return [].concat(_toConsumableArray(files), _toConsumableArray(Array(Math.max(0, max - files.length)).fill(null))).slice(0, max);
+}
+function removeSlot(values, index, max) {
+  var next = Array.from({
+    length: max
+  }, function (_, i) {
+    return values[i] || null;
+  });
+  next[index] = null;
+  return next;
+}
+function EpisodeMediaMapper(_ref8) {
+  var videoValue = _ref8.videoValue,
+    subtitleValue = _ref8.subtitleValue,
+    onVideoChange = _ref8.onVideoChange,
+    onSubtitleChange = _ref8.onSubtitleChange,
+    langList = _ref8.langList,
     t = _ref8.t,
-    _ref8$compact = _ref8.compact,
-    compact = _ref8$compact === void 0 ? false : _ref8$compact;
+    _ref8$max = _ref8.max,
+    max = _ref8$max === void 0 ? 10 : _ref8$max;
+  var lang = langList && langList[0] || LANG_LIST[0];
+  var rawVideos = Array.isArray(videoValue) ? videoValue : videoValue ? [videoValue] : [];
+  var subtitlesByLang = subtitleValue || {};
+  var rawSubtitles = Array.isArray(subtitlesByLang[lang]) ? subtitlesByLang[lang] : [];
+  var videos = Array.from({
+    length: max
+  }, function (_, index) {
+    return rawVideos[index] || null;
+  });
+  var subtitles = Array.from({
+    length: max
+  }, function (_, index) {
+    return rawSubtitles[index] || null;
+  });
+  var rows = videos.map(function (video, index) {
+    return {
+      video: video,
+      subtitle: subtitles[index] || null
+    };
+  });
+  var activeRows = videos.filter(Boolean).length;
+  var pairedCount = rows.filter(function (row) {
+    return row.video && row.subtitle;
+  }).length;
+  var videoCount = videos.filter(Boolean).length;
+  var subtitleCount = subtitles.filter(function (subtitle, index) {
+    return subtitle && videos[index];
+  }).length;
+  var _React$useState3 = React.useState(null),
+    _React$useState4 = _slicedToArray(_React$useState3, 2),
+    draggingItem = _React$useState4[0],
+    setDraggingItem = _React$useState4[1];
+  var setSubtitles = function setSubtitles(next) {
+    return onSubtitleChange(_objectSpread(_objectSpread({}, subtitlesByLang), {}, _defineProperty({}, lang, next)));
+  };
+  var syncSubtitlesToVideos = function syncSubtitlesToVideos(nextVideos) {
+    var nextSubtitles = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : subtitles;
+    var nextActiveRows = nextVideos.filter(Boolean).length;
+    return Array.from({
+      length: max
+    }, function (_, index) {
+      return index < nextActiveRows ? nextSubtitles[index] || null : null;
+    });
+  };
+  var addMany = function addMany(kind) {
+    var room = kind === 'video' ? max - videoCount : videoCount - subtitleCount;
+    if (room <= 0) return;
+    var count = Math.min(3, room);
+    var files = Array.from({
+      length: count
+    }, function () {
+      return fakeFile(kind);
+    });
+    if (kind === 'video') onVideoChange(fillSlots(videos, files, max));else setSubtitles(fillSubtitleSlots(subtitles, files, videos, max));
+  };
+  var removeFile = function removeFile(kind, index) {
+    if (kind === 'video') {
+      var nextVideos = compactSlots(removeSlot(videos, index, max), max);
+      var nextSubtitles = compactSlots(removeSlot(subtitles, index, max), max);
+      onVideoChange(nextVideos);
+      setSubtitles(syncSubtitlesToVideos(nextVideos, nextSubtitles));
+      return;
+    }
+    setSubtitles(removeSlot(subtitles, index, max));
+  };
+  var moveItem = function moveItem(kind, from, to) {
+    if (from == null || from === to) return;
+    if (kind === 'video') {
+      var nextVideos = compactSlots(moveSlots(videos, from, to, max), max);
+      onVideoChange(nextVideos);
+      setSubtitles(syncSubtitlesToVideos(nextVideos));
+      return;
+    }
+    if (to >= activeRows) return;
+    setSubtitles(moveSlots(subtitles, from, to, max));
+  };
+  var startDrag = function startDrag(event, kind, index, enabled) {
+    if (!enabled) {
+      event.preventDefault();
+      return;
+    }
+    setDraggingItem({
+      kind: kind,
+      index: index
+    });
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('text/plain', "".concat(kind, ":").concat(index));
+  };
+  var dropItem = function dropItem(event, kind, index) {
+    event.preventDefault();
+    if (!draggingItem || draggingItem.kind !== kind) return;
+    moveItem(kind, draggingItem.index, index);
+    setDraggingItem(null);
+  };
+  var fileItem = function fileItem(kind, file, index, enabled) {
+    var dragging = (draggingItem === null || draggingItem === void 0 ? void 0 : draggingItem.kind) === kind && draggingItem.index === index;
+    var emptyText = kind === 'video' ? '영상 없음' : enabled ? '자막 없음' : '영상 추가 후 가능';
+    return /*#__PURE__*/React.createElement("div", {
+      draggable: !!file,
+      onDragStart: function onDragStart(event) {
+        return startDrag(event, kind, index, !!file);
+      },
+      onDragOver: function onDragOver(event) {
+        if ((draggingItem === null || draggingItem === void 0 ? void 0 : draggingItem.kind) === kind && draggingItem.index !== index && enabled) event.preventDefault();
+      },
+      onDrop: function onDrop(event) {
+        return enabled && dropItem(event, kind, index);
+      },
+      onDragEnd: function onDragEnd() {
+        return setDraggingItem(null);
+      },
+      title: file ? '파일을 잡고 드래그해서 순서 변경' : undefined,
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        minWidth: 0,
+        minHeight: 30,
+        padding: 0,
+        borderRadius: 0,
+        border: 'none',
+        background: 'transparent',
+        boxShadow: 'none',
+        opacity: dragging ? 0.64 : enabled ? 1 : 0.46,
+        cursor: file ? 'grab' : 'default'
+      }
+    }, file ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+      style: {
+        flex: 1,
+        minWidth: 0,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        fontFamily: t.sans,
+        fontSize: 12.5,
+        color: t.ink
+      }
+    }, file.name), /*#__PURE__*/React.createElement("button", {
+      type: "button",
+      onMouseDown: function onMouseDown(event) {
+        return event.stopPropagation();
+      },
+      onClick: function onClick() {
+        return removeFile(kind, index);
+      },
+      "aria-label": "".concat(kind === 'video' ? '영상' : '자막', " \uC81C\uAC70"),
+      style: {
+        width: 20,
+        height: 24,
+        border: 'none',
+        background: 'transparent',
+        color: t.inkMute,
+        fontFamily: t.sans,
+        fontSize: 15,
+        lineHeight: '22px',
+        cursor: 'pointer',
+        flexShrink: 0,
+        padding: 0
+      }
+    }, "\xD7")) : /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: t.sans,
+        fontSize: 11.5,
+        color: enabled ? t.inkFaint : t.inkFaint
+      }
+    }, emptyText));
+  };
+  var mediaBox = function mediaBox(kind) {
+    var isVideo = kind === 'video';
+    var titleText = isVideo ? '영상 파일' : '자막 파일';
+    var countText = isVideo ? "".concat(videoCount, "/").concat(max) : "".concat(subtitleCount, "/").concat(videoCount || 0);
+    var disabled = isVideo ? videoCount >= max : videoCount === 0 || subtitleCount >= videoCount;
+    var buttonText = isVideo ? '영상 업로드' : '자막 업로드';
+    var values = isVideo ? videos : subtitles;
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: '1 1 280px',
+        minWidth: 0,
+        border: "0.5px solid ".concat(t.line),
+        borderRadius: 12,
+        overflow: 'hidden',
+        background: '#fff'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 10,
+        minHeight: 46,
+        padding: '0 12px',
+        background: t.surfaceAlt,
+        borderBottom: "0.5px solid ".concat(t.line)
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 6,
+        minWidth: 0
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: t.sans,
+        fontSize: 12.5,
+        fontWeight: 700,
+        color: t.ink,
+        whiteSpace: 'nowrap'
+      }
+    }, titleText), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: t.sans,
+        fontSize: 11,
+        color: t.inkFaint,
+        whiteSpace: 'nowrap'
+      }
+    }, countText, "\uAC1C")), /*#__PURE__*/React.createElement("button", {
+      type: "button",
+      onClick: function onClick() {
+        return addMany(kind);
+      },
+      disabled: disabled,
+      onMouseEnter: function onMouseEnter(event) {
+        if (!disabled) event.currentTarget.style.background = '#FFE5DB';
+      },
+      onMouseLeave: function onMouseLeave(event) {
+        if (!disabled) event.currentTarget.style.background = ACCENT_SOFT;
+      },
+      style: {
+        height: 29,
+        padding: '0 12px',
+        borderRadius: 999,
+        border: 'none',
+        background: disabled ? '#F7F7F8' : ACCENT_SOFT,
+        color: disabled ? t.inkFaint : ACCENT,
+        fontFamily: t.sans,
+        fontSize: 11.5,
+        fontWeight: 500,
+        cursor: disabled ? 'default' : 'pointer',
+        whiteSpace: 'nowrap',
+        boxShadow: disabled ? 'none' : 'inset 0 0 0 0.5px rgba(232,93,44,0.16)',
+        transition: 'background 140ms ease, box-shadow 140ms ease, color 140ms ease'
+      }
+    }, buttonText)), /*#__PURE__*/React.createElement("div", null, values.map(function (file, index) {
+      var enabled = isVideo || index < activeRows;
+      return /*#__PURE__*/React.createElement("div", {
+        key: index,
+        style: {
+          display: 'grid',
+          gridTemplateColumns: '58px minmax(0, 1fr)',
+          alignItems: 'center',
+          gap: 10,
+          minHeight: 46,
+          padding: '8px 12px',
+          borderTop: index === 0 ? 'none' : "0.5px solid ".concat(t.line),
+          background: enabled ? '#fff' : '#FCFCFA'
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: 'flex',
+          alignItems: 'center'
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontFamily: t.mono,
+          fontSize: 12,
+          fontWeight: 700,
+          color: enabled ? t.ink : t.inkFaint
+        }
+      }, "EP", String(index + 1).padStart(2, '0'))), fileItem(kind, file, index, enabled));
+    })));
+  };
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 12,
+      alignItems: 'stretch',
+      flexWrap: 'wrap'
+    }
+  }, mediaBox('video'), mediaBox('subtitle')));
+}
+function SubLabel(_ref9) {
+  var children = _ref9.children,
+    hint = _ref9.hint,
+    t = _ref9.t,
+    _ref9$compact = _ref9.compact,
+    compact = _ref9$compact === void 0 ? false : _ref9$compact;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
@@ -783,14 +1164,30 @@ function SubLabel(_ref8) {
     }
   }, hint));
 }
-function WebMediaSection(_ref9) {
-  var form = _ref9.form,
-    set = _ref9.set,
-    langList = _ref9.langList,
-    t = _ref9.t;
+function DotFieldLabel(_ref0) {
+  var children = _ref0.children;
+  return /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 9
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      width: 6,
+      height: 6,
+      borderRadius: 999,
+      background: ACCENT,
+      flexShrink: 0
+    }
+  }), /*#__PURE__*/React.createElement("span", null, children));
+}
+function WebMediaSection(_ref1) {
+  var form = _ref1.form,
+    set = _ref1.set,
+    langList = _ref1.langList,
+    t = _ref1.t;
   var ll = langList || LANG_LIST;
-  var subtitleLang = ll[0] || LANG_LIST[0];
-  var subtitleLabel = LANG_SHORT[subtitleLang] || subtitleLang;
   return /*#__PURE__*/React.createElement(SectionCard, {
     id: "sec-media",
     title: "\uBBF8\uB514\uC5B4",
@@ -803,7 +1200,7 @@ function WebMediaSection(_ref9) {
       gap: 32
     }
   }, /*#__PURE__*/React.createElement(Field, {
-    label: "\uB300\uD45C \uC774\uBBF8\uC9C0",
+    label: /*#__PURE__*/React.createElement(DotFieldLabel, null, "\uB300\uD45C \uC774\uBBF8\uC9C0"),
     required: true,
     hint: "\uC138\uB85C \uD3EC\uC2A4\uD130 1\uC7A5",
     t: t
@@ -819,7 +1216,7 @@ function WebMediaSection(_ref9) {
     placeholder: "\uB300\uD45C \uC774\uBBF8\uC9C0 \uC5C5\uB85C\uB4DC",
     t: t
   })), /*#__PURE__*/React.createElement(Field, {
-    label: "\uAD00\uB828 \uC774\uBBF8\uC9C0",
+    label: /*#__PURE__*/React.createElement(DotFieldLabel, null, "\uAD00\uB828 \uC774\uBBF8\uC9C0"),
     hint: "\uCD5C\uB300 10\uC7A5",
     t: t
   }, /*#__PURE__*/React.createElement(MediaUpload, {
@@ -833,97 +1230,48 @@ function WebMediaSection(_ref9) {
     },
     placeholder: "\uC2A4\uD2F8\uCEF7 \xB7 \uD0A4\uC544\uD2B8 \uC5C5\uB85C\uB4DC",
     t: t
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: 18,
-      border: "0.5px solid ".concat(t.line),
-      borderRadius: 14,
-      background: '#FCFCFA'
-    }
-  }, /*#__PURE__*/React.createElement(Field, {
-    label: "\uD2F0\uC800 \uC601\uC0C1",
-    hint: "\uCD5C\uB300 10\uAC1C",
+  })), /*#__PURE__*/React.createElement(Field, {
+    label: /*#__PURE__*/React.createElement(DotFieldLabel, null, "\uD2F0\uC800 \uC601\uC0C1\xB7\uC790\uB9C9"),
     t: t
-  }, /*#__PURE__*/React.createElement(MediaUpload, {
-    variant: "dropzone",
-    kind: "video",
-    multiple: true,
-    max: 10,
-    value: form.teaserKeys,
-    onChange: function onChange(v) {
+  }, /*#__PURE__*/React.createElement(EpisodeMediaMapper, {
+    videoValue: form.teaserKeys,
+    subtitleValue: form.teaserSubtitles,
+    onVideoChange: function onVideoChange(v) {
       return set('teaserKeys', v);
     },
-    placeholder: "\uD2F0\uC800 \uC601\uC0C1 \uC5C5\uB85C\uB4DC",
-    t: t
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: 22,
-      paddingTop: 18,
-      borderTop: "0.5px solid ".concat(t.line)
-    }
-  }, /*#__PURE__*/React.createElement(SubLabel, {
-    compact: true,
-    hint: "".concat(subtitleLabel, " \uC790\uB9C9 \uD30C\uC77C"),
-    t: t
-  }, "\uD2F0\uC800 \uC790\uB9C9"), /*#__PURE__*/React.createElement(SubtitleByLang, {
-    value: form.teaserSubtitles,
-    onChange: function onChange(v) {
+    onSubtitleChange: function onSubtitleChange(v) {
       return set('teaserSubtitles', v);
     },
     langList: ll,
+    t: t,
+    max: 3
+  })), /*#__PURE__*/React.createElement(Field, {
+    label: /*#__PURE__*/React.createElement(DotFieldLabel, null, "\uBB34\uB8CC\uD68C\uCC28 \uC601\uC0C1\xB7\uC790\uB9C9"),
     t: t
-  }))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: 18,
-      border: "0.5px solid ".concat(t.line),
-      borderRadius: 14,
-      background: '#FCFCFA'
-    }
-  }, /*#__PURE__*/React.createElement(Field, {
-    label: "\uBB34\uB8CC\uD68C\uCC28 \uC601\uC0C1",
-    hint: "\uCD5C\uB300 10\uAC1C",
-    t: t
-  }, /*#__PURE__*/React.createElement(MediaUpload, {
-    variant: "dropzone",
-    kind: "video",
-    multiple: true,
-    max: 10,
-    value: form.freeEpisodeKeys,
-    onChange: function onChange(v) {
+  }, /*#__PURE__*/React.createElement(EpisodeMediaMapper, {
+    videoValue: form.freeEpisodeKeys,
+    subtitleValue: form.freeEpisodeSubtitles,
+    onVideoChange: function onVideoChange(v) {
       return set('freeEpisodeKeys', v);
     },
-    placeholder: "\uBB34\uB8CC\uD68C\uCC28 \uC601\uC0C1 \uC5C5\uB85C\uB4DC",
-    t: t
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: 22,
-      paddingTop: 18,
-      borderTop: "0.5px solid ".concat(t.line)
-    }
-  }, /*#__PURE__*/React.createElement(SubLabel, {
-    compact: true,
-    hint: "".concat(subtitleLabel, " \uC790\uB9C9 \uD30C\uC77C"),
-    t: t
-  }, "\uBB34\uB8CC\uD68C\uCC28 \uC790\uB9C9"), /*#__PURE__*/React.createElement(SubtitleByLang, {
-    value: form.freeEpisodeSubtitles,
-    onChange: function onChange(v) {
+    onSubtitleChange: function onSubtitleChange(v) {
       return set('freeEpisodeSubtitles', v);
     },
     langList: ll,
     t: t
-  })))));
+  }))));
 }
 function reviewArr(v) {
-  return Array.isArray(v) ? v : v ? [v] : [];
+  return (Array.isArray(v) ? v : v ? [v] : []).filter(Boolean);
 }
-function ReviewRow(_ref0) {
-  var label = _ref0.label,
-    value = _ref0.value,
-    _ref0$ok = _ref0.ok,
-    ok = _ref0$ok === void 0 ? true : _ref0$ok,
-    _ref0$required = _ref0.required,
-    required = _ref0$required === void 0 ? false : _ref0$required,
-    t = _ref0.t;
+function ReviewRow(_ref10) {
+  var label = _ref10.label,
+    value = _ref10.value,
+    _ref10$ok = _ref10.ok,
+    ok = _ref10$ok === void 0 ? true : _ref10$ok,
+    _ref10$required = _ref10.required,
+    required = _ref10$required === void 0 ? false : _ref10$required,
+    t = _ref10.t;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
@@ -988,10 +1336,10 @@ function ReviewRow(_ref0) {
     strokeLinejoin: "round"
   }))), /*#__PURE__*/React.createElement("span", null, value || '미입력')));
 }
-function ReviewGroup(_ref1) {
-  var title = _ref1.title,
-    children = _ref1.children,
-    t = _ref1.t;
+function ReviewGroup(_ref11) {
+  var title = _ref11.title,
+    children = _ref11.children,
+    t = _ref11.t;
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(GroupHead, {
     title: title,
     t: t
@@ -1003,12 +1351,12 @@ function ReviewGroup(_ref1) {
     }
   }, children));
 }
-function WebReviewSection(_ref10) {
-  var form = _ref10.form,
-    baseLanguage = _ref10.baseLanguage,
-    rightsConfirmed = _ref10.rightsConfirmed,
-    onRightsChange = _ref10.onRightsChange,
-    t = _ref10.t;
+function WebReviewSection(_ref12) {
+  var form = _ref12.form,
+    baseLanguage = _ref12.baseLanguage,
+    rightsConfirmed = _ref12.rightsConfirmed,
+    onRightsChange = _ref12.onRightsChange,
+    t = _ref12.t;
   var lang = baseLanguage || LANG_LIST[0];
   var langLabel = LANG_SHORT[lang] || lang;
   var tr = form.translations.find(function (x) {
@@ -1069,7 +1417,7 @@ function WebReviewSection(_ref10) {
     style: {
       fontFamily: t.sans,
       fontSize: 13,
-      fontWeight: 550,
+      fontWeight: 500,
       color: '#555A63',
       lineHeight: 1.5
     }
@@ -1255,14 +1603,9 @@ function WebReviewSection(_ref10) {
     required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
-    label: "\uBB34\uB8CC\uD68C\uCC28 \uC601\uC0C1",
-    value: "".concat(freeVideos.length, "\uAC1C"),
-    ok: freeVideos.length > 0,
-    t: t
-  }), /*#__PURE__*/React.createElement(ReviewRow, {
-    label: "\uBB34\uB8CC\uD68C\uCC28 \uC790\uB9C9",
-    value: "".concat(freeSubs.length, "\uAC1C"),
-    ok: freeSubs.length > 0,
+    label: "\uAD00\uB828 \uC774\uBBF8\uC9C0",
+    value: "".concat(contentImages.length, "\uC7A5"),
+    ok: contentImages.length > 0,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uD2F0\uC800 \uC601\uC0C1",
@@ -1275,9 +1618,14 @@ function WebReviewSection(_ref10) {
     ok: teaserSubs.length > 0,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
-    label: "\uAD00\uB828 \uC774\uBBF8\uC9C0",
-    value: "".concat(contentImages.length, "\uC7A5"),
-    ok: contentImages.length > 0,
+    label: "\uBB34\uB8CC\uD68C\uCC28 \uC601\uC0C1",
+    value: "".concat(freeVideos.length, "\uAC1C"),
+    ok: freeVideos.length > 0,
+    t: t
+  }), /*#__PURE__*/React.createElement(ReviewRow, {
+    label: "\uBB34\uB8CC\uD68C\uCC28 \uC790\uB9C9",
+    value: "".concat(freeSubs.length, "\uAC1C"),
+    ok: freeSubs.length > 0,
     t: t
   })), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -1340,9 +1688,9 @@ function WebReviewSection(_ref10) {
     }
   }, "\uC704 \uB0B4\uC6A9\uC744 \uD655\uC778\uD558\uACE0 \uB3D9\uC758\uD569\uB2C8\uB2E4."))))));
 }
-function WebPageHeader(_ref11) {
-  var t = _ref11.t,
-    compact = _ref11.compact;
+function WebPageHeader(_ref13) {
+  var t = _ref13.t,
+    compact = _ref13.compact;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       marginBottom: compact ? 16 : 22
