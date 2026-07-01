@@ -91,6 +91,9 @@ var ENUMS = {
     v: 'GLOBAL_EXCEPT_CHINA',
     label: '글로벌(중국 본토 제외)'
   }, {
+    v: 'GLOBAL_EXCEPT_CHINA_JAPAN',
+    label: '글로벌 (중국 본토, 일본 제외)'
+  }, {
     v: 'GLOBAL_EXCEPT_CHINA_THAILAND',
     label: '글로벌(중국 본토, 태국 제외)'
   }, {
