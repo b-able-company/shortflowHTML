@@ -39,56 +39,50 @@
     .prod-tabs {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
       min-width: 0;
     }
 
     .prod-tab {
       position: relative;
-      height: 32px;
-      padding: 0 11px;
-      border: 1px solid var(--prod-line);
-      border-radius: 8px;
+      height: 36px;
+      padding: 0 16px;
+      border: 1.5px solid #dfe3ea;
+      border-radius: 999px;
       background: #fff;
-      color: #6f737c;
+      color: #3f4650;
       font-size: 12.5px;
       font-weight: 700;
       white-space: nowrap;
+      transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
     }
 
     .prod-tab:hover {
-      border-color: var(--prod-line-strong);
-      color: #151515;
+      border-color: #cfd5df;
+      background: #fafbfc;
+      color: var(--prod-ink);
     }
 
     .prod-tab-count {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 17px;
-      height: 17px;
       margin-left: 5px;
-      padding: 0 5px;
-      border-radius: 999px;
-      background: #f4f4f2;
       color: #8f96a3;
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 750;
     }
 
     .prod-tab.active {
-      border-color: rgba(232,93,44,0.36);
-      background: #fff7f3;
+      border-color: rgba(232,93,44,0.42);
+      background: #fff4ee;
       color: var(--prod-orange);
+      box-shadow: 0 1px 4px rgba(232,93,44,0.08);
     }
 
     .prod-tab.active .prod-tab-count {
-      background: #fff;
-      color: var(--prod-orange);
+      color: inherit;
     }
 
     .prod-primary {
-      height: 32px;
+      height: 36px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -99,7 +93,7 @@
       background: var(--prod-orange);
       color: #fff;
       font-size: 12.5px;
-      font-weight: 750;
+      font-weight: 650;
       text-decoration: none;
       white-space: nowrap;
     }
@@ -122,7 +116,7 @@
     .prod-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 18px;
+      gap: 30px 18px;
       overflow: visible;
     }
 
@@ -162,20 +156,26 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 42%);
     }
 
-    .prod-poster-label {
+    .prod-poster img {
       position: absolute;
-      right: 10px;
-      bottom: 9px;
-      color: rgba(107,112,122,0.58);
-      font-size: 9px;
-      font-weight: 750;
-      letter-spacing: 0;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .prod-poster.has-image::before {
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0) 46%);
+      pointer-events: none;
     }
 
     .prod-badge {
       position: absolute;
       top: 9px;
       left: 9px;
+      z-index: 2;
       display: inline-flex;
       align-items: center;
       gap: 5px;
@@ -199,8 +199,8 @@
     .prod-card-title {
       margin-top: 12px;
       color: var(--prod-ink);
-      font-size: 15px;
-      font-weight: 650;
+      font-size: 14.5px;
+      font-weight: 550;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -223,6 +223,13 @@
       color: var(--prod-ink);
       font-size: 12px;
       font-weight: 700;
+      transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+    }
+
+    .prod-detail:hover {
+      border-color: var(--prod-line-strong);
+      background: #fafaf7;
+      color: #111;
     }
 
     .prod-more {
@@ -236,6 +243,13 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+    }
+
+    .prod-more:hover {
+      border-color: var(--prod-line-strong);
+      background: #fafaf7;
+      color: var(--prod-ink);
     }
 
     .prod-more svg {
@@ -312,35 +326,37 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 16px;
-      margin-top: 48px;
+      gap: 4px;
+      min-height: 34px;
+      margin-top: 52px;
     }
 
     .prod-page-btn {
-      min-width: 18px;
-      height: 24px;
-      padding: 0;
+      min-width: 28px;
+      height: 28px;
+      padding: 0 8px;
       border: 0;
+      border-radius: 7px;
       background: transparent;
-      color: #6b7280;
-      font-size: 13px;
-      font-weight: 400;
+      color: var(--prod-muted);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
       cursor: pointer;
     }
 
-    .prod-page-btn svg {
-      width: 14px;
-      height: 14px;
-      stroke-width: 2.1;
+    .prod-page-btn:hover:not(:disabled) {
+      background: #f1f0ec;
+      color: var(--prod-ink);
     }
 
     .prod-page-btn.active {
-      color: var(--prod-orange);
-      font-weight: 700;
+      background: rgba(26, 26, 24, 0.09);
+      color: var(--prod-ink);
     }
 
     .prod-page-btn:disabled {
-      color: #c0c5cf;
+      color: var(--prod-faint);
       cursor: default;
     }
 
@@ -369,7 +385,7 @@
 
       .prod-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
+        gap: 24px 14px;
       }
     }
   </style>
@@ -396,17 +412,23 @@
   <script>
     const myContents = [
       { title: '오피스 와이프의 남자 사냥법', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'rose', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
-      { title: '재벌집 비서', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'indigo', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
+      { title: '재벌집 비서', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'indigo', image: 'images/재벌집막내비서.png', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
       { title: '우리 반 전학생은 아이돌', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'teal', note: '아직 제출 전이에요. 필수 정보를 입력한 뒤 검토 요청해주세요.' },
       { title: '그녀의 두 번째 엔딩', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'indigo', note: '회차 정보가 임시 저장되어 있어요.' },
-      { title: '대표님, 계약 연애는 처음이라서요', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'violet', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
+      { title: '대표님, 계약 연애는 처음이라서요', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'violet', image: 'images/대표님이내전남친.png', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
       { title: '달빛 아래 편의점', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'slate', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
-      { title: '남편이 AI입니다', type: 'AI', status: 'approved', statusLabel: '승인됨', tone: 'amber', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
-      { title: '퇴사했더니 황제가 됐다', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'rose', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
-      { title: '살인범과 룸메이트가 되었다', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'slate', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
-      { title: '오늘부터 악녀 대행합니다', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'teal', note: '아직 제출 전이에요. 필수 정보를 입력한 뒤 검토 요청해주세요.' },
+      { title: '남편이 AI입니다', type: 'AI', status: 'approved', statusLabel: '승인됨', tone: 'amber', image: 'images/남편이AI.png', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
+      { title: '퇴사했더니 황제가 됐다', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'rose', image: 'images/퇴사했더니황제.png', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
+      { title: '살인범과 룸메이트가 되었다', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'slate', image: 'images/살인범과룸메이트.png', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
+      { title: '오늘부터 악녀 대행합니다', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'teal', image: 'images/오늘부터악녀대행.png', note: '아직 제출 전이에요. 필수 정보를 입력한 뒤 검토 요청해주세요.' },
       { title: '우주 택배 기사님', type: '숏애니', status: 'approved', statusLabel: '승인됨', tone: 'indigo', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
-      { title: '나의 위험한 파트너', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'violet', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' }
+      { title: '나의 위험한 파트너', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'violet', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
+      { title: '새벽 배송 로맨스', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'rose', note: '아직 제출 전이에요. 필수 정보를 입력한 뒤 검토 요청해주세요.' },
+      { title: '내 매니저는 구미호', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'amber', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
+      { title: '비밀 사내 결혼', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'teal', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
+      { title: '왕자님의 퇴근길', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'violet', note: '아직 제출 전이에요. 필수 정보를 입력한 뒤 검토 요청해주세요.' },
+      { title: '첫사랑 리셋 버튼', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'slate', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
+      { title: '계약 종료 3일 전', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'indigo', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' }
     ];
 
     const grid = document.getElementById('contentGrid');
@@ -414,7 +436,7 @@
     const pagination = document.getElementById('prodPagination');
     let activeFilter = 'all';
     let activePage = 1;
-    const pageSize = 8;
+    const pageSize = 12;
 
     function filteredContents() {
       if (activeFilter === 'all') return myContents;
@@ -459,11 +481,11 @@
       grid.style.display = rows.length ? 'grid' : 'none';
       grid.innerHTML = pageRows.map(item => `
         <article class="prod-card status-${item.status}">
-          <div class="prod-poster tone-${item.tone}">
+          <div class="prod-poster ${item.image ? 'has-image' : `tone-${item.tone}`}">
+            ${item.image ? `<img src="${escapeAttr(item.image)}" alt="${escapeAttr(item.title)} 포스터">` : ''}
             <span class="prod-badge">
               <span class="prod-dot"></span>${item.statusLabel}
             </span>
-            <span class="prod-poster-label">${item.type}</span>
           </div>
           <div class="prod-card-title">${item.title}</div>
           <div class="prod-card-foot">
@@ -489,15 +511,13 @@
         pagination.innerHTML = '';
         return;
       }
-      const prevIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>';
-      const nextIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
       const pages = Array.from({ length: totalPages }, (_, index) => index + 1).map(page => `
         <button class="prod-page-btn ${page === activePage ? 'active' : ''}" type="button" data-page="${page}" aria-label="${page}페이지" ${page === activePage ? 'aria-current="page"' : ''}>${page}</button>
       `).join('');
       pagination.innerHTML = `
-        <button class="prod-page-btn" type="button" data-page="${activePage - 1}" aria-label="이전 페이지" ${activePage === 1 ? 'disabled' : ''}>${prevIcon}</button>
+        <button class="prod-page-btn" type="button" data-page="${activePage - 1}" aria-label="이전 페이지" ${activePage === 1 ? 'disabled' : ''}>‹</button>
         ${pages}
-        <button class="prod-page-btn" type="button" data-page="${activePage + 1}" aria-label="다음 페이지" ${activePage === totalPages ? 'disabled' : ''}>${nextIcon}</button>
+        <button class="prod-page-btn" type="button" data-page="${activePage + 1}" aria-label="다음 페이지" ${activePage === totalPages ? 'disabled' : ''}>›</button>
       `;
     }
 
