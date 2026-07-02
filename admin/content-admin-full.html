@@ -173,7 +173,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 .fg input, .fg select, .fg textarea { font-size: 12px; padding: 7px 10px; border: 0.5px solid #e0dfd9; border-radius: 6px; background: #fff; color: #1a1a18; outline: none; font-family: inherit; width: 100%; }
 .fg input:focus, .fg select:focus, .fg textarea:focus { border-color: #aaa; }
 .fg textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
-.fg input[readonly] { background: #f7f6f2; color: #aaa; }
+.fg input[readonly], .fg textarea[readonly] { background: #f7f6f2; color: #777; }
 .field-with-action { display: flex; align-items: center; gap: 7px; }
 .field-with-action input { flex: 1; min-width: 0; }
 .field-with-action .btn { height: 31px; white-space: nowrap; flex-shrink: 0; }
@@ -734,6 +734,13 @@ td { padding: 9px 12px; vertical-align: middle; }
                     <div class="fg"><input id="b-reject" readonly placeholder="거절 이력 없음" /></div>
                   </div>
                 </div>
+
+                <div class="form-section">
+                  <div class="form-section-title">제작사 요청사항</div>
+                  <div class="form-grid full">
+                    <div class="fg"><textarea id="b-producer-request" rows="4" readonly placeholder="제작사가 남긴 추가 요청사항이 없습니다."></textarea></div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -1163,6 +1170,7 @@ const contents = [
     poster:'poster-p1',
     lang:'한국어', eps:16, runtime:12, totalRuntime:192, startPoint:1, rating:'15세 이상', type:'오리지널', mediaCategory:'DRAMA', coProduction:'SOLO', exclusive:false, pstatus:'제작 완료',
     driveFolderUrl:'https://drive.google.com/drive/folders/last-letter', rejectReason:'',
+    producerRequest:'이전 반려 사유였던 캐릭터 소개를 보강했습니다. 신규 포스터와 1-3화 무료 공개용 영상을 우선 검수 부탁드립니다.',
     bookmarks:['ShortReel (US)','Viki'],
     timeline:[
       {dot:'blue',text:'제작사가 등록 재신청함',time:'2026.05.08 · 10:32'},
@@ -1175,6 +1183,7 @@ const contents = [
     poster:'poster-p2',
     lang:'한국어', eps:20, runtime:10, totalRuntime:200, startPoint:1, rating:'전체 관람가', type:'오리지널', mediaCategory:'DRAMA', coProduction:'AGENCY', exclusive:false, pstatus:'제작 완료',
     driveFolderUrl:'https://drive.google.com/drive/folders/reverse-cinderella', rejectReason:'',
+    producerRequest:'중국어 번역 데이터는 다음 주 업데이트 예정입니다. 우선 한국어/영어 메타데이터 기준으로 검토 부탁드립니다.',
     bookmarks:['WeTV'],
     timeline:[{dot:'blue',text:'제작사가 등록 신청함',time:'2026.05.07 · 11:00'}],
     mails:[]
@@ -1183,6 +1192,7 @@ const contents = [
     poster:'poster-p3',
     lang:'일본어', eps:12, runtime:8, totalRuntime:96, startPoint:1, rating:'15세 이상', type:'오리지널', mediaCategory:'DRAMA', coProduction:'JOINT', exclusive:true, pstatus:'제작 완료',
     driveFolderUrl:'https://drive.google.com/drive/folders/tokyo-drift', rejectReason:'',
+    producerRequest:'',
     bookmarks:['Viki','iQIYI','WeTV'],
     timeline:[
       {dot:'green',text:'관리자가 승인함',time:'2026.05.01 · 09:20'},
@@ -1194,6 +1204,7 @@ const contents = [
     poster:'poster-p4',
     lang:'한국어', eps:10, runtime:14, totalRuntime:140, startPoint:1, rating:'12세 이상', type:'리메이크', mediaCategory:'DRAMA', coProduction:'SOLO', exclusive:false, pstatus:'제작 완료',
     driveFolderUrl:'', rejectReason:'캐릭터 설명이 부족합니다. 주요 인물 소개를 보완해주세요.',
+    producerRequest:'재심사 전 내부 검토용으로 임시 제출했습니다. 캐릭터 소개 보강본은 별도 수정 요청으로 전달 예정입니다.',
     bookmarks:[],
     timeline:[
       {dot:'red',text:'관리자가 거절함',time:'2026.04.29 · 14:00'},
@@ -1205,6 +1216,7 @@ const contents = [
     poster:'poster-p5',
     lang:'한국어', eps:8, runtime:18, totalRuntime:144, startPoint:1, rating:'전체 관람가', type:'오리지널', mediaCategory:'ANIMATION', coProduction:'SOLO', exclusive:false, pstatus:'제작 중',
     driveFolderUrl:'', rejectReason:'',
+    producerRequest:'',
     bookmarks:[],
     timeline:[{dot:'gray',text:'초안 저장됨',time:'2026.04.25 · 09:00'}],
     mails:[]
@@ -1213,6 +1225,7 @@ const contents = [
     poster:'poster-p6',
     lang:'한국어', eps:18, runtime:11, totalRuntime:198, startPoint:1, rating:'전체 관람가', type:'오리지널', mediaCategory:'DRAMA', coProduction:'JOINT', exclusive:true, pstatus:'제작 완료',
     driveFolderUrl:'https://drive.google.com/drive/folders/echo-spring', rejectReason:'',
+    producerRequest:'기존 계약 플랫폼에는 이미 공개된 작품이라 외부 플랫폼 발송 전 중복 노출 여부를 확인해주세요.',
     bookmarks:['Viki','WeTV'],
     timeline:[
       {dot:'green',text:'관리자가 승인함',time:'2026.04.20 · 11:00'},
@@ -1471,6 +1484,7 @@ function createAdminContent() {
     }],
     mails: [],
     adminNote: document.getElementById('new-content-note').value.trim(),
+    producerRequest: '',
   };
 
   contents.unshift(content);
@@ -1517,6 +1531,7 @@ function selectContent(id) {
   document.getElementById('b-exclusive').value = String(Boolean(c.exclusive));
   setSelectByText('b-pstatus', c.pstatus);
   document.getElementById('b-reject').value = c.rejectReason || '';
+  document.getElementById('b-producer-request').value = c.producerRequest || '';
   document.getElementById('approval-section').style.display = c.rejectReason ? '' : 'none';
 
   renderExtraInfo(c);
