@@ -18,31 +18,31 @@ function webContentGroups(form) {
   }
   return [
     { title: '작품 기본 정보', fields: [
-      { key: 'productionStatus', label: '제작 상태', kind: 'seg', enumKey: 'productionStatus', cols: 12, hint: '제작 상태에 따라 필수 항목이 달라집니다.' },
-      { key: 'originalTitle', label: '원제', kind: 'text', cols: 12, required: true, ph: '작품 원제' },
-      { key: 'title', label: '제목', kind: 'text', source: 'translation', cols: 12, required: true, ph: '언어별 제목', hint: '현재 사이트 언어로 표시되는 제목입니다. 원제와 언어가 다른 경우 번역 제목을 입력해주세요.' },
-      { key: 'episodes', label: '총 회차 수', kind: 'num', suffix: '화', cols: 6 },
+      { key: 'originalTitle', label: '제목', kind: 'text', cols: 12, required: true, ph: '작품 원제', hint: '작품이 처음 제작된 언어의 제목이에요. 변하지 않는 고유 식별용 제목입니다.' },
+      { key: 'title', label: '기타제목', kind: 'text', source: 'translation', cols: 12, required: true, ph: '언어별 제목', hint: '지금 보고 계신 언어로 서비스될 때 노출되는 제목이에요.' },
       { key: 'logline', label: '로그라인', kind: 'text', source: 'translation', cols: 12, ph: '한 줄 소개' },
       { key: 'synopsis', label: '시놉시스', kind: 'area', source: 'translation', rows: 4, cols: 12, ph: '줄거리' },
       { key: 'characterDescription', label: '인물 소개', kind: 'area', source: 'translation', rows: 3, cols: 12, ph: '주요 인물 설명' },
-      { key: 'director', label: '감독', kind: 'text', source: 'crew', cols: 6 },
-      { key: 'writer', label: '작가', kind: 'text', source: 'crew', cols: 6, divider: true },
-      { key: 'cast', label: '출연진', kind: 'text', source: 'crew', cols: 12, ph: '주연 · 조연' },
+      { key: 'director', label: '감독', kind: 'text', source: 'crew', cols: 6, required: false },
+      { key: 'writer', label: '작가', kind: 'text', source: 'crew', cols: 6, divider: true, required: false },
+      { key: 'cast', label: '출연진', kind: 'text', source: 'crew', cols: 12, ph: '주연 · 조연', required: false },
+      { key: 'episodes', label: '총 회차 수', kind: 'num', suffix: '화', cols: 4 },
+      { key: 'runtime', label: '회차당 러닝타임', kind: 'text', ph: '예: 1~3분, 90초', cols: 4, divider: true },
+      { key: 'totalRuntime', label: '총 러닝타임 (분)', kind: 'num', cols: 4 },
       { key: 'genreCodes', label: '장르', kind: 'chips', cols: 12, hint: '복수 선택' },
     ]},
     { title: '제작 정보', fields: [
+      { key: 'productionStatus', label: '제작 상태', kind: 'seg', enumKey: 'productionStatus', cols: 12 },
       { key: 'mediaCategory', label: '미디어 카테고리', kind: 'seg', enumKey: 'mediaCategory', cols: 6 },
       { key: 'productionYear', label: '제작연도', kind: 'num', suffix: '년', cols: 6 },
       { key: 'isAiGenerated', label: 'AI 생성 콘텐츠 여부', kind: 'checkbox', cols: 6, required: false, hint: '생성형 AI로 영상 또는 주요 이미지를 제작한 경우 체크해주세요.' },
       { key: 'contentLanguage', label: '콘텐츠 언어', kind: 'seg', enumKey: 'contentLanguage', hint: '원본 언어', cols: 6, divider: true },
-      { key: 'runtime', label: '회차당 러닝타임', kind: 'text', ph: '예: 1~3분, 90초', cols: 6, divider: true },
-      { key: 'totalRuntime', label: '총 러닝타임 (분)', kind: 'num', cols: 6, divider: true },
     ]},
     { title: '라이선스 · 유통', fields: license },
     { title: '공개 · 등급', fields: [
       { key: 'startPoint', label: '유료 시청 시작 회차', kind: 'num', suffix: '화부터', hint: '이 회차부터 유료', cols: 6 },
       { key: 'contentType', label: '콘텐츠 유형', kind: 'seg', enumKey: 'contentType', cols: 6 },
-      { key: 'ageRating', label: '영상 등급', kind: 'seg', enumKey: 'ageRating', cols: 12 },
+      { key: 'ageRating', label: '영상 등급', kind: 'seg', enumKey: 'ageRating', cols: 12, required: false },
     ]},
   ];
 }
@@ -208,8 +208,7 @@ function WebBasicSection({ form, set, setLangItem, baseLanguage, onAiUpload, t }
                 const inset = f.divider || (cols < 12 && !position.startsRow);
                 const needsRowFiller = position.endsRow && position.remainder > 0;
                 const roomy = f.kind === 'chips' || f.kind === 'area';
-                const optionalInPlanning = form.productionStatus === 'PLANNING' && ['director', 'writer', 'cast', 'ageRating'].includes(f.key);
-                const required = f.required !== false && f.key !== 'startPoint' && !optionalInPlanning;
+                const required = f.required !== false && f.key !== 'startPoint';
                 return (
                   <React.Fragment key={`${f.source || 'form'}-${f.key}`}>
                     <RowField label={f.label} hint={f.hint} required={required} cols={cols} inset={inset} strongDivider={!!f.divider} roomy={roomy} t={t}>
@@ -492,17 +491,17 @@ function WebMediaSection({ form, set, langList, t }) {
   return (
     <SectionCard id="sec-media" title="미디어" desc={null} t={t}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
-        <Field label={<DotFieldLabel>대표 이미지</DotFieldLabel>} required hint="세로 포스터 1장" t={t}>
+        <Field label={<DotFieldLabel>대표 이미지</DotFieldLabel>} required hint="세로 포스터 1장" gap={12} t={t}>
           <MediaUpload variant="dropzone" kind="image" multiple={false} max={1} value={form.mainImageKey}
             onChange={(v) => set('mainImageKey', v)} placeholder="대표 이미지 업로드" t={t} />
         </Field>
 
-        <Field label={<DotFieldLabel>관련 이미지</DotFieldLabel>} hint="최대 10장" t={t}>
+        <Field label={<DotFieldLabel>관련 이미지</DotFieldLabel>} hint="최대 10장" gap={12} t={t}>
           <MediaUpload variant="dropzone" kind="image" multiple max={10} value={form.contentImageKeys}
             onChange={(v) => set('contentImageKeys', v)} placeholder="스틸컷 · 키아트 업로드" t={t} />
         </Field>
 
-        <Field label={<DotFieldLabel>티저 영상·자막</DotFieldLabel>} t={t}>
+        <Field label={<DotFieldLabel>티저 영상·자막</DotFieldLabel>} hint="자막이나 로고가 삽입되지 않은 클린 버전 영상만 업로드해주세요." gap={12} t={t}>
           <EpisodeMediaMapper
             videoValue={form.teaserKeys}
             subtitleValue={form.teaserSubtitles}
@@ -514,7 +513,7 @@ function WebMediaSection({ form, set, langList, t }) {
           />
         </Field>
 
-        <Field label={<DotFieldLabel>무료회차 영상·자막</DotFieldLabel>} t={t}>
+        <Field label={<DotFieldLabel>무료회차 영상·자막</DotFieldLabel>} hint="자막이나 로고가 삽입되지 않은 클린 버전 영상만 업로드해주세요." gap={12} t={t}>
           <EpisodeMediaMapper
             videoValue={form.freeEpisodeKeys}
             subtitleValue={form.freeEpisodeSubtitles}
@@ -583,7 +582,6 @@ function WebReviewSection({ form, set, baseLanguage, rightsConfirmed, onRightsCh
   const freeSubs = reviewArr((form.freeEpisodeSubtitles || {})[lang]);
   const teaserSubs = reviewArr((form.teaserSubtitles || {})[lang]);
   const genreText = (form.genreCodes || []).map((c) => genreLabel(c)).join(' · ');
-  const isPlanning = form.productionStatus === 'PLANNING';
   const distributionLabel = form.distributionHistory === 'NEW' ? '미유통 (신작)' : form.distributionHistory === 'RELEASED' ? '기유통' : '';
 
   return (
@@ -597,26 +595,26 @@ function WebReviewSection({ form, set, baseLanguage, rightsConfirmed, onRightsCh
         </div>
 
         <ReviewGroup title="작품 기본 정보" t={t}>
-          <ReviewRow label="제작 상태" value={enumLabel('productionStatus', form.productionStatus)} ok={!!form.productionStatus} required t={t} />
-          <ReviewRow label="원제" value={form.originalTitle} ok={!!form.originalTitle} required t={t} />
-          <ReviewRow label="제목" value={tr.title} ok={!!tr.title} required t={t} />
+          <ReviewRow label="제목" value={form.originalTitle} ok={!!form.originalTitle} required t={t} />
+          <ReviewRow label="기타제목" value={tr.title} ok={!!tr.title} required t={t} />
           <ReviewRow label="로그라인" value={tr.logline} ok={!!tr.logline} required t={t} />
           <ReviewRow label="시놉시스" value={tr.synopsis} ok={!!tr.synopsis} required t={t} />
           <ReviewRow label="인물 소개" value={tr.characterDescription} ok={!!tr.characterDescription} required t={t} />
-          <ReviewRow label="감독" value={crew.director} ok={isPlanning || !!crew.director} required={!isPlanning} t={t} />
-          <ReviewRow label="작가" value={crew.writer} ok={isPlanning || !!crew.writer} required={!isPlanning} t={t} />
-          <ReviewRow label="출연진" value={crew.cast} ok={isPlanning || !!crew.cast} required={!isPlanning} t={t} />
+          <ReviewRow label="감독" value={crew.director} ok={!!crew.director} t={t} />
+          <ReviewRow label="작가" value={crew.writer} ok={!!crew.writer} t={t} />
+          <ReviewRow label="출연진" value={crew.cast} ok={!!crew.cast} t={t} />
+          <ReviewRow label="총 회차 수" value={form.episodes ? `${form.episodes}화` : ''} ok={!!form.episodes} required t={t} />
+          <ReviewRow label="회차당 러닝타임" value={form.runtime} ok={!!form.runtime} required t={t} />
+          <ReviewRow label="총 러닝타임 (분)" value={form.totalRuntime ? `${form.totalRuntime}분` : ''} ok={!!form.totalRuntime} required t={t} />
           <ReviewRow label="장르" value={genreText} ok={!!genreText} required t={t} />
         </ReviewGroup>
 
         <ReviewGroup title="제작 정보" t={t}>
+          <ReviewRow label="제작 상태" value={enumLabel('productionStatus', form.productionStatus)} ok={!!form.productionStatus} required t={t} />
           <ReviewRow label="미디어 카테고리" value={enumLabel('mediaCategory', form.mediaCategory)} ok={!!form.mediaCategory} required t={t} />
           <ReviewRow label="제작연도" value={form.productionYear ? `${form.productionYear}년` : ''} ok={!!form.productionYear} required t={t} />
           <ReviewRow label="AI 생성 콘텐츠 여부" value={form.isAiGenerated ? '예' : '아니오'} ok={true} t={t} />
           <ReviewRow label="콘텐츠 언어" value={enumLabel('contentLanguage', form.contentLanguage)} ok={!!form.contentLanguage} required t={t} />
-          <ReviewRow label="총 회차 수" value={form.episodes ? `${form.episodes}화` : ''} ok={!!form.episodes} required t={t} />
-          <ReviewRow label="회차당 러닝타임" value={form.runtime} ok={!!form.runtime} required t={t} />
-          <ReviewRow label="총 러닝타임 (분)" value={form.totalRuntime ? `${form.totalRuntime}분` : ''} ok={!!form.totalRuntime} required t={t} />
         </ReviewGroup>
 
         <ReviewGroup title="라이선스 · 유통" t={t}>
@@ -630,9 +628,9 @@ function WebReviewSection({ form, set, baseLanguage, rightsConfirmed, onRightsCh
         </ReviewGroup>
 
         <ReviewGroup title="공개 · 등급" t={t}>
-          <ReviewRow label="유료 시청 시작 회차" value={form.startPoint ? `${form.startPoint}화부터` : ''} ok={true} t={t} />
+          <ReviewRow label="유료 시청 시작 회차" value={form.startPoint ? `${form.startPoint}화부터` : ''} ok={!!form.startPoint} t={t} />
           <ReviewRow label="콘텐츠 유형" value={enumLabel('contentType', form.contentType)} ok={!!form.contentType} required t={t} />
-          <ReviewRow label="영상 등급" value={enumLabel('ageRating', form.ageRating)} ok={isPlanning || !!form.ageRating} required={!isPlanning} t={t} />
+          <ReviewRow label="영상 등급" value={enumLabel('ageRating', form.ageRating)} ok={!!form.ageRating} t={t} />
         </ReviewGroup>
 
         <ReviewGroup title="미디어" t={t}>

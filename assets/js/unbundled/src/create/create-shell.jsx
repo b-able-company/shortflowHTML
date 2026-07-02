@@ -229,8 +229,7 @@ function missingSubmitRequiredItems(form, baseLanguage) {
 
   webContentGroups(form).forEach((group) => {
     group.fields.forEach((field) => {
-      const optionalInPlanning = form.productionStatus === 'PLANNING' && ['director', 'writer', 'cast', 'ageRating'].includes(field.key);
-      const required = field.required !== false && field.key !== 'startPoint' && !optionalInPlanning;
+      const required = field.required !== false && field.key !== 'startPoint';
       if (!required) return;
       const source = field.source === 'translation' ? translation : field.source === 'crew' ? crew : form;
       if (!hasRequiredValue(source[field.key])) missing.push(field.label);

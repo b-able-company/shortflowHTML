@@ -72,6 +72,9 @@ var ENUMS = {
   }, {
     v: 'ADULT',
     label: '청소년 관람불가'
+  }, {
+    v: 'LATER',
+    label: '추후입력'
   }],
   contentType: [{
     v: 'ORIGINAL',

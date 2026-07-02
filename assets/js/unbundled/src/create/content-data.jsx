@@ -37,6 +37,7 @@ const ENUMS = {
     { v: 'TWELVE',   label: '12세' },
     { v: 'FIFTEEN',  label: '15세' },
     { v: 'ADULT',    label: '청소년 관람불가' },
+    { v: 'LATER',    label: '추후입력' },
   ],
   contentType: [
     { v: 'ORIGINAL', label: '오리지널' },

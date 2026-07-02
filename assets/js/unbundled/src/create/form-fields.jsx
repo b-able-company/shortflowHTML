@@ -5,15 +5,34 @@ const ACCENT = '#E85D2C';
 const ACCENT_SOFT = '#FFF1EC';
 
 // ─── 라벨 + 힌트 래퍼 ──────────────────────────────────
-function Field({ label, hint, required, optional, children, t, span }) {
+function Field({ label, hint, required, optional, children, t, span, gap = 7 }) {
+  const [hintOpen, setHintOpen] = React.useState(false);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 7, gridColumn: span ? `span ${span}` : 'auto', minWidth: 0 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap, gridColumn: span ? `span ${span}` : 'auto', minWidth: 0 }}>
       {label && (
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 7 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 7, position: 'relative' }}>
           <span style={{ fontFamily: t.sans, fontSize: 12.5, fontWeight: 600, color: t.ink, letterSpacing: -0.1, whiteSpace: 'nowrap' }}>{label}</span>
           {required && <span style={{ color: ACCENT, fontSize: 12, fontWeight: 700 }}>*</span>}
           {optional && <span style={{ fontFamily: t.sans, fontSize: 11, color: t.inkFaint }}>선택</span>}
-          {hint && <span style={{ fontFamily: t.sans, fontSize: 11, color: t.inkFaint, marginLeft: 'auto' }}>{hint}</span>}
+          {hint && (
+            <span
+              role="button"
+              tabIndex={0}
+              aria-label={hint}
+              onClick={() => setHintOpen((v) => !v)}
+              onFocus={() => setHintOpen(true)}
+              onBlur={() => setHintOpen(false)}
+              onMouseEnter={() => setHintOpen(true)}
+              onMouseLeave={() => setHintOpen(false)}
+              style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 15, height: 15, borderRadius: 999, border: `0.5px solid ${t.lineStrong}`, color: '#9A9DA3', background: t.surface, fontFamily: t.sans, fontSize: 10, fontWeight: 700, lineHeight: 1, cursor: 'help' }}>
+              ?
+              {hintOpen && (
+                <span style={{ position: 'absolute', top: 22, left: -8, zIndex: 40, width: 'max-content', maxWidth: 280, padding: '8px 10px', borderRadius: 7, border: `0.5px solid ${t.line}`, background: t.surface, boxShadow: '0 4px 12px rgba(0,0,0,0.045)', color: t.inkMute, fontFamily: t.sans, fontSize: 11.5, fontWeight: 500, lineHeight: 1.45, whiteSpace: 'normal', textAlign: 'left' }}>
+                  {hint}
+                </span>
+              )}
+            </span>
+          )}
         </div>
       )}
       {children}
@@ -165,7 +184,7 @@ function SelectMenu({ options, value, onChange, t, placeholder }) {
         <div style={{
           position: 'absolute', top: 40, left: 0, right: 0, zIndex: 30,
           background: t.surface, border: `0.5px solid ${t.line}`, borderRadius: 7,
-          boxShadow: '0 12px 30px rgba(0,0,0,0.14)', padding: 5, maxHeight: 240, overflow: 'auto',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.045)', padding: 5, maxHeight: 240, overflow: 'auto',
         }}>
           {options.map((o) => (
             <div key={o.v} onClick={() => { onChange && onChange(o.v); setOpen(false); }} style={{

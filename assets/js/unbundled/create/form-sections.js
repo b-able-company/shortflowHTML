@@ -74,34 +74,22 @@ function webContentGroups(form) {
   return [{
     title: '작품 기본 정보',
     fields: [{
-      key: 'productionStatus',
-      label: '제작 상태',
-      kind: 'seg',
-      enumKey: 'productionStatus',
-      cols: 12,
-      hint: '제작 상태에 따라 필수 항목이 달라집니다.'
-    }, {
       key: 'originalTitle',
-      label: '원제',
+      label: '제목',
       kind: 'text',
       cols: 12,
       required: true,
-      ph: '작품 원제'
+      ph: '작품 원제',
+      hint: '작품이 처음 제작된 언어의 제목이에요. 변하지 않는 고유 식별용 제목입니다.'
     }, {
       key: 'title',
-      label: '제목',
+      label: '기타제목',
       kind: 'text',
       source: 'translation',
       cols: 12,
       required: true,
       ph: '언어별 제목',
-      hint: '현재 사이트 언어로 표시되는 제목입니다. 원제와 언어가 다른 경우 번역 제목을 입력해주세요.'
-    }, {
-      key: 'episodes',
-      label: '총 회차 수',
-      kind: 'num',
-      suffix: '화',
-      cols: 6
+      hint: '지금 보고 계신 언어로 서비스될 때 노출되는 제목이에요.'
     }, {
       key: 'logline',
       label: '로그라인',
@@ -130,21 +118,42 @@ function webContentGroups(form) {
       label: '감독',
       kind: 'text',
       source: 'crew',
-      cols: 6
+      cols: 6,
+      required: false
     }, {
       key: 'writer',
       label: '작가',
       kind: 'text',
       source: 'crew',
       cols: 6,
-      divider: true
+      divider: true,
+      required: false
     }, {
       key: 'cast',
       label: '출연진',
       kind: 'text',
       source: 'crew',
       cols: 12,
-      ph: '주연 · 조연'
+      ph: '주연 · 조연',
+      required: false
+    }, {
+      key: 'episodes',
+      label: '총 회차 수',
+      kind: 'num',
+      suffix: '화',
+      cols: 4
+    }, {
+      key: 'runtime',
+      label: '회차당 러닝타임',
+      kind: 'text',
+      ph: '예: 1~3분, 90초',
+      cols: 4,
+      divider: true
+    }, {
+      key: 'totalRuntime',
+      label: '총 러닝타임 (분)',
+      kind: 'num',
+      cols: 4
     }, {
       key: 'genreCodes',
       label: '장르',
@@ -155,6 +164,12 @@ function webContentGroups(form) {
   }, {
     title: '제작 정보',
     fields: [{
+      key: 'productionStatus',
+      label: '제작 상태',
+      kind: 'seg',
+      enumKey: 'productionStatus',
+      cols: 12
+    }, {
       key: 'mediaCategory',
       label: '미디어 카테고리',
       kind: 'seg',
@@ -181,19 +196,6 @@ function webContentGroups(form) {
       hint: '원본 언어',
       cols: 6,
       divider: true
-    }, {
-      key: 'runtime',
-      label: '회차당 러닝타임',
-      kind: 'text',
-      ph: '예: 1~3분, 90초',
-      cols: 6,
-      divider: true
-    }, {
-      key: 'totalRuntime',
-      label: '총 러닝타임 (분)',
-      kind: 'num',
-      cols: 6,
-      divider: true
     }]
   }, {
     title: '라이선스 · 유통',
@@ -218,7 +220,8 @@ function webContentGroups(form) {
       label: '영상 등급',
       kind: 'seg',
       enumKey: 'ageRating',
-      cols: 12
+      cols: 12,
+      required: false
     }]
   }];
 }
@@ -698,8 +701,7 @@ function WebBasicSection(_ref6) {
       var inset = f.divider || cols < 12 && !position.startsRow;
       var needsRowFiller = position.endsRow && position.remainder > 0;
       var roomy = f.kind === 'chips' || f.kind === 'area';
-      var optionalInPlanning = form.productionStatus === 'PLANNING' && ['director', 'writer', 'cast', 'ageRating'].includes(f.key);
-      var required = f.required !== false && f.key !== 'startPoint' && !optionalInPlanning;
+      var required = f.required !== false && f.key !== 'startPoint';
       return /*#__PURE__*/React.createElement(React.Fragment, {
         key: "".concat(f.source || 'form', "-").concat(f.key)
       }, /*#__PURE__*/React.createElement(RowField, {
@@ -1203,6 +1205,7 @@ function WebMediaSection(_ref1) {
     label: /*#__PURE__*/React.createElement(DotFieldLabel, null, "\uB300\uD45C \uC774\uBBF8\uC9C0"),
     required: true,
     hint: "\uC138\uB85C \uD3EC\uC2A4\uD130 1\uC7A5",
+    gap: 12,
     t: t
   }, /*#__PURE__*/React.createElement(MediaUpload, {
     variant: "dropzone",
@@ -1218,6 +1221,7 @@ function WebMediaSection(_ref1) {
   })), /*#__PURE__*/React.createElement(Field, {
     label: /*#__PURE__*/React.createElement(DotFieldLabel, null, "\uAD00\uB828 \uC774\uBBF8\uC9C0"),
     hint: "\uCD5C\uB300 10\uC7A5",
+    gap: 12,
     t: t
   }, /*#__PURE__*/React.createElement(MediaUpload, {
     variant: "dropzone",
@@ -1232,6 +1236,8 @@ function WebMediaSection(_ref1) {
     t: t
   })), /*#__PURE__*/React.createElement(Field, {
     label: /*#__PURE__*/React.createElement(DotFieldLabel, null, "\uD2F0\uC800 \uC601\uC0C1\xB7\uC790\uB9C9"),
+    hint: "\uC790\uB9C9\uC774\uB098 \uB85C\uACE0\uAC00 \uC0BD\uC785\uB418\uC9C0 \uC54A\uC740 \uD074\uB9B0 \uBC84\uC804 \uC601\uC0C1\uB9CC \uC5C5\uB85C\uB4DC\uD574\uC8FC\uC138\uC694.",
+    gap: 12,
     t: t
   }, /*#__PURE__*/React.createElement(EpisodeMediaMapper, {
     videoValue: form.teaserKeys,
@@ -1247,6 +1253,8 @@ function WebMediaSection(_ref1) {
     max: 3
   })), /*#__PURE__*/React.createElement(Field, {
     label: /*#__PURE__*/React.createElement(DotFieldLabel, null, "\uBB34\uB8CC\uD68C\uCC28 \uC601\uC0C1\xB7\uC790\uB9C9"),
+    hint: "\uC790\uB9C9\uC774\uB098 \uB85C\uACE0\uAC00 \uC0BD\uC785\uB418\uC9C0 \uC54A\uC740 \uD074\uB9B0 \uBC84\uC804 \uC601\uC0C1\uB9CC \uC5C5\uB85C\uB4DC\uD574\uC8FC\uC138\uC694.",
+    gap: 12,
     t: t
   }, /*#__PURE__*/React.createElement(EpisodeMediaMapper, {
     videoValue: form.freeEpisodeKeys,
@@ -1375,7 +1383,6 @@ function WebReviewSection(_ref12) {
   var genreText = (form.genreCodes || []).map(function (c) {
     return genreLabel(c);
   }).join(' · ');
-  var isPlanning = form.productionStatus === 'PLANNING';
   var distributionLabel = form.distributionHistory === 'NEW' ? '미유통 (신작)' : form.distributionHistory === 'RELEASED' ? '기유통' : '';
   return /*#__PURE__*/React.createElement(SectionCard, {
     id: "sec-review",
@@ -1426,19 +1433,13 @@ function WebReviewSection(_ref12) {
     title: "\uC791\uD488 \uAE30\uBCF8 \uC815\uBCF4",
     t: t
   }, /*#__PURE__*/React.createElement(ReviewRow, {
-    label: "\uC81C\uC791 \uC0C1\uD0DC",
-    value: enumLabel('productionStatus', form.productionStatus),
-    ok: !!form.productionStatus,
-    required: true,
-    t: t
-  }), /*#__PURE__*/React.createElement(ReviewRow, {
-    label: "\uC6D0\uC81C",
+    label: "\uC81C\uBAA9",
     value: form.originalTitle,
     ok: !!form.originalTitle,
     required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
-    label: "\uC81C\uBAA9",
+    label: "\uAE30\uD0C0\uC81C\uBAA9",
     value: tr.title,
     ok: !!tr.title,
     required: true,
@@ -1464,20 +1465,35 @@ function WebReviewSection(_ref12) {
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uAC10\uB3C5",
     value: crew.director,
-    ok: isPlanning || !!crew.director,
-    required: !isPlanning,
+    ok: !!crew.director,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uC791\uAC00",
     value: crew.writer,
-    ok: isPlanning || !!crew.writer,
-    required: !isPlanning,
+    ok: !!crew.writer,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uCD9C\uC5F0\uC9C4",
     value: crew.cast,
-    ok: isPlanning || !!crew.cast,
-    required: !isPlanning,
+    ok: !!crew.cast,
+    t: t
+  }), /*#__PURE__*/React.createElement(ReviewRow, {
+    label: "\uCD1D \uD68C\uCC28 \uC218",
+    value: form.episodes ? "".concat(form.episodes, "\uD654") : '',
+    ok: !!form.episodes,
+    required: true,
+    t: t
+  }), /*#__PURE__*/React.createElement(ReviewRow, {
+    label: "\uD68C\uCC28\uB2F9 \uB7EC\uB2DD\uD0C0\uC784",
+    value: form.runtime,
+    ok: !!form.runtime,
+    required: true,
+    t: t
+  }), /*#__PURE__*/React.createElement(ReviewRow, {
+    label: "\uCD1D \uB7EC\uB2DD\uD0C0\uC784 (\uBD84)",
+    value: form.totalRuntime ? "".concat(form.totalRuntime, "\uBD84") : '',
+    ok: !!form.totalRuntime,
+    required: true,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uC7A5\uB974",
@@ -1489,6 +1505,12 @@ function WebReviewSection(_ref12) {
     title: "\uC81C\uC791 \uC815\uBCF4",
     t: t
   }, /*#__PURE__*/React.createElement(ReviewRow, {
+    label: "\uC81C\uC791 \uC0C1\uD0DC",
+    value: enumLabel('productionStatus', form.productionStatus),
+    ok: !!form.productionStatus,
+    required: true,
+    t: t
+  }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uBBF8\uB514\uC5B4 \uCE74\uD14C\uACE0\uB9AC",
     value: enumLabel('mediaCategory', form.mediaCategory),
     ok: !!form.mediaCategory,
@@ -1509,24 +1531,6 @@ function WebReviewSection(_ref12) {
     label: "\uCF58\uD150\uCE20 \uC5B8\uC5B4",
     value: enumLabel('contentLanguage', form.contentLanguage),
     ok: !!form.contentLanguage,
-    required: true,
-    t: t
-  }), /*#__PURE__*/React.createElement(ReviewRow, {
-    label: "\uCD1D \uD68C\uCC28 \uC218",
-    value: form.episodes ? "".concat(form.episodes, "\uD654") : '',
-    ok: !!form.episodes,
-    required: true,
-    t: t
-  }), /*#__PURE__*/React.createElement(ReviewRow, {
-    label: "\uD68C\uCC28\uB2F9 \uB7EC\uB2DD\uD0C0\uC784",
-    value: form.runtime,
-    ok: !!form.runtime,
-    required: true,
-    t: t
-  }), /*#__PURE__*/React.createElement(ReviewRow, {
-    label: "\uCD1D \uB7EC\uB2DD\uD0C0\uC784 (\uBD84)",
-    value: form.totalRuntime ? "".concat(form.totalRuntime, "\uBD84") : '',
-    ok: !!form.totalRuntime,
     required: true,
     t: t
   })), /*#__PURE__*/React.createElement(ReviewGroup, {
@@ -1580,7 +1584,7 @@ function WebReviewSection(_ref12) {
   }, /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uC720\uB8CC \uC2DC\uCCAD \uC2DC\uC791 \uD68C\uCC28",
     value: form.startPoint ? "".concat(form.startPoint, "\uD654\uBD80\uD130") : '',
-    ok: true,
+    ok: !!form.startPoint,
     t: t
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uCF58\uD150\uCE20 \uC720\uD615",
@@ -1591,8 +1595,7 @@ function WebReviewSection(_ref12) {
   }), /*#__PURE__*/React.createElement(ReviewRow, {
     label: "\uC601\uC0C1 \uB4F1\uAE09",
     value: enumLabel('ageRating', form.ageRating),
-    ok: isPlanning || !!form.ageRating,
-    required: !isPlanning,
+    ok: !!form.ageRating,
     t: t
   })), /*#__PURE__*/React.createElement(ReviewGroup, {
     title: "\uBBF8\uB514\uC5B4",

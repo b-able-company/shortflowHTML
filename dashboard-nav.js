@@ -39,10 +39,21 @@
     globe: '<svg class="lang-globe" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M8 1.5C5.5 4 5.5 12 8 14.5M8 1.5C10.5 4 10.5 12 8 14.5M1.5 8h13"/></svg>',
     chevronDown: '<svg class="lang-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5"/></svg>',
   };
+  const languageOptions = ['KR', 'CN', 'EN'];
+
+  function getPreferredLanguage() {
+    try {
+      const saved = localStorage.getItem('shortflow-language');
+      return languageOptions.includes(saved) ? saved : 'KR';
+    } catch (error) {
+      return 'KR';
+    }
+  }
 
   function renderTopNav(activePage) {
     const currentPage = activePage || 'platform-dashboard';
     const currentRole = resolveViewRole(currentPage);
+    const currentLanguage = getPreferredLanguage();
 
     return `
       <header class="top-nav">
@@ -62,11 +73,20 @@
             <button class="icon-action" aria-label="알림">${icons.bell}</button>
             ${currentRole === 'platform' ? `<a class="icon-action cart" href="cart.html" aria-label="카트">${icons.cart}</a>` : ''}
             <button class="icon-action" aria-label="테마">${icons.moon}</button>
-            <button class="lang" type="button" aria-label="사이트 언어 선택" aria-haspopup="listbox">
-              ${icons.globe}
-              <span>한국어</span>
-              ${icons.chevronDown}
-            </button>
+            <div class="lang-wrap">
+              <button class="lang" type="button" aria-label="사이트 언어 선택" aria-haspopup="listbox" aria-expanded="false" data-lang-trigger>
+                ${icons.globe}
+                <span data-lang-current>${currentLanguage}</span>
+                ${icons.chevronDown}
+              </button>
+              <div class="lang-menu" role="listbox" aria-label="사이트 언어">
+                ${languageOptions.map(code => `
+                  <button class="lang-option ${code === currentLanguage ? 'active' : ''}" type="button" role="option" aria-selected="${code === currentLanguage ? 'true' : 'false'}" data-lang-code="${code}">
+                    <span>${code}</span>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
             <a class="user ${currentPage === 'mypage' ? 'active' : ''}" href="${currentRole === 'producer' ? 'owner-prod.html' : 'owner.html'}" ${currentPage === 'mypage' ? 'aria-current="page"' : ''}>Reelio</a>
             <a class="logout" href="login/login.html">로그아웃</a>
           </div>
@@ -313,6 +333,69 @@
     document.addEventListener('focusin', prepareLink);
   }
 
+  function closeLanguageMenus() {
+    document.querySelectorAll('.lang-wrap.open').forEach(wrapper => {
+      wrapper.classList.remove('open');
+      wrapper.querySelector('[data-lang-trigger]')?.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  function syncLanguageSelection(code) {
+    document.querySelectorAll('[data-lang-current]').forEach(label => {
+      label.textContent = code;
+    });
+    document.querySelectorAll('[data-lang-code]').forEach(option => {
+      const active = option.dataset.langCode === code;
+      option.classList.toggle('active', active);
+      option.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+  }
+
+  function setupLanguageDropdown() {
+    if (document.documentElement.dataset.shortflowLanguageDropdown === 'true') return;
+    document.documentElement.dataset.shortflowLanguageDropdown = 'true';
+
+    document.addEventListener('click', event => {
+      if (!(event.target instanceof Element)) return;
+
+      const option = event.target.closest('[data-lang-code]');
+      if (option) {
+        const code = option.dataset.langCode;
+        if (!languageOptions.includes(code)) return;
+        try {
+          localStorage.setItem('shortflow-language', code);
+        } catch (error) {
+          // The selector is visual only, so storage failure is fine.
+        }
+        syncLanguageSelection(code);
+        closeLanguageMenus();
+        return;
+      }
+
+      const trigger = event.target.closest('[data-lang-trigger]');
+      if (trigger) {
+        const wrapper = trigger.closest('.lang-wrap');
+        const willOpen = !wrapper?.classList.contains('open');
+        closeLanguageMenus();
+        if (wrapper && willOpen) {
+          wrapper.classList.add('open');
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+
+      if (!event.target.closest('.lang-wrap')) {
+        closeLanguageMenus();
+      }
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        closeLanguageMenus();
+      }
+    });
+  }
+
   if (!window.__SHORTFLOW_DEFER_NAV__) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', mountDeclarativeNavs);
@@ -322,6 +405,7 @@
   }
 
   setupPagePrefetch();
+  setupLanguageDropdown();
 
   window.ShortflowNav = {
     renderTopNav,

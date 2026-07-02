@@ -28,20 +28,27 @@ function Field(_ref) {
     optional = _ref.optional,
     children = _ref.children,
     t = _ref.t,
-    span = _ref.span;
+    span = _ref.span,
+    _ref$gap = _ref.gap,
+    gap = _ref$gap === void 0 ? 7 : _ref$gap;
+  var _React$useState = React.useState(false),
+    _React$useState2 = _slicedToArray(_React$useState, 2),
+    hintOpen = _React$useState2[0],
+    setHintOpen = _React$useState2[1];
   return /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       flexDirection: 'column',
-      gap: 7,
+      gap: gap,
       gridColumn: span ? "span ".concat(span) : 'auto',
       minWidth: 0
     }
   }, label && /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
-      alignItems: 'baseline',
-      gap: 7
+      alignItems: 'center',
+      gap: 7,
+      position: 'relative'
     }
   }, /*#__PURE__*/React.createElement("span", {
     style: {
@@ -65,13 +72,65 @@ function Field(_ref) {
       color: t.inkFaint
     }
   }, "\uC120\uD0DD"), hint && /*#__PURE__*/React.createElement("span", {
+    role: "button",
+    tabIndex: 0,
+    "aria-label": hint,
+    onClick: function onClick() {
+      return setHintOpen(function (v) {
+        return !v;
+      });
+    },
+    onFocus: function onFocus() {
+      return setHintOpen(true);
+    },
+    onBlur: function onBlur() {
+      return setHintOpen(false);
+    },
+    onMouseEnter: function onMouseEnter() {
+      return setHintOpen(true);
+    },
+    onMouseLeave: function onMouseLeave() {
+      return setHintOpen(false);
+    },
     style: {
+      position: 'relative',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 15,
+      height: 15,
+      borderRadius: 999,
+      border: "0.5px solid ".concat(t.lineStrong),
+      color: '#9A9DA3',
+      background: t.surface,
       fontFamily: t.sans,
-      fontSize: 11,
-      color: t.inkFaint,
-      marginLeft: 'auto'
+      fontSize: 10,
+      fontWeight: 700,
+      lineHeight: 1,
+      cursor: 'help'
     }
-  }, hint)), children);
+  }, "?", hintOpen && /*#__PURE__*/React.createElement("span", {
+    style: {
+      position: 'absolute',
+      top: 22,
+      left: -8,
+      zIndex: 40,
+      width: 'max-content',
+      maxWidth: 280,
+      padding: '8px 10px',
+      borderRadius: 7,
+      border: "0.5px solid ".concat(t.line),
+      background: t.surface,
+      boxShadow: '0 4px 12px rgba(0,0,0,0.045)',
+      color: t.inkMute,
+      fontFamily: t.sans,
+      fontSize: 11.5,
+      fontWeight: 500,
+      lineHeight: 1.45,
+      whiteSpace: 'normal',
+      textAlign: 'left'
+    }
+  }, hint))), children);
 }
 var inputBase = function inputBase(t) {
   return {
@@ -404,7 +463,7 @@ function SelectMenu(_ref8) {
       background: t.surface,
       border: "0.5px solid ".concat(t.line),
       borderRadius: 7,
-      boxShadow: '0 12px 30px rgba(0,0,0,0.14)',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.045)',
       padding: 5,
       maxHeight: 240,
       overflow: 'auto'
