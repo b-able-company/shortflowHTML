@@ -84,6 +84,8 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 
 /* PLATFORM CHECKBOXES */
 .platform-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.select-all-platforms { margin-left: auto; height: 26px; padding: 0 10px; border: 0.5px solid #e0dfd9; border-radius: 6px; background: #fff; color: #555; font-family: inherit; font-size: 11.5px; font-weight: 500; cursor: pointer; }
+.select-all-platforms:hover { border-color: #aaa; background: #fafaf7; color: #1a1a18; }
 .platform-item { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 0.5px solid #e8e6e0; border-radius: 8px; cursor: pointer; user-select: none; }
 .platform-item:hover { border-color: #bbb; }
 .platform-item.checked { border: 1.5px solid #aaa79f; background: #f7f6f2; }
@@ -239,6 +241,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
           <div class="step inactive" id="step2-badge">2</div>
           <span style="font-size:12px;font-weight:500;color:#333">발송할 플랫폼사 선택</span>
           <span style="font-size:11px;color:#bbb;margin-left:4px">복수 선택 가능</span>
+          <button class="select-all-platforms" type="button" onclick="selectAllPlatforms()">전체선택</button>
         </div>
         <div class="platform-grid" id="platform-grid"></div>
         <p class="note" style="margin-top:10px">이미 발송된 플랫폼사는 <span style="background:#EAF3DE;color:#3B6D11;font-size:9.5px;padding:1px 5px;border-radius:4px">발송 완료</span> 표시됩니다. 재발송도 가능합니다.</p>
@@ -395,6 +398,12 @@ function renderPlatforms() {
 function togglePlatform(id) {
   if (checkedPlatforms.has(id)) checkedPlatforms.delete(id);
   else checkedPlatforms.add(id);
+  renderPlatforms();
+  updateSendBtn();
+}
+
+function selectAllPlatforms() {
+  platforms.forEach(platform => checkedPlatforms.add(platform.id));
   renderPlatforms();
   updateSendBtn();
 }

@@ -60,16 +60,18 @@
     .search input::placeholder { color: #7c8495; }
     .divider { width: 1px; height: 22px; background: #d9dde4; }
     .tool-btn {
+      width: 92px;
       height: 36px;
       border: 1px solid var(--line);
-      border-radius: 6px;
+      border-radius: 12px;
       background: #fff;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
       padding: 0 12px;
-      font-size: 13px;
-      font-weight: 400;
+      font-size: 13.5px;
+      font-weight: 500;
       cursor: pointer;
     }
     .tool-btn.is-active {
@@ -78,7 +80,7 @@
       background: #fff8f5;
     }
     .filter-body {
-      padding: 16px 16px 16px;
+      padding: 16px 16px 16px 28px;
     }
     .filter-panel.is-collapsed .search-row {
       border-bottom-color: transparent;
@@ -91,7 +93,7 @@
       grid-template-columns: 92px 1fr;
       gap: 16px;
       align-items: start;
-      margin-bottom: 12px;
+      margin-bottom: 14.5px;
     }
     .filter-line:last-child { margin-bottom: 0; }
     .filter-label {
@@ -124,7 +126,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin: 18px 4px 18px;
+      margin: 30px 4px 12px;
     }
     .count {
       color: #5f6673;
@@ -136,7 +138,7 @@
       gap: 22px;
       color: #7d8391;
       font-size: 14px;
-      font-weight: 400;
+      font-weight: 500;
     }
     .sort button {
       border: 0;
@@ -159,7 +161,8 @@
       justify-content: center;
       gap: 4px;
       min-height: 34px;
-      margin-top: 24px;
+      margin-top: 96px;
+      margin-bottom: 72px;
     }
     .page-btn {
       min-width: 28px;
@@ -351,7 +354,7 @@
     @media (max-width: 720px) {
       .filter-line { grid-template-columns: 1fr; gap: 8px; }
       .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; }
-      .pagination { margin-top: 24px; gap: 4px; }
+      .pagination { margin-top: 80px; margin-bottom: 56px; gap: 4px; }
       .content-list-main { padding-bottom: 24px; }
       .poster-title { font-size: 22px; }
     }
@@ -369,11 +372,9 @@
         </label>
         <div class="divider"></div>
         <button class="tool-btn is-active" type="button" id="filterToggle" aria-expanded="true" aria-controls="filters">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
           필터
         </button>
         <button class="tool-btn" type="button" id="favoriteOnly">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
           즐겨찾기
         </button>
       </div>
@@ -498,7 +499,7 @@
       sort: 'popular',
       query: '',
       page: 1,
-      pageSize: 12
+      pageSize: 15
     };
 
     const grid = document.getElementById('grid');

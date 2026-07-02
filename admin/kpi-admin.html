@@ -50,6 +50,15 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .metric-card { position: relative; min-height: 132px; padding: 22px 25px 20px; background: #fff; border-radius: 11px; display: flex; flex-direction: column; }
 .metric-top { display: block; padding-right: 48px; }
 .metric-name { font-size: 13.5px; color: #777; font-weight: 500; }
+.metric-name-with-help { display: inline-flex; align-items: center; gap: 5px; position: relative; }
+.metric-help { width: 15px; height: 15px; border: 0.5px solid #d5d2ca; border-radius: 50%; background: #fff; color: #aaa; font-family: inherit; font-size: 9px; font-weight: 650; line-height: 14px; text-align: center; cursor: help; }
+.metric-help-popover { position: absolute; top: 22px; left: 0; z-index: 20; display: none; width: 340px; padding: 12px 13px; border: 0.5px solid #e3e1db; border-radius: 8px; background: #fff; color: #555; font-size: 11.5px; font-weight: 500; line-height: 1.55; white-space: normal; }
+.metric-help-popover strong { display: block; margin-bottom: 6px; color: #1a1a18; font-size: 12.5px; font-weight: 650; }
+.metric-help-popover p { margin: 0 0 8px; color: #666; }
+.metric-help-popover em { display: block; margin: 9px 0 5px; color: #888; font-size: 11px; font-style: normal; font-weight: 650; }
+.metric-help-popover span { display: block; color: #555; line-height: 1.6; }
+.metric-help:hover + .metric-help-popover,
+.metric-help:focus + .metric-help-popover { display: block; }
 .metric-icon { position: absolute; top: 22px; right: 25px; width: 52px; height: 52px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 25px; }
 .metric-value { margin-top: 14px; padding-right: 48px; font-size: 31px; line-height: 1; font-weight: 650; letter-spacing: -0.04em; white-space: nowrap; }
 .metric-value span { font-size: 15px !important; }
@@ -332,7 +341,24 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
         </article>
         <article class="metric-card">
           <div class="metric-top">
-            <span class="metric-name">활성 플랫폼 수</span>
+            <span class="metric-name metric-name-with-help">활성 플랫폼 수
+              <button class="metric-help" type="button" aria-label="활성 플랫폼사 목록">?</button>
+              <span class="metric-help-popover" role="tooltip">
+                <strong>활성 플랫폼 수란?</strong>
+                <p>최근 3개월 이내 구매 문의를 1건 이상 보낸 플랫폼사 수예요.</p>
+                <p>증감(+/-)은 한 달 전 같은 기준으로 집계한 값과 비교한 수치입니다.</p>
+                <em>활성 플랫폼 목록</em>
+                <span>· ShortReel (US)</span>
+                <span>· Viki</span>
+                <span>· WeTV</span>
+                <span>· DramaBox</span>
+                <span>· MoboReels</span>
+                <span>· GoodShort</span>
+                <span>· FlexTV</span>
+                <span>· ReelShort</span>
+                <span>· ShortMax</span>
+              </span>
+            </span>
             <span class="metric-icon tone-blue"><i class="ti ti-activity"></i></span>
           </div>
           <strong class="metric-value">9<span style="font-size:13px;margin-left:2px">개사</span></strong>

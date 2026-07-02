@@ -40,6 +40,10 @@
     chevronDown: '<svg class="lang-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5"/></svg>',
   };
   const languageOptions = ['KR', 'CN', 'EN'];
+  const accountProfiles = {
+    platform: { company: 'Reelio', roleLabel: '플랫폼', accountHref: 'owner.html' },
+    producer: { company: 'Reelio', roleLabel: '제작사', accountHref: 'owner-prod.html' },
+  };
 
   function getPreferredLanguage() {
     try {
@@ -54,6 +58,7 @@
     const currentPage = activePage || 'platform-dashboard';
     const currentRole = resolveViewRole(currentPage);
     const currentLanguage = getPreferredLanguage();
+    const account = accountProfiles[currentRole] || accountProfiles.platform;
 
     return `
       <header class="top-nav">
@@ -71,7 +76,6 @@
           </nav>
           <div class="nav-actions">
             <button class="icon-action" aria-label="알림">${icons.bell}</button>
-            ${currentRole === 'platform' ? `<a class="icon-action cart" href="cart.html" aria-label="카트">${icons.cart}</a>` : ''}
             <button class="icon-action" aria-label="테마">${icons.moon}</button>
             <div class="lang-wrap">
               <button class="lang" type="button" aria-label="사이트 언어 선택" aria-haspopup="listbox" aria-expanded="false" data-lang-trigger>
@@ -87,8 +91,27 @@
                 `).join('')}
               </div>
             </div>
-            <a class="user ${currentPage === 'mypage' ? 'active' : ''}" href="${currentRole === 'producer' ? 'owner-prod.html' : 'owner.html'}" ${currentPage === 'mypage' ? 'aria-current="page"' : ''}>Reelio</a>
-            <a class="logout" href="login/login.html">로그아웃</a>
+            <div class="account-wrap">
+              <button class="account-trigger ${currentPage === 'mypage' ? 'active' : ''}" type="button" aria-label="계정 메뉴" aria-haspopup="true">
+                <span>${account.company}</span>
+              </button>
+              <div class="account-menu" role="menu">
+                <a class="account-head" href="${account.accountHref}" role="menuitem">
+                  <strong>${account.company}</strong>
+                  <span>${account.roleLabel}</span>
+                </a>
+                ${currentRole === 'platform' ? `
+                  <a class="account-menu-item" href="cart.html" role="menuitem">
+                    ${icons.cart}
+                    <span>장바구니</span>
+                  </a>
+                ` : ''}
+                <a class="account-menu-item danger" href="login/login.html" role="menuitem">
+                  <span class="account-menu-icon">↪</span>
+                  <span>로그아웃</span>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </header>
