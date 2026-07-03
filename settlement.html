@@ -413,6 +413,7 @@
 </style>
 <script src="login/vendor/react.development.js"></script>
 <script src="login/vendor/react-dom.development.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="login/vendor/babel-standalone.min.js"></script>
 
 <link rel="stylesheet" href="dashboard-common.css">
@@ -1345,6 +1346,29 @@ const PLATFORMS = [
     releaseDate: '2024-09-01',
     expiryDate: '2026-08-31',
     rsRate: 25, // 25%
+    rsMonthly: [
+      { month: '2024-10', amount: 210 },
+      { month: '2024-11', amount: 290 },
+      { month: '2024-12', amount: 340 },
+      { month: '2025-01', amount: 380 },
+      { month: '2025-02', amount: 310 },
+      { month: '2025-03', amount: 280 },
+      { month: '2025-04', amount: 360 },
+      { month: '2025-05', amount: 370 },
+      { month: '2025-06', amount: 390 },
+      { month: '2025-07', amount: 420 },
+      { month: '2025-08', amount: 450 },
+      { month: '2025-09', amount: 430 },
+      { month: '2025-10', amount: 470 },
+      { month: '2025-11', amount: 500 },
+      { month: '2025-12', amount: 520 },
+      { month: '2026-01', amount: 540 },
+      { month: '2026-02', amount: 560 },
+      { month: '2026-03', amount: 590 },
+      { month: '2026-04', amount: 610 },
+      { month: '2026-05', amount: 630 },
+      { month: '2026-06', amount: 650 },
+    ],
     mgRows: [
       {
         period: '2024-09', periodKind: 'month',
@@ -1425,6 +1449,29 @@ const PLATFORMS = [
     releaseDate: '2024-10-10',
     expiryDate: '2026-10-09',
     rsRate: 30,
+    rsMonthly: [
+      { month: '2024-10', amount: 90 },
+      { month: '2024-11', amount: 120 },
+      { month: '2024-12', amount: 110 },
+      { month: '2025-01', amount: 160 },
+      { month: '2025-02', amount: 170 },
+      { month: '2025-03', amount: 150 },
+      { month: '2025-04', amount: 175 },
+      { month: '2025-05', amount: 180 },
+      { month: '2025-06', amount: 185 },
+      { month: '2025-07', amount: 210 },
+      { month: '2025-08', amount: 220 },
+      { month: '2025-09', amount: 205 },
+      { month: '2025-10', amount: 230 },
+      { month: '2025-11', amount: 245 },
+      { month: '2025-12', amount: 260 },
+      { month: '2026-01', amount: 275 },
+      { month: '2026-02', amount: 285 },
+      { month: '2026-03', amount: 300 },
+      { month: '2026-04', amount: 315 },
+      { month: '2026-05', amount: 330 },
+      { month: '2026-06', amount: 345 },
+    ],
     rsRows: [
       {
         period: '2024-Q4', periodKind: 'quarter',
@@ -1852,11 +1899,348 @@ function TableGroupLabel({ kind, t }) {
 
 }
 
+function SettlementPaneHeader({ hasRsTrend, activePane, setActivePane, t }) {
+  const isRsPane = activePane === 'rs';
+  return (
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 14,
+      padding: '13px 20px 12px',
+      background: t.surface,
+      borderBottom: `0.5px solid ${t.line}`
+    }}>
+      <div style={{
+        fontSize: 13.5,
+        color: t.ink,
+        fontWeight: 600,
+        letterSpacing: -0.1,
+      }}>
+        {isRsPane ? '월별 RS 수익' : '정산 상세'}
+      </div>
+
+      {hasRsTrend &&
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              setActivePane(isRsPane ? 'records' : 'rs');
+            }}
+            style={{
+              height: 34,
+              minWidth: 112,
+              padding: '0 18px',
+              border: 0,
+              borderRadius: 999,
+              background: '#1d1d1f',
+              color: '#fff',
+              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.12)',
+              fontFamily: t.sans,
+              fontSize: 11.5,
+              fontWeight: 500,
+              letterSpacing: 0,
+              cursor: 'pointer'
+            }}>
+            {isRsPane ? '거래 기록 보기' : 'RS 추이 보기'}
+            <span style={{
+              display: 'inline-block',
+              marginLeft: 7,
+              fontWeight: 400,
+              opacity: 0.82
+            }}>-&gt;</span>
+          </button>
+        </div>
+      }
+    </div>
+  );
+}
+
+function RSTrendPanel({ p, selectedYear, setSelectedYear, years, t }) {
+  const rows = p.rsMonthly || [];
+  const chartRef = React.useRef(null);
+  const chartId = React.useMemo(() => `rs-trend-${p.id}`, [p.id]);
+  const months = React.useMemo(() => {
+    return Array.from({ length: 12 }, (_, index) => ({
+      number: index + 1,
+      key: String(index + 1).padStart(2, '0'),
+      label: `${index + 1}월`,
+    }));
+  }, []);
+  const amountByMonth = React.useMemo(() => {
+    return new Map(rows.map((row) => [row.month, row.amount]));
+  }, [rows]);
+  const yearRows = React.useMemo(() => {
+    return months.map((month) => {
+      const monthKey = `${selectedYear}-${month.key}`;
+      return {
+        key: monthKey,
+        label: month.label,
+        amount: amountByMonth.has(monthKey) ? amountByMonth.get(monthKey) : null,
+      };
+    });
+  }, [amountByMonth, months, selectedYear]);
+  const formatRSAmount = (amount) =>
+    amount == null ? '-' : `$${Math.round(amount).toLocaleString('en-US')}`;
+
+  React.useEffect(() => {
+    if (years.length && !years.includes(selectedYear)) {
+      setSelectedYear(years[0]);
+    }
+  }, [selectedYear, years]);
+
+  React.useEffect(() => {
+    if (!chartRef.current || !window.ApexCharts) return undefined;
+    const chart = new ApexCharts(chartRef.current, {
+      series: [{
+        name: 'RS 수익',
+        data: yearRows.map((row) => row.amount),
+      }],
+      chart: {
+        type: 'area',
+        height: 246,
+        toolbar: { show: false },
+        zoom: { enabled: false },
+        animations: { enabled: true, speed: 500 },
+        fontFamily: t.sans,
+        background: '#fff',
+        offsetY: 12,
+      },
+      colors: ['#4fa987'],
+      stroke: { curve: 'straight', width: 2.5 },
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shadeIntensity: 1,
+          opacityFrom: 0.2,
+          opacityTo: 0.02,
+          stops: [0, 100],
+        },
+      },
+      markers: {
+        size: 4,
+        strokeWidth: 2,
+        strokeColors: ['#4fa987'],
+        fillColor: '#fff',
+        hover: { size: 6 },
+      },
+      xaxis: {
+        categories: yearRows.map((row) => row.label),
+        labels: { style: { fontSize: '10px', colors: '#9fa1a5' }, rotate: 0 },
+        axisBorder: { show: false },
+        axisTicks: { show: false },
+        tooltip: { enabled: false },
+      },
+      yaxis: {
+        labels: {
+          style: { fontSize: '10px', colors: '#b2b4b8' },
+          formatter: (value) => value == null ? '' : `$${Math.round(value).toLocaleString('en-US')}`,
+        },
+      },
+      grid: {
+        borderColor: '#f0efe9',
+        padding: { left: 4, right: 12, top: 0, bottom: -4 },
+      },
+      tooltip: {
+        theme: 'dark',
+        x: {
+          formatter: (_value, opts) => yearRows[opts.dataPointIndex]?.key || '',
+        },
+        y: {
+          formatter: (value) => value == null ? '데이터 없음' : `$${Math.round(value).toLocaleString('en-US')}`,
+          title: { formatter: () => 'RS 수익' },
+        },
+      },
+      dataLabels: { enabled: false },
+      legend: { show: false },
+    });
+    chart.render();
+    return () => chart.destroy();
+  }, [chartId, selectedYear, t.sans, yearRows]);
+
+  return (
+    <div style={{ padding: '14px 20px 20px', background: t.surface }}>
+      <div style={{
+        border: `0.5px solid ${t.line}`,
+        borderRadius: 10,
+        overflow: 'hidden',
+        position: 'relative',
+        background: '#fff',
+        padding: '10px 12px 0'
+      }}>
+        {years.length > 0 &&
+          <div style={{
+            position: 'absolute',
+            top: 12,
+            right: 18,
+            zIndex: 2,
+            display: 'inline-flex',
+            alignItems: 'center',
+          }}>
+            <select
+              value={selectedYear}
+              onChange={(event) => setSelectedYear(event.target.value)}
+              style={{
+                height: 30,
+                minWidth: 82,
+                padding: '0 30px 0 11px',
+                border: `0.5px solid ${t.line}`,
+                borderRadius: 8,
+                background: 'rgba(255, 255, 255, 0.92)',
+                color: t.ink,
+                boxShadow: '0 1px 4px rgba(0, 0, 0, 0.04)',
+                fontFamily: t.sans,
+                fontSize: 12.5,
+                fontWeight: 500,
+                outline: 'none',
+                appearance: 'none',
+                WebkitAppearance: 'none',
+                cursor: 'pointer'
+              }}>
+              {years.map((year) =>
+                <option key={year} value={year}>{year}</option>
+              )}
+            </select>
+            <svg
+              width="9"
+              height="6"
+              viewBox="0 0 9 6"
+              style={{
+                position: 'absolute',
+                right: 11,
+                pointerEvents: 'none'
+              }}>
+              <path d="M1 1.25L4.5 4.75L8 1.25" stroke="#8f9297" strokeWidth="1.1" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+        }
+        {window.ApexCharts
+          ? <div id={chartId} ref={chartRef} style={{ minHeight: 246 }} />
+          : <div style={{ height: 246, display: 'flex', alignItems: 'center', justifyContent: 'center', color: t.inkMute, fontSize: 12 }}>
+              그래프를 불러오는 중입니다.
+            </div>
+        }
+      </div>
+
+      <div style={{
+        marginTop: 10,
+        border: `0.5px solid ${t.line}`,
+        borderRadius: 8,
+        overflowX: 'auto',
+        background: '#fff'
+      }}>
+        <table style={{
+          width: '100%',
+          minWidth: 860,
+          borderCollapse: 'collapse',
+          tableLayout: 'fixed',
+          fontFamily: t.sans
+        }}>
+          <thead>
+            <tr>
+              <th style={{
+                width: 62,
+                padding: '9px 14px',
+                borderBottom: `0.5px solid ${t.line}`,
+                background: '#fff',
+                color: t.inkMute,
+                fontSize: 12,
+                fontWeight: 500,
+                textAlign: 'left'
+              }}>
+                연도
+              </th>
+              {months.map((month) =>
+                <th key={month.key} style={{
+                  padding: '9px 12px',
+                  borderBottom: `0.5px solid ${t.line}`,
+                  background: '#fff',
+                  color: t.inkMute,
+                  fontSize: 12,
+                  fontWeight: 500,
+                  textAlign: 'center'
+                }}>
+                  {month.label}
+                </th>
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {years.map((year) =>
+              <tr key={year} style={{
+                background: year === selectedYear ? '#f2f3f4' : '#fff'
+              }}>
+                <th style={{
+                  padding: '9px 14px',
+                  borderTop: `0.5px solid ${t.line}`,
+                  color: t.inkMute,
+                  fontSize: 12,
+                  fontWeight: 500,
+                  textAlign: 'left',
+                  fontVariantNumeric: 'tabular-nums'
+                }}>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedYear(year)}
+                    style={{
+                      border: 0,
+                      background: 'transparent',
+                      padding: 0,
+                      color: 'inherit',
+                      font: 'inherit',
+                      cursor: 'pointer'
+                    }}>
+                    {year}
+                  </button>
+                </th>
+                {months.map((month) => {
+                  const key = `${year}-${month.key}`;
+                  const amount = amountByMonth.has(key) ? amountByMonth.get(key) : null;
+                  return (
+                    <td key={key} style={{
+                      padding: '9px 12px',
+                      borderTop: `0.5px solid ${t.line}`,
+                      color: amount == null ? '#c7c3ba' : t.ink,
+                      fontFamily: t.mono,
+                      fontSize: 12,
+                      fontWeight: amount == null ? 400 : 500,
+                      fontVariantNumeric: 'tabular-nums',
+                      textAlign: 'center',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      {formatRSAmount(amount)}
+                    </td>
+                  );
+                })}
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 // ── 플랫폼 아코디언 ──────────────────────────────────────────
 function PlatformRow({ p, open, onToggle, t = BASE_TOKENS }) {
   const flatTotal = platformFlatTotal(p);
   const mgTotal = platformMGTotal(p);
   const rsTotal = platformRSTotal(p);
+  const hasRsTrend = p.type === 'rs' || p.type === 'mgrs';
+  const rsTrendYears = React.useMemo(() => {
+    return Array.from(new Set((p.rsMonthly || []).map((row) => row.month.slice(0, 4)))).sort().reverse();
+  }, [p.rsMonthly]);
+  const [activePane, setActivePane] = React.useState('records');
+  const [selectedYear, setSelectedYear] = React.useState(() => rsTrendYears[0] || String(new Date().getFullYear()));
+  React.useEffect(() => {
+    if (open) setActivePane('records');
+  }, [open]);
+  React.useEffect(() => {
+    if (rsTrendYears.length && !rsTrendYears.includes(selectedYear)) {
+      setSelectedYear(rsTrendYears[0]);
+    }
+  }, [rsTrendYears, selectedYear]);
   const contractAmountMeta = p.type === 'flat' ?
   { label: 'Flat Fee 계약금액', value: p.rows?.[0]?.contractAmount } :
   p.type === 'mgrs' ?
@@ -1974,21 +2358,37 @@ function PlatformRow({ p, open, onToggle, t = BASE_TOKENS }) {
       {/* EXPANDED */}
       {open &&
       <div style={{ borderTop: `0.5px solid ${t.line}`, background: t.surface }}>
-          {p.type === 'flat' &&
-        <SettleTable rows={p.rows} t={t} periodLabel="발생월" withDeposit={true} />
-        }
-          {p.type === 'rs' &&
-        <SettleTable rows={p.rsRows} t={t} periodLabel="분기" />
-        }
-          {p.type === 'mgrs' &&
-        <>
+          <SettlementPaneHeader
+            hasRsTrend={hasRsTrend}
+            activePane={activePane}
+            setActivePane={setActivePane}
+            t={t}
+          />
+
+          {(!hasRsTrend || activePane === 'records') && p.type === 'flat' &&
+            <SettleTable rows={p.rows} t={t} periodLabel="발생월" withDeposit={true} />
+          }
+          {activePane === 'records' && p.type === 'rs' &&
+            <SettleTable rows={p.rsRows} t={t} periodLabel="분기" />
+          }
+          {activePane === 'records' && p.type === 'mgrs' &&
+            <>
               <TableGroupLabel kind="mg" t={t} />
               <SettleTable rows={p.mgRows} t={t} periodLabel="발생월" withDeposit={true} />
               <div style={{ height: 0.5, background: t.line }} />
               <TableGroupLabel kind="rs" t={t} />
               <SettleTable rows={p.rsRows} t={t} periodLabel="분기" />
             </>
-        }
+          }
+          {hasRsTrend && activePane === 'rs' &&
+            <RSTrendPanel
+              p={p}
+              selectedYear={selectedYear}
+              setSelectedYear={setSelectedYear}
+              years={rsTrendYears}
+              t={t}
+            />
+          }
         </div>
       }
     </div>);

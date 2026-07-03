@@ -13,11 +13,13 @@
     { id: 'my-content', label: '내콘텐츠', href: 'contentlist-prod.html', role: 'producer' },
     { id: 'producer-dashboard', label: '대시보드', href: 'producer-dashboard.html', role: 'producer' },
     { id: 'script-analysis', label: 'AI 대본분석', href: '#', role: 'producer' },
+    { id: 'production-collab', label: '제작 협업', href: 'investor-collaboration.html', role: 'investor' },
     { id: 'guide', label: '이용가이드', href: '#', role: 'shared' },
   ];
   const rolePages = {
     platform: new Set(['content', 'concierge', 'platform-dashboard', 'dashboard']),
     producer: new Set(['my-content', 'producer-dashboard', 'script-analysis']),
+    investor: new Set(['production-collab']),
   };
 
   const platformDashboardTabs = [
@@ -43,6 +45,13 @@
   const accountProfiles = {
     platform: { company: 'Reelio', roleLabel: '플랫폼', accountHref: 'owner.html' },
     producer: { company: 'Reelio', roleLabel: '제작사', accountHref: 'owner-prod.html' },
+    investor: { company: 'Reelio', roleLabel: '투자자', accountHref: '#' },
+  };
+
+  const homeLinks = {
+    platform: 'content-list.html',
+    producer: 'contentlist-prod.html',
+    investor: 'investor-collaboration.html',
   };
 
   function getPreferredLanguage() {
@@ -63,7 +72,7 @@
     return `
       <header class="top-nav">
         <div class="nav-inner">
-          <a class="brand" href="${currentRole === 'producer' ? 'contentlist-prod.html' : 'content-list.html'}" aria-label="숏플로우 홈">
+          <a class="brand" href="${homeLinks[currentRole] || homeLinks.platform}" aria-label="숏플로우 홈">
             <img class="brand-logo" src="images/shortflow-logo.svg" alt="숏플로우 Shortflow">
           </a>
           <nav class="primary-nav" aria-label="주 메뉴">
@@ -127,8 +136,13 @@
       rememberViewRole('producer');
       return 'producer';
     }
+    if (rolePages.investor.has(currentPage)) {
+      rememberViewRole('investor');
+      return 'investor';
+    }
     try {
-      return localStorage.getItem('shortflow-view-role') === 'producer' ? 'producer' : 'platform';
+      const savedRole = localStorage.getItem('shortflow-view-role');
+      return ['platform', 'producer', 'investor'].includes(savedRole) ? savedRole : 'platform';
     } catch (error) {
       return 'platform';
     }
@@ -282,6 +296,16 @@
       rememberViewRole('producer');
     });
     remote.appendChild(producerButton);
+
+    const investorButton = document.createElement('a');
+    investorButton.className = 'utility-toggle investor-view-toggle' + (currentRole === 'investor' ? ' active' : '');
+    investorButton.href = 'investor-collaboration.html';
+    investorButton.setAttribute('aria-label', '투자자 입장 화면');
+    investorButton.textContent = '투자자 입장 뷰';
+    investorButton.addEventListener('click', function() {
+      rememberViewRole('investor');
+    });
+    remote.appendChild(investorButton);
 
     const adminButton = document.createElement('a');
     adminButton.className = 'utility-toggle admin-toggle';
