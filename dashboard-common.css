@@ -710,8 +710,8 @@ button {
   width: 100%;
   min-height: 90px;
   display: grid;
-  grid-template-columns: 52px minmax(0, 1fr);
-  gap: 18px;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 12px;
   align-items: center;
   padding: 12px 12px;
   text-align: left;
@@ -2219,7 +2219,7 @@ button {
 }
 
 .message-filter-bar {
-  padding: 12px 12px 10px;
+  padding: 17px 12px 18px;
   border-bottom: 1px solid var(--line-soft);
 }
 
@@ -2227,38 +2227,35 @@ button {
   position: relative;
 }
 
-.message-type-select-wrap::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: 13px;
-  width: 6px;
-  height: 6px;
-  border-right: 1.5px solid var(--ink-muted);
-  border-bottom: 1.5px solid var(--ink-muted);
-  transform: translateY(-70%) rotate(45deg);
-  pointer-events: none;
-}
-
 .message-type-filter {
   width: 100%;
-  height: 40px;
-  padding: 0 34px 0 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #fafafa;
+  height: 42px;
+  padding: 0 32px 0 14px;
+  border: none;
+  border-radius: 10px;
+  background-color: #f5f5f7;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a8f99' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  background-size: 13px;
   color: var(--ink);
   font-family: inherit;
-  font-size: 12.5px;
-  font-weight: 600;
+  font-size: 13.5px;
+  font-weight: 500;
   outline: none;
   appearance: none;
   -webkit-appearance: none;
   cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.message-type-filter:hover {
+  background-color: #ececee;
 }
 
 .message-type-filter:focus {
-  border-color: #a9abb0;
+  background-color: #fff;
+  box-shadow: 0 0 0 1px #dcdee3 inset, 0 0 0 3px rgba(17, 24, 39, 0.06);
 }
 
 .message-empty {
@@ -2278,7 +2275,7 @@ button {
   text-align: left;
   display: grid;
   grid-template-columns: 52px minmax(0, 1fr);
-  gap: 18px;
+  gap: 13px;
   align-items: center;
   cursor: pointer;
   transition: background 0.14s ease;
@@ -2318,8 +2315,8 @@ button {
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--ink);
-  font-size: 13.5px;
-  font-weight: 680;
+  font-size: 14.5px;
+  font-weight: 500;
   line-height: 1.25;
 }
 
@@ -2337,19 +2334,12 @@ button {
 }
 
 .message-type-avatar svg {
-  width: 17px;
-  height: 17px;
+  width: 21px;
+  height: 21px;
   stroke: currentColor;
-  stroke-width: 1.75;
+  stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
-}
-
-.message-type-avatar img {
-  display: block;
-  width: 23px;
-  height: 23px;
-  object-fit: contain;
 }
 
 .message-type-avatar.is-production {
@@ -2392,8 +2382,7 @@ button {
 
 .message-item-head time,
 .message-item-meta time,
-.message-detail-meta time,
-.message-bubble-meta time {
+.message-detail-meta time {
   color: var(--ink-muted);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 11px;
@@ -2437,7 +2426,7 @@ button {
   width: 22px;
   height: 22px;
   border-radius: 999px;
-  background: #111827;
+  background: var(--orange);
   color: #fff;
   font-size: 11px;
   font-weight: 700;
@@ -2471,10 +2460,50 @@ button {
 .message-detail-head {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 16px;
-  padding: 18px 26px;
+  padding: 16px 26px;
   border-bottom: 1px solid var(--line-soft);
+}
+
+.message-detail-title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 0;
+}
+
+.message-detail-title .message-type-avatar {
+  width: 44px;
+  height: 44px;
+}
+
+.message-detail-title .message-type-avatar svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 1.8;
+}
+
+.message-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.message-detail-type {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 560;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.message-detail-time {
+  color: var(--ink-muted);
+  font-size: 11.5px;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .message-detail-meta {
@@ -2484,7 +2513,7 @@ button {
 .message-thread {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 36px;
   padding: 28px 32px 34px;
   background: #fff;
 }
@@ -2499,26 +2528,43 @@ button {
   justify-content: flex-end;
 }
 
-.message-bubble-row.is-user .message-bubble {
+.message-bubble-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.message-bubble-row.is-user .message-bubble-col {
+  align-items: flex-end;
   max-width: min(640px, 88%);
-  background: #fff;
+}
+
+.message-bubble-row.is-admin .message-bubble-col {
+  align-items: flex-start;
+  max-width: min(680px, 92%);
+}
+
+.message-bubble-row.is-user .message-bubble {
+  background: #f4f5f7;
+  border-bottom-right-radius: 4px;
 }
 
 .message-bubble-row.is-admin .message-bubble {
-  max-width: min(680px, 92%);
-  background: #f4f5f7;
+  background: #fff;
+  border-bottom-left-radius: 4px;
 }
 
 .message-bubble {
+  width: 100%;
   min-width: 0;
-  padding: 16px 18px;
+  padding: 14px 16px;
   border: 1px solid var(--line-soft);
-  border-radius: 14px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  border-radius: 18px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 
 .message-bubble-meta {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .message-bubble-meta strong {
@@ -2530,19 +2576,27 @@ button {
 .message-body {
   width: 100%;
   color: var(--ink);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.7;
   letter-spacing: -0.05px;
   white-space: pre-wrap;
 }
 
+.message-bubble-time {
+  margin-top: 6px;
+  padding: 0 2px;
+  color: var(--ink-muted);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+}
+
 .message-avatar {
-  width: 32px;
-  height: 32px;
-  border: 1px solid #dedbd4;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e1e4ea;
   border-radius: 999px;
-  background: #f7f6f1;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.7);
+  background: #fff;
   color: var(--ink);
   display: inline-flex;
   align-items: center;
@@ -2560,7 +2614,7 @@ button {
 .admin-comment-body,
 .admin-comment-empty {
   color: var(--ink);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.65;
   white-space: pre-wrap;
 }

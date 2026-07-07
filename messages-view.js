@@ -15,10 +15,23 @@
 
   function inquiryTypeIcon(type) {
     if (type === '제작협업') {
-      return '<img src="images/icon/handshake.png" alt="">';
+      return `
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="m11 17 2 2a1 1 0 1 0 3-3"/>
+          <path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/>
+          <path d="m21 3 1 11h-2"/>
+          <path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/>
+          <path d="M3 4h8"/>
+        </svg>
+      `;
     }
     if (type === '컨시어지판매') {
-      return '<img src="images/icon/sell.png" alt="">';
+      return `
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect x="2" y="7" width="20" height="14" rx="2"/>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </svg>
+      `;
     }
     return `
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -93,27 +106,39 @@
     const comments = selected.adminComments || [];
     return `
       <section class="message-detail">
+        <div class="message-detail-head">
+          <div class="message-detail-title">
+            ${renderInquiryTypeAvatar(selected)}
+            <span class="message-detail-info">
+              <span class="message-detail-type">${escapeHtml(inquiryTypeOf(selected))}</span>
+              <time class="message-detail-time">${escapeHtml(selected.date)} ${escapeHtml(selected.time)}</time>
+            </span>
+          </div>
+        </div>
         <div class="message-thread">
           <article class="message-bubble-row is-user">
-            <div class="message-bubble">
-              <div class="message-bubble-meta">
-                <strong>문의 내용</strong>
-                <time>${escapeHtml(selected.date)} ${escapeHtml(selected.time)}</time>
+            <div class="message-bubble-col">
+              <div class="message-bubble">
+                <div class="message-bubble-meta">
+                  <strong>문의 내용</strong>
+                </div>
+                <div class="message-body">${escapeHtml(selected.full)}</div>
               </div>
-              <div class="message-body">${escapeHtml(selected.full)}</div>
+              <time class="message-bubble-time">${escapeHtml(selected.date)} ${escapeHtml(selected.time)}</time>
             </div>
-            ${renderInquiryTypeAvatar(selected)}
           </article>
 
           ${comments.length ? comments.map(comment => `
             <article class="message-bubble-row is-admin">
               <div class="message-avatar" aria-hidden="true">${renderAdminIcon()}</div>
-              <div class="message-bubble">
-                <div class="message-bubble-meta">
-                  <strong>${escapeHtml(comment.name)}</strong>
-                  <time>${escapeHtml(comment.date)} ${escapeHtml(comment.time)}</time>
+              <div class="message-bubble-col">
+                <div class="message-bubble">
+                  <div class="message-bubble-meta">
+                    <strong>${escapeHtml(comment.name)}</strong>
+                  </div>
+                  <div class="admin-comment-body">${escapeHtml(comment.body)}</div>
                 </div>
-                <div class="admin-comment-body">${escapeHtml(comment.body)}</div>
+                <time class="message-bubble-time">${escapeHtml(comment.date)} ${escapeHtml(comment.time)}</time>
               </div>
             </article>
           `).join('') : '<div class="admin-comment-empty">아직 등록된 관리자 댓글이 없습니다.</div>'}
