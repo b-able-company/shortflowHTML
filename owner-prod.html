@@ -817,6 +817,408 @@
       color: var(--owner-orange);
     }
 
+    .representative-works {
+      border-top: 1px solid var(--line-soft);
+      padding: 22px 24px 24px;
+    }
+
+    .works-section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .works-section-title {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    .works-section-title strong {
+      color: var(--owner-ink);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .works-section-title span {
+      color: var(--owner-muted);
+      font-size: 11.5px;
+      line-height: 1.45;
+    }
+
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .work-card {
+      position: relative;
+      min-width: 0;
+      height: 100%;
+    }
+
+    .work-card-main {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-width: 0;
+      padding: 6px;
+      border: 1px solid var(--owner-line);
+      border-radius: 8px;
+      background: #fff;
+      overflow: hidden;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.16s, background 0.16s;
+    }
+
+    .work-card-main:hover {
+      border-color: var(--owner-line-strong);
+      background: var(--owner-soft);
+    }
+
+    .work-card-delete {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--owner-line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--owner-muted);
+      opacity: 0;
+      transform: scale(0.92);
+      cursor: pointer;
+      transition: opacity 0.14s ease, transform 0.14s ease, background 0.14s, color 0.14s, border-color 0.14s;
+    }
+
+    .work-card-delete svg {
+      width: 12px;
+      height: 12px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .work-card:hover .work-card-delete,
+    .work-card-delete:focus-visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .work-card-delete:hover {
+      background: var(--owner-ink);
+      color: #fff;
+      border-color: var(--owner-ink);
+    }
+
+    .work-card-add {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 6px;
+      border: 1px dashed var(--owner-line-strong);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--owner-faint);
+      cursor: pointer;
+      transition: border-color 0.16s, background 0.16s, color 0.16s;
+    }
+
+    .work-card-add:hover {
+      border-color: var(--owner-orange);
+      background: var(--owner-orange-soft);
+      color: var(--owner-orange);
+    }
+
+    .work-add-icon {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--owner-soft);
+    }
+
+    .work-card-add:hover .work-add-icon {
+      background: #fff;
+    }
+
+    .work-add-icon svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .work-add-label {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .work-image {
+      aspect-ratio: 16 / 10;
+      border-radius: 5px;
+      background: var(--owner-soft);
+      overflow: hidden;
+    }
+
+    .work-image img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .work-placeholder {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      color: var(--owner-faint);
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+
+    .work-card-body {
+      padding: 9px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .work-card-body strong {
+      min-width: 0;
+      flex: 1;
+      color: var(--owner-ink);
+      font-size: 13px;
+      font-weight: 620;
+      line-height: 1.35;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .work-card-body span {
+      flex: 0 0 auto;
+      color: var(--owner-muted);
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .owner-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(15, 17, 21, 0.34);
+    }
+
+    .owner-modal {
+      width: min(460px, 100%);
+      max-height: min(720px, calc(100vh - 48px));
+      overflow: auto;
+      border: 1px solid var(--owner-line);
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 18px 44px rgba(15, 17, 21, 0.18);
+    }
+
+    .owner-modal-head {
+      min-height: 58px;
+      padding: 17px 20px;
+      border-bottom: 1px solid var(--line-soft);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .owner-modal-head strong {
+      color: var(--owner-ink);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .owner-modal-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .work-upload-well {
+      position: relative;
+      width: min(220px, 100%);
+      aspect-ratio: 2 / 3;
+      margin: 0 auto;
+    }
+
+    .work-upload-surface {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      border: 1px dashed var(--owner-line-strong);
+      border-radius: 8px;
+      background: var(--owner-soft);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.16s, background 0.16s;
+    }
+
+    .work-upload-surface:hover {
+      border-color: var(--owner-orange);
+    }
+
+    .work-upload-surface img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .work-upload-empty {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--owner-faint);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .work-upload-surface:hover .work-upload-empty {
+      color: var(--owner-orange);
+    }
+
+    .work-upload-empty svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 1.6;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .work-upload-hint {
+      position: absolute;
+      inset: auto 0 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 8px;
+      background: linear-gradient(to top, rgba(15, 17, 21, 0.62), rgba(15, 17, 21, 0));
+      color: #fff;
+      font-size: 11.5px;
+      font-weight: 700;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.16s ease, transform 0.16s ease;
+    }
+
+    .work-upload-hint svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .work-upload-surface:hover .work-upload-hint,
+    .work-upload-surface:focus-visible .work-upload-hint {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .work-upload-remove {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--owner-line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--owner-muted);
+      cursor: pointer;
+      transition: background 0.14s, color 0.14s, border-color 0.14s;
+    }
+
+    .work-upload-remove svg {
+      width: 13px;
+      height: 13px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .work-upload-remove:hover {
+      background: var(--owner-ink);
+      color: #fff;
+      border-color: var(--owner-ink);
+    }
+
+    .work-modal-fields {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 108px;
+      gap: 12px;
+    }
+
+    .work-year-input {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .owner-modal-foot {
+      padding: 14px 20px 18px;
+      border-top: 1px solid var(--line-soft);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .owner-modal-foot .primary-action {
+      margin-left: 0;
+    }
+
+    .owner-modal-foot .primary-action,
+    .owner-modal-foot .secondary-action {
+      min-width: 86px;
+    }
+
+    .secondary-action:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
     @media (max-width: 900px) {
       .owner-main {
         min-height: 520px;
@@ -824,13 +1226,15 @@
 
       .owner-layout,
       .invite-body,
-      .credit-summary {
+      .credit-summary,
+      .works-grid {
         grid-template-columns: 1fr;
       }
 
       .field-grid,
       .account-field-grid,
-      .field-with-action {
+      .field-with-action,
+      .work-modal-fields {
         grid-template-columns: 1fr;
       }
 
@@ -887,6 +1291,23 @@
       phone: '+82 2-1234-5678',
       website: 'https://reelio.co',
       address: '서울특별시 강남구 테헤란로 142, 6층',
+    };
+
+    const representativeWorks = [
+      { id: 'work1', image: 'images/ceo-ex-boyfriend.png', title: '대표님이 내 전남친입니다', year: '2026' },
+      { id: 'work2', image: 'images/return-topstar-poster.png', title: '죽었다가 회귀한 톱스타', year: '2025' },
+      { id: 'work3', image: 'images/chaebol-secretary.png', title: '재벌집 막내 비서', year: '2025' },
+    ];
+
+    const MAX_REPRESENTATIVE_WORKS = 3;
+    let workIdSeq = representativeWorks.length;
+
+    const workEditor = {
+      open: false,
+      workId: '',
+      draftImage: '',
+      draftTitle: '',
+      draftYear: '',
     };
 
     const userProfile = {
@@ -1132,6 +1553,63 @@
       `;
     }
 
+    function getRepresentativeWork(id) {
+      return representativeWorks.find(item => item.id === id);
+    }
+
+    function renderWorkImage(image, alt) {
+      return image
+        ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(alt)}">`
+        : '<div class="work-placeholder">이미지 추가</div>';
+    }
+
+    function renderRepresentativeWorkCard(work) {
+      return `
+        <div class="work-card">
+          <button class="work-card-delete" type="button" data-action="delete-work" data-work-id="${escapeHtml(work.id)}" aria-label="대표작 삭제">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+          <button class="work-card-main" type="button" data-action="open-work-editor" data-work-id="${escapeHtml(work.id)}">
+            <div class="work-image">
+              ${renderWorkImage(work.image, work.title)}
+            </div>
+            <div class="work-card-body">
+              <strong>${escapeHtml(work.title)}</strong>
+              <span>${escapeHtml(work.year)}</span>
+            </div>
+          </button>
+        </div>
+      `;
+    }
+
+    function renderAddWorkCard() {
+      return `
+        <button class="work-card-add" type="button" data-action="add-work">
+          <span class="work-add-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+          <span class="work-add-label">대표작 추가</span>
+        </button>
+      `;
+    }
+
+    function renderRepresentativeWorksSection() {
+      const slots = Array.from({ length: MAX_REPRESENTATIVE_WORKS }, (_, index) => representativeWorks[index] || null);
+      return `
+        <section class="representative-works" aria-label="대표작 관리">
+          <div class="works-section-head">
+            <div class="works-section-title">
+              <strong>대표작 관리</strong>
+              <span>회사 프로필에 노출할 대표작을 최대 ${MAX_REPRESENTATIVE_WORKS}개까지 등록할 수 있어요.</span>
+            </div>
+          </div>
+          <div class="works-grid">
+            ${slots.map(work => work ? renderRepresentativeWorkCard(work) : renderAddWorkCard()).join('')}
+          </div>
+        </section>
+      `;
+    }
+
     function renderInfoPanel() {
       return `
         <section class="owner-panel">
@@ -1153,6 +1631,7 @@
             ${field('주소', companyProfile.address, { full: true })}
             ${field('회사 소개', companyProfile.description, { full: true })}
           </div>
+          ${renderRepresentativeWorksSection()}
         </section>
       `;
     }
@@ -1304,6 +1783,139 @@
       `;
     }
 
+    function openWorkEditor(workId) {
+      const isNew = !workId;
+      if (isNew && representativeWorks.length >= MAX_REPRESENTATIVE_WORKS) return;
+
+      const work = isNew ? null : getRepresentativeWork(workId);
+      if (!isNew && !work) return;
+
+      workEditor.open = true;
+      workEditor.workId = isNew ? '' : work.id;
+      workEditor.draftImage = work ? work.image || '' : '';
+      workEditor.draftTitle = work ? work.title || '' : '';
+      workEditor.draftYear = work ? work.year || '' : '';
+      render();
+      setTimeout(() => document.getElementById('work-title-input')?.focus(), 0);
+    }
+
+    function closeWorkEditor() {
+      workEditor.open = false;
+      workEditor.workId = '';
+      workEditor.draftImage = '';
+      workEditor.draftTitle = '';
+      workEditor.draftYear = '';
+      render();
+    }
+
+    function deleteWork(workId) {
+      const index = representativeWorks.findIndex(item => item.id === workId);
+      if (index === -1) return;
+      if (!confirm('이 대표작을 삭제할까요?')) return;
+
+      representativeWorks.splice(index, 1);
+      if (workEditor.workId === workId) {
+        closeWorkEditor();
+        return;
+      }
+      render();
+    }
+
+    function saveWorkEditor() {
+      const isNew = !workEditor.workId;
+      const work = isNew ? null : getRepresentativeWork(workEditor.workId);
+      if (!isNew && !work) return;
+
+      const titleInput = document.getElementById('work-title-input');
+      const yearInput = document.getElementById('work-year-input');
+      const title = (titleInput ? titleInput.value : workEditor.draftTitle).trim();
+      const year = (yearInput ? yearInput.value : workEditor.draftYear).trim();
+
+      if (!workEditor.draftImage) {
+        alert('대표 이미지를 선택해주세요.');
+        return;
+      }
+
+      if (!title) {
+        alert('대표작 제목을 입력해주세요.');
+        return;
+      }
+
+      if (!/^\d{4}$/.test(year)) {
+        alert('제작연도는 4자리 숫자로 입력해주세요.');
+        return;
+      }
+
+      if (isNew) {
+        workIdSeq += 1;
+        representativeWorks.push({ id: `work${workIdSeq}`, image: workEditor.draftImage, title, year });
+      } else {
+        work.image = workEditor.draftImage;
+        work.title = title;
+        work.year = year;
+      }
+      closeWorkEditor();
+    }
+
+    function renderWorkEditorModal() {
+      if (!workEditor.open) return '';
+
+      const isNew = !workEditor.workId;
+
+      return `
+        <div class="owner-modal-backdrop" data-action="close-work-editor">
+          <section class="owner-modal" role="dialog" aria-modal="true" aria-labelledby="work-modal-title">
+            <header class="owner-modal-head">
+              <span class="panel-dot"></span>
+              <strong id="work-modal-title">${isNew ? '대표작 추가' : '대표작 편집'}</strong>
+            </header>
+            <div class="owner-modal-body">
+              <div class="work-upload-well">
+                <button class="work-upload-surface" type="button" data-action="trigger-work-upload" aria-label="${workEditor.draftImage ? '이미지 변경' : '이미지 선택'}">
+                  ${workEditor.draftImage ? `
+                    <img src="${escapeHtml(workEditor.draftImage)}" alt="${escapeHtml(workEditor.draftTitle || '대표작 이미지')}">
+                    <span class="work-upload-hint">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+                      <span>이미지 변경</span>
+                    </span>
+                  ` : `
+                    <span class="work-upload-empty">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+                      <span>대표 이미지 선택</span>
+                    </span>
+                  `}
+                </button>
+                ${workEditor.draftImage ? `
+                  <button class="work-upload-remove" type="button" data-action="clear-work-image" aria-label="이미지 삭제">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                  </button>
+                ` : ''}
+                <input id="work-image-input" type="file" accept="image/*" hidden>
+              </div>
+              <div class="work-modal-fields">
+                <div class="field editable">
+                  <label>제목</label>
+                  <div class="field-value">
+                    <input id="work-title-input" class="field-input" type="text" value="${escapeHtml(workEditor.draftTitle)}" placeholder="대표작 제목">
+                  </div>
+                </div>
+                <div class="field editable">
+                  <label>제작연도</label>
+                  <div class="field-value mono">
+                    <input id="work-year-input" class="field-input work-year-input" type="text" inputmode="numeric" maxlength="4" value="${escapeHtml(workEditor.draftYear)}" placeholder="2026">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <footer class="owner-modal-foot">
+              <button class="secondary-action" type="button" data-action="close-work-editor">취소</button>
+              <button class="primary-action" type="button" data-action="save-work-editor">저장</button>
+            </footer>
+          </section>
+        </div>
+      `;
+    }
+
     function renderOwnerContent(activeTab) {
       const panels = {
         account: renderAccountPanel,
@@ -1322,6 +1934,7 @@
               ${panels[activeTab]()}
             </section>
           </div>
+          ${renderWorkEditorModal()}
         </div>
       `;
     }
@@ -1450,6 +2063,9 @@
 
     root.addEventListener('click', event => {
       const actionButton = event.target.closest('[data-action]');
+      if (actionButton?.classList.contains('owner-modal-backdrop') && event.target !== actionButton) {
+        return;
+      }
       if (actionButton?.dataset.action === 'send-email-code') {
         sendEmailCode();
         return;
@@ -1466,6 +2082,35 @@
         saveCompany();
         return;
       }
+      if (actionButton?.dataset.action === 'open-work-editor') {
+        openWorkEditor(actionButton.dataset.workId);
+        return;
+      }
+      if (actionButton?.dataset.action === 'add-work') {
+        openWorkEditor('');
+        return;
+      }
+      if (actionButton?.dataset.action === 'delete-work') {
+        deleteWork(actionButton.dataset.workId);
+        return;
+      }
+      if (actionButton?.dataset.action === 'close-work-editor') {
+        closeWorkEditor();
+        return;
+      }
+      if (actionButton?.dataset.action === 'trigger-work-upload') {
+        document.getElementById('work-image-input')?.click();
+        return;
+      }
+      if (actionButton?.dataset.action === 'clear-work-image') {
+        workEditor.draftImage = '';
+        render();
+        return;
+      }
+      if (actionButton?.dataset.action === 'save-work-editor') {
+        saveWorkEditor();
+        return;
+      }
 
       const copyButton = event.target.closest('.copy-code');
       if (!copyButton) return;
@@ -1476,7 +2121,40 @@
       }, 1200);
     });
 
+    root.addEventListener('change', event => {
+      if (event.target.id !== 'work-image-input') return;
+
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        alert('이미지 파일을 선택해주세요.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        workEditor.draftImage = String(reader.result || '');
+        render();
+      };
+      reader.readAsDataURL(file);
+    });
+
     root.addEventListener('input', event => {
+      if (event.target.id === 'work-title-input') {
+        workEditor.draftTitle = event.target.value;
+        return;
+      }
+
+      if (event.target.id === 'work-year-input') {
+        const year = event.target.value.replace(/\D/g, '').slice(0, 4);
+        workEditor.draftYear = year;
+        if (event.target.value !== year) {
+          event.target.value = year;
+        }
+        return;
+      }
+
       if (event.target.id !== 'account-email') return;
 
       const email = event.target.value.trim();
@@ -1493,6 +2171,12 @@
           input.focus();
           input.setSelectionRange(input.value.length, input.value.length);
         }, 0);
+      }
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && workEditor.open) {
+        closeWorkEditor();
       }
     });
 

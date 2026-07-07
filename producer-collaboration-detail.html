@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>제작협업 상세 | 제작사 입장 뷰</title>
+  <link rel="stylesheet" href="dashboard-common.css">
+  <script src="dashboard-nav.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --orange: #e85d2c;
+      --ink: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --soft: #f8f9fb;
+      --surface: #ffffff;
+    }
+    body {
+      margin: 0;
+      background: #fff;
+      color: var(--ink);
+      font-family: "Geist", "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .collab-detail-main {
+      padding: 24px 0 72px;
+    }
+    .detail-shell {
+      display: grid;
+      gap: 22px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      gap: 6px;
+      color: #747b88;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+    .reference-media {
+      position: relative;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 2 / 3;
+      min-height: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #f3f4f6;
+      border: 1px solid var(--line);
+    }
+    .reference-media img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+    .reference-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      padding: 34px;
+      background: linear-gradient(145deg, #1d2435 0%, #44384a 48%, #d99976 100%);
+      color: #fff;
+      font-size: 40px;
+      line-height: 1.08;
+      letter-spacing: -1px;
+      font-weight: 650;
+      word-break: keep-all;
+    }
+    .reference-media::after {
+      display: none;
+    }
+    .media-label {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      z-index: 2;
+      padding: 7px 10px;
+      border-radius: 7px;
+      background: rgba(17,24,39,0.76);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      backdrop-filter: blur(12px);
+    }
+    .play-button {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 2;
+      transform: translate(-50%, -50%);
+      width: 62px;
+      height: 62px;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.92);
+      color: #111827;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      cursor: pointer;
+    }
+    .play-button svg {
+      width: 24px;
+      height: 24px;
+      margin-left: 3px;
+      fill: currentColor;
+    }
+    .media-caption {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 20px;
+      z-index: 2;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.45;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.36);
+    }
+    .summary-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      min-height: 450px;
+    }
+    .stage-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      min-height: 30px;
+      padding: 8px 13px 6px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(245,245,247,0.92);
+      color: #3f4652;
+      font-size: 12px;
+      font-weight: 560;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+    .stage-badge.is-casting {
+      background: rgba(12,12,12,0.88);
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.16), inset 0 1px 0 rgba(255,255,255,0.14);
+    }
+    .stage-badge.is-pilot {
+      background: rgba(18,101,66,0.92);
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(3,54,33,0.14), inset 0 1px 0 rgba(255,255,255,0.16);
+    }
+    .detail-title {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.24;
+      letter-spacing: -0.5px;
+      font-weight: 700;
+    }
+    .detail-producer {
+      margin-top: 9px;
+      color: #4b5563;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .genre-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 18px;
+    }
+    .genre-chip {
+      min-height: 29px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 12px 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(17,24,39,0.07);
+      color: #4f5561;
+      font-size: 12.5px;
+      font-weight: 540;
+      line-height: 1.1;
+      background: rgba(248,249,251,0.92);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.78);
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .meta-item {
+      padding: 13px 14px;
+      border-radius: 9px;
+      background: #fafafa;
+      border: 1px solid #eeeeee;
+    }
+    .meta-label {
+      color: #7b8190;
+      font-size: 11.5px;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    .meta-value {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 650;
+      line-height: 1.35;
+    }
+    .action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: auto;
+      padding-top: 24px;
+    }
+    .action-button {
+      height: 44px;
+      border-radius: 10px;
+      border: 1px solid #dfe3e8;
+      background: #fff;
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      font-size: 14px;
+      font-weight: 650;
+      cursor: pointer;
+    }
+    .action-button.primary {
+      border-color: #1d1d1f;
+      background: #1d1d1f;
+      color: #fff;
+    }
+    .action-button.is-active svg {
+      fill: #ff3f4d;
+      stroke: #ff3f4d;
+    }
+    .section-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(390px, 0.58fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+    .info-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 24px;
+    }
+    .section-grid .info-card {
+      min-height: 238px;
+    }
+    .info-card h2 {
+      margin: 0 0 14px;
+      font-size: 16px;
+      letter-spacing: -0.2px;
+    }
+    .synopsis {
+      margin: 0;
+      color: #3f4652;
+      font-size: 14.5px;
+      line-height: 1.75;
+      word-break: keep-all;
+    }
+    .casting-copy {
+      margin: 0;
+      color: #3f4652;
+      font-size: 14.5px;
+      line-height: 1.75;
+      word-break: keep-all;
+    }
+    .synopsis + .synopsis,
+    .casting-copy + .casting-copy {
+      margin-top: 12px;
+    }
+    .media-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .media-card {
+      min-width: 0;
+    }
+    .media-thumb {
+      position: relative;
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      padding: 0;
+      border: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #e5e7eb;
+      margin-bottom: 8px;
+      cursor: pointer;
+      text-align: left;
+    }
+    .media-thumb img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      transition: transform 180ms ease;
+    }
+    .media-thumb:hover img {
+      transform: scale(1.025);
+    }
+    .media-thumb::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.42) 100%);
+      pointer-events: none;
+    }
+    .media-type {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      z-index: 1;
+      padding: 5px 8px;
+      border-radius: 6px;
+      background: rgba(17,24,39,0.76);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .media-play {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.92);
+      color: #111827;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.14);
+    }
+    .media-play svg {
+      width: 16px;
+      height: 16px;
+      margin-left: 2px;
+      fill: currentColor;
+    }
+    .media-name {
+      font-size: 13px;
+      font-weight: 400;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .media-viewer-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 54px 44px 36px;
+      background: rgba(0, 0, 0, 0.74);
+      backdrop-filter: blur(6px);
+    }
+    .media-viewer-backdrop.is-open {
+      display: flex;
+    }
+    .media-viewer-panel {
+      width: fit-content;
+      max-width: calc(100vw - 88px);
+      max-height: calc(100vh - 90px);
+      display: inline-grid;
+      gap: 10px;
+    }
+    .media-viewer-head {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      color: #fff;
+    }
+    .media-viewer-title {
+      min-width: 0;
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.3;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.32);
+    }
+    .media-viewer-type {
+      display: none;
+    }
+    .media-viewer-close {
+      position: fixed;
+      top: 26px;
+      right: 26px;
+      width: 30px;
+      height: 30px;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .media-viewer-close:hover {
+      background: rgba(255,255,255,0.12);
+    }
+    .media-viewer-close svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 2.4;
+    }
+    .media-viewer-body {
+      position: relative;
+      width: fit-content;
+      max-width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      background: transparent;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.45);
+    }
+    .media-viewer-body img {
+      width: auto;
+      height: auto;
+      max-width: calc(100vw - 88px);
+      max-height: calc(100vh - 132px);
+      display: block;
+      object-fit: contain;
+      background: transparent;
+    }
+    .media-viewer-play {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 58px;
+      height: 58px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: rgba(255,255,255,0.92);
+      color: #111827;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 32px rgba(0,0,0,0.22);
+      pointer-events: none;
+    }
+    .media-viewer-play.is-visible {
+      display: inline-flex;
+    }
+    .media-viewer-play svg {
+      width: 22px;
+      height: 22px;
+      margin-left: 3px;
+      fill: currentColor;
+    }
+    .inquiry-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(15,17,21,0.42);
+    }
+    .inquiry-modal-backdrop.is-open {
+      display: flex;
+    }
+    .inquiry-modal {
+      width: min(520px, 100%);
+      border: 1px solid rgba(255,255,255,0.72);
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.24);
+      overflow: hidden;
+    }
+    .inquiry-modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 22px 12px;
+    }
+    .inquiry-modal-title {
+      margin: 0;
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.35;
+      letter-spacing: -0.2px;
+    }
+    .inquiry-modal-copy {
+      margin: 0 0 14px;
+      color: #3f4652;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .inquiry-modal-close {
+      width: 34px;
+      height: 34px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: #777d88;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .inquiry-modal-close:hover {
+      background: transparent;
+      color: #111827;
+    }
+    .inquiry-modal-close svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 2.1;
+    }
+    .inquiry-form {
+      padding: 0 22px 20px;
+    }
+    .inquiry-textarea {
+      width: 100%;
+      min-height: 132px;
+      resize: vertical;
+      border: 1px solid #e2e5ea;
+      border-radius: 7px;
+      padding: 12px 13px;
+      background: #fff;
+      color: #111827;
+      font: inherit;
+      font-size: 13px;
+      line-height: 1.55;
+      outline: none;
+      transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+    }
+    .inquiry-textarea:focus {
+      border-color: #8d94a0;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(31,65,255,0.08);
+    }
+    .inquiry-textarea::placeholder {
+      color: #9aa1ad;
+    }
+    .inquiry-complete {
+      display: none;
+      margin: 0 0 14px;
+      padding: 13px 14px;
+      border-radius: 8px;
+      background: #f5f7f6;
+      color: #263a31;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .inquiry-modal.is-submitted .inquiry-modal-copy,
+    .inquiry-modal.is-submitted .inquiry-textarea {
+      display: none;
+    }
+    .inquiry-modal.is-submitted .inquiry-complete {
+      display: block;
+    }
+    .inquiry-actions {
+      display: block;
+      margin-top: 12px;
+    }
+    .inquiry-action {
+      width: 100%;
+      height: 42px;
+      padding: 0 16px;
+      border: 0;
+      border-radius: 7px;
+      background: #1d1d1f;
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.16s ease, transform 0.16s ease;
+    }
+    .inquiry-action:hover {
+      background: #000;
+      transform: translateY(-1px);
+    }
+    .inquiry-modal.is-submitted .inquiry-action {
+      display: none;
+    }
+    .producer-intro {
+      margin: 0;
+      color: #4b5563;
+      font-size: 14.5px;
+      line-height: 1.75;
+      word-break: keep-all;
+    }
+    .producer-intro + .producer-intro {
+      margin-top: 12px;
+    }
+    .producer-profile {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 424px;
+      gap: 36px;
+      align-items: start;
+    }
+    .producer-intro-column,
+    .producer-works-column {
+      min-width: 0;
+    }
+    .producer-works-column {
+      justify-self: end;
+      width: 424px;
+    }
+    .producer-column-title {
+      margin: 0 0 14px;
+      font-size: 16px;
+      letter-spacing: -0.2px;
+    }
+    .works-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 128px));
+      gap: 20px;
+      align-items: start;
+    }
+    .work-card {
+      min-width: 0;
+      width: 100%;
+    }
+    .work-poster {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      height: auto;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #e5e7eb;
+      margin-bottom: 8px;
+    }
+    .work-poster img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+    .work-poster.is-empty {
+      background: linear-gradient(145deg, #e9edf3 0%, #cfd6e0 100%);
+    }
+    .work-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 650;
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .work-title-text {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .work-year-inline {
+      margin-left: auto;
+      color: #7b8190;
+      font-size: 11.5px;
+      font-weight: 500;
+    }
+    .my-content-actionbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 118px;
+      padding: 10px;
+      border: 1px solid rgba(17,17,17,0.1);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.96);
+      box-shadow: 0 6px 16px rgba(15,23,42,0.08);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+    }
+    .my-content-actionbar::before {
+      content: "";
+      width: 28px;
+      height: 4px;
+      margin: 0 auto 1px;
+      border-radius: 999px;
+      background: #dedbd3;
+    }
+    .my-content-remote-title {
+      color: #8b8f98;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-align: center;
+    }
+    .my-content-remote-status {
+      color: #9b9da3;
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.2;
+      text-align: center;
+    }
+    .my-content-floating-btn {
+      width: 100%;
+      height: 34px;
+      padding: 0 10px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 750;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .my-content-edit-btn,
+    .my-content-review-btn,
+    .my-content-workflow-btn {
+      border: 1px solid #e4e2dc;
+      background: #fff;
+      color: #333;
+    }
+    .my-content-edit-btn:hover,
+    .my-content-review-btn:hover,
+    .my-content-workflow-btn:hover {
+      background: #f7f6f2;
+    }
+    @media (max-width: 980px) {
+      .hero,
+      .section-grid {
+        grid-template-columns: 1fr;
+      }
+      .summary-card,
+      .reference-media {
+        min-height: auto;
+      }
+      .reference-media {
+        width: min(300px, 100%);
+      }
+    }
+    @media (max-width: 720px) {
+      .collab-detail-main {
+        padding-bottom: 48px;
+      }
+      .detail-title {
+        font-size: 23px;
+      }
+      .media-viewer-backdrop {
+        padding: 48px 18px 22px;
+      }
+      .media-viewer-panel {
+        max-width: calc(100vw - 36px);
+        max-height: calc(100vh - 70px);
+      }
+      .media-viewer-body img {
+        max-width: calc(100vw - 36px);
+        max-height: calc(100vh - 112px);
+      }
+      .media-viewer-close {
+        top: 14px;
+        right: 14px;
+      }
+      .meta-grid,
+      .action-row,
+      .media-list,
+      .producer-profile {
+        grid-template-columns: 1fr;
+      }
+      .producer-works-column {
+        justify-self: stretch;
+        width: 100%;
+      }
+      .works-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .work-card {
+        width: 100%;
+        max-width: none;
+      }
+      .my-content-actionbar {
+        width: 104px;
+        padding: 6px;
+      }
+      .my-content-floating-btn {
+        height: 32px;
+        padding: 0 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div data-shortflow-nav="my-content"></div>
+  <div id="contentManageSubNav"></div>
+  <script>
+    document.getElementById('contentManageSubNav').outerHTML = window.ShortflowNav.renderContentManageSubNav('collaboration-plans');
+  </script>
+
+  <main class="main collab-detail-main">
+    <div class="detail-shell" id="detailRoot"></div>
+  </main>
+
+  <div class="media-viewer-backdrop" id="mediaViewer" role="dialog" aria-modal="true" aria-labelledby="mediaViewerTitle">
+    <div class="media-viewer-panel">
+      <div class="media-viewer-head">
+        <div class="media-viewer-title">
+          <span class="media-viewer-type" id="mediaViewerType">이미지</span>
+          <span id="mediaViewerTitle">레퍼런스 이미지</span>
+        </div>
+        <button class="media-viewer-close" type="button" id="mediaViewerClose" aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="media-viewer-body">
+        <img id="mediaViewerImage" src="" alt="">
+        <span class="media-viewer-play" id="mediaViewerPlay" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="inquiry-modal-backdrop" id="inquiryModal" role="dialog" aria-modal="true" aria-labelledby="inquiryModalTitle">
+    <div class="inquiry-modal" id="inquiryModalPanel">
+      <div class="inquiry-modal-head">
+        <div>
+          <h2 class="inquiry-modal-title" id="inquiryModalTitle">제작 문의하기</h2>
+        </div>
+        <button class="inquiry-modal-close" type="button" id="inquiryModalClose" aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <form class="inquiry-form" id="inquiryForm">
+        <p class="inquiry-modal-copy">검토하고 싶은 제작 방향과 조건을 남겨주시면 숏플로우 담당자가 확인 후 연락드립니다.</p>
+        <textarea class="inquiry-textarea" id="inquiryMessage" required placeholder="예: 희망 제작 일정, 예산 범위, 캐스팅 방향, 확인하고 싶은 조건"></textarea>
+        <p class="inquiry-complete">문의가 접수되었습니다. 담당자가 내용을 검토한 뒤 순차적으로 연락드리겠습니다.</p>
+        <div class="inquiry-actions">
+          <button class="inquiry-action" type="submit">문의 보내기</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const detailItems = [
+      {
+        title: '죽었다가 회귀한 톱스타',
+        producer: 'Orbit Pictures',
+        producerIntro: 'Orbit Pictures는 판타지 설정과 액션 리듬을 결합한 숏폼 시리즈를 제작합니다. 빠른 사건 전개와 시각적 콘셉트가 명확한 작품을 선호하며, 회귀·복수·연예계 소재처럼 초반 후킹이 강한 장르를 주로 개발합니다. 파일럿 단계에서 액션 동선과 화면 톤을 먼저 검증하는 방식으로 제작 리스크를 줄이고, 플랫폼별 숏클립 홍보에 활용하기 쉬운 장면을 기획 단계부터 함께 설계합니다.',
+        genres: ['타임슬립', '액션'],
+        stage: '파일럿 촬영 완료',
+        image: 'images/return-topstar-poster.png',
+        fallback: 'images/죽었다가회귀한.png',
+        episodes: '36부작 예정',
+        runtime: '편당 3분',
+        casting: '주연은 화려한 톱스타의 얼굴과 회귀 이후 복수심을 동시에 표현할 수 있는 배우로 캐스팅을 확정했습니다. 라이벌은 액션 동선과 감정 대립을 모두 소화할 수 있는 배우를 최종 조율 중이며, 매니저 캐릭터는 긴장감 속에서 리듬을 풀어주는 코믹 연기가 가능한 배우를 섭외하고 있습니다.',
+        synopsis: '사고로 모든 것을 잃은 톱스타가 데뷔 직전으로 회귀하며 자신의 죽음과 업계의 음모를 추적하는 이야기입니다. 파일럿 촬영을 통해 액션 톤과 회귀 연출 테스트를 완료했습니다. 주인공은 과거의 선택을 하나씩 바꾸며 성공을 되찾는 동시에, 자신을 무너뜨린 인물들의 연결고리를 추적합니다. 연예계 복수극의 속도감에 회귀 판타지의 쾌감을 얹어, 매회 선택과 결과가 즉각적으로 드러나는 구조를 목표로 합니다.',
+        works: [
+          { title: '우리 집에 킬러가 산다', year: '2025', image: 'images/killer-at-home.png', fallback: 'images/우리집에킬러가.png' },
+          { title: '퇴사했더니 황제가 됐다', year: '2024', image: 'images/resigned-emperor.png', fallback: 'images/퇴사했더니황제.png' },
+          { title: '살인범과 룸메이트가 되었다', year: '2024', image: 'images/murderer-roommate.png', fallback: 'images/살인범과룸메이트.png' }
+        ]
+      }
+    ];
+
+    const item = detailItems[0];
+    const root = document.getElementById('detailRoot');
+    const mediaViewer = document.getElementById('mediaViewer');
+    const mediaViewerType = document.getElementById('mediaViewerType');
+    const mediaViewerTitle = document.getElementById('mediaViewerTitle');
+    const mediaViewerImage = document.getElementById('mediaViewerImage');
+    const mediaViewerPlay = document.getElementById('mediaViewerPlay');
+    const mediaViewerClose = document.getElementById('mediaViewerClose');
+    const inquiryModal = document.getElementById('inquiryModal');
+    const inquiryModalPanel = document.getElementById('inquiryModalPanel');
+    const inquiryModalClose = document.getElementById('inquiryModalClose');
+    const inquiryForm = document.getElementById('inquiryForm');
+    const inquiryMessage = document.getElementById('inquiryMessage');
+    const PRODUCTION_INQUIRY_STORAGE_KEY = 'shortflow-production-inquiries';
+    let interested = false;
+
+    function stageClass(stage) {
+      if (stage === '캐스팅중') return 'is-casting';
+      if (stage === '파일럿 촬영 완료') return 'is-pilot';
+      return '';
+    }
+
+    function heartIcon(active) {
+      return `<svg width="17" height="17" viewBox="0 0 24 24" fill="${active ? '#ff3f4d' : 'none'}" stroke="${active ? '#ff3f4d' : 'currentColor'}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>`;
+    }
+
+    function posterMarkup(work) {
+      return work.image
+        ? `<img src="${work.image}" alt="${work.title} 포스터"${fallbackAttr(work.fallback)}>`
+        : '';
+    }
+
+    function paragraphMarkup(text, className) {
+      const paragraphs = text
+        .split(/(?<=\.)\s+/)
+        .reduce((groups, sentence, index) => {
+          const groupIndex = index < 2 ? 0 : 1;
+          groups[groupIndex] = groups[groupIndex] ? `${groups[groupIndex]} ${sentence}` : sentence;
+          return groups;
+        }, [])
+        .filter(Boolean);
+
+      return paragraphs.map((paragraph) => `<p class="${className}">${paragraph}</p>`).join('');
+    }
+
+    function fallbackAttr(fallback) {
+      return fallback
+        ? ` data-fallback-src="${fallback.normalize('NFC')}" data-fallback-src-alt="${fallback.normalize('NFD')}" data-fallback-step="0" onerror="handleImageFallback(this)"`
+        : '';
+    }
+
+    function handleImageFallback(image) {
+      const step = Number(image.dataset.fallbackStep || '0');
+      const fallback = step === 0 ? image.dataset.fallbackSrc : image.dataset.fallbackSrcAlt;
+      image.dataset.fallbackStep = String(step + 1);
+      if (fallback && image.src !== fallback) {
+        image.src = fallback;
+        return;
+      }
+      image.onerror = null;
+    }
+
+    function mediaMarkup(entry) {
+      return entry.image
+        ? `<img src="${entry.image}" alt="${entry.title} 레퍼런스 이미지"${fallbackAttr(entry.fallback)}>`
+        : `<div class="reference-fallback">${entry.title}</div>`;
+    }
+
+    function relatedMedia(entry) {
+      return [
+        { type: '영상', title: '레드카펫 복귀 티저', image: 'images/topstar-still-1.png', fallback: 'images/톱스타스틸컷1.png', playable: true },
+        { type: '이미지', title: '촬영장 대기 스틸', image: 'images/topstar-still-2.png', fallback: 'images/톱스타스틸컷2.png', playable: false },
+        { type: '이미지', title: '거울 앞 복수 선언 컷', image: 'images/topstar-still-3.png', fallback: 'images/톱스타스틸컷3.png', playable: false }
+      ];
+    }
+
+    function openMediaViewer(media) {
+      mediaViewerType.textContent = media.type;
+      mediaViewerTitle.textContent = media.title;
+      mediaViewerImage.src = media.image;
+      mediaViewerImage.alt = media.title;
+      mediaViewerImage.dataset.fallbackSrc = media.fallback ? media.fallback.normalize('NFC') : '';
+      mediaViewerImage.dataset.fallbackSrcAlt = media.fallback ? media.fallback.normalize('NFD') : '';
+      mediaViewerImage.dataset.fallbackStep = '0';
+      mediaViewerImage.onerror = () => handleImageFallback(mediaViewerImage);
+      mediaViewerPlay.classList.toggle('is-visible', media.playable);
+      mediaViewer.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMediaViewer() {
+      mediaViewer.classList.remove('is-open');
+      document.body.style.overflow = '';
+      mediaViewerImage.onerror = null;
+      mediaViewerImage.src = '';
+      mediaViewerImage.dataset.fallbackSrc = '';
+      mediaViewerImage.dataset.fallbackSrcAlt = '';
+      mediaViewerImage.dataset.fallbackStep = '';
+    }
+
+    function openInquiryModal() {
+      inquiryModal.classList.add('is-open');
+      inquiryModalPanel.classList.remove('is-submitted');
+      inquiryForm.reset();
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => inquiryMessage.focus(), 0);
+    }
+
+    function closeInquiryModal() {
+      inquiryModal.classList.remove('is-open');
+      inquiryModalPanel.classList.remove('is-submitted');
+      document.body.style.overflow = '';
+    }
+
+    function formatInquiryDateParts(date) {
+      const pad = (value) => String(value).padStart(2, '0');
+      return {
+        date: `${date.getFullYear()}.${pad(date.getMonth() + 1)}.${pad(date.getDate())}`,
+        time: `${pad(date.getHours())}:${pad(date.getMinutes())}`,
+      };
+    }
+
+    function saveProductionInquiry(message) {
+      const now = new Date();
+      const timestamp = now.getTime();
+      const dateParts = formatInquiryDateParts(now);
+      let savedItems = [];
+
+      try {
+        savedItems = JSON.parse(localStorage.getItem(PRODUCTION_INQUIRY_STORAGE_KEY) || '[]');
+        if (!Array.isArray(savedItems)) savedItems = [];
+      } catch (error) {
+        savedItems = [];
+      }
+
+      const inquiry = {
+        id: `pc-${timestamp}`,
+        inquiryType: '제작협업',
+        title: `${item.title} 제작 문의`,
+        date: dateParts.date,
+        time: dateParts.time,
+        statusLabel: '전송됨',
+        full: `콘텐츠: ${item.title}
+제작사: ${item.producer}
+
+${message}`,
+      };
+
+      localStorage.setItem(PRODUCTION_INQUIRY_STORAGE_KEY, JSON.stringify([inquiry, ...savedItems].slice(0, 20)));
+    }
+
+    function installManagementRemote() {
+      if (document.querySelector('.my-content-actionbar')) return;
+
+      const actionbar = document.createElement('div');
+      actionbar.className = 'my-content-actionbar';
+
+      const title = document.createElement('div');
+      title.className = 'my-content-remote-title';
+      title.textContent = 'MY CONTENT';
+
+      const status = document.createElement('div');
+      status.className = 'my-content-remote-status';
+      status.textContent = '관리 도구';
+
+      const editButton = document.createElement('button');
+      editButton.className = 'my-content-floating-btn my-content-edit-btn';
+      editButton.type = 'button';
+      editButton.textContent = '수정하기';
+      editButton.addEventListener('click', () => {
+        alert('기획안 수정 화면으로 이동합니다.');
+      });
+
+      const reviewButton = document.createElement('button');
+      reviewButton.className = 'my-content-floating-btn my-content-review-btn';
+      reviewButton.type = 'button';
+      reviewButton.textContent = '검토 요청';
+      reviewButton.addEventListener('click', () => {
+        alert('검토 요청을 보냈습니다.');
+      });
+
+      const workflowButton = document.createElement('button');
+      workflowButton.className = 'my-content-floating-btn my-content-workflow-btn';
+      workflowButton.type = 'button';
+      workflowButton.textContent = '워크플로우';
+      workflowButton.addEventListener('click', () => {
+        window.location.href = 'producer-dashboard.html?tab=workflow';
+      });
+
+      actionbar.appendChild(title);
+      actionbar.appendChild(status);
+      actionbar.appendChild(editButton);
+      actionbar.appendChild(reviewButton);
+      actionbar.appendChild(workflowButton);
+      actionbar.style.visibility = 'hidden';
+      document.body.appendChild(actionbar);
+
+      const positionActionbar = () => {
+        const rootRect = root.getBoundingClientRect();
+        const backControl = root.querySelector('.back-link');
+        const backRect = backControl ? backControl.getBoundingClientRect() : rootRect;
+        const gap = 14;
+        const panelWidth = actionbar.offsetWidth || 112;
+        const outsideLeft = rootRect.right + gap;
+        const insideLeft = rootRect.right - panelWidth - gap;
+        const hasOutsideRoom = outsideLeft + panelWidth <= window.innerWidth - 12;
+
+        actionbar.style.top = `${Math.max(64, backRect.top)}px`;
+        actionbar.style.left = `${Math.max(12, hasOutsideRoom ? outsideLeft : insideLeft)}px`;
+      };
+
+      requestAnimationFrame(() => {
+        positionActionbar();
+        actionbar.style.visibility = 'visible';
+      });
+      window.addEventListener('resize', positionActionbar);
+      window.addEventListener('scroll', positionActionbar, { passive: true });
+    }
+
+    function render() {
+      const mediaItems = relatedMedia(item);
+      document.title = `${item.title} | 제작협업 상세`;
+      root.innerHTML = `
+        <a class="back-link" href="producer-collaboration.html">← 제작협업 기획안</a>
+        <section class="hero">
+          <div class="reference-media">
+            ${mediaMarkup(item)}
+          </div>
+          <aside class="summary-card">
+            <span class="stage-badge ${stageClass(item.stage)}">${item.stage}</span>
+            <h1 class="detail-title">${item.title}</h1>
+            <div class="detail-producer">${item.producer}</div>
+            <div class="genre-row">
+              ${item.genres.map((genre) => `<span class="genre-chip">${genre}</span>`).join('')}
+            </div>
+            <div class="meta-grid">
+              <div class="meta-item">
+                <div class="meta-label">예정 부작수</div>
+                <div class="meta-value">${item.episodes}</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">편당 러닝타임</div>
+                <div class="meta-value">${item.runtime}</div>
+              </div>
+            </div>
+            <div class="action-row">
+              <button class="action-button primary" type="button" id="inquiryButton">제작 문의하기</button>
+              <button class="action-button ${interested ? 'is-active' : ''}" type="button" id="interestButton">
+                ${heartIcon(interested)}
+                즐겨찾기
+              </button>
+            </div>
+          </aside>
+        </section>
+        <section class="section-grid">
+          <div class="info-card">
+            <h2>시놉시스</h2>
+            ${paragraphMarkup(item.synopsis, 'synopsis')}
+          </div>
+          <div class="info-card">
+            <h2>캐스팅 정보</h2>
+            ${paragraphMarkup(item.casting, 'casting-copy')}
+          </div>
+        </section>
+        <section class="info-card">
+          <h2>레퍼런스 이미지/영상</h2>
+          <div class="media-list">
+            ${mediaItems.map((media, index) => `
+              <div class="media-card">
+                <button class="media-thumb" type="button" data-media-index="${index}" aria-label="${media.title} 크게 보기">
+                  <img src="${media.image}" alt="${media.title}"${fallbackAttr(media.fallback)}>
+                  <span class="media-type">${media.type}</span>
+                  ${media.playable ? `
+                    <span class="media-play" aria-hidden="true">
+                      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </span>
+                  ` : ''}
+                </button>
+                <div class="media-name">${media.title}</div>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+        <section class="info-card">
+          <div class="producer-profile">
+            <div class="producer-intro-column">
+              <h2 class="producer-column-title">제작사 소개</h2>
+              ${paragraphMarkup(item.producerIntro, 'producer-intro')}
+            </div>
+            <div class="producer-works-column">
+              <div class="works-list">
+                ${item.works.map((work) => `
+                  <div class="work-card">
+                    <div class="work-poster ${work.image ? '' : 'is-empty'}">${posterMarkup(work)}</div>
+                    <div class="work-name">
+                      <span class="work-title-text">${work.title}</span>
+                      <span class="work-year-inline">${work.year}</span>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+
+      document.getElementById('interestButton').addEventListener('click', () => {
+        interested = !interested;
+        render();
+      });
+      document.getElementById('inquiryButton').addEventListener('click', () => {
+        openInquiryModal();
+      });
+      document.querySelectorAll('[data-media-index]').forEach((button) => {
+        button.addEventListener('click', () => {
+          openMediaViewer(mediaItems[Number(button.dataset.mediaIndex)]);
+        });
+      });
+      installManagementRemote();
+    }
+
+    mediaViewerClose.addEventListener('click', closeMediaViewer);
+    mediaViewer.addEventListener('click', (event) => {
+      if (event.target === mediaViewer) closeMediaViewer();
+    });
+    inquiryModalClose.addEventListener('click', closeInquiryModal);
+    inquiryModal.addEventListener('click', (event) => {
+      if (event.target === inquiryModal) closeInquiryModal();
+    });
+    inquiryForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!inquiryMessage.value.trim()) {
+        inquiryMessage.value = '';
+        inquiryMessage.reportValidity();
+        return;
+      }
+      saveProductionInquiry(inquiryMessage.value.trim());
+      inquiryModalPanel.classList.add('is-submitted');
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      if (inquiryModal.classList.contains('is-open')) {
+        closeInquiryModal();
+        return;
+      }
+      if (mediaViewer.classList.contains('is-open')) {
+        closeMediaViewer();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>

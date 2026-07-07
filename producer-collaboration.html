@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>제작협업 기획안 | shortflow</title>
+  <link rel="stylesheet" href="dashboard-common.css">
+  <script src="dashboard-nav.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background: #fff;
+    }
+
+    @view-transition {
+      navigation: auto;
+    }
+
+    .producer-collaboration-main {
+      min-height: calc(100vh - 250px);
+      padding: 18px 0 64px;
+      view-transition-name: producer-content-main;
+    }
+
+    .producer-collab-toolbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 18px;
+    }
+
+    .producer-collab-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .producer-collab-tab {
+      position: relative;
+      height: 32px;
+      padding: 0 14px;
+      border: 1.5px solid #dfe3ea;
+      border-radius: 999px;
+      background: #fff;
+      color: #3f4650;
+      font-size: 12.5px;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .producer-collab-tab:hover {
+      border-color: #cfd5df;
+      background: #fafbfc;
+      color: var(--ink);
+    }
+
+    .producer-collab-tab.active {
+      border-color: rgba(232,93,44,0.42);
+      background: #fff4ee;
+      color: var(--orange);
+      box-shadow: 0 1px 4px rgba(232,93,44,0.08);
+    }
+
+    .producer-collab-tab-count {
+      margin-left: 5px;
+      color: #8f96a3;
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .producer-collab-tab.active .producer-collab-tab-count {
+      color: inherit;
+    }
+
+    .producer-collab-primary {
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 0 18px 0 16px;
+      border-radius: 9px;
+      border: 0.5px solid rgba(232, 93, 44, 0.72);
+      background: var(--orange);
+      color: #fff;
+      font-size: 12.5px;
+      font-weight: 650;
+      text-decoration: none;
+      white-space: nowrap;
+      box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.18);
+      transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .producer-collab-primary::before {
+      content: "+";
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: currentColor;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1;
+      margin-top: -1px;
+    }
+
+    .producer-collab-primary:hover {
+      border-color: rgba(232, 93, 44, 0.86);
+      background: #d94f25;
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.2), 0 4px 12px rgba(232, 93, 44, 0.16);
+    }
+
+    .producer-collab-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 36px 14px;
+      overflow: visible;
+    }
+
+    .producer-collab-card {
+      position: relative;
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #fff;
+      transition: border-color 0.16s ease, transform 0.16s ease;
+      z-index: 1;
+    }
+
+    .producer-collab-card:hover {
+      border-color: #d7d4cc;
+      transform: translateY(-1px);
+    }
+
+    .producer-collab-card.menu-open {
+      z-index: 40;
+    }
+
+    .producer-collab-poster {
+      position: relative;
+      aspect-ratio: 1 / 1.3;
+      overflow: hidden;
+      border-radius: 9px;
+      background: linear-gradient(155deg, #f2c3ae 0%, #dfe4f5 100%);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+    }
+
+    .producer-collab-poster::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 42%);
+    }
+
+    .producer-collab-poster img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .producer-collab-poster.has-image::before {
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0) 46%);
+      pointer-events: none;
+    }
+
+    .producer-collab-badge {
+      position: absolute;
+      top: 9px;
+      left: 9px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.94);
+      color: var(--ink);
+      font-size: 11px;
+      font-weight: 750;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.08);
+    }
+
+    .producer-collab-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #a2a6ae;
+    }
+
+    .status-review .producer-collab-dot { background: #d38c1c; }
+    .status-approved .producer-collab-dot { background: #24824e; }
+    .status-draft .producer-collab-dot { background: #8b9098; }
+    .status-approved .producer-collab-badge { color: #176935; }
+    .status-review .producer-collab-badge { color: #9a6a0f; }
+    .status-draft .producer-collab-badge { color: #6f7680; }
+
+    .producer-collab-title {
+      margin-top: 10px;
+      color: var(--ink);
+      font-size: 13.5px;
+      font-weight: 550;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .producer-collab-foot {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 11px;
+    }
+
+    .producer-collab-detail {
+      flex: 1;
+      height: 30px;
+      padding: 0 9px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      font-size: 11.5px;
+      font-weight: 700;
+      transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+    }
+
+    .producer-collab-detail:hover {
+      border-color: #d7d4cc;
+      background: #fafaf7;
+      color: #111;
+    }
+
+    .producer-collab-more {
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: #676b73;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+    }
+
+    .producer-collab-more:hover {
+      border-color: #d7d4cc;
+      background: #fafaf7;
+      color: var(--ink);
+    }
+
+    .producer-collab-more svg {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2.1;
+    }
+
+    .producer-collab-menu {
+      position: absolute;
+      right: 10px;
+      top: calc(100% - 8px);
+      z-index: 80;
+      width: 202px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #fff;
+      box-shadow: 0 14px 32px rgba(17,24,39,0.13);
+      display: none;
+    }
+
+    .producer-collab-card.menu-open .producer-collab-menu {
+      display: block;
+    }
+
+    .producer-collab-menu-item {
+      width: 100%;
+      min-height: 36px;
+      padding: 0 11px;
+      border-radius: 8px;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    .producer-collab-menu-item:hover {
+      background: #f7f7f5;
+    }
+
+    .producer-collab-menu-item.danger {
+      color: #b23b2e;
+    }
+
+    .producer-collab-empty {
+      display: none;
+      padding: 56px 20px;
+      border: 1px dashed #d7d4cc;
+      border-radius: 16px;
+      color: var(--ink-faint);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @media (max-width: 1120px) {
+      .producer-collab-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
+      .producer-collab-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .producer-collab-toolbar {
+        align-items: stretch;
+        flex-direction: column-reverse;
+        gap: 12px;
+      }
+
+      .producer-collab-primary {
+        align-self: flex-end;
+      }
+
+      .producer-collab-tabs {
+        gap: 8px;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+      }
+
+      .producer-collab-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div data-shortflow-nav="my-content"></div>
+  <div id="contentManageSubNav"></div>
+  <script>
+    document.getElementById('contentManageSubNav').outerHTML = window.ShortflowNav.renderContentManageSubNav('collaboration-plans');
+  </script>
+  <main class="main producer-collaboration-main" id="producerCollaborationRoot" aria-label="제작협업 기획안"></main>
+  <script>
+    const producerCollaborationRoot = document.getElementById('producerCollaborationRoot');
+
+    producerCollaborationRoot.innerHTML = `
+        <div class="producer-collab-toolbar">
+          <nav class="producer-collab-tabs" aria-label="제작협업 상태">
+            <button class="producer-collab-tab active" type="button" data-filter="all">전체<span class="producer-collab-tab-count" data-count="all">0</span></button>
+            <button class="producer-collab-tab" type="button" data-filter="draft">임시저장<span class="producer-collab-tab-count" data-count="draft">0</span></button>
+            <button class="producer-collab-tab" type="button" data-filter="review">검토중<span class="producer-collab-tab-count" data-count="review">0</span></button>
+            <button class="producer-collab-tab" type="button" data-filter="approved">승인됨<span class="producer-collab-tab-count" data-count="approved">0</span></button>
+          </nav>
+          <a class="producer-collab-primary" href="producer-collaboration-create.html">새 기획안</a>
+        </div>
+        <section class="producer-collab-grid" id="producerCollaborationGrid" aria-label="제작협업 기획안 목록"></section>
+        <div class="producer-collab-empty" id="producerCollaborationEmpty">이 상태의 기획안이 없어요.</div>
+      `;
+
+    const collaborationPlans = [
+        { title: '대표님이 내 전남친입니다', status: 'approved', statusLabel: '승인됨', tone: 'rose', image: 'images/ceo-ex-boyfriend.png' },
+        { title: '죽었다가 회귀한 톱스타', status: 'review', statusLabel: '검토중', tone: 'indigo', image: 'images/return-topstar-poster.png' },
+        { title: '재벌집 막내 비서', status: 'draft', statusLabel: '임시저장', tone: 'teal', image: 'images/chaebol-secretary.png' },
+        { title: '우리 집에 킬러가 산다', status: 'review', statusLabel: '검토중', tone: 'slate', image: 'images/killer-at-home.png' },
+        { title: '오늘부터 악녀 대행합니다', status: 'approved', statusLabel: '승인됨', tone: 'violet', image: 'images/villainess-agent.png' },
+      ];
+
+    const producerGrid = document.getElementById('producerCollaborationGrid');
+    const producerEmpty = document.getElementById('producerCollaborationEmpty');
+    let activeProducerFilter = 'all';
+
+      function escapeAttr(value) {
+        return String(value)
+          .replace(/&/g, '&amp;')
+          .replace(/"/g, '&quot;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+      }
+
+      function menuItemsFor(item) {
+        if (item.status === 'approved') return ['수정하기', '검토 요청 보내기', '워크플로우 보기'];
+        if (item.status === 'review') return ['워크플로우 보기'];
+        if (item.status === 'draft') return ['이어서 작성', '검토 요청 보내기', '삭제'];
+        return ['워크플로우 보기'];
+      }
+
+      function updateTabCounts() {
+        const counts = {
+          all: collaborationPlans.length,
+          draft: collaborationPlans.filter(item => item.status === 'draft').length,
+          review: collaborationPlans.filter(item => item.status === 'review').length,
+          approved: collaborationPlans.filter(item => item.status === 'approved').length,
+        };
+        producerCollaborationRoot.querySelectorAll('[data-count]').forEach(node => {
+          node.textContent = counts[node.dataset.count] || 0;
+        });
+      }
+
+      function filteredPlans() {
+        if (activeProducerFilter === 'all') return collaborationPlans;
+        return collaborationPlans.filter(item => item.status === activeProducerFilter);
+      }
+
+      function detailHref(item) {
+        return `producer-collaboration-detail.html?title=${encodeURIComponent(item.title)}`;
+      }
+
+      function renderProducerPlans() {
+        const rows = filteredPlans();
+        producerEmpty.style.display = rows.length ? 'none' : 'block';
+        producerGrid.style.display = rows.length ? 'grid' : 'none';
+        producerGrid.innerHTML = rows.map(item => `
+          <article class="producer-collab-card status-${item.status}">
+            <div class="producer-collab-poster ${item.image ? 'has-image' : ''}">
+              ${item.image ? `<img src="${escapeAttr(item.image)}" alt="${escapeAttr(item.title)} 포스터">` : ''}
+              <span class="producer-collab-badge">
+                <span class="producer-collab-dot"></span>${item.statusLabel}
+              </span>
+            </div>
+            <div class="producer-collab-title">${escapeAttr(item.title)}</div>
+            <div class="producer-collab-foot">
+              <button class="producer-collab-detail" type="button" data-title="${escapeAttr(item.title)}">상세 보기</button>
+              <button class="producer-collab-more" type="button" aria-label="${escapeAttr(item.title)} 더보기">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></svg>
+              </button>
+            </div>
+            <div class="producer-collab-menu" role="menu">
+              ${menuItemsFor(item).map(label => `
+                <button class="producer-collab-menu-item ${label === '삭제' ? 'danger' : ''}" type="button" role="menuitem">
+                  <span>${label}</span>
+                </button>
+              `).join('')}
+            </div>
+          </article>
+        `).join('');
+      }
+
+      producerCollaborationRoot.querySelectorAll('.producer-collab-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          activeProducerFilter = tab.dataset.filter;
+          producerCollaborationRoot.querySelectorAll('.producer-collab-tab').forEach(item => item.classList.toggle('active', item === tab));
+          renderProducerPlans();
+        });
+      });
+
+      document.addEventListener('click', event => {
+        const detailButton = event.target.closest('.producer-collab-detail');
+        if (detailButton) {
+          const item = collaborationPlans.find(plan => plan.title === detailButton.dataset.title);
+          if (item) {
+            window.location.href = detailHref(item);
+          }
+          return;
+        }
+
+        const moreButton = event.target.closest('.producer-collab-more');
+        if (moreButton) {
+          const card = moreButton.closest('.producer-collab-card');
+          const willOpen = !card.classList.contains('menu-open');
+          document.querySelectorAll('.producer-collab-card.menu-open').forEach(item => item.classList.remove('menu-open'));
+          card.classList.toggle('menu-open', willOpen);
+          event.stopPropagation();
+          return;
+        }
+
+        if (!event.target.closest('.producer-collab-menu')) {
+          document.querySelectorAll('.producer-collab-card.menu-open').forEach(item => item.classList.remove('menu-open'));
+        }
+      });
+
+      document.addEventListener('pointerover', event => {
+        const detailButton = event.target.closest('.producer-collab-detail');
+        if (!detailButton) return;
+        const item = collaborationPlans.find(plan => plan.title === detailButton.dataset.title);
+        if (item) {
+          window.ShortflowNav?.prefetchPage(detailHref(item));
+        }
+      }, { passive: true });
+
+      updateTabCounts();
+      renderProducerPlans();
+  </script>
+</body>
+</html>

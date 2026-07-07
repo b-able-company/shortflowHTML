@@ -28,6 +28,10 @@
 </head>
 <body>
 <div data-shortflow-nav="my-content"></div>
+<div id="contentManageSubNav"></div>
+<script>
+  document.getElementById('contentManageSubNav').outerHTML = window.ShortflowNav.renderContentManageSubNav('contents');
+</script>
   <div id="root"></div>
 
   <script src="assets/js/unbundled/detail/producer-detail-entry.js"></script>

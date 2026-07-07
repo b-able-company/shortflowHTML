@@ -1,20 +1,8 @@
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
-function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
-function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 // 새 콘텐츠 등록 — 단계형 웹페이지 (4단계 + 검토 요청)
 // API 단계와 정렬: 1 기본정보+2 다국어 → POST /contents · 3 미디어 → PUT media · 4 메타 → PUT meta · 검토 → PATCH submit
 // 섹션은 nc-web-sections.jsx 재사용. 의존: dashboard-shell · nc-shell · tweaks-panel
 
-var STEP_DEFS = [{
+const STEP_DEFS = [{
   k: 1,
   label: '콘텐츠 정보',
   hint: '기본 정보 · 텍스트 · 크루',
@@ -32,12 +20,13 @@ var STEP_DEFS = [{
 }];
 
 // 좌측 단계 레일
-function StepRail(_ref) {
-  var steps = _ref.steps,
-    current = _ref.current,
-    maxReached = _ref.maxReached,
-    onJump = _ref.onJump,
-    t = _ref.t;
+function StepRail({
+  steps,
+  current,
+  maxReached,
+  onJump,
+  t
+}) {
   return /*#__PURE__*/React.createElement("nav", {
     style: {
       position: 'sticky',
@@ -46,15 +35,13 @@ function StepRail(_ref) {
       flexDirection: 'column',
       gap: 4
     }
-  }, steps.map(function (s) {
-    var done = s.k < current;
-    var active = s.k === current;
-    var reachable = s.k <= maxReached;
+  }, steps.map(s => {
+    const done = s.k < current;
+    const active = s.k === current;
+    const reachable = s.k <= maxReached;
     return /*#__PURE__*/React.createElement("button", {
       key: s.k,
-      onClick: function onClick() {
-        return reachable && onJump(s.k);
-      },
+      onClick: () => reachable && onJump(s.k),
       style: {
         display: 'flex',
         alignItems: 'center',
@@ -65,7 +52,7 @@ function StepRail(_ref) {
         cursor: reachable ? 'pointer' : 'default',
         width: '100%',
         background: active ? ACCENT_SOFT : 'transparent',
-        border: "0.5px solid ".concat(active ? '#F2C3AE' : 'transparent')
+        border: `0.5px solid ${active ? '#F2C3AE' : 'transparent'}`
       }
     }, /*#__PURE__*/React.createElement("span", {
       style: {
@@ -81,7 +68,7 @@ function StepRail(_ref) {
         fontWeight: 700,
         background: active ? ACCENT : done ? t.surfaceAlt : t.surfaceAlt,
         color: active ? '#FFF7EE' : done ? ACCENT : t.inkFaint,
-        border: active ? 'none' : "0.5px solid ".concat(t.line)
+        border: active ? 'none' : `0.5px solid ${t.line}`
       }
     }, done ? /*#__PURE__*/React.createElement("svg", {
       width: "12",
@@ -112,23 +99,21 @@ function StepRail(_ref) {
     }, s.hint)));
   }));
 }
-var STEP_TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+const STEP_TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "stepNav": "top"
 } /*EDITMODE-END*/;
 function getSiteLanguage() {
-  var locale = (document.documentElement.lang || navigator.language || 'ko').toLowerCase();
+  const locale = (document.documentElement.lang || navigator.language || 'ko').toLowerCase();
   if (locale.startsWith('en')) return 'EN';
   if (locale.startsWith('zh')) return 'ZH';
   return 'KO';
 }
-function AIIntroModal(_ref2) {
-  var onLater = _ref2.onLater,
-    onTry = _ref2.onTry,
-    t = _ref2.t;
-  var _React$useState = React.useState(false),
-    _React$useState2 = _slicedToArray(_React$useState, 2),
-    tryHover = _React$useState2[0],
-    setTryHover = _React$useState2[1];
+function AIIntroModal({
+  onLater,
+  onTry,
+  t
+}) {
+  const [tryHover, setTryHover] = React.useState(false);
   return /*#__PURE__*/React.createElement("div", {
     onClick: onLater,
     style: {
@@ -142,9 +127,7 @@ function AIIntroModal(_ref2) {
       padding: 24
     }
   }, /*#__PURE__*/React.createElement("div", {
-    onClick: function onClick(e) {
-      return e.stopPropagation();
-    },
+    onClick: e => e.stopPropagation(),
     style: {
       position: 'relative',
       width: 380,
@@ -230,18 +213,14 @@ function AIIntroModal(_ref2) {
     }
   }, /*#__PURE__*/React.createElement("button", {
     onClick: onTry,
-    onMouseEnter: function onMouseEnter() {
-      return setTryHover(true);
-    },
-    onMouseLeave: function onMouseLeave() {
-      return setTryHover(false);
-    },
+    onMouseEnter: () => setTryHover(true),
+    onMouseLeave: () => setTryHover(false),
     style: {
       width: '100%',
       height: 40,
       borderRadius: 10,
       cursor: 'pointer',
-      border: tryHover ? 'none' : "0.5px solid ".concat(t.lineStrong),
+      border: tryHover ? 'none' : `0.5px solid ${t.lineStrong}`,
       background: tryHover ? ACCENT : t.surface,
       color: tryHover ? '#FFF7EE' : t.ink,
       fontFamily: t.sans,
@@ -251,9 +230,10 @@ function AIIntroModal(_ref2) {
     }
   }, "\uC0AC\uC6A9\uD574\uBCF4\uAE30")))));
 }
-function AIPlanUploadModal(_ref3) {
-  var onClose = _ref3.onClose,
-    t = _ref3.t;
+function AIPlanUploadModal({
+  onClose,
+  t
+}) {
   return /*#__PURE__*/React.createElement("div", {
     onClick: onClose,
     style: {
@@ -267,9 +247,7 @@ function AIPlanUploadModal(_ref3) {
       padding: 24
     }
   }, /*#__PURE__*/React.createElement("div", {
-    onClick: function onClick(e) {
-      return e.stopPropagation();
-    },
+    onClick: e => e.stopPropagation(),
     style: {
       width: 380,
       height: 308,
@@ -319,7 +297,7 @@ function AIPlanUploadModal(_ref3) {
       justifyContent: 'center',
       minHeight: 148,
       borderRadius: 14,
-      border: "1px dashed ".concat(t.lineStrong),
+      border: `1px dashed ${t.lineStrong}`,
       background: t.surfaceAlt,
       cursor: 'pointer',
       padding: 14,
@@ -338,7 +316,7 @@ function AIPlanUploadModal(_ref3) {
       height: 38,
       borderRadius: 999,
       background: t.surface,
-      border: "0.5px solid ".concat(t.line),
+      border: `0.5px solid ${t.line}`,
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -383,7 +361,7 @@ function AIPlanUploadModal(_ref3) {
       height: 40,
       borderRadius: 10,
       cursor: 'pointer',
-      border: "0.5px solid ".concat(t.lineStrong),
+      border: `0.5px solid ${t.lineStrong}`,
       background: t.surface,
       color: t.ink,
       fontFamily: t.sans,
@@ -407,94 +385,58 @@ function AIPlanUploadModal(_ref3) {
   }, "\uCD94\uCD9C\uD558\uAE30"))));
 }
 function WebStepApp() {
-  var t = BASE_TOKENS;
-  var _useTweaks = useTweaks(STEP_TWEAK_DEFAULTS),
-    _useTweaks2 = _slicedToArray(_useTweaks, 2),
-    tw = _useTweaks2[0],
-    setTweak = _useTweaks2[1];
-  var _React$useState3 = React.useState(getSiteLanguage),
-    _React$useState4 = _slicedToArray(_React$useState3, 1),
-    baseLanguage = _React$useState4[0];
-  var _React$useState5 = React.useState(function () {
-      return _objectSpread(_objectSpread({}, INITIAL_FORM), {}, {
-        mediaLanguage: getSiteLanguage()
-      });
-    }),
-    _React$useState6 = _slicedToArray(_React$useState5, 2),
-    form = _React$useState6[0],
-    setForm = _React$useState6[1];
-  var selectedLangs = [baseLanguage];
-  var _React$useState7 = React.useState(1),
-    _React$useState8 = _slicedToArray(_React$useState7, 2),
-    current = _React$useState8[0],
-    setCurrent = _React$useState8[1];
-  var _React$useState9 = React.useState(null),
-    _React$useState0 = _slicedToArray(_React$useState9, 2),
-    savedAt = _React$useState0[0],
-    setSavedAt = _React$useState0[1];
-  var _React$useState1 = React.useState(false),
-    _React$useState10 = _slicedToArray(_React$useState1, 2),
-    devBypass = _React$useState10[0],
-    setDevBypass = _React$useState10[1];
-  var _React$useState11 = React.useState(false),
-    _React$useState12 = _slicedToArray(_React$useState11, 2),
-    doneOpen = _React$useState12[0],
-    setDoneOpen = _React$useState12[1];
-  var _React$useState13 = React.useState(false),
-    _React$useState14 = _slicedToArray(_React$useState13, 2),
-    rightsConfirmed = _React$useState14[0],
-    setRightsConfirmed = _React$useState14[1];
-  var _React$useState15 = React.useState(true),
-    _React$useState16 = _slicedToArray(_React$useState15, 2),
-    aiIntroOpen = _React$useState16[0],
-    setAiIntroOpen = _React$useState16[1];
-  var _React$useState17 = React.useState(false),
-    _React$useState18 = _slicedToArray(_React$useState17, 2),
-    aiUploadOpen = _React$useState18[0],
-    setAiUploadOpen = _React$useState18[1];
-  var set = function set(k, v) {
-    return setForm(function (f) {
-      return _objectSpread(_objectSpread({}, f), {}, _defineProperty({}, k, v));
-    });
-  };
-  var setLangItem = function setLangItem(listKey, language, k, v) {
-    return setForm(function (f) {
-      return _objectSpread(_objectSpread({}, f), {}, _defineProperty({}, listKey, f[listKey].map(function (x) {
-        return x.language === language ? _objectSpread(_objectSpread({}, x), {}, _defineProperty({}, k, v)) : x;
-      })));
-    });
-  };
-  var total = STEP_DEFS.length;
-  var props = {
-    form: form,
-    set: set,
-    setLangItem: setLangItem,
+  const t = BASE_TOKENS;
+  const [tw, setTweak] = useTweaks(STEP_TWEAK_DEFAULTS);
+  const [baseLanguage] = React.useState(getSiteLanguage);
+  const [form, setForm] = React.useState(() => ({
+    ...INITIAL_FORM,
+    mediaLanguage: getSiteLanguage()
+  }));
+  const selectedLangs = [baseLanguage];
+  const [current, setCurrent] = React.useState(1);
+  const [savedAt, setSavedAt] = React.useState(null);
+  const [devBypass, setDevBypass] = React.useState(false);
+  const [doneOpen, setDoneOpen] = React.useState(false);
+  const [rightsConfirmed, setRightsConfirmed] = React.useState(false);
+  const [aiIntroOpen, setAiIntroOpen] = React.useState(true);
+  const [aiUploadOpen, setAiUploadOpen] = React.useState(false);
+  const set = (k, v) => setForm(f => ({
+    ...f,
+    [k]: v
+  }));
+  const setLangItem = (listKey, language, k, v) => setForm(f => ({
+    ...f,
+    [listKey]: f[listKey].map(x => x.language === language ? {
+      ...x,
+      [k]: v
+    } : x)
+  }));
+  const total = STEP_DEFS.length;
+  const props = {
+    form,
+    set,
+    setLangItem,
     langList: selectedLangs,
-    baseLanguage: baseLanguage,
-    rightsConfirmed: rightsConfirmed,
+    baseLanguage,
+    rightsConfirmed,
     onRightsChange: setRightsConfirmed,
-    onAiUpload: function onAiUpload() {
-      return setAiUploadOpen(true);
-    },
-    t: t
+    onAiUpload: () => setAiUploadOpen(true),
+    t
   };
-  var goTo = function goTo(k) {
-    var _document$querySelect;
+  const goTo = k => {
     setCurrent(k);
-    (_document$querySelect = document.querySelector('[data-nc-scroll]')) === null || _document$querySelect === void 0 || _document$querySelect.scrollTo({
+    document.querySelector('[data-nc-scroll]')?.scrollTo({
       top: 0
     });
   };
-  var onSave = function onSave() {
-    return setSavedAt(nowHHMM());
-  };
-  var renderStep = function renderStep() {
+  const onSave = () => setSavedAt(nowHHMM());
+  const renderStep = () => {
     if (current === 1) return /*#__PURE__*/React.createElement(WebBasicSection, props);
     if (current === 2) return /*#__PURE__*/React.createElement(WebMediaSection, props);
     return /*#__PURE__*/React.createElement(WebReviewSection, props);
   };
-  var side = tw.stepNav === 'side';
-  var cur = STEP_DEFS[current - 1];
+  const side = tw.stepNav === 'side';
+  const cur = STEP_DEFS[current - 1];
   return /*#__PURE__*/React.createElement("div", {
     style: {
       width: '100vw',
@@ -523,38 +465,9 @@ function WebStepApp() {
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      marginBottom: 22
+      marginBottom: 16
     }
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: function onClick() {
-      return window.history.back();
-    },
-    style: {
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: 6,
-      fontFamily: t.sans,
-      fontSize: 12.5,
-      fontWeight: 600,
-      color: t.inkMute,
-      marginBottom: 10,
-      border: 'none',
-      background: 'transparent',
-      cursor: 'pointer',
-      padding: 0
-    }
-  }, /*#__PURE__*/React.createElement("svg", {
-    width: "14",
-    height: "14",
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: "2"
-  }, /*#__PURE__*/React.createElement("path", {
-    d: "M15 18l-6-6 6-6",
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  })), "\uCF58\uD150\uCE20 \uBAA9\uB85D"), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       alignItems: 'center',
@@ -619,42 +532,26 @@ function WebStepApp() {
     current: current,
     total: total,
     maxW: 960,
-    onPrev: function onPrev() {
-      return goTo(Math.max(1, current - 1));
-    },
-    onNext: function onNext() {
-      return goTo(Math.min(total, current + 1));
-    },
+    onPrev: () => goTo(Math.max(1, current - 1)),
+    onNext: () => goTo(Math.min(total, current + 1)),
     onSave: onSave,
-    onSubmit: function onSubmit() {
-      return setDoneOpen(true);
-    },
+    onSubmit: () => setDoneOpen(true),
     missingCount: (devBypass ? 0 : window.missingSubmitRequiredItems(form, baseLanguage).length) + (current === total && !rightsConfirmed ? 1 : 0),
-    onDevBypass: function onDevBypass() {
-      return setDevBypass(function (v) {
-        return !v;
-      });
-    },
+    onDevBypass: () => setDevBypass(v => !v),
     t: t
   }), doneOpen && /*#__PURE__*/React.createElement(SubmittedToast, {
     t: t,
-    onClose: function onClose() {
-      return setDoneOpen(false);
-    }
+    onClose: () => setDoneOpen(false)
   }), aiIntroOpen && /*#__PURE__*/React.createElement(AIIntroModal, {
     t: t,
-    onLater: function onLater() {
-      return setAiIntroOpen(false);
-    },
-    onTry: function onTry() {
+    onLater: () => setAiIntroOpen(false),
+    onTry: () => {
       setAiIntroOpen(false);
       setAiUploadOpen(true);
     }
   }), aiUploadOpen && /*#__PURE__*/React.createElement(AIPlanUploadModal, {
     t: t,
-    onClose: function onClose() {
-      return setAiUploadOpen(false);
-    }
+    onClose: () => setAiUploadOpen(false)
   }), /*#__PURE__*/React.createElement(TweaksPanel, {
     title: "Tweaks"
   }, /*#__PURE__*/React.createElement(TweakSection, {
@@ -669,9 +566,7 @@ function WebStepApp() {
       value: 'side',
       label: '좌측 레일'
     }],
-    onChange: function onChange(v) {
-      return setTweak('stepNav', v);
-    }
+    onChange: v => setTweak('stepNav', v)
   })));
 }
 ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(WebStepApp, null));

@@ -451,10 +451,16 @@ function buildDetailPage({ producer }) {
       .filter(Boolean)
       .join('\n')
   );
-  html = addToBodyStart(
-    html,
-    `<div data-shortflow-nav="${activeNav}"></div>`
-  );
+  const navHtml = producer
+    ? [
+        '<div data-shortflow-nav="my-content"></div>',
+        '<div id="contentManageSubNav"></div>',
+        '<script>',
+        "  document.getElementById('contentManageSubNav').outerHTML = window.ShortflowNav.renderContentManageSubNav('contents');",
+        '</script>',
+      ].join('\n')
+    : `<div data-shortflow-nav="${activeNav}"></div>`;
+  html = addToBodyStart(html, navHtml);
   html = addBeforeBodyEnd(html, `<script src="${runtimePath}"></script>`);
   write(producer ? 'my-content-detail.html' : 'content-detail.html', cleanHtml(html));
 }

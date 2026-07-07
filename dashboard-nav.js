@@ -11,7 +11,7 @@
     { id: 'platform-collab', label: '제작협업', href: 'platform-collaboration.html', role: 'platform' },
     { id: 'concierge', label: '컨시어지', href: 'concierge.html', role: 'platform' },
     { id: 'platform-dashboard', label: '대시보드', href: 'shortflow-dashboard.html', aliases: ['dashboard'], role: 'platform' },
-    { id: 'my-content', label: '내콘텐츠', href: 'contentlist-prod.html', role: 'producer' },
+    { id: 'my-content', label: '콘텐츠 관리', href: 'contentlist-prod.html', role: 'producer' },
     { id: 'producer-dashboard', label: '대시보드', href: 'producer-dashboard.html', role: 'producer' },
     { id: 'script-analysis', label: 'AI 대본분석', href: '#', role: 'producer' },
     { id: 'production-collab', label: '제작 협업', href: 'investor-collaboration.html', role: 'investor' },
@@ -33,6 +33,11 @@
     { id: 'workflow', label: '워크플로우', href: 'producer-dashboard.html?tab=workflow' },
     { id: 'settlement', label: '정산', href: 'settlement-list.html' },
     { id: 'performance', label: '퍼포먼스', href: 'performance.html' },
+  ];
+
+  const producerContentTabs = [
+    { id: 'contents', label: '유통 콘텐츠', href: 'contentlist-prod.html' },
+    { id: 'collaboration-plans', label: '제작협업 기획안', href: 'producer-collaboration.html' },
   ];
 
   const icons = {
@@ -167,6 +172,18 @@
       <div class="sub-nav">
         <div class="sub-nav-inner">
           ${dashboardTabs.map(tab => `
+            <a class="${tab.id === activeTab ? 'active' : ''}" href="${tab.href}" data-tab="${tab.id}" ${tab.id === activeTab ? 'aria-current="page"' : ''}>${tab.label}</a>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderContentManageSubNav(activeTab) {
+    return `
+      <div class="sub-nav">
+        <div class="sub-nav-inner">
+          ${producerContentTabs.map(tab => `
             <a class="${tab.id === activeTab ? 'active' : ''}" href="${tab.href}" data-tab="${tab.id}" ${tab.id === activeTab ? 'aria-current="page"' : ''}>${tab.label}</a>
           `).join('')}
         </div>
@@ -458,6 +475,7 @@
   window.ShortflowNav = {
     renderTopNav,
     renderDashboardSubNav,
+    renderContentManageSubNav,
     renderFooter,
     renderShell,
     mountTopNav,

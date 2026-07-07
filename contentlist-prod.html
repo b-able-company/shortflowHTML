@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>내콘텐츠 | shortflow</title>
+  <title>콘텐츠 | shortflow</title>
   <link rel="stylesheet" href="dashboard-common.css">
   <script src="dashboard-nav.js"></script>
   <style>
@@ -23,9 +23,14 @@
       background: var(--prod-bg);
     }
 
+    @view-transition {
+      navigation: auto;
+    }
+
     .prod-main {
       padding-top: 18px;
       padding-bottom: 64px;
+      view-transition-name: producer-content-main;
     }
 
     .prod-toolbar {
@@ -122,18 +127,17 @@
 
     .prod-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 226px));
-      justify-content: space-between;
-      gap: 30px 18px;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 36px 14px;
       overflow: visible;
     }
 
     .prod-card {
       position: relative;
       min-width: 0;
-      padding: 12px;
+      padding: 10px;
       border: 1px solid var(--prod-line);
-      border-radius: 15px;
+      border-radius: 13px;
       background: var(--prod-surface);
       transition: border-color 0.16s ease, transform 0.16s ease;
       z-index: 1;
@@ -152,7 +156,7 @@
       position: relative;
       aspect-ratio: 1 / 1.3;
       overflow: hidden;
-      border-radius: 10px;
+      border-radius: 9px;
       background: linear-gradient(155deg, #f2c3ae 0%, #dfe4f5 100%);
       box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
     }
@@ -205,9 +209,9 @@
     }
 
     .prod-card-title {
-      margin-top: 12px;
+      margin-top: 10px;
       color: var(--prod-ink);
-      font-size: 14.5px;
+      font-size: 13.5px;
       font-weight: 550;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -218,18 +222,18 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-top: 13px;
+      margin-top: 11px;
     }
 
     .prod-detail {
       flex: 1;
-      height: 32px;
-      padding: 0 11px;
+      height: 30px;
+      padding: 0 9px;
       border: 1px solid var(--prod-line);
       border-radius: 8px;
       background: #fff;
       color: var(--prod-ink);
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
     }
@@ -241,8 +245,8 @@
     }
 
     .prod-more {
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       border: 1px solid var(--prod-line);
       border-radius: 8px;
       background: #fff;
@@ -268,7 +272,7 @@
 
     .prod-menu {
       position: absolute;
-      right: 12px;
+      right: 10px;
       top: calc(100% - 8px);
       z-index: 80;
       width: 202px;
@@ -368,9 +372,15 @@
       cursor: default;
     }
 
-    @media (max-width: 980px) {
+    @media (max-width: 1120px) {
       .prod-grid {
-        grid-template-columns: repeat(3, minmax(0, 226px));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
+      .prod-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
 
@@ -400,6 +410,10 @@
 </head>
 <body>
   <div data-shortflow-nav="my-content"></div>
+  <div id="contentManageSubNav"></div>
+  <script>
+    document.getElementById('contentManageSubNav').outerHTML = window.ShortflowNav.renderContentManageSubNav('contents');
+  </script>
 
   <main class="main prod-main">
     <div class="prod-toolbar">
@@ -444,7 +458,7 @@
     const pagination = document.getElementById('prodPagination');
     let activeFilter = 'all';
     let activePage = 1;
-    const pageSize = 12;
+    const pageSize = 15;
 
     function filteredContents() {
       if (activeFilter === 'all') return myContents;

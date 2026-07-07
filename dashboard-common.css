@@ -48,6 +48,20 @@ button {
   border-bottom: 1px solid var(--line-soft);
 }
 
+.top-nav {
+  position: relative;
+  z-index: 10020;
+  overflow: visible;
+  background: var(--bg);
+}
+
+.sub-nav {
+  position: relative;
+  z-index: 10010;
+  overflow: visible;
+  background: var(--bg);
+}
+
 .nav-inner,
 .sub-nav-inner,
 .main {
@@ -60,6 +74,7 @@ button {
   display: flex;
   align-items: center;
   gap: 52px;
+  overflow: visible;
 }
 
 /* Temporary view switcher, kept outside the main canvas for design review. */
@@ -308,7 +323,7 @@ button {
   top: calc(100% + 10px);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 60;
+  z-index: 10030;
   display: none;
   width: 86px;
   padding: 5px;
@@ -351,6 +366,7 @@ button {
 
 .account-wrap {
   position: relative;
+  z-index: 10030;
   display: inline-flex;
   align-items: center;
   transform: translateX(-4px);
@@ -397,7 +413,7 @@ button {
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
-  z-index: 70;
+  z-index: 10040;
   display: none;
   width: 188px;
   padding: 6px;

@@ -156,11 +156,7 @@ function WebStepApp() {
       <div data-nc-scroll style={{ flex: 1, overflow: 'auto' }}>
         <div style={{ width: 'min(960px, calc(100vw - 80px))', margin: '0 auto', padding: '32px 0 48px', position: 'relative' }}>
           {/* 헤더 */}
-          <div style={{ marginBottom: 22 }}>
-            <button onClick={() => window.history.back()} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: t.sans, fontSize: 12.5, fontWeight: 600, color: t.inkMute, marginBottom: 10, border: 'none', background: 'transparent', cursor: 'pointer', padding: 0 }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              콘텐츠 목록
-            </button>
+          <div style={{ marginBottom: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <h1 style={{ margin: 0, fontFamily: t.sans, fontSize: 27, fontWeight: 700, letterSpacing: -0.7, color: t.ink }}>새 콘텐츠 등록</h1>
               <span style={{ fontFamily: t.mono, fontSize: 12.5, color: t.inkFaint }}>단계 {current} / {total} · {cur.label}</span>
