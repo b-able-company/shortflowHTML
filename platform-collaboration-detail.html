@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>제작협업 상세 | 플랫폼 입장 뷰</title>
+  <link rel="stylesheet" href="dashboard-common.css">
+  <script src="dashboard-nav.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --orange: #e85d2c;
+      --ink: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --soft: #f8f9fb;
+      --surface: #ffffff;
+    }
+    body {
+      margin: 0;
+      background: #fff;
+      color: var(--ink);
+      font-family: "Geist", "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .collab-detail-main {
+      padding: 24px 0 72px;
+    }
+    .detail-shell {
+      display: grid;
+      gap: 22px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      gap: 6px;
+      color: #747b88;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+    .reference-media {
+      position: relative;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 2 / 3;
+      min-height: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #f3f4f6;
+      border: 1px solid var(--line);
+    }
+    .reference-media img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+    .reference-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      padding: 34px;
+      background: linear-gradient(145deg, #1d2435 0%, #44384a 48%, #d99976 100%);
+      color: #fff;
+      font-size: 40px;
+      line-height: 1.08;
+      letter-spacing: -1px;
+      font-weight: 650;
+      word-break: keep-all;
+    }
+    .reference-media::after {
+      display: none;
+    }
+    .media-label {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      z-index: 2;
+      padding: 7px 10px;
+      border-radius: 7px;
+      background: rgba(17,24,39,0.76);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      backdrop-filter: blur(12px);
+    }
+    .play-button {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 2;
+      transform: translate(-50%, -50%);
+      width: 62px;
+      height: 62px;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.92);
+      color: #111827;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      cursor: pointer;
+    }
+    .play-button svg {
+      width: 24px;
+      height: 24px;
+      margin-left: 3px;
+      fill: currentColor;
+    }
+    .media-caption {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 20px;
+      z-index: 2;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.45;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.36);
+    }
+    .summary-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      min-height: 450px;
+    }
+    .stage-badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 6px;
+      background: var(--orange);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .stage-badge.is-casting { background: #1f2937; }
+    .stage-badge.is-pilot { background: #37705b; }
+    .detail-title {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.24;
+      letter-spacing: -0.5px;
+      font-weight: 700;
+    }
+    .detail-producer {
+      margin-top: 9px;
+      color: #4b5563;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .genre-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 18px;
+    }
+    .genre-chip {
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 10px;
+      border-radius: 999px;
+      border: 1px solid #e0e4ea;
+      color: #4b5563;
+      font-size: 12.5px;
+      font-weight: 500;
+      background: #fff;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .meta-item {
+      padding: 13px 14px;
+      border-radius: 9px;
+      background: #fafafa;
+      border: 1px solid #eeeeee;
+    }
+    .meta-label {
+      color: #7b8190;
+      font-size: 11.5px;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    .meta-value {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 650;
+      line-height: 1.35;
+    }
+    .action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: auto;
+      padding-top: 24px;
+    }
+    .action-button {
+      height: 44px;
+      border-radius: 10px;
+      border: 1px solid #dfe3e8;
+      background: #fff;
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      font-size: 14px;
+      font-weight: 650;
+      cursor: pointer;
+    }
+    .action-button.primary {
+      border-color: #1d1d1f;
+      background: #1d1d1f;
+      color: #fff;
+    }
+    .action-button.is-active svg {
+      fill: #ff3f4d;
+      stroke: #ff3f4d;
+    }
+    .section-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(390px, 0.58fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+    .info-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 24px;
+    }
+    .section-grid .info-card {
+      min-height: 238px;
+    }
+    .info-card h2 {
+      margin: 0 0 14px;
+      font-size: 16px;
+      letter-spacing: -0.2px;
+    }
+    .synopsis {
+      margin: 0;
+      color: #3f4652;
+      font-size: 14.5px;
+      line-height: 1.75;
+      word-break: keep-all;
+    }
+    .casting-copy {
+      margin: 0;
+      color: #3f4652;
+      font-size: 14.5px;
+      line-height: 1.75;
+      word-break: keep-all;
+    }
+    .media-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .media-card {
+      min-width: 0;
+    }
+    .media-thumb {
+      position: relative;
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      padding: 0;
+      border: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #e5e7eb;
+      margin-bottom: 8px;
+      cursor: pointer;
+      text-align: left;
+    }
+    .media-thumb img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      transition: transform 180ms ease;
+    }
+    .media-thumb:hover img {
+      transform: scale(1.025);
+    }
+    .media-thumb::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.42) 100%);
+      pointer-events: none;
+    }
+    .media-type {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      z-index: 1;
+      padding: 5px 8px;
+      border-radius: 6px;
+      background: rgba(17,24,39,0.76);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .media-play {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.92);
+      color: #111827;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.14);
+    }
+    .media-play svg {
+      width: 16px;
+      height: 16px;
+      margin-left: 2px;
+      fill: currentColor;
+    }
+    .media-name {
+      font-size: 13px;
+      font-weight: 650;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .media-viewer-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 54px 44px 36px;
+      background: rgba(0, 0, 0, 0.74);
+      backdrop-filter: blur(6px);
+    }
+    .media-viewer-backdrop.is-open {
+      display: flex;
+    }
+    .media-viewer-panel {
+      width: fit-content;
+      max-width: calc(100vw - 88px);
+      max-height: calc(100vh - 90px);
+      display: inline-grid;
+      gap: 10px;
+    }
+    .media-viewer-head {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      color: #fff;
+    }
+    .media-viewer-title {
+      min-width: 0;
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.3;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.32);
+    }
+    .media-viewer-type {
+      display: none;
+    }
+    .media-viewer-close {
+      position: fixed;
+      top: 26px;
+      right: 26px;
+      width: 30px;
+      height: 30px;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .media-viewer-close:hover {
+      background: rgba(255,255,255,0.12);
+    }
+    .media-viewer-close svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 2.4;
+    }
+    .media-viewer-body {
+      position: relative;
+      width: fit-content;
+      max-width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      background: transparent;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.45);
+    }
+    .media-viewer-body img {
+      width: auto;
+      height: auto;
+      max-width: calc(100vw - 88px);
+      max-height: calc(100vh - 132px);
+      display: block;
+      object-fit: contain;
+      background: transparent;
+    }
+    .media-viewer-play {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 58px;
+      height: 58px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: rgba(255,255,255,0.92);
+      color: #111827;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 32px rgba(0,0,0,0.22);
+      pointer-events: none;
+    }
+    .media-viewer-play.is-visible {
+      display: inline-flex;
+    }
+    .media-viewer-play svg {
+      width: 22px;
+      height: 22px;
+      margin-left: 3px;
+      fill: currentColor;
+    }
+    .producer-intro {
+      margin: 0;
+      color: #4b5563;
+      font-size: 14px;
+      line-height: 1.65;
+      word-break: keep-all;
+    }
+    .producer-profile {
+      display: grid;
+      grid-template-columns: minmax(0, 0.45fr) minmax(0, 0.55fr);
+      gap: 28px;
+      align-items: start;
+    }
+    .producer-column-title {
+      margin: 0 0 14px;
+      font-size: 16px;
+      letter-spacing: -0.2px;
+    }
+    .works-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 132px));
+      gap: 22px;
+      align-items: start;
+    }
+    .work-card {
+      min-width: 0;
+      width: 132px;
+    }
+    .work-poster {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      height: auto;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #e5e7eb;
+      margin-bottom: 8px;
+    }
+    .work-poster img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+    .work-poster.is-empty {
+      background: linear-gradient(145deg, #e9edf3 0%, #cfd6e0 100%);
+    }
+    .work-name {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 650;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .work-title-text {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .work-year-inline {
+      margin-left: auto;
+      color: #7b8190;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    @media (max-width: 980px) {
+      .hero,
+      .section-grid {
+        grid-template-columns: 1fr;
+      }
+      .summary-card,
+      .reference-media {
+        min-height: auto;
+      }
+      .reference-media {
+        width: min(300px, 100%);
+      }
+    }
+    @media (max-width: 720px) {
+      .collab-detail-main {
+        padding-bottom: 48px;
+      }
+      .detail-title {
+        font-size: 23px;
+      }
+      .media-viewer-backdrop {
+        padding: 48px 18px 22px;
+      }
+      .media-viewer-panel {
+        max-width: calc(100vw - 36px);
+        max-height: calc(100vh - 70px);
+      }
+      .media-viewer-body img {
+        max-width: calc(100vw - 36px);
+        max-height: calc(100vh - 112px);
+      }
+      .media-viewer-close {
+        top: 14px;
+        right: 14px;
+      }
+      .meta-grid,
+      .action-row,
+      .media-list,
+      .producer-profile,
+      .works-list {
+        grid-template-columns: 1fr;
+      }
+      .work-card {
+        width: 100%;
+        max-width: 140px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div data-shortflow-nav="platform-collab"></div>
+
+  <main class="main collab-detail-main">
+    <div class="detail-shell" id="detailRoot"></div>
+  </main>
+
+  <div class="media-viewer-backdrop" id="mediaViewer" role="dialog" aria-modal="true" aria-labelledby="mediaViewerTitle">
+    <div class="media-viewer-panel">
+      <div class="media-viewer-head">
+        <div class="media-viewer-title">
+          <span class="media-viewer-type" id="mediaViewerType">이미지</span>
+          <span id="mediaViewerTitle">레퍼런스 이미지</span>
+        </div>
+        <button class="media-viewer-close" type="button" id="mediaViewerClose" aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="media-viewer-body">
+        <img id="mediaViewerImage" src="" alt="">
+        <span class="media-viewer-play" id="mediaViewerPlay" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const detailItems = [
+      {
+        title: '죽었다가 회귀한 톱스타',
+        producer: 'Orbit Pictures',
+        producerIntro: 'Orbit Pictures는 판타지 설정과 액션 리듬을 결합한 숏폼 시리즈를 제작합니다. 빠른 사건 전개와 시각적 콘셉트가 명확한 작품을 선호하며, 회귀·복수·연예계 소재처럼 초반 후킹이 강한 장르를 주로 개발합니다. 파일럿 단계에서 액션 동선과 화면 톤을 먼저 검증하는 방식으로 제작 리스크를 줄이고, 플랫폼별 숏클립 홍보에 활용하기 쉬운 장면을 기획 단계부터 함께 설계합니다.',
+        genres: ['타임슬립', '액션'],
+        stage: '파일럿 촬영 완료',
+        image: 'images/죽었다가회귀한.png',
+        episodes: '36부작 예정',
+        runtime: '편당 3분',
+        casting: '주연은 화려한 톱스타의 얼굴과 회귀 이후 복수심을 동시에 표현할 수 있는 배우로 캐스팅을 확정했습니다. 라이벌은 액션 동선과 감정 대립을 모두 소화할 수 있는 배우를 최종 조율 중이며, 매니저 캐릭터는 긴장감 속에서 리듬을 풀어주는 코믹 연기가 가능한 배우를 섭외하고 있습니다.',
+        synopsis: '사고로 모든 것을 잃은 톱스타가 데뷔 직전으로 회귀하며 자신의 죽음과 업계의 음모를 추적하는 이야기입니다. 파일럿 촬영을 통해 액션 톤과 회귀 연출 테스트를 완료했습니다. 주인공은 과거의 선택을 하나씩 바꾸며 성공을 되찾는 동시에, 자신을 무너뜨린 인물들의 연결고리를 추적합니다. 연예계 복수극의 속도감에 회귀 판타지의 쾌감을 얹어, 매회 선택과 결과가 즉각적으로 드러나는 구조를 목표로 합니다.',
+        works: [
+          { title: '우리 집에 킬러가 산다', year: '2025', image: 'images/우리집에킬러가.png' },
+          { title: '퇴사했더니 황제가 됐다', year: '2024', image: 'images/퇴사했더니황제.png' },
+          { title: '살인범과 룸메이트가 되었다', year: '2024', image: 'images/살인범과룸메이트.png' }
+        ]
+      }
+    ];
+
+    const item = detailItems[0];
+    const root = document.getElementById('detailRoot');
+    const mediaViewer = document.getElementById('mediaViewer');
+    const mediaViewerType = document.getElementById('mediaViewerType');
+    const mediaViewerTitle = document.getElementById('mediaViewerTitle');
+    const mediaViewerImage = document.getElementById('mediaViewerImage');
+    const mediaViewerPlay = document.getElementById('mediaViewerPlay');
+    const mediaViewerClose = document.getElementById('mediaViewerClose');
+    let interested = false;
+
+    function stageClass(stage) {
+      if (stage === '캐스팅중') return 'is-casting';
+      if (stage === '파일럿 촬영 완료') return 'is-pilot';
+      return '';
+    }
+
+    function heartIcon(active) {
+      return `<svg width="17" height="17" viewBox="0 0 24 24" fill="${active ? '#ff3f4d' : 'none'}" stroke="${active ? '#ff3f4d' : 'currentColor'}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>`;
+    }
+
+    function posterMarkup(work) {
+      return work.image
+        ? `<img src="${work.image}" alt="${work.title} 포스터">`
+        : '';
+    }
+
+    function mediaMarkup(entry) {
+      return entry.image
+        ? `<img src="${entry.image}" alt="${entry.title} 레퍼런스 이미지">`
+        : `<div class="reference-fallback">${entry.title}</div>`;
+    }
+
+    function relatedMedia(entry) {
+      return [
+        { type: '영상', title: '레드카펫 복귀 티저', image: 'images/톱스타스틸컷1.png', playable: true },
+        { type: '이미지', title: '촬영장 대기 스틸', image: 'images/톱스타스틸컷2.png', playable: false },
+        { type: '이미지', title: '거울 앞 복수 선언 컷', image: 'images/톱스타스틸컷3.png', playable: false }
+      ];
+    }
+
+    function openMediaViewer(media) {
+      mediaViewerType.textContent = media.type;
+      mediaViewerTitle.textContent = media.title;
+      mediaViewerImage.src = media.image;
+      mediaViewerImage.alt = media.title;
+      mediaViewerPlay.classList.toggle('is-visible', media.playable);
+      mediaViewer.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMediaViewer() {
+      mediaViewer.classList.remove('is-open');
+      document.body.style.overflow = '';
+      mediaViewerImage.src = '';
+    }
+
+    function render() {
+      const mediaItems = relatedMedia(item);
+      document.title = `${item.title} | 제작협업 상세`;
+      root.innerHTML = `
+        <a class="back-link" href="platform-collaboration.html">← 제작협업 목록</a>
+        <section class="hero">
+          <div class="reference-media">
+            ${mediaMarkup(item)}
+          </div>
+          <aside class="summary-card">
+            <span class="stage-badge ${stageClass(item.stage)}">${item.stage}</span>
+            <h1 class="detail-title">${item.title}</h1>
+            <div class="detail-producer">${item.producer}</div>
+            <div class="genre-row">
+              ${item.genres.map((genre) => `<span class="genre-chip">${genre}</span>`).join('')}
+            </div>
+            <div class="meta-grid">
+              <div class="meta-item">
+                <div class="meta-label">예정 부작수</div>
+                <div class="meta-value">${item.episodes}</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">편당 러닝타임</div>
+                <div class="meta-value">${item.runtime}</div>
+              </div>
+            </div>
+            <div class="action-row">
+              <button class="action-button primary" type="button" id="inquiryButton">제작 문의하기</button>
+              <button class="action-button ${interested ? 'is-active' : ''}" type="button" id="interestButton">
+                ${heartIcon(interested)}
+                관심등록
+              </button>
+            </div>
+          </aside>
+        </section>
+        <section class="section-grid">
+          <div class="info-card">
+            <h2>시놉시스</h2>
+            <p class="synopsis">${item.synopsis}</p>
+          </div>
+          <div class="info-card">
+            <h2>캐스팅 정보</h2>
+            <p class="casting-copy">${item.casting}</p>
+          </div>
+        </section>
+        <section class="info-card">
+          <h2>레퍼런스 이미지/영상</h2>
+          <div class="media-list">
+            ${mediaItems.map((media, index) => `
+              <div class="media-card">
+                <button class="media-thumb" type="button" data-media-index="${index}" aria-label="${media.title} 크게 보기">
+                  <img src="${media.image}" alt="${media.title}">
+                  <span class="media-type">${media.type}</span>
+                  ${media.playable ? `
+                    <span class="media-play" aria-hidden="true">
+                      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </span>
+                  ` : ''}
+                </button>
+                <div class="media-name">${media.title}</div>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+        <section class="info-card">
+          <div class="producer-profile">
+            <div>
+              <h2 class="producer-column-title">제작사 소개</h2>
+              <p class="producer-intro">${item.producerIntro}</p>
+            </div>
+            <div>
+              <h2 class="producer-column-title">대표 작품</h2>
+              <div class="works-list">
+                ${item.works.map((work) => `
+                  <div class="work-card">
+                    <div class="work-poster ${work.image ? '' : 'is-empty'}">${posterMarkup(work)}</div>
+                    <div class="work-name">
+                      <span class="work-title-text">${work.title}</span>
+                      <span class="work-year-inline">${work.year}</span>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+
+      document.getElementById('interestButton').addEventListener('click', () => {
+        interested = !interested;
+        render();
+      });
+      document.getElementById('inquiryButton').addEventListener('click', () => {
+        window.alert('제작 문의가 접수되었습니다.');
+      });
+      document.querySelectorAll('[data-media-index]').forEach((button) => {
+        button.addEventListener('click', () => {
+          openMediaViewer(mediaItems[Number(button.dataset.mediaIndex)]);
+        });
+      });
+    }
+
+    mediaViewerClose.addEventListener('click', closeMediaViewer);
+    mediaViewer.addEventListener('click', (event) => {
+      if (event.target === mediaViewer) closeMediaViewer();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && mediaViewer.classList.contains('is-open')) {
+        closeMediaViewer();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>

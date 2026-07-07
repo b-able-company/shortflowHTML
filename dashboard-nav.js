@@ -8,6 +8,7 @@
 
   const primaryNavItems = [
     { id: 'content', label: '콘텐츠', href: 'content-list.html', role: 'platform' },
+    { id: 'platform-collab', label: '제작협업', href: 'platform-collaboration.html', role: 'platform' },
     { id: 'concierge', label: '컨시어지', href: 'concierge.html', role: 'platform' },
     { id: 'platform-dashboard', label: '대시보드', href: 'shortflow-dashboard.html', aliases: ['dashboard'], role: 'platform' },
     { id: 'my-content', label: '내콘텐츠', href: 'contentlist-prod.html', role: 'producer' },
@@ -17,7 +18,7 @@
     { id: 'guide', label: '이용가이드', href: '#', role: 'shared' },
   ];
   const rolePages = {
-    platform: new Set(['content', 'concierge', 'platform-dashboard', 'dashboard']),
+    platform: new Set(['platform-collab', 'content', 'concierge', 'platform-dashboard', 'dashboard']),
     producer: new Set(['my-content', 'producer-dashboard', 'script-analysis']),
     investor: new Set(['production-collab']),
   };
