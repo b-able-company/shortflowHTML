@@ -612,14 +612,15 @@
         genres: ['타임슬립', '액션'],
         stage: '파일럿 촬영 완료',
         image: 'images/return-topstar-poster.png',
+        fallback: 'images/죽었다가회귀한.png',
         episodes: '36부작 예정',
         runtime: '편당 3분',
         casting: '주연은 화려한 톱스타의 얼굴과 회귀 이후 복수심을 동시에 표현할 수 있는 배우로 캐스팅을 확정했습니다. 라이벌은 액션 동선과 감정 대립을 모두 소화할 수 있는 배우를 최종 조율 중이며, 매니저 캐릭터는 긴장감 속에서 리듬을 풀어주는 코믹 연기가 가능한 배우를 섭외하고 있습니다.',
         synopsis: '사고로 모든 것을 잃은 톱스타가 데뷔 직전으로 회귀하며 자신의 죽음과 업계의 음모를 추적하는 이야기입니다. 파일럿 촬영을 통해 액션 톤과 회귀 연출 테스트를 완료했습니다. 주인공은 과거의 선택을 하나씩 바꾸며 성공을 되찾는 동시에, 자신을 무너뜨린 인물들의 연결고리를 추적합니다. 연예계 복수극의 속도감에 회귀 판타지의 쾌감을 얹어, 매회 선택과 결과가 즉각적으로 드러나는 구조를 목표로 합니다.',
         works: [
-          { title: '우리 집에 킬러가 산다', year: '2025', image: 'images/killer-at-home.png' },
-          { title: '퇴사했더니 황제가 됐다', year: '2024', image: 'images/resigned-emperor.png' },
-          { title: '살인범과 룸메이트가 되었다', year: '2024', image: 'images/murderer-roommate.png' }
+          { title: '우리 집에 킬러가 산다', year: '2025', image: 'images/killer-at-home.png', fallback: 'images/우리집에킬러가.png' },
+          { title: '퇴사했더니 황제가 됐다', year: '2024', image: 'images/resigned-emperor.png', fallback: 'images/퇴사했더니황제.png' },
+          { title: '살인범과 룸메이트가 되었다', year: '2024', image: 'images/murderer-roommate.png', fallback: 'images/살인범과룸메이트.png' }
         ]
       }
     ];
@@ -646,21 +647,38 @@
 
     function posterMarkup(work) {
       return work.image
-        ? `<img src="${work.image}" alt="${work.title} 포스터">`
+        ? `<img src="${work.image}" alt="${work.title} 포스터"${fallbackAttr(work.fallback)}>`
         : '';
+    }
+
+    function fallbackAttr(fallback) {
+      return fallback
+        ? ` data-fallback-src="${fallback.normalize('NFC')}" data-fallback-src-alt="${fallback.normalize('NFD')}" data-fallback-step="0" onerror="handleImageFallback(this)"`
+        : '';
+    }
+
+    function handleImageFallback(image) {
+      const step = Number(image.dataset.fallbackStep || '0');
+      const fallback = step === 0 ? image.dataset.fallbackSrc : image.dataset.fallbackSrcAlt;
+      image.dataset.fallbackStep = String(step + 1);
+      if (fallback && image.src !== fallback) {
+        image.src = fallback;
+        return;
+      }
+      image.onerror = null;
     }
 
     function mediaMarkup(entry) {
       return entry.image
-        ? `<img src="${entry.image}" alt="${entry.title} 레퍼런스 이미지">`
+        ? `<img src="${entry.image}" alt="${entry.title} 레퍼런스 이미지"${fallbackAttr(entry.fallback)}>`
         : `<div class="reference-fallback">${entry.title}</div>`;
     }
 
     function relatedMedia(entry) {
       return [
-        { type: '영상', title: '레드카펫 복귀 티저', image: 'images/topstar-still-1.png', playable: true },
-        { type: '이미지', title: '촬영장 대기 스틸', image: 'images/topstar-still-2.png', playable: false },
-        { type: '이미지', title: '거울 앞 복수 선언 컷', image: 'images/topstar-still-3.png', playable: false }
+        { type: '영상', title: '레드카펫 복귀 티저', image: 'images/topstar-still-1.png', fallback: 'images/톱스타스틸컷1.png', playable: true },
+        { type: '이미지', title: '촬영장 대기 스틸', image: 'images/topstar-still-2.png', fallback: 'images/톱스타스틸컷2.png', playable: false },
+        { type: '이미지', title: '거울 앞 복수 선언 컷', image: 'images/topstar-still-3.png', fallback: 'images/톱스타스틸컷3.png', playable: false }
       ];
     }
 
@@ -669,6 +687,10 @@
       mediaViewerTitle.textContent = media.title;
       mediaViewerImage.src = media.image;
       mediaViewerImage.alt = media.title;
+      mediaViewerImage.dataset.fallbackSrc = media.fallback ? media.fallback.normalize('NFC') : '';
+      mediaViewerImage.dataset.fallbackSrcAlt = media.fallback ? media.fallback.normalize('NFD') : '';
+      mediaViewerImage.dataset.fallbackStep = '0';
+      mediaViewerImage.onerror = () => handleImageFallback(mediaViewerImage);
       mediaViewerPlay.classList.toggle('is-visible', media.playable);
       mediaViewer.classList.add('is-open');
       document.body.style.overflow = 'hidden';
@@ -677,7 +699,11 @@
     function closeMediaViewer() {
       mediaViewer.classList.remove('is-open');
       document.body.style.overflow = '';
+      mediaViewerImage.onerror = null;
       mediaViewerImage.src = '';
+      mediaViewerImage.dataset.fallbackSrc = '';
+      mediaViewerImage.dataset.fallbackSrcAlt = '';
+      mediaViewerImage.dataset.fallbackStep = '';
     }
 
     function render() {
@@ -731,7 +757,7 @@
             ${mediaItems.map((media, index) => `
               <div class="media-card">
                 <button class="media-thumb" type="button" data-media-index="${index}" aria-label="${media.title} 크게 보기">
-                  <img src="${media.image}" alt="${media.title}">
+                  <img src="${media.image}" alt="${media.title}"${fallbackAttr(media.fallback)}>
                   <span class="media-type">${media.type}</span>
                   ${media.playable ? `
                     <span class="media-play" aria-hidden="true">
