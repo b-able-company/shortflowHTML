@@ -143,18 +143,30 @@
     .stage-badge {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       width: fit-content;
-      height: 28px;
-      padding: 0 10px;
-      border-radius: 6px;
-      background: var(--orange);
-      color: #fff;
+      min-height: 30px;
+      padding: 8px 13px 6px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(245,245,247,0.92);
+      color: #3f4652;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 560;
+      line-height: 1.1;
       margin-bottom: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.7);
     }
-    .stage-badge.is-casting { background: #1f2937; }
-    .stage-badge.is-pilot { background: #37705b; }
+    .stage-badge.is-casting {
+      background: rgba(12,12,12,0.88);
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.16), inset 0 1px 0 rgba(255,255,255,0.14);
+    }
+    .stage-badge.is-pilot {
+      background: rgba(18,101,66,0.92);
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(3,54,33,0.14), inset 0 1px 0 rgba(255,255,255,0.16);
+    }
     .detail-title {
       margin: 0;
       font-size: 28px;
@@ -175,16 +187,19 @@
       margin-top: 18px;
     }
     .genre-chip {
-      height: 28px;
+      min-height: 29px;
       display: inline-flex;
       align-items: center;
-      padding: 0 10px;
+      justify-content: center;
+      padding: 7px 12px 5px;
       border-radius: 999px;
-      border: 1px solid #e0e4ea;
-      color: #4b5563;
+      border: 1px solid rgba(17,24,39,0.07);
+      color: #4f5561;
       font-size: 12.5px;
-      font-weight: 500;
-      background: #fff;
+      font-weight: 540;
+      line-height: 1.1;
+      background: rgba(248,249,251,0.92);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.78);
     }
     .meta-grid {
       display: grid;
@@ -274,6 +289,10 @@
       line-height: 1.75;
       word-break: keep-all;
     }
+    .synopsis + .synopsis,
+    .casting-copy + .casting-copy {
+      margin-top: 12px;
+    }
     .media-list {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -349,7 +368,7 @@
     }
     .media-name {
       font-size: 13px;
-      font-weight: 650;
+      font-weight: 560;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -459,18 +478,160 @@
       margin-left: 3px;
       fill: currentColor;
     }
+    .inquiry-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(15,17,21,0.42);
+    }
+    .inquiry-modal-backdrop.is-open {
+      display: flex;
+    }
+    .inquiry-modal {
+      width: min(520px, 100%);
+      border: 1px solid rgba(255,255,255,0.72);
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.24);
+      overflow: hidden;
+    }
+    .inquiry-modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 22px 12px;
+    }
+    .inquiry-modal-title {
+      margin: 0;
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.35;
+      letter-spacing: -0.2px;
+    }
+    .inquiry-modal-copy {
+      margin: 0 0 14px;
+      color: #3f4652;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .inquiry-modal-close {
+      width: 34px;
+      height: 34px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: #777d88;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .inquiry-modal-close:hover {
+      background: transparent;
+      color: #111827;
+    }
+    .inquiry-modal-close svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 2.1;
+    }
+    .inquiry-form {
+      padding: 0 22px 20px;
+    }
+    .inquiry-textarea {
+      width: 100%;
+      min-height: 132px;
+      resize: vertical;
+      border: 1px solid #e2e5ea;
+      border-radius: 7px;
+      padding: 12px 13px;
+      background: #fff;
+      color: #111827;
+      font: inherit;
+      font-size: 13px;
+      line-height: 1.55;
+      outline: none;
+      transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+    }
+    .inquiry-textarea:focus {
+      border-color: #8d94a0;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(31,65,255,0.08);
+    }
+    .inquiry-textarea::placeholder {
+      color: #9aa1ad;
+    }
+    .inquiry-complete {
+      display: none;
+      margin: 0 0 14px;
+      padding: 13px 14px;
+      border-radius: 8px;
+      background: #f5f7f6;
+      color: #263a31;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .inquiry-modal.is-submitted .inquiry-modal-copy,
+    .inquiry-modal.is-submitted .inquiry-textarea {
+      display: none;
+    }
+    .inquiry-modal.is-submitted .inquiry-complete {
+      display: block;
+    }
+    .inquiry-actions {
+      display: block;
+      margin-top: 12px;
+    }
+    .inquiry-action {
+      width: 100%;
+      height: 42px;
+      padding: 0 16px;
+      border: 0;
+      border-radius: 7px;
+      background: #1d1d1f;
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.16s ease, transform 0.16s ease;
+    }
+    .inquiry-action:hover {
+      background: #000;
+      transform: translateY(-1px);
+    }
+    .inquiry-modal.is-submitted .inquiry-action {
+      display: none;
+    }
     .producer-intro {
       margin: 0;
       color: #4b5563;
-      font-size: 14px;
-      line-height: 1.65;
+      font-size: 14.5px;
+      line-height: 1.75;
       word-break: keep-all;
+    }
+    .producer-intro + .producer-intro {
+      margin-top: 12px;
     }
     .producer-profile {
       display: grid;
-      grid-template-columns: minmax(0, 0.45fr) minmax(0, 0.55fr);
-      gap: 28px;
+      grid-template-columns: minmax(0, 1fr) 424px;
+      gap: 36px;
       align-items: start;
+    }
+    .producer-intro-column,
+    .producer-works-column {
+      min-width: 0;
+    }
+    .producer-works-column {
+      justify-self: end;
+      width: 424px;
     }
     .producer-column-title {
       margin: 0 0 14px;
@@ -479,13 +640,13 @@
     }
     .works-list {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 132px));
-      gap: 22px;
+      grid-template-columns: repeat(3, minmax(0, 128px));
+      gap: 20px;
       align-items: start;
     }
     .work-card {
       min-width: 0;
-      width: 132px;
+      width: 100%;
     }
     .work-poster {
       position: relative;
@@ -509,9 +670,10 @@
     .work-name {
       display: flex;
       align-items: center;
-      gap: 7px;
-      font-size: 13px;
+      gap: 6px;
+      font-size: 12.5px;
       font-weight: 650;
+      line-height: 1.25;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -524,7 +686,7 @@
     .work-year-inline {
       margin-left: auto;
       color: #7b8190;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 500;
     }
     @media (max-width: 980px) {
@@ -565,13 +727,20 @@
       .meta-grid,
       .action-row,
       .media-list,
-      .producer-profile,
-      .works-list {
+      .producer-profile {
         grid-template-columns: 1fr;
+      }
+      .producer-works-column {
+        justify-self: stretch;
+        width: 100%;
+      }
+      .works-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
       }
       .work-card {
         width: 100%;
-        max-width: 140px;
+        max-width: none;
       }
     }
   </style>
@@ -600,6 +769,27 @@
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </span>
       </div>
+    </div>
+  </div>
+
+  <div class="inquiry-modal-backdrop" id="inquiryModal" role="dialog" aria-modal="true" aria-labelledby="inquiryModalTitle">
+    <div class="inquiry-modal" id="inquiryModalPanel">
+      <div class="inquiry-modal-head">
+        <div>
+          <h2 class="inquiry-modal-title" id="inquiryModalTitle">제작 문의하기</h2>
+        </div>
+        <button class="inquiry-modal-close" type="button" id="inquiryModalClose" aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <form class="inquiry-form" id="inquiryForm">
+        <p class="inquiry-modal-copy">검토하고 싶은 제작 방향과 조건을 남겨주시면 숏플로우 담당자가 확인 후 연락드립니다.</p>
+        <textarea class="inquiry-textarea" id="inquiryMessage" required placeholder="예: 희망 제작 일정, 예산 범위, 캐스팅 방향, 확인하고 싶은 조건"></textarea>
+        <p class="inquiry-complete">문의가 접수되었습니다. 담당자가 내용을 검토한 뒤 순차적으로 연락드리겠습니다.</p>
+        <div class="inquiry-actions">
+          <button class="inquiry-action" type="submit">문의 보내기</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -633,6 +823,11 @@
     const mediaViewerImage = document.getElementById('mediaViewerImage');
     const mediaViewerPlay = document.getElementById('mediaViewerPlay');
     const mediaViewerClose = document.getElementById('mediaViewerClose');
+    const inquiryModal = document.getElementById('inquiryModal');
+    const inquiryModalPanel = document.getElementById('inquiryModalPanel');
+    const inquiryModalClose = document.getElementById('inquiryModalClose');
+    const inquiryForm = document.getElementById('inquiryForm');
+    const inquiryMessage = document.getElementById('inquiryMessage');
     let interested = false;
 
     function stageClass(stage) {
@@ -649,6 +844,19 @@
       return work.image
         ? `<img src="${work.image}" alt="${work.title} 포스터"${fallbackAttr(work.fallback)}>`
         : '';
+    }
+
+    function paragraphMarkup(text, className) {
+      const paragraphs = text
+        .split(/(?<=\.)\s+/)
+        .reduce((groups, sentence, index) => {
+          const groupIndex = index < 2 ? 0 : 1;
+          groups[groupIndex] = groups[groupIndex] ? `${groups[groupIndex]} ${sentence}` : sentence;
+          return groups;
+        }, [])
+        .filter(Boolean);
+
+      return paragraphs.map((paragraph) => `<p class="${className}">${paragraph}</p>`).join('');
     }
 
     function fallbackAttr(fallback) {
@@ -706,6 +914,20 @@
       mediaViewerImage.dataset.fallbackStep = '';
     }
 
+    function openInquiryModal() {
+      inquiryModal.classList.add('is-open');
+      inquiryModalPanel.classList.remove('is-submitted');
+      inquiryForm.reset();
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => inquiryMessage.focus(), 0);
+    }
+
+    function closeInquiryModal() {
+      inquiryModal.classList.remove('is-open');
+      inquiryModalPanel.classList.remove('is-submitted');
+      document.body.style.overflow = '';
+    }
+
     function render() {
       const mediaItems = relatedMedia(item);
       document.title = `${item.title} | 제작협업 상세`;
@@ -736,7 +958,7 @@
               <button class="action-button primary" type="button" id="inquiryButton">제작 문의하기</button>
               <button class="action-button ${interested ? 'is-active' : ''}" type="button" id="interestButton">
                 ${heartIcon(interested)}
-                관심등록
+                즐겨찾기
               </button>
             </div>
           </aside>
@@ -744,11 +966,11 @@
         <section class="section-grid">
           <div class="info-card">
             <h2>시놉시스</h2>
-            <p class="synopsis">${item.synopsis}</p>
+            ${paragraphMarkup(item.synopsis, 'synopsis')}
           </div>
           <div class="info-card">
             <h2>캐스팅 정보</h2>
-            <p class="casting-copy">${item.casting}</p>
+            ${paragraphMarkup(item.casting, 'casting-copy')}
           </div>
         </section>
         <section class="info-card">
@@ -772,12 +994,11 @@
         </section>
         <section class="info-card">
           <div class="producer-profile">
-            <div>
+            <div class="producer-intro-column">
               <h2 class="producer-column-title">제작사 소개</h2>
-              <p class="producer-intro">${item.producerIntro}</p>
+              ${paragraphMarkup(item.producerIntro, 'producer-intro')}
             </div>
-            <div>
-              <h2 class="producer-column-title">대표 작품</h2>
+            <div class="producer-works-column">
               <div class="works-list">
                 ${item.works.map((work) => `
                   <div class="work-card">
@@ -799,7 +1020,7 @@
         render();
       });
       document.getElementById('inquiryButton').addEventListener('click', () => {
-        window.alert('제작 문의가 접수되었습니다.');
+        openInquiryModal();
       });
       document.querySelectorAll('[data-media-index]').forEach((button) => {
         button.addEventListener('click', () => {
@@ -812,8 +1033,26 @@
     mediaViewer.addEventListener('click', (event) => {
       if (event.target === mediaViewer) closeMediaViewer();
     });
+    inquiryModalClose.addEventListener('click', closeInquiryModal);
+    inquiryModal.addEventListener('click', (event) => {
+      if (event.target === inquiryModal) closeInquiryModal();
+    });
+    inquiryForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!inquiryMessage.value.trim()) {
+        inquiryMessage.value = '';
+        inquiryMessage.reportValidity();
+        return;
+      }
+      inquiryModalPanel.classList.add('is-submitted');
+    });
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && mediaViewer.classList.contains('is-open')) {
+      if (event.key !== 'Escape') return;
+      if (inquiryModal.classList.contains('is-open')) {
+        closeInquiryModal();
+        return;
+      }
+      if (mediaViewer.classList.contains('is-open')) {
         closeMediaViewer();
       }
     });

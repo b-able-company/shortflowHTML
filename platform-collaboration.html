@@ -190,22 +190,36 @@
     }
     .stage-badge {
       position: absolute;
-      top: 14px;
-      left: 14px;
+      top: 13px;
+      left: 13px;
       z-index: 2;
-      padding: 6px 9px;
-      border-radius: 4px;
-      background: rgba(17,24,39,0.82);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      padding: 8px 13px 6px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.22);
       color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      line-height: 1;
-      letter-spacing: 0.2px;
-      backdrop-filter: blur(10px);
+      font-size: 12px;
+      font-weight: 560;
+      line-height: 1.1;
+      letter-spacing: 0;
+      backdrop-filter: blur(18px) saturate(150%);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.16), inset 0 1px 0 rgba(255,255,255,0.18);
     }
-    .stage-badge.is-planning { background: rgba(232,93,44,0.92); }
-    .stage-badge.is-casting { background: rgba(17,24,39,0.82); }
-    .stage-badge.is-pilot { background: rgba(55,112,91,0.9); }
+    .stage-badge.is-planning {
+      background: rgba(255,255,255,0.22);
+    }
+    .stage-badge.is-casting {
+      background: rgba(12,12,12,0.88);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.14);
+    }
+    .stage-badge.is-pilot {
+      background: rgba(18,101,66,0.92);
+      box-shadow: 0 8px 24px rgba(3,54,33,0.22), inset 0 1px 0 rgba(255,255,255,0.16);
+    }
     .poster-actions {
       position: absolute;
       top: 14px;
@@ -246,20 +260,6 @@
         transform: none;
         pointer-events: auto;
       }
-    }
-    .poster-title {
-      position: absolute;
-      left: 16px;
-      right: 16px;
-      bottom: 22px;
-      z-index: 1;
-      color: #fff;
-      font-size: 27px;
-      font-weight: 400;
-      line-height: 1.04;
-      letter-spacing: -0.8px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.35);
-      word-break: keep-all;
     }
     .poster-producer {
       position: absolute;
@@ -365,7 +365,6 @@
       .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; }
       .pagination { margin-top: 80px; margin-bottom: 56px; gap: 4px; }
       .platform-collaboration-main { padding-bottom: 24px; }
-      .poster-title { font-size: 22px; }
     }
   </style>
 </head>
@@ -450,10 +449,15 @@
       { title: '남편이 AI입니다: 시즌 제로', producer: 'Neon Script', genres: ['로맨스', 'SF'], stage: '파일럿 촬영 완료', favorite: true, poster: 'p6', image: 'images/ai-husband.png', href: '#', registeredAt: '2026-06-05' },
       { title: '퇴사했더니 황제가 됐다', producer: 'History Pop', genres: ['판타지', '사극'], stage: '기획중', favorite: false, poster: 'p7', image: 'images/resigned-emperor.png', href: '#', registeredAt: '2026-05-30' },
       { title: '살인범과 룸메이트가 되었다', producer: 'Tension House', genres: ['스릴러', '미스터리'], stage: '캐스팅중', favorite: true, poster: 'p8', image: 'images/murderer-roommate.png', href: '#', registeredAt: '2026-05-25' },
-      { title: '비밀 계정의 주인', producer: 'Deep Pink Studio', genres: ['복수', '스릴러'], stage: '기획중', favorite: false, poster: 'p9', href: '#', registeredAt: '2026-05-18' },
-      { title: '계약 종료 3일 전', producer: 'Blue Hour', genres: ['로맨스', '멜로'], stage: '파일럿 촬영 완료', favorite: false, poster: 'p10', href: '#', registeredAt: '2026-05-10' },
-      { title: '달빛 아래 편의점', producer: 'Daybreak Works', genres: ['청춘', 'SF'], stage: '캐스팅중', favorite: false, poster: 'p11', href: '#', registeredAt: '2026-05-04' },
-      { title: '그녀의 두 번째 엔딩', producer: 'Ending Note', genres: ['로맨스', '타임슬립'], stage: '기획중', favorite: true, poster: 'p12', href: '#', registeredAt: '2026-04-28' }
+      { title: '비밀 계정의 주인', producer: 'Deep Pink Studio', genres: ['복수', '스릴러'], stage: '기획중', favorite: false, poster: 'p9', image: 'images/topstar-still-1.png', href: '#', registeredAt: '2026-05-18' },
+      { title: '계약 종료 3일 전', producer: 'Blue Hour', genres: ['로맨스', '멜로'], stage: '파일럿 촬영 완료', favorite: false, poster: 'p10', image: 'images/topstar-still-2.png', href: '#', registeredAt: '2026-05-10' },
+      { title: '달빛 아래 편의점', producer: 'Daybreak Works', genres: ['청춘', 'SF'], stage: '캐스팅중', favorite: false, poster: 'p11', image: 'images/topstar-still-3.png', href: '#', registeredAt: '2026-05-04' },
+      { title: '그녀의 두 번째 엔딩', producer: 'Ending Note', genres: ['로맨스', '타임슬립'], stage: '기획중', favorite: true, poster: 'p12', image: 'images/return-topstar-poster.png', href: '#', registeredAt: '2026-04-28' },
+      { title: '새벽 두 시의 고백', producer: 'Moonlit Studio', genres: ['로맨스', '청춘'], stage: '기획중', favorite: false, poster: 'p1', image: 'images/ceo-ex-boyfriend.png', href: '#', registeredAt: '2026-04-21' },
+      { title: '상속녀의 가짜 약혼자', producer: 'Velvet Room', genres: ['로맨스', '가족'], stage: '캐스팅중', favorite: false, poster: 'p2', image: 'images/chaebol-secretary.png', href: '#', registeredAt: '2026-04-16' },
+      { title: '이번 생은 조연입니다', producer: 'Loop Lab', genres: ['타임슬립', '코미디'], stage: '파일럿 촬영 완료', favorite: false, poster: 'p3', image: 'images/villainess-agent.png', href: '#', registeredAt: '2026-04-09' },
+      { title: '대표님의 비밀 계약서', producer: 'Paper Moon', genres: ['로맨스', '복수'], stage: '기획중', favorite: false, poster: 'p4', image: 'images/killer-at-home.png', href: '#', registeredAt: '2026-04-02' },
+      { title: '나를 죽인 배우를 찾습니다', producer: 'Frame Zero', genres: ['스릴러', '미스터리'], stage: '캐스팅중', favorite: false, poster: 'p5', image: 'images/murderer-roommate.png', href: '#', registeredAt: '2026-03-26' }
     ];
 
     const state = {
@@ -518,7 +522,7 @@
             <a href="${detailHref(item)}">
               ${item.image
                 ? `<img class="poster-image" src="${item.image}" alt="${item.title} 포스터">`
-                : `<div class="poster-title">${item.title}</div>`}
+                : ''}
             </a>
             <span class="stage-badge ${stageClass(item.stage)}">${item.stage}</span>
             <div class="poster-producer">${item.producer}</div>
