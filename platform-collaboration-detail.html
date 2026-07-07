@@ -828,6 +828,7 @@
     const inquiryModalClose = document.getElementById('inquiryModalClose');
     const inquiryForm = document.getElementById('inquiryForm');
     const inquiryMessage = document.getElementById('inquiryMessage');
+    const PRODUCTION_INQUIRY_STORAGE_KEY = 'shortflow-production-inquiries';
     let interested = false;
 
     function stageClass(stage) {
@@ -926,6 +927,43 @@
       inquiryModal.classList.remove('is-open');
       inquiryModalPanel.classList.remove('is-submitted');
       document.body.style.overflow = '';
+    }
+
+    function formatInquiryDateParts(date) {
+      const pad = (value) => String(value).padStart(2, '0');
+      return {
+        date: `${date.getFullYear()}.${pad(date.getMonth() + 1)}.${pad(date.getDate())}`,
+        time: `${pad(date.getHours())}:${pad(date.getMinutes())}`,
+      };
+    }
+
+    function saveProductionInquiry(message) {
+      const now = new Date();
+      const timestamp = now.getTime();
+      const dateParts = formatInquiryDateParts(now);
+      let savedItems = [];
+
+      try {
+        savedItems = JSON.parse(localStorage.getItem(PRODUCTION_INQUIRY_STORAGE_KEY) || '[]');
+        if (!Array.isArray(savedItems)) savedItems = [];
+      } catch (error) {
+        savedItems = [];
+      }
+
+      const inquiry = {
+        id: `pc-${timestamp}`,
+        inquiryType: '제작협업',
+        title: `${item.title} 제작 문의`,
+        date: dateParts.date,
+        time: dateParts.time,
+        statusLabel: '전송됨',
+        full: `콘텐츠: ${item.title}
+제작사: ${item.producer}
+
+${message}`,
+      };
+
+      localStorage.setItem(PRODUCTION_INQUIRY_STORAGE_KEY, JSON.stringify([inquiry, ...savedItems].slice(0, 20)));
     }
 
     function render() {
@@ -1044,6 +1082,7 @@
         inquiryMessage.reportValidity();
         return;
       }
+      saveProductionInquiry(inquiryMessage.value.trim());
       inquiryModalPanel.classList.add('is-submitted');
     });
     document.addEventListener('keydown', (event) => {

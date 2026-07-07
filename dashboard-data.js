@@ -39,7 +39,48 @@
     { label: '보류', value: 0 },
   ];
 
+  const PRODUCTION_INQUIRY_STORAGE_KEY = 'shortflow-production-inquiries';
+
+  function storedProductionInquiryItems() {
+    let savedItems = [];
+
+    try {
+      savedItems = JSON.parse(localStorage.getItem(PRODUCTION_INQUIRY_STORAGE_KEY) || '[]');
+    } catch (error) {
+      savedItems = [];
+    }
+
+    if (!Array.isArray(savedItems)) return [];
+
+    return savedItems
+      .filter(item => item && item.full)
+      .map((item, index) => ({
+        id: item.id || `pc-stored-${index}`,
+        inquiryType: item.inquiryType || '제작협업',
+        title: item.title || '제작협업 문의',
+        date: item.date || '',
+        time: item.time || '',
+        statusLabel: item.statusLabel || '전송됨',
+        full: item.full,
+        adminComments: Array.isArray(item.adminComments) ? item.adminComments : undefined,
+      }));
+  }
+
   const messageItems = [
+    ...storedProductionInquiryItems(),
+    {
+      id: 'm-production-1',
+      inquiryType: '제작협업',
+      title: '죽었다가 회귀한 톱스타 제작 문의',
+      date: '2026.07.07',
+      time: '13:20',
+      statusLabel: '전송됨',
+      full: `콘텐츠: 죽었다가 회귀한 톱스타
+제작사: Orbit Pictures
+
+파일럿 촬영 완료본 기준으로 플랫폼 오리지널 편성을 검토하고 싶습니다.
+희망 제작 일정, 추가 회차 확장 가능 여부, 주요 캐스팅 조건을 함께 논의하고 싶습니다.`,
+    },
     {
       id: 'm1',
       inquiryType: '컨시어지판매',

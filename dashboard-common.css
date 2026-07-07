@@ -535,7 +535,7 @@ button {
   min-height: 52px;
   padding: 0 34px;
   margin-left: auto;
-  border: 1px solid #111827;
+  border: 1px solid #d7dbe2;
   border-radius: 12px;
   background: #111827;
   color: #fff;
@@ -710,8 +710,8 @@ button {
   width: 100%;
   min-height: 90px;
   display: grid;
-  grid-template-columns: 40px minmax(0, 1fr);
-  gap: 12px;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 18px;
   align-items: center;
   padding: 12px 12px;
   text-align: left;
@@ -2207,7 +2207,8 @@ button {
 }
 
 .messages-grid {
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 380px 1fr;
+  gap: 18px;
 }
 
 .message-list {
@@ -2218,7 +2219,7 @@ button {
 }
 
 .message-filter-bar {
-  padding: 12px;
+  padding: 12px 12px 10px;
   border-bottom: 1px solid var(--line-soft);
 }
 
@@ -2241,14 +2242,15 @@ button {
 
 .message-type-filter {
   width: 100%;
-  height: 34px;
+  height: 40px;
   padding: 0 34px 0 12px;
   border: 1px solid var(--line);
-  border-radius: 6px;
-  background: #fafaf8;
+  border-radius: 8px;
+  background: #fafafa;
   color: var(--ink);
   font-family: inherit;
-  font-size: 12px;
+  font-size: 12.5px;
+  font-weight: 600;
   outline: none;
   appearance: none;
   -webkit-appearance: none;
@@ -2268,13 +2270,18 @@ button {
 
 .message-item {
   width: 100%;
-  padding: 14px;
+  padding: 15px 16px;
   border: 0;
   border-bottom: 1px solid var(--line-soft);
   border-radius: 0;
   background: transparent;
   text-align: left;
-  transition: background 0.14s;
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.14s ease;
 }
 
 .message-item:last-child {
@@ -2282,45 +2289,111 @@ button {
 }
 
 .message-item.selected {
-  background: #fff8f4;
+  background: #f7f8fa;
 }
 
-.message-item-top,
-.message-item-preview,
-.message-detail-meta {
+.message-item-head,
+.message-preview-row,
+.message-item-meta,
+.message-detail-meta,
+.message-bubble-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-}
-
-.message-item-top {
-  margin-bottom: 10px;
-}
-
-.message-top-left {
-  min-width: 0;
-  display: inline-flex;
-  align-items: center;
   gap: 10px;
 }
 
-.message-type {
-  color: var(--ink);
-  font-size: 13px;
-  font-weight: 700;
+.message-item-head {
+  margin-bottom: 7px;
+}
+
+.message-item-content {
+  min-width: 0;
+}
+
+.message-sender-name {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--ink);
+  font-size: 13.5px;
+  font-weight: 680;
+  line-height: 1.25;
+}
+
+.message-type-avatar {
+  width: 52px;
+  height: 52px;
+  border: 1px solid #e1e4ea;
+  border-radius: 999px;
+  background: #fff;
+  color: #111827;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.message-type-avatar svg {
+  width: 17px;
+  height: 17px;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.message-type-avatar img {
+  display: block;
+  width: 23px;
+  height: 23px;
+  object-fit: contain;
+}
+
+.message-type-avatar.is-production {
+  border-color: #e1e4ea;
+  background: #fff;
+  color: #111827;
+}
+
+.message-type-avatar.is-concierge {
+  border-color: #e1e4ea;
+  background: #fff;
+  color: #111827;
+}
+
+.message-type-avatar.is-general {
+  border-color: #e1e4ea;
+  background: #fff;
+  color: #111827;
+}
+
+.message-preview-row {
+  min-width: 0;
+}
+
+.message-item-meta {
+  justify-content: flex-start;
+  min-height: 22px;
+  margin-top: 7px;
+  color: var(--ink-muted);
+  font-size: 11px;
 }
 
 .message-comment-slot {
-  min-width: 18px;
+  min-width: 22px;
+  margin-left: auto;
   display: inline-flex;
   justify-content: flex-end;
   flex-shrink: 0;
 }
 
-.message-top-left time,
-.message-detail-meta time {
+.message-item-head time,
+.message-item-meta time,
+.message-detail-meta time,
+.message-bubble-meta time {
   color: var(--ink-muted);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 11px;
@@ -2331,11 +2404,11 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 8px 4px 7px;
-  border-radius: 6px;
+  padding: 3px 7px 3px 6px;
+  border-radius: 999px;
   background: var(--green-bg);
   color: var(--green);
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 600;
   white-space: nowrap;
 }
@@ -2360,20 +2433,15 @@ button {
 .comment-badge {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding: 0;
-  border-radius: 0;
-  background: transparent;
-  color: #4b5563;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #111827;
+  color: #fff;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
-}
-
-.comment-badge svg {
-  width: 12px;
-  height: 12px;
-  stroke-width: 2;
 }
 
 .message-title {
@@ -2382,8 +2450,10 @@ button {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 13px;
-  font-weight: 500;
+  color: #7b8190;
+  font-size: 12.5px;
+  font-weight: 450;
+  line-height: 1.45;
 }
 
 .message-right {
@@ -2394,36 +2464,71 @@ button {
   width: 100%;
   height: fit-content;
   min-height: 0;
-  padding: 28px 32px;
+  padding: 0;
+  overflow: hidden;
 }
 
-.message-section-head {
+.message-detail-head {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 16px;
-}
-
-.message-section h3,
-.admin-comment-section h3 {
-  margin: 0;
-  color: var(--ink);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: -0.05px;
+  padding: 18px 26px;
+  border-bottom: 1px solid var(--line-soft);
 }
 
 .message-detail-meta {
   justify-content: flex-start;
 }
 
+.message-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 28px 32px 34px;
+  background: #fff;
+}
+
+.message-bubble-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.message-bubble-row.is-user {
+  justify-content: flex-end;
+}
+
+.message-bubble-row.is-user .message-bubble {
+  max-width: min(640px, 88%);
+  background: #fff;
+}
+
+.message-bubble-row.is-admin .message-bubble {
+  max-width: min(680px, 92%);
+  background: #f4f5f7;
+}
+
+.message-bubble {
+  min-width: 0;
+  padding: 16px 18px;
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.message-bubble-meta {
+  margin-bottom: 10px;
+}
+
+.message-bubble-meta strong {
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
 .message-body {
   width: 100%;
-  padding: 18px 20px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--surface-alt);
   color: var(--ink);
   font-size: 13px;
   line-height: 1.7;
@@ -2431,24 +2536,9 @@ button {
   white-space: pre-wrap;
 }
 
-.admin-comment-section {
-  margin-top: 28px;
-  padding-top: 22px;
-  border-top: 1px solid var(--line);
-}
-
-.admin-comment {
-  display: grid;
-  grid-template-columns: 34px 1fr;
-  gap: 14px;
-  align-items: start;
-  margin-top: 14px;
-}
-
-.admin-comment-dot {
-  width: 34px;
-  height: 34px;
-  margin-top: 2px;
+.message-avatar {
+  width: 32px;
+  height: 32px;
   border: 1px solid #dedbd4;
   border-radius: 999px;
   background: #f7f6f1;
@@ -2457,41 +2547,14 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
-.admin-comment-dot img {
+.message-avatar img {
   display: block;
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
   object-fit: contain;
-}
-
-.admin-comment-content {
-  padding: 16px 18px;
-  border-radius: 10px;
-  background: #f7f6f1;
-}
-
-.admin-comment-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.admin-comment-meta strong {
-  color: var(--ink);
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.admin-comment-meta time {
-  color: var(--ink-muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 11px;
-  letter-spacing: 0.2px;
-  white-space: nowrap;
 }
 
 .admin-comment-body,
@@ -2503,7 +2566,10 @@ button {
 }
 
 .admin-comment-empty {
-  margin-top: 14px;
+  padding: 16px 18px;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  background: #fff;
   color: var(--ink-muted);
 }
 

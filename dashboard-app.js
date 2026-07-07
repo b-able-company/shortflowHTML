@@ -6,6 +6,7 @@
   const { renderMessagesView } = window.ShortflowMessages;
   const { renderContractsView } = window.ShortflowContracts;
   const dashboardTabs = new Set(['workflow', 'contracts', 'messages']);
+  const DEFAULT_INQUIRY_TYPE = '컨시어지판매';
 
   function syncTabFromUrl() {
     const tab = new URLSearchParams(window.location.search).get('tab');
@@ -93,7 +94,7 @@
       appState.messageTypeFilter = event.target.value;
       const firstMatch = window.ShortflowData.messageItems.find(message =>
         appState.messageTypeFilter === 'all'
-        || (message.inquiryType || '컨시어지판매') === appState.messageTypeFilter
+        || (message.inquiryType || DEFAULT_INQUIRY_TYPE) === appState.messageTypeFilter
       );
       if (firstMatch) appState.selectedMessageId = firstMatch.id;
       render();
