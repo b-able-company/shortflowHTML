@@ -1901,6 +1901,10 @@ function TableGroupLabel({ kind, t }) {
 
 function SettlementPaneHeader({ hasRsTrend, activePane, setActivePane, t }) {
   const isRsPane = activePane === 'rs';
+  const paneButtons = [
+    { key: 'records', label: '거래 기록' },
+    { key: 'rs', label: 'RS 추이' },
+  ];
   return (
     <div style={{
       display: 'flex',
@@ -1922,35 +1926,35 @@ function SettlementPaneHeader({ hasRsTrend, activePane, setActivePane, t }) {
 
       {hasRsTrend &&
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <button
-            type="button"
-            onClick={(event) => {
-              event.stopPropagation();
-              setActivePane(isRsPane ? 'records' : 'rs');
-            }}
-            style={{
-              height: 34,
-              minWidth: 112,
-              padding: '0 18px',
-              border: 0,
-              borderRadius: 999,
-              background: '#1d1d1f',
-              color: '#fff',
-              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.12)',
-              fontFamily: t.sans,
-              fontSize: 11.5,
-              fontWeight: 500,
-              letterSpacing: 0,
-              cursor: 'pointer'
-            }}>
-            {isRsPane ? '거래 기록 보기' : 'RS 추이 보기'}
-            <span style={{
-              display: 'inline-block',
-              marginLeft: 7,
-              fontWeight: 400,
-              opacity: 0.82
-            }}>-&gt;</span>
-          </button>
+          {paneButtons.map((button) => {
+            const active = activePane === button.key;
+            return (
+              <button
+                key={button.key}
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setActivePane(button.key);
+                }}
+                style={{
+                  height: 34,
+                  minWidth: 82,
+                  padding: '0 15px',
+                  border: active ? 0 : `0.5px solid ${t.lineStrong}`,
+                  borderRadius: 999,
+                  background: active ? '#1d1d1f' : t.surface,
+                  color: active ? '#fff' : t.inkMute,
+                  boxShadow: active ? '0 2px 6px rgba(0, 0, 0, 0.12)' : 'none',
+                  fontFamily: t.sans,
+                  fontSize: 11.5,
+                  fontWeight: active ? 600 : 500,
+                  letterSpacing: 0,
+                  cursor: 'pointer'
+                }}>
+                {button.label}
+              </button>
+            );
+          })}
         </div>
       }
     </div>
