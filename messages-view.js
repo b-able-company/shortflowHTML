@@ -135,7 +135,7 @@
                 <time class="message-bubble-time">${escapeHtml(comment.date)} ${escapeHtml(comment.time)}</time>
               </div>
             </article>
-          `).join('') : '<div class="admin-comment-empty">아직 등록된 관리자 댓글이 없습니다.</div>'}
+          `).join('') : ''}
         </div>
       </section>
     `;

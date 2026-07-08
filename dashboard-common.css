@@ -2303,6 +2303,10 @@ button {
   border-bottom: 0;
 }
 
+.message-item + .message-item {
+  margin-top: 6px;
+}
+
 .message-item.selected {
   background: #f7f8fa;
 }
@@ -2565,6 +2569,7 @@ button {
 
 .message-bubble-row.is-admin {
   align-items: flex-end;
+  padding-bottom: 22px;
 }
 
 .message-bubble-row.is-admin .message-bubble-time {
