@@ -2223,7 +2223,7 @@ button {
 }
 
 .messages-grid {
-  grid-template-columns: 380px 1fr;
+  grid-template-columns: 350px 1fr;
   gap: 18px;
 }
 
@@ -2241,14 +2241,16 @@ button {
 
 .message-type-select-wrap {
   position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 .message-type-filter {
-  width: 100%;
+  width: calc(100% - 12px);
   height: 42px;
-  padding: 0 32px 0 14px;
+  padding: 0 32px 0 20px;
   border: none;
-  border-radius: 10px;
+  border-radius: 999px;
   background-color: #f5f5f7;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a8f99' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -2285,13 +2287,13 @@ button {
   width: 100%;
   padding: 15px 16px;
   border: 0;
-  border-bottom: 1px solid var(--line-soft);
+  border-bottom: 0;
   border-radius: 0;
   background: transparent;
   text-align: left;
   display: grid;
-  grid-template-columns: 52px minmax(0, 1fr);
-  gap: 13px;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 12px;
   align-items: center;
   cursor: pointer;
   transition: background 0.14s ease;
@@ -2331,14 +2333,14 @@ button {
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--ink);
-  font-size: 14.5px;
+  font-size: 13.5px;
   font-weight: 500;
   line-height: 1.25;
 }
 
 .message-type-avatar {
-  width: 52px;
-  height: 52px;
+  width: 46px;
+  height: 46px;
   border: 1px solid #e1e4ea;
   border-radius: 999px;
   background: #fff;
@@ -2350,8 +2352,8 @@ button {
 }
 
 .message-type-avatar svg {
-  width: 21px;
-  height: 21px;
+  width: 18px;
+  height: 18px;
   stroke: currentColor;
   stroke-width: 1.6;
   stroke-linecap: round;
@@ -2552,12 +2554,24 @@ button {
 
 .message-bubble-row.is-user .message-bubble-col {
   align-items: flex-end;
-  max-width: min(640px, 88%);
+  max-width: min(520px, 76%);
 }
 
 .message-bubble-row.is-admin .message-bubble-col {
   align-items: flex-start;
-  max-width: min(680px, 92%);
+  max-width: min(560px, 78%);
+  position: relative;
+}
+
+.message-bubble-row.is-admin {
+  align-items: flex-end;
+}
+
+.message-bubble-row.is-admin .message-bubble-time {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 2px;
+  margin-top: 0;
 }
 
 .message-bubble-row.is-user .message-bubble {
@@ -2596,6 +2610,7 @@ button {
   line-height: 1.7;
   letter-spacing: -0.05px;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .message-bubble-time {

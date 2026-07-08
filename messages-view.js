@@ -119,9 +119,6 @@
           <article class="message-bubble-row is-user">
             <div class="message-bubble-col">
               <div class="message-bubble">
-                <div class="message-bubble-meta">
-                  <strong>문의 내용</strong>
-                </div>
                 <div class="message-body">${escapeHtml(selected.full)}</div>
               </div>
               <time class="message-bubble-time">${escapeHtml(selected.date)} ${escapeHtml(selected.time)}</time>
@@ -133,9 +130,6 @@
               <div class="message-avatar" aria-hidden="true">${renderAdminIcon()}</div>
               <div class="message-bubble-col">
                 <div class="message-bubble">
-                  <div class="message-bubble-meta">
-                    <strong>${escapeHtml(comment.name)}</strong>
-                  </div>
                   <div class="admin-comment-body">${escapeHtml(comment.body)}</div>
                 </div>
                 <time class="message-bubble-time">${escapeHtml(comment.date)} ${escapeHtml(comment.time)}</time>
