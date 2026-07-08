@@ -570,23 +570,85 @@
     }
     .inquiry-complete {
       display: none;
-      margin: 0 0 14px;
-      padding: 13px 14px;
-      border-radius: 8px;
-      background: #f5f7f6;
-      color: #263a31;
+      min-height: 226px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 0 6px;
+      padding: 14px 0 4px;
+      text-align: center;
+    }
+    .inquiry-check {
+      width: 62px;
+      height: 62px;
+      display: block;
+      overflow: visible;
+    }
+    .inquiry-check-circle {
+      fill: #fff4ee;
+      stroke: var(--orange);
+      stroke-width: 2.2;
+      stroke-dasharray: 164;
+      stroke-dashoffset: 164;
+      transform: rotate(-90deg);
+      transform-origin: 31px 31px;
+    }
+    .inquiry-check-mark {
+      fill: none;
+      stroke: var(--orange);
+      stroke-width: 3.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 34;
+      stroke-dashoffset: 34;
+    }
+    .inquiry-complete-title {
+      margin-top: 14px;
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+    }
+    .inquiry-complete-copy {
+      margin-top: 6px;
+      color: #6f7682;
       font-size: 13px;
-      line-height: 1.55;
+      line-height: 1.5;
+    }
+    @keyframes inquiry-circle-draw {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes inquiry-check-draw {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes inquiry-check-pop {
+      0% { transform: scale(0.82); opacity: 0; }
+      58% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
     }
     .inquiry-modal.is-submitted .inquiry-modal-copy,
     .inquiry-modal.is-submitted .inquiry-textarea {
       display: none;
     }
+    .inquiry-modal.is-submitted .inquiry-modal-head {
+      display: none;
+    }
+    .inquiry-modal.is-submitted {
+      width: min(330px, 100%);
+    }
     .inquiry-modal.is-submitted .inquiry-complete {
-      display: block;
+      display: flex;
+      animation: inquiry-check-pop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    .inquiry-modal.is-submitted .inquiry-check-circle {
+      animation: inquiry-circle-draw 0.28s ease-out 0.04s forwards;
+    }
+    .inquiry-modal.is-submitted .inquiry-check-mark {
+      animation: inquiry-check-draw 0.18s ease-out 0.26s forwards;
     }
     .inquiry-actions {
-      display: block;
+      display: flex;
+      justify-content: center;
       margin-top: 12px;
     }
     .inquiry-action {
@@ -608,6 +670,30 @@
     }
     .inquiry-modal.is-submitted .inquiry-action {
       display: none;
+    }
+    .inquiry-confirm-action {
+      display: none;
+      width: 84%;
+      height: 40px;
+      border: 1px solid #dfe2e8;
+      border-radius: 9px;
+      background: #fff;
+      color: #1d1d1f;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(15, 17, 21, 0.04);
+      transition: background 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+    }
+    .inquiry-confirm-action:hover {
+      border-color: #cfd3db;
+      background: #f7f8fa;
+      transform: translateY(-1px);
+    }
+    .inquiry-modal.is-submitted .inquiry-confirm-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .producer-intro {
       margin: 0;
@@ -785,9 +871,17 @@
       <form class="inquiry-form" id="inquiryForm">
         <p class="inquiry-modal-copy">검토하고 싶은 제작 방향과 조건을 남겨주시면 숏플로우 담당자가 확인 후 연락드립니다.</p>
         <textarea class="inquiry-textarea" id="inquiryMessage" required placeholder="예: 희망 제작 일정, 예산 범위, 캐스팅 방향, 확인하고 싶은 조건"></textarea>
-        <p class="inquiry-complete">문의가 접수되었습니다. 담당자가 내용을 검토한 뒤 순차적으로 연락드리겠습니다.</p>
+        <div class="inquiry-complete" aria-label="문의 접수 완료">
+          <svg class="inquiry-check" viewBox="0 0 62 62" aria-hidden="true">
+            <circle class="inquiry-check-circle" cx="31" cy="31" r="26"></circle>
+            <path class="inquiry-check-mark" d="M20 31.5l7.2 7.2L43 23.8"></path>
+          </svg>
+          <div class="inquiry-complete-title">문의가 접수되었습니다</div>
+          <div class="inquiry-complete-copy">담당자가 확인 후 연락드릴게요.</div>
+        </div>
         <div class="inquiry-actions">
           <button class="inquiry-action" type="submit">문의 보내기</button>
+          <button class="inquiry-confirm-action" type="button" id="inquiryConfirmClose">확인</button>
         </div>
       </form>
     </div>
@@ -826,6 +920,7 @@
     const inquiryModal = document.getElementById('inquiryModal');
     const inquiryModalPanel = document.getElementById('inquiryModalPanel');
     const inquiryModalClose = document.getElementById('inquiryModalClose');
+    const inquiryConfirmClose = document.getElementById('inquiryConfirmClose');
     const inquiryForm = document.getElementById('inquiryForm');
     const inquiryMessage = document.getElementById('inquiryMessage');
     const PRODUCTION_INQUIRY_STORAGE_KEY = 'shortflow-production-inquiries';
@@ -1072,6 +1167,7 @@ ${message}`,
       if (event.target === mediaViewer) closeMediaViewer();
     });
     inquiryModalClose.addEventListener('click', closeInquiryModal);
+    inquiryConfirmClose.addEventListener('click', closeInquiryModal);
     inquiryModal.addEventListener('click', (event) => {
       if (event.target === inquiryModal) closeInquiryModal();
     });

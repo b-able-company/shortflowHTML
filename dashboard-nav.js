@@ -226,12 +226,13 @@
     const subNavHtml = config.showDashboardSubNav === false
       ? ''
       : renderDashboardSubNav(config.activeTab, config.dashboardKind);
+    const footerHtml = config.hideFooter ? '' : renderFooter();
 
     return `
       ${renderTopNav(activePage)}
       ${subNavHtml}
       <main class="main">${contentHtml}</main>
-      ${renderFooter()}
+      ${footerHtml}
     `;
   }
 

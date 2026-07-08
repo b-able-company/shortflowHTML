@@ -23,6 +23,7 @@
       activePage: 'platform-dashboard',
       activeTab: appState.tab,
       dashboardKind: 'platform',
+      hideFooter: appState.tab === 'workflow' || appState.tab === 'messages',
     });
   }
 

@@ -9,6 +9,7 @@
       activePage: 'producer-dashboard',
       activeTab: 'workflow',
       dashboardKind: 'producer',
+      hideFooter: true,
     });
   }
 

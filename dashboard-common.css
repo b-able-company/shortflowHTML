@@ -630,6 +630,14 @@ button {
   align-items: start;
 }
 
+.workflow-grid,
+.messages-grid {
+  height: calc(100vh - 206px);
+  min-height: 0;
+  align-items: stretch;
+  overflow: hidden;
+}
+
 .left-column,
 .right-column {
   min-width: 0;
@@ -645,6 +653,15 @@ button {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.workflow-grid > .left-column,
+.workflow-grid > .right-column,
+.messages-grid > .left-column,
+.messages-grid > .right-column {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .profile-card,
@@ -712,9 +729,22 @@ button {
   overflow: hidden;
 }
 
+.workflow-grid .workflow-list {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+}
+
 .workflow-search-bar {
   padding: 12px;
   border-bottom: 1px solid var(--line-soft);
+}
+
+.workflow-grid .workflow-search-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--surface);
 }
 
 .workflow-search-bar .content-search {
@@ -917,6 +947,16 @@ button {
 .workflow-detail {
   overflow: hidden;
   min-height: 540px;
+}
+
+.workflow-grid .workflow-detail {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.workflow-grid .stats-card {
+  flex: 0 0 auto;
 }
 
 .workflow-detail-head {
@@ -2234,9 +2274,22 @@ button {
   overflow: hidden;
 }
 
+.messages-grid .message-list {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+}
+
 .message-filter-bar {
   padding: 17px 12px 18px;
   border-bottom: 1px solid var(--line-soft);
+}
+
+.messages-grid .message-filter-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--surface);
 }
 
 .message-type-select-wrap {
@@ -2479,6 +2532,16 @@ button {
   overflow: hidden;
 }
 
+.messages-grid .message-detail {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages-grid .message-detail-head {
+  flex: 0 0 auto;
+}
+
 .message-detail-head {
   display: flex;
   align-items: center;
@@ -2538,6 +2601,12 @@ button {
   gap: 36px;
   padding: 28px 32px 34px;
   background: #fff;
+}
+
+.messages-grid .message-thread {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .message-bubble-row {
@@ -2686,6 +2755,34 @@ button {
   .dashboard-grid,
   .messages-grid {
     grid-template-columns: 1fr;
+  }
+
+  .workflow-grid,
+  .messages-grid {
+    height: auto;
+    overflow: visible;
+  }
+
+  .workflow-grid > .left-column,
+  .workflow-grid > .right-column,
+  .messages-grid > .left-column,
+  .messages-grid > .right-column {
+    height: auto;
+    overflow: visible;
+  }
+
+  .workflow-grid .workflow-list,
+  .workflow-grid .workflow-detail,
+  .messages-grid .message-list,
+  .messages-grid .message-detail,
+  .messages-grid .message-thread {
+    height: auto;
+    overflow: visible;
+  }
+
+  .workflow-grid .workflow-search-bar,
+  .messages-grid .message-filter-bar {
+    position: static;
   }
 
   .contract-toolbar {
