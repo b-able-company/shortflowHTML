@@ -987,7 +987,7 @@ function FavSquareBtn(_ref12) {
       padding: 0
     }
   }, /*#__PURE__*/React.createElement(HeartIcon, {
-    filled: active,
+    filled: true,
     size: 18
   }));
 }
@@ -1034,7 +1034,7 @@ function DetailVariantA(_ref13) {
       fontWeight: fav ? 600 : 500
     }
   }, /*#__PURE__*/React.createElement(HeartIcon, {
-    filled: fav,
+    filled: true,
     size: 15
   }), fav ? '즐겨찾기' : '즐겨찾기'), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
@@ -1119,7 +1119,7 @@ function DetailVariantB(_ref14) {
     active: fav,
     activeBg: "#FFF1EC",
     icon: /*#__PURE__*/React.createElement(HeartIcon, {
-      filled: fav,
+      filled: true,
       size: 15
     }),
     label: "\uC990\uACA8\uCC3E\uAE30",
@@ -1197,7 +1197,7 @@ function DetailVariantC_Actions(_ref17) {
       fontWeight: fav ? 600 : 500
     }
   }, /*#__PURE__*/React.createElement(HeartIcon, {
-    filled: fav,
+    filled: true,
     size: 15
   }), fav ? '즐겨찾기' : '즐겨찾기'), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
@@ -1306,7 +1306,7 @@ function DetailVariantD_RightCol(_ref19) {
     t: t,
     active: fav,
     icon: /*#__PURE__*/React.createElement(HeartIcon, {
-      filled: fav,
+      filled: true,
       size: 12,
       color: fav ? '#E85D2C' : '#1F2937'
     }),
@@ -1354,7 +1354,7 @@ function ContentDetailPageD(_ref20) {
     style: {
       margin: '0 auto',
       padding: '32px 40px 80px',
-      maxWidth: 1120
+      maxWidth: 1140
     }
   }, /*#__PURE__*/React.createElement("button", {
     style: {
@@ -1415,7 +1415,7 @@ function ContentDetailPage(_ref21) {
     style: {
       margin: '0 auto',
       padding: '32px 40px 80px',
-      maxWidth: 1120
+      maxWidth: 1140
     }
   }, /*#__PURE__*/React.createElement("button", {
     style: {

@@ -25,9 +25,9 @@
 
   const producerWorkflowItems = [
     { id: 'p1', title: '대표님이 내 전남친입니다', sub: '숏드라마 · 80화', status: 'CONTENT_SUBMITTED', date: '2026년 6월 8일', poster: 'rose', image: 'images/대표님이내전남친.png' },
-    { id: 'p2', title: '재벌집 막내 비서', sub: '숏드라마 · 72화', status: 'CONTENT_APPROVED', date: '2026년 6월 7일', poster: 'indigo', image: 'images/재벌집막내비서.png' },
-    { id: 'p4', title: '죽었다가 회귀한 톱스타', sub: '숏드라마 · 80화', status: 'REVISION_REQUESTED', date: '2026년 6월 4일', poster: 'magenta', image: 'images/죽었다가회귀한.png' },
-    { id: 'p5', title: '우리 집에 킬러가 산다', sub: '숏드라마 · 64화', status: 'REVISION_APPROVED', date: '2026년 6월 3일', poster: 'indigo', image: 'images/우리집에킬러가.png' },
+    { id: 'p2', title: '재벌집 막내 비서', sub: '숏드라마 · 72화', status: 'CONTENT_APPROVED', date: '2026년 6월 7일', poster: 'indigo', image: 'images/재벌집막내비서.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
+    { id: 'p4', title: '죽었다가 회귀한 톱스타', sub: '숏드라마 · 80화', status: 'REVISION_REQUESTED', date: '2026년 6월 4일', poster: 'magenta', image: 'images/죽었다가회귀한.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
+    { id: 'p5', title: '우리 집에 킬러가 산다', sub: '숏드라마 · 64화', status: 'REVISION_APPROVED', date: '2026년 6월 3일', poster: 'indigo', image: 'images/우리집에킬러가.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
   ].map(item => ({ ...item, statusLabel: producerStatusLabels[item.status] }));
 
   const producerInProgressStatuses = new Set(['CONTENT_SUBMITTED', 'REVISION_REQUESTED']);

@@ -277,9 +277,10 @@
       background: rgba(17,24,39,0.96);
     }
     .fav.active svg { fill: #ff3f4d; stroke: #ff3f4d; }
-    .cart-add {
-      font-size: 17px;
-      line-height: 1;
+    .cart-add svg {
+      width: 19px;
+      height: 19px;
+      display: block;
     }
     .cart-add.active {
       background: var(--orange);
@@ -519,6 +520,10 @@
       return `<svg width="19" height="19" viewBox="0 0 24 24" fill="${filled ? '#ff3f4d' : 'none'}" stroke="${filled ? '#ff3f4d' : '#fff'}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>`;
     }
 
+    function iconCart() {
+      return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>`;
+    }
+
     function render() {
       let items = contents.filter((item) => {
         if (state.section.length && !state.section.includes(item.section)) return false;
@@ -552,7 +557,7 @@
                 ${iconHeart(item.favorite)}
               </button>
               <button class="poster-action cart-add ${item.inCart ? 'active' : ''}" type="button" data-title="${item.title}" aria-label="${item.title} 장바구니 ${item.inCart ? '빼기' : '담기'}" aria-pressed="${Boolean(item.inCart)}">
-                🛒
+                ${iconCart()}
               </button>
             </div>
           </div>

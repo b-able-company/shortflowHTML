@@ -1,7 +1,7 @@
 function installDetailLayoutTweaks() {
   var style = document.createElement('style');
   style.id = '__detail_layout_tweaks';
-  style.textContent = "\n      body {\n        min-width: 0 !important;\n      }\n      #root {\n        width: min(960px, calc(100% - 32px)) !important;\n        max-width: 960px !important;\n        margin-left: auto !important;\n        margin-right: auto !important;\n      }\n      #root *,\n      #root *::before,\n      #root *::after {\n        box-sizing: border-box !important;\n      }\n      #root > *,\n      #root main,\n      #root section,\n      #root [style*=\"1200\"],\n      #root [style*=\"1080\"],\n      #root [style*=\"1024\"] {\n        max-width: 100% !important;\n      }\n      #root main {\n        padding-left: 0 !important;\n        padding-right: 0 !important;\n      }\n      @media (max-width: 720px) {\n        #root {\n          width: calc(100% - 24px) !important;\n        }\n      }\n    ";
+  style.textContent = "\n      body {\n        min-width: 0 !important;\n      }\n      #root {\n        width: min(1140px, calc(100% - 48px)) !important;\n        max-width: 1140px !important;\n        margin-left: auto !important;\n        margin-right: auto !important;\n      }\n      #root *,\n      #root *::before,\n      #root *::after {\n        box-sizing: border-box !important;\n      }\n      #root > *,\n      #root main,\n      #root section,\n      #root [style*=\"1200\"],\n      #root [style*=\"1080\"],\n      #root [style*=\"1024\"] {\n        max-width: 100% !important;\n      }\n      #root main {\n        padding-left: 0 !important;\n        padding-right: 0 !important;\n      }\n      @media (max-width: 720px) {\n        #root {\n          width: calc(100% - 24px) !important;\n        }\n      }\n    ";
   document.head.appendChild(style);
 }
 function installDetailFieldTweaks() {
@@ -72,7 +72,7 @@ function installDetailFieldTweaks() {
       var year = document.createElement('span');
       year.textContent = '(2026)';
       title.style.fontWeight = '700';
-      title.style.fontSize = '27px';
+      title.style.fontSize = '24px';
       title.replaceChildren(document.createTextNode('죽었다가 회귀한 톱스타 '), year);
     }
     if (title) {
@@ -86,10 +86,10 @@ function installDetailFieldTweaks() {
       var _year = title.querySelector('span');
       if (_year) {
         _year.style.display = 'inline-block';
-        _year.style.color = '#6B7280';
-        _year.style.fontSize = '22px';
-        _year.style.fontWeight = '600';
-        _year.style.verticalAlign = '2px';
+        _year.style.color = '#151515';
+        _year.style.fontSize = '24px';
+        _year.style.fontWeight = '500';
+        _year.style.verticalAlign = '0';
       }
     }
     var contractButton = Array.from(root.querySelectorAll('button')).find(function (button) {

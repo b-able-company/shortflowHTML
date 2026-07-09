@@ -18,7 +18,7 @@ const PLAN_INITIAL_FORM = {
   title: '',
   genre: [],
   synopsis: '',
-  status: '기획중',
+  status: '기획',
   episodeCount: null,
   runtime: '',
   casting: '',
@@ -28,14 +28,23 @@ const PLAN_INITIAL_FORM = {
   reviewNote: ''
 };
 const PLAN_STATUS_OPTIONS = [{
-  v: '기획중',
-  label: '기획중'
+  v: '기획',
+  label: '기획'
 }, {
-  v: '캐스팅중',
-  label: '캐스팅중'
+  v: '시놉 확정',
+  label: '시놉 확정'
 }, {
-  v: '파일럿 촬영완료',
-  label: '파일럿 촬영완료'
+  v: '대본 확보',
+  label: '대본 확보'
+}, {
+  v: '캐스팅 확정',
+  label: '캐스팅 확정'
+}, {
+  v: '파일럿 완료',
+  label: '파일럿 완료'
+}, {
+  v: '제작 준비완료',
+  label: '제작 준비완료'
 }];
 function planArr(value) {
   return Array.isArray(value) ? value : value ? [value] : [];

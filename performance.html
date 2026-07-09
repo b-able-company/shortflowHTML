@@ -5,7 +5,7 @@
 <script src="dashboard-nav.js"></script>
 <style>
   #performance-dashboard-chrome { width: 100%; }
-  #root { width: min(960px, calc(100vw - 48px)); margin: 0 auto; }
+  #root { width: min(var(--max), calc(100vw - 48px)); margin: 0 auto; }
   #root > div > header:first-child { display: none !important; }
   #root > div > main { max-width: none !important; padding: 32px 0 80px !important; }
   @media (max-width: 920px) {

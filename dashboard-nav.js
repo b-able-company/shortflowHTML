@@ -43,9 +43,9 @@
   const icons = {
     bell: '<svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
     cart: '<svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h8.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',
-    moon: '<svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>',
     globe: '<svg class="lang-globe" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M8 1.5C5.5 4 5.5 12 8 14.5M8 1.5C10.5 4 10.5 12 8 14.5M1.5 8h13"/></svg>',
     chevronDown: '<svg class="lang-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5"/></svg>',
+    user: '<svg class="account-user-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>',
   };
   const languageOptions = ['KR', 'CN', 'EN'];
   const accountProfiles = {
@@ -90,8 +90,6 @@
             }).join('')}
           </nav>
           <div class="nav-actions">
-            <button class="icon-action" aria-label="알림">${icons.bell}</button>
-            <button class="icon-action" aria-label="테마">${icons.moon}</button>
             <div class="lang-wrap">
               <button class="lang" type="button" aria-label="사이트 언어 선택" aria-haspopup="listbox" aria-expanded="false" data-lang-trigger>
                 ${icons.globe}
@@ -106,9 +104,10 @@
                 `).join('')}
               </div>
             </div>
+            <button class="icon-action" aria-label="알림">${icons.bell}</button>
             <div class="account-wrap">
               <button class="account-trigger ${currentPage === 'mypage' ? 'active' : ''}" type="button" aria-label="계정 메뉴" aria-haspopup="true">
-                <span>${account.company}</span>
+                ${icons.user}
               </button>
               <div class="account-menu" role="menu">
                 <a class="account-head" href="${account.accountHref}" role="menuitem">
@@ -201,7 +200,7 @@
               <a href="#">개인정보 처리방침</a>
               <a href="#">이용약관</a>
             </nav>
-            <a class="footer-cta" href="concierge.html">온보딩 문의하기</a>
+            <a class="footer-cta" href="#onboarding-inquiry" data-onboarding-trigger>온보딩 문의하기</a>
           </div>
           <div class="footer-info">
             <span>(주) 비에이블컴퍼니</span>
@@ -217,6 +216,53 @@
           <div class="footer-copy">© 2026 shortflow. All rights reserved.</div>
         </div>
       </footer>
+      ${renderOnboardingModal()}
+    `;
+  }
+
+  function renderOnboardingModal() {
+    return `
+      <div class="onboarding-modal-backdrop" id="onboardingInquiryModal" role="dialog" aria-modal="true" aria-labelledby="onboardingInquiryTitle">
+        <section class="onboarding-modal" id="onboardingInquiryPanel">
+          <button class="onboarding-modal-close" type="button" data-onboarding-close aria-label="닫기">×</button>
+          <form class="onboarding-form" id="onboardingInquiryForm">
+            <div class="onboarding-form-head">
+              <h2 id="onboardingInquiryTitle">Contact us</h2>
+              <p>필요한 내용을 남겨주시면 담당자가 확인 후 연락드립니다.</p>
+            </div>
+            <div class="onboarding-field">
+              <label for="onboardingName">이름<span>*</span></label>
+              <input id="onboardingName" name="name" type="text" autocomplete="name" required placeholder="이름*">
+            </div>
+            <div class="onboarding-field">
+              <label for="onboardingEmail">이메일<span>*</span></label>
+              <input id="onboardingEmail" name="email" type="email" autocomplete="email" required placeholder="이메일*">
+            </div>
+            <div class="onboarding-field">
+              <label for="onboardingCompany">소속회사</label>
+              <input id="onboardingCompany" name="company" type="text" autocomplete="organization" placeholder="소속회사">
+            </div>
+            <div class="onboarding-field">
+              <label for="onboardingMessage">문의내용<span>*</span></label>
+              <textarea id="onboardingMessage" name="message" required placeholder="문의내용*"></textarea>
+            </div>
+            <div class="onboarding-complete" aria-live="polite">
+              <div class="onboarding-check" aria-hidden="true">
+                <svg viewBox="0 0 62 62">
+                  <circle cx="31" cy="31" r="26"></circle>
+                  <path d="M20 31.5l7.2 7.2L43 23.8"></path>
+                </svg>
+              </div>
+              <strong>문의가 접수되었습니다</strong>
+              <span>담당자가 확인 후 연락드릴게요.</span>
+            </div>
+            <div class="onboarding-actions">
+              <button class="onboarding-submit" type="submit">온보딩 문의하기</button>
+              <button class="onboarding-confirm" type="button" data-onboarding-close>확인</button>
+            </div>
+          </form>
+        </section>
+      </div>
     `;
   }
 
@@ -252,7 +298,10 @@
   }
 
   function mountFooter() {
-    if (document.querySelector('.content-footer')) return;
+    if (document.querySelector('.content-footer')) {
+      ensureOnboardingModal();
+      return;
+    }
     document.body.insertAdjacentHTML('beforeend', renderFooter());
   }
 
@@ -462,6 +511,92 @@
     });
   }
 
+  function ensureOnboardingModal() {
+    if (document.getElementById('onboardingInquiryModal')) return;
+    document.body.insertAdjacentHTML('beforeend', renderOnboardingModal());
+  }
+
+  function openOnboardingModal() {
+    ensureOnboardingModal();
+    const modal = document.getElementById('onboardingInquiryModal');
+    const panel = document.getElementById('onboardingInquiryPanel');
+    const form = document.getElementById('onboardingInquiryForm');
+    if (!modal || !panel || !form) return;
+
+    form.reset();
+    panel.classList.remove('is-submitted');
+    modal.classList.add('is-open');
+    document.body.classList.add('onboarding-modal-open');
+    setTimeout(() => document.getElementById('onboardingName')?.focus(), 0);
+  }
+
+  function closeOnboardingModal() {
+    const modal = document.getElementById('onboardingInquiryModal');
+    const panel = document.getElementById('onboardingInquiryPanel');
+    modal?.classList.remove('is-open');
+    panel?.classList.remove('is-submitted');
+    document.body.classList.remove('onboarding-modal-open');
+  }
+
+  function saveOnboardingInquiry(form) {
+    const formData = new FormData(form);
+    const inquiry = {
+      id: `onboarding-${Date.now()}`,
+      name: String(formData.get('name') || '').trim(),
+      email: String(formData.get('email') || '').trim(),
+      company: String(formData.get('company') || '').trim(),
+      message: String(formData.get('message') || '').trim(),
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      const key = 'shortflow-onboarding-inquiries';
+      const saved = JSON.parse(localStorage.getItem(key) || '[]');
+      localStorage.setItem(key, JSON.stringify([inquiry, ...saved].slice(0, 30)));
+    } catch (error) {
+      // Demo submissions should not fail if storage is unavailable.
+    }
+  }
+
+  function setupOnboardingModal() {
+    if (document.documentElement.dataset.shortflowOnboardingModal === 'true') return;
+    document.documentElement.dataset.shortflowOnboardingModal = 'true';
+
+    document.addEventListener('click', event => {
+      if (!(event.target instanceof Element)) return;
+
+      const trigger = event.target.closest('[data-onboarding-trigger]');
+      if (trigger) {
+        event.preventDefault();
+        openOnboardingModal();
+        return;
+      }
+
+      if (event.target.closest('[data-onboarding-close]')) {
+        closeOnboardingModal();
+        return;
+      }
+
+      const modal = document.getElementById('onboardingInquiryModal');
+      if (modal && event.target === modal) {
+        closeOnboardingModal();
+      }
+    });
+
+    document.addEventListener('submit', event => {
+      const form = event.target;
+      if (!(form instanceof HTMLFormElement) || form.id !== 'onboardingInquiryForm') return;
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      saveOnboardingInquiry(form);
+      document.getElementById('onboardingInquiryPanel')?.classList.add('is-submitted');
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeOnboardingModal();
+    });
+  }
+
   if (!window.__SHORTFLOW_DEFER_NAV__) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', mountDeclarativeNavs);
@@ -472,12 +607,14 @@
 
   setupPagePrefetch();
   setupLanguageDropdown();
+  setupOnboardingModal();
 
   window.ShortflowNav = {
     renderTopNav,
     renderDashboardSubNav,
     renderContentManageSubNav,
     renderFooter,
+    renderOnboardingModal,
     renderShell,
     mountTopNav,
     mountFooter,

@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const activeView = document.querySelector('.view.active')?.id;
       return activeView === 'view-bundle' ? '묶음 거래' : activeView === 'view-turnkey' ? '턴키 거래' : '단일 거래';
     }],
-    'turnkey-intent-admin.html': ['거래', () => '턴키 판매 의사'],
+    'turnkey-intent-admin.html': ['거래', () => '문의함'],
     'settlement-admin.html': ['정산', () => {
       const activeView = document.querySelector('.view.active')?.id;
       return activeView === 'view-settlement' ? '정산처리' : activeView === 'view-completed' ? '정산완료' : '계약관리';

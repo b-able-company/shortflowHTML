@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>턴키 판매 의사 — Shortflow Admin</title>
+<title>문의함 — Shortflow Admin</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
 <link rel="stylesheet" href="admin-common.css" />
 <script src="admin-common.js"></script>
@@ -30,11 +30,29 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .topbar { height: 46px; background: #fff; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; padding: 0 18px; flex-shrink: 0; }
 .topbar-title { font-size: 14px; font-weight: 600; }
 .split { flex: 1; display: flex; overflow: hidden; }
-.lp { width: 400px; min-width: 400px; display: flex; flex-direction: column; border-right: 0.5px solid #e8e6e0; overflow: hidden; flex-shrink: 0; }
+.lp { width: 460px; min-width: 420px; display: flex; flex-direction: column; border-right: 0.5px solid #e8e6e0; overflow: hidden; flex-shrink: 0; }
 .dp { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #fafaf7; }
-.toolbar { background: #fff; border-bottom: 0.5px solid #e8e6e0; padding: 8px 14px; display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
-.chip { font-size: 11px; padding: 3px 9px; border-radius: 20px; border: 0.5px solid #e0dfd9; color: #666; cursor: pointer; background: #fff; user-select: none; white-space: nowrap; }
-.chip.on { background: #1a1a18; color: #fff; border-color: #1a1a18; }
+.toolbar { background: #fff; border-bottom: 0.5px solid #e8e6e0; padding: 10px 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; flex-shrink: 0; }
+.filter-select {
+  width: 100%;
+  height: 32px;
+  padding: 0 30px 0 10px;
+  border: 0.5px solid #e0dfd9;
+  border-radius: 7px;
+  background-color: #fff;
+  color: #333;
+  font-family: inherit;
+  font-size: 12px;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+}
+.filter-select:focus {
+  border-color: #aaa;
+}
 .tscroll { flex: 1; overflow-y: auto; background: #fff; }
 table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 thead th { background: #f7f6f2; padding: 7px 12px; text-align: left; font-size: 10px; font-weight: 500; color: #aaa; border-bottom: 0.5px solid #e8e6e0; position: sticky; top: 0; white-space: nowrap; }
@@ -42,15 +60,18 @@ tbody tr { border-bottom: 0.5px solid #f0efe9; cursor: pointer; }
 tbody tr:hover { background: #fafaf7; }
 tbody tr.sel { background: #f3f2ee; }
 td { padding: 10px 12px; vertical-align: middle; }
-.col-platform { width: 34%; }
-.col-status { width: 24%; }
-.col-comments { width: 16%; }
-.col-date { width: 26%; }
+.col-type { width: 24%; }
+.col-platform { width: 28%; }
+.col-status { width: 19%; }
+.col-comments { width: 13%; }
+.col-date { width: 16%; }
 .th-platform, .td-platform { text-align: left; }
+.th-type, .td-type,
 .th-status, .td-status,
 .th-count, .tcount,
 .th-date, .tmeta { text-align: center; }
 .tname { font-size: 12.5px; font-weight: 500; }
+.type-text { color: #5f5f59; font-size: 12px; font-weight: 500; white-space: nowrap; }
 .tmeta { font-size: 12.5px; color: #888; }
 .tcount { font-size: 12.5px; color: #77746d; white-space: nowrap; }
 .tcount.zero { color: #aaa; }
@@ -68,6 +89,7 @@ td { padding: 10px 12px; vertical-align: middle; }
 .inq-box { background: #fff; border: 0.5px solid #e8e6e0; border-radius: 8px; padding: 14px; }
 .inq-row { display: flex; justify-content: space-between; gap: 18px; padding: 6px 0; font-size: 12px; border-bottom: 0.5px solid #eee; }
 .inq-row:last-child { border-bottom: none; }
+.production-meta { display: none; }
 .inq-k { color: #aaa; flex: 0 0 100px; }
 .inq-v { color: #1a1a18; text-align: right; }
 .note-row { align-items: flex-start; }
@@ -122,7 +144,7 @@ td { padding: 10px 12px; vertical-align: middle; }
       <a class="ni" href="workflow-admin.html#bundle">묶음 거래</a>
       <a class="ni" href="workflow-admin.html#turnkey">턴키 거래</a>
     </div>
-    <a class="ni active" href="turnkey-intent-admin.html"><i class="ti ti-clipboard-list"></i> 턴키 판매 의사</a>
+    <a class="ni active" href="turnkey-intent-admin.html"><i class="ti ti-inbox"></i> 문의함</a>
     <a class="ni" href="platform-contract-admin.html"><i class="ti ti-file-dollar"></i> 플랫폼 계약 관리</a>
     <div class="nav-label">운영</div>
     <a class="ni" href="settlement-admin.html"><i class="ti ti-receipt"></i> 정산</a>
@@ -144,43 +166,32 @@ td { padding: 10px 12px; vertical-align: middle; }
 </div>
 
 <div class="main">
-  <div class="topbar"><span class="topbar-title">턴키 판매 의사</span></div>
+  <div class="topbar"><span class="topbar-title">문의함</span></div>
   <div class="split">
     <div class="lp">
       <div class="toolbar">
-        <div class="chip on" onclick="setChip(this)">전체</div>
-        <div class="chip" onclick="setChip(this)">접수</div>
-        <div class="chip" onclick="setChip(this)">검토 완료</div>
+        <select class="filter-select" id="type-filter" aria-label="문의 유형 필터" onchange="setTypeFilter(this)">
+          <option value="전체">전체 문의</option>
+          <option value="턴키 판매 의사">턴키 판매 의사</option>
+          <option value="제작협업">제작협업</option>
+        </select>
+        <select class="filter-select" id="status-filter" aria-label="문의 상태 필터" onchange="setStatusFilter(this)">
+          <option value="전체">전체 상태</option>
+          <option value="접수">접수</option>
+          <option value="검토 완료">검토 완료</option>
+        </select>
       </div>
       <div class="tscroll">
         <table>
           <colgroup>
+            <col class="col-type" />
             <col class="col-platform" />
             <col class="col-status" />
             <col class="col-comments" />
             <col class="col-date" />
           </colgroup>
-          <thead><tr><th class="th-platform">플랫폼사</th><th class="th-status">상태</th><th class="th-count">댓글</th><th class="th-date">날짜</th></tr></thead>
-          <tbody>
-            <tr class="sel" onclick="selectIntent(this,'WeTV','2026.05.12 · 11:10','아시아권 숏폼 콘텐츠 공급 가능 여부와 추천 라인업을 검토받고 싶습니다. 협상 전 내부 편성 검토용으로 사용할 예정입니다.','접수')">
-              <td class="td-platform"><div class="tname">WeTV</div></td>
-              <td class="td-status"><span class="bdg b-received">접수</span></td>
-              <td class="tcount" data-comment-count-for="WeTV"></td>
-              <td class="tmeta">2026.05.12</td>
-            </tr>
-            <tr onclick="selectIntent(this,'iQIYI','2026.05.09 · 16:25','중화권 서비스에 적합한 콘텐츠 묶음을 검토하고 싶습니다. 예산은 아직 확정 전입니다.','검토 완료')">
-              <td class="td-platform"><div class="tname">iQIYI</div></td>
-              <td class="td-status"><span class="bdg b-done">검토 완료</span></td>
-              <td class="tcount" data-comment-count-for="iQIYI"></td>
-              <td class="tmeta">2026.05.09</td>
-            </tr>
-            <tr onclick="selectIntent(this,'Rakuten Viki','2026.05.06 · 09:45','북미/유럽 사용자 반응을 볼 수 있는 로맨스 장르 후보군이 있는지 확인 부탁드립니다.','접수')">
-              <td class="td-platform"><div class="tname">Rakuten Viki</div></td>
-              <td class="td-status"><span class="bdg b-received">접수</span></td>
-              <td class="tcount" data-comment-count-for="Rakuten Viki"></td>
-              <td class="tmeta">2026.05.06</td>
-            </tr>
-          </tbody>
+          <thead><tr><th class="th-type">유형</th><th class="th-platform">문의처</th><th class="th-status">상태</th><th class="th-count">댓글</th><th class="th-date">날짜</th></tr></thead>
+          <tbody id="inquiry-list"></tbody>
         </table>
       </div>
     </div>
@@ -189,7 +200,7 @@ td { padding: 10px 12px; vertical-align: middle; }
       <div class="dh">
         <div>
           <div class="dh-title" id="intent-platform">WeTV</div>
-          <div class="dh-sub" id="intent-date">2026.05.12 · 11:10</div>
+          <div class="dh-sub" id="intent-date">턴키 판매 의사 · 2026.05.12 · 11:10</div>
           <button class="btn btn-primary dh-review" id="review-btn" onclick="completeReview()"><i class="ti ti-check"></i> 검토 완료 처리</button>
         </div>
         <div class="dh-actions">
@@ -200,6 +211,18 @@ td { padding: 10px 12px; vertical-align: middle; }
         <div class="sec">
           <div class="sec-title">메시지</div>
           <div class="inq-box">
+            <div class="inq-row">
+              <div class="inq-k">문의 유형</div>
+              <div class="inq-v" id="intent-type">턴키 판매 의사</div>
+            </div>
+            <div class="inq-row production-meta">
+              <div class="inq-k">제작사</div>
+              <div class="inq-v" id="intent-producer">-</div>
+            </div>
+            <div class="inq-row production-meta">
+              <div class="inq-k">콘텐츠</div>
+              <div class="inq-v" id="intent-content">-</div>
+            </div>
             <div class="message-text" id="intent-message">아시아권 숏폼 콘텐츠 공급 가능 여부와 추천 라인업을 검토받고 싶습니다. 협상 전 내부 편성 검토용으로 사용할 예정입니다.</div>
           </div>
         </div>
@@ -222,50 +245,222 @@ td { padding: 10px 12px; vertical-align: middle; }
 </div>
 
 <script>
-const commentsByIntent = {
-  'WeTV': [
-    { author: 'Lee Admin', date: '2026.05.12 13:40', text: '로맨스/스릴러 혼합 라인업으로 1차 후보를 추려보고 메일 발송 여부 확인 필요.' },
-  ],
-  'iQIYI': [
-    { author: 'Lee Admin', date: '2026.05.10 10:15', text: '중화권 서비스 기준에 맞는 작품 3개 확인 완료. 다음 미팅에서 패키지 조건 공유 예정.' },
-  ],
-};
-let selectedIntentKey = 'WeTV';
+const baseInquiries = [
+  {
+    id: 'turnkey-wetv',
+    type: '턴키 판매 의사',
+    name: 'WeTV',
+    sub: '아시아권 라인업 검토',
+    date: '2026.05.12 · 11:10',
+    shortDate: '05.12',
+    message: '아시아권 숏폼 콘텐츠 공급 가능 여부와 추천 라인업을 검토받고 싶습니다. 협상 전 내부 편성 검토용으로 사용할 예정입니다.',
+    status: '접수',
+  },
+  {
+    id: 'turnkey-iqiyi',
+    type: '턴키 판매 의사',
+    name: 'iQIYI',
+    sub: '중화권 묶음 후보 검토',
+    date: '2026.05.09 · 16:25',
+    shortDate: '05.09',
+    message: '중화권 서비스에 적합한 콘텐츠 묶음을 검토하고 싶습니다. 예산은 아직 확정 전입니다.',
+    status: '검토 완료',
+  },
+  {
+    id: 'turnkey-viki',
+    type: '턴키 판매 의사',
+    name: 'Rakuten Viki',
+    sub: '북미/유럽 로맨스 후보',
+    date: '2026.05.06 · 09:45',
+    shortDate: '05.06',
+    message: '북미/유럽 사용자 반응을 볼 수 있는 로맨스 장르 후보군이 있는지 확인 부탁드립니다.',
+    status: '접수',
+  },
+  {
+    id: 'production-topstar',
+    type: '제작협업',
+    name: 'Reelio',
+    sub: '죽었다가 회귀한 톱스타',
+    producerName: "PARK'N MEDIA",
+    contentTitle: '죽었다가 회귀한 톱스타',
+    date: '2026.05.13 · 14:20',
+    shortDate: '05.13',
+    message: '회귀물 톤을 살린 세로형 숏드라마 공동 제작 가능성과 예상 제작 일정을 검토하고 싶습니다.',
+    status: '접수',
+  },
+  {
+    id: 'production-office-wife',
+    type: '제작협업',
+    name: 'PlayShort Korea',
+    sub: '오피스 와이프의 남자 사냥법',
+    producerName: '스튜디오 라이트',
+    contentTitle: '오피스 와이프의 남자 사냥법',
+    date: '2026.05.08 · 10:30',
+    shortDate: '05.08',
+    message: '치정 로맨스 장르의 현지화 제작 가능 여부와 캐스팅 방향에 대한 의견을 요청드립니다.',
+    status: '검토 완료',
+  },
+];
 
-function setChip(el) {
-  el.closest('.toolbar').querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
-  el.classList.add('on');
+function clearLegacyProductionInquiriesOnce() {
+  try {
+    const marker = 'shortflow-production-inquiries-cleared-20260709';
+    if (localStorage.getItem(marker) === '1') return;
+    localStorage.removeItem('shortflow-production-inquiries');
+    localStorage.setItem(marker, '1');
+  } catch (error) {
+    // localStorage may be unavailable in restricted previews.
+  }
 }
 
-function selectIntent(row, platform, date, message, status) {
-  document.querySelectorAll('tbody tr').forEach(r => r.classList.remove('sel'));
-  row.classList.add('sel');
-  document.getElementById('intent-platform').textContent = platform;
-  document.getElementById('intent-date').textContent = date;
-  document.getElementById('intent-message').textContent = message;
-  selectedIntentKey = platform;
+function storedProductionInquiries() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('shortflow-production-inquiries') || '[]');
+    if (!Array.isArray(saved)) return [];
+    return saved.map((item, index) => {
+      const date = item.date && item.time ? `${item.date} · ${item.time}` : '2026.05.13 · 12:00';
+      return {
+        id: item.id || `production-saved-${index}`,
+        type: item.inquiryType || '제작협업',
+        name: item.platformName || item.platform || 'Reelio',
+        sub: item.contentTitle || item.title || '제작협업 문의',
+        producerName: item.producerName || '-',
+        contentTitle: item.contentTitle || item.title || '-',
+        date,
+        shortDate: date.slice(5, 10),
+        message: item.full || item.message || '제작협업 문의가 접수되었습니다.',
+        status: item.status || '접수',
+      };
+    });
+  } catch (error) {
+    return [];
+  }
+}
+
+clearLegacyProductionInquiriesOnce();
+
+let inquiryItems = [...storedProductionInquiries(), ...baseInquiries];
+let activeTypeFilter = '전체';
+let activeStatusFilter = '전체';
+
+const commentsByIntent = {
+  'turnkey-wetv': [
+    { author: 'Lee Admin', date: '2026.05.12 13:40', text: '로맨스/스릴러 혼합 라인업으로 1차 후보를 추려보고 메일 발송 여부 확인 필요.' },
+  ],
+  'turnkey-iqiyi': [
+    { author: 'Lee Admin', date: '2026.05.10 10:15', text: '중화권 서비스 기준에 맞는 작품 3개 확인 완료. 다음 미팅에서 패키지 조건 공유 예정.' },
+  ],
+  'production-office-wife': [
+    { author: 'Lee Admin', date: '2026.05.08 15:05', text: '제작비 범위와 심의 가능성 먼저 확인 필요.' },
+  ],
+};
+let selectedInquiryId = inquiryItems[0]?.id || '';
+
+function setTypeFilter(el) {
+  activeTypeFilter = el.value || '전체';
+  renderInquiryList();
+}
+
+function setStatusFilter(el) {
+  activeStatusFilter = el.value || '전체';
+  renderInquiryList();
+}
+
+function statusClass(status) {
+  return status === '검토 완료' ? 'b-done' : 'b-received';
+}
+
+function filteredInquiries() {
+  return inquiryItems.filter(item => {
+    if (activeTypeFilter !== '전체' && item.type !== activeTypeFilter) return false;
+    if (activeStatusFilter !== '전체' && item.status !== activeStatusFilter) return false;
+    return true;
+  });
+}
+
+function renderInquiryList() {
+  const list = document.getElementById('inquiry-list');
+  const items = filteredInquiries();
+  if (!items.some(item => item.id === selectedInquiryId)) {
+    selectedInquiryId = items[0]?.id || '';
+  }
+  list.innerHTML = items.length ? items.map(item => `
+    <tr class="${item.id === selectedInquiryId ? 'sel' : ''}" data-inquiry-id="${escapeHtml(item.id)}" onclick="selectInquiry('${escapeHtml(item.id)}')">
+      <td class="td-type"><span class="type-text">${escapeHtml(item.type)}</span></td>
+      <td class="td-platform">
+        <div class="tname">${escapeHtml(item.name)}</div>
+      </td>
+      <td class="td-status"><span class="bdg ${statusClass(item.status)}">${escapeHtml(item.status)}</span></td>
+      <td class="tcount" data-comment-count-for="${escapeHtml(item.id)}"></td>
+      <td class="tmeta">${escapeHtml(item.shortDate)}</td>
+    </tr>
+  `).join('') : '<tr><td colspan="5" class="tmeta" style="padding:24px 12px;">조건에 맞는 문의가 없습니다.</td></tr>';
+  if (selectedInquiryId) {
+    renderDetail();
+  } else {
+    renderEmptyDetail();
+  }
+  updateIntentCommentCounts();
+}
+
+function selectInquiry(id) {
+  selectedInquiryId = id;
+  renderInquiryList();
+}
+
+function selectedInquiry() {
+  return inquiryItems.find(item => item.id === selectedInquiryId);
+}
+
+function renderDetail() {
+  const item = selectedInquiry();
+  if (!item) return renderEmptyDetail();
+  document.getElementById('intent-platform').textContent = item.name;
+  document.getElementById('intent-date').textContent = `${item.type} · ${item.date}`;
+  document.getElementById('intent-type').textContent = item.type;
+  document.getElementById('intent-producer').textContent = item.producerName || '-';
+  document.getElementById('intent-content').textContent = item.contentTitle || item.sub || '-';
+  document.getElementById('intent-message').textContent = item.message;
+  document.querySelectorAll('.production-meta').forEach(row => {
+    row.style.display = item.type === '제작협업' ? 'flex' : 'none';
+  });
   const badge = document.getElementById('intent-status');
-  badge.textContent = status;
-  badge.className = status === '검토 완료' ? 'bdg b-done' : 'bdg b-received';
-  document.getElementById('review-btn').style.display = status === '검토 완료' ? 'none' : 'inline-flex';
+  badge.textContent = item.status;
+  badge.className = `bdg ${statusClass(item.status)}`;
+  document.getElementById('review-btn').style.display = item.status === '검토 완료' ? 'none' : 'inline-flex';
   document.getElementById('comment-input').value = '';
   renderComments();
 }
 
+function renderEmptyDetail() {
+  document.getElementById('intent-platform').textContent = '문의 없음';
+  document.getElementById('intent-date').textContent = '-';
+  document.getElementById('intent-type').textContent = '-';
+  document.getElementById('intent-producer').textContent = '-';
+  document.getElementById('intent-content').textContent = '-';
+  document.getElementById('intent-message').textContent = '선택 가능한 문의가 없습니다.';
+  document.querySelectorAll('.production-meta').forEach(row => {
+    row.style.display = 'none';
+  });
+  document.getElementById('intent-status').textContent = '-';
+  document.getElementById('review-btn').style.display = 'none';
+  selectedInquiryId = '';
+  renderComments();
+}
+
 function completeReview() {
+  const item = selectedInquiry();
+  if (!item) return;
+  item.status = '검토 완료';
   const badge = document.getElementById('intent-status');
   badge.textContent = '검토 완료';
   badge.className = 'bdg b-done';
   document.getElementById('review-btn').style.display = 'none';
-  const rowBadge = document.querySelector('tbody tr.sel .bdg');
-  if (rowBadge) {
-    rowBadge.textContent = '검토 완료';
-    rowBadge.className = 'bdg b-done';
-  }
+  renderInquiryList();
 }
 
 function escapeHtml(value) {
-  return value.replace(/[&<>"']/g, ch => ({
+  return String(value).replace(/[&<>"']/g, ch => ({
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
@@ -280,9 +475,14 @@ function formatNow() {
   return `${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
 }
 
+function formatDateTime(date) {
+  const pad = n => String(n).padStart(2, '0');
+  return `${date.getFullYear()}.${pad(date.getMonth() + 1)}.${pad(date.getDate())} · ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
 function renderComments() {
   const list = document.getElementById('comment-list');
-  const comments = commentsByIntent[selectedIntentKey] || [];
+  const comments = commentsByIntent[selectedInquiryId] || [];
   document.getElementById('comment-count').textContent = `${comments.length}개`;
   updateIntentCommentCounts();
   if (comments.length === 0) {
@@ -314,9 +514,9 @@ function updateIntentCommentCounts() {
 function addComment() {
   const input = document.getElementById('comment-input');
   const text = input.value.trim();
-  if (!text) return;
-  if (!commentsByIntent[selectedIntentKey]) commentsByIntent[selectedIntentKey] = [];
-  commentsByIntent[selectedIntentKey].push({
+  if (!text || !selectedInquiryId) return;
+  if (!commentsByIntent[selectedInquiryId]) commentsByIntent[selectedInquiryId] = [];
+  commentsByIntent[selectedInquiryId].push({
     author: 'Lee Admin',
     date: formatNow(),
     text,
@@ -325,7 +525,7 @@ function addComment() {
   renderComments();
 }
 
-renderComments();
+renderInquiryList();
 </script>
 </body>
 </html>

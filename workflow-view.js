@@ -116,7 +116,7 @@
     const detailTimeline = isProducer
       ? (producerTimelineByStatus[item.status] || []).map(step => ({ ...step, date: item.date }))
       : timelineItems;
-    const showGoogleDrive = isProducer && ['CONTENT_APPROVED', 'REVISION_APPROVED'].includes(item.status);
+    const showGoogleDrive = isProducer && item.status !== 'CONTENT_SUBMITTED' && item.driveUrl;
 
     return `
       <section class="workflow-detail">
@@ -129,7 +129,7 @@
             ${isProducer ? `
               <div class="detail-actions">
                 <button>콘텐츠 상세 보기</button>
-                ${showGoogleDrive ? '<button>구글 드라이브</button>' : ''}
+                ${showGoogleDrive ? `<a href="${escapeHtml(item.driveUrl)}" target="_blank" rel="noopener noreferrer">구글 드라이브</a>` : ''}
               </div>
             ` : `
               <div class="detail-actions">

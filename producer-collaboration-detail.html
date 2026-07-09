@@ -141,6 +141,7 @@
       min-height: 450px;
     }
     .stage-badge {
+      position: relative;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -157,15 +158,42 @@
       margin-bottom: 16px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.7);
     }
-    .stage-badge.is-casting {
-      background: rgba(12,12,12,0.88);
+    .stage-badge::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      top: 50%;
+      left: calc(100% + 10px);
+      z-index: 8;
+      width: max-content;
+      max-width: 240px;
+      padding: 9px 11px;
+      border-radius: 8px;
+      background: rgba(17,24,39,0.94);
       color: #fff;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.16), inset 0 1px 0 rgba(255,255,255,0.14);
+      font-size: 11.5px;
+      font-weight: 500;
+      line-height: 1.45;
+      white-space: normal;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-3px, -50%);
+      transition: opacity 140ms ease, transform 140ms ease;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.2);
     }
-    .stage-badge.is-pilot {
-      background: rgba(18,101,66,0.92);
+    .stage-badge:hover::after,
+    .stage-badge:focus-visible::after {
+      opacity: 1;
+      transform: translate(0, -50%);
+    }
+    .stage-badge.is-plan,
+    .stage-badge.is-synopsis,
+    .stage-badge.is-script,
+    .stage-badge.is-casting,
+    .stage-badge.is-pilot,
+    .stage-badge.is-ready {
+      background: rgba(12,12,12,0.82);
       color: #fff;
-      box-shadow: 0 8px 24px rgba(3,54,33,0.14), inset 0 1px 0 rgba(255,255,255,0.16);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.14);
     }
     .detail-title {
       margin: 0;
@@ -233,6 +261,7 @@
       padding-top: 24px;
     }
     .action-button {
+      position: relative;
       height: 44px;
       border-radius: 10px;
       border: 1px solid #dfe3e8;
@@ -245,6 +274,36 @@
       font-size: 14px;
       font-weight: 650;
       cursor: pointer;
+    }
+    .action-button[aria-disabled="true"] {
+      cursor: default;
+    }
+    .action-button[aria-disabled="true"]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 8px);
+      z-index: 10;
+      width: max-content;
+      max-width: 220px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(29, 28, 28, 0.94);
+      color: #fff;
+      font-size: 11.5px;
+      font-weight: 500;
+      line-height: 1.45;
+      white-space: normal;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 3px);
+      transition: opacity 140ms ease, transform 140ms ease;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+    }
+    .action-button[aria-disabled="true"]:hover::after,
+    .action-button[aria-disabled="true"]:focus-visible::after {
+      opacity: 1;
+      transform: translate(-50%, 0);
     }
     .action-button.primary {
       border-color: #1D1C1C;
@@ -874,7 +933,7 @@
         producer: 'Orbit Pictures',
         producerIntro: 'Orbit Pictures는 판타지 설정과 액션 리듬을 결합한 숏폼 시리즈를 제작합니다. 빠른 사건 전개와 시각적 콘셉트가 명확한 작품을 선호하며, 회귀·복수·연예계 소재처럼 초반 후킹이 강한 장르를 주로 개발합니다. 파일럿 단계에서 액션 동선과 화면 톤을 먼저 검증하는 방식으로 제작 리스크를 줄이고, 플랫폼별 숏클립 홍보에 활용하기 쉬운 장면을 기획 단계부터 함께 설계합니다.',
         genres: ['타임슬립', '액션'],
-        stage: '파일럿 촬영 완료',
+        stage: '파일럿 완료',
         image: 'images/return-topstar-poster.png',
         fallback: 'images/죽었다가회귀한.png',
         episodes: '36부작 예정',
@@ -905,10 +964,27 @@
     const PRODUCTION_INQUIRY_STORAGE_KEY = 'shortflow-production-inquiries';
     let interested = false;
 
+    const STAGE_DEFINITIONS = {
+      '기획': '기획안(로그라인·소재·타깃) 보유',
+      '시놉 확정': '확정 시놉시스·기획서 완성',
+      '대본 확보': '대본 완성(전회차 또는 파일럿분)',
+      '캐스팅 확정': '주연 캐스팅 확정',
+      '파일럿 완료': '파일럿/티저 영상 완성',
+      '제작 준비완료': '예산·스태프·일정 확정, 자금만 확보되면 촬영 개시'
+    };
+
     function stageClass(stage) {
-      if (stage === '캐스팅중') return 'is-casting';
-      if (stage === '파일럿 촬영 완료') return 'is-pilot';
-      return '';
+      if (stage === '기획') return 'is-plan';
+      if (stage === '시놉 확정') return 'is-synopsis';
+      if (stage === '대본 확보') return 'is-script';
+      if (stage === '캐스팅 확정') return 'is-casting';
+      if (stage === '파일럿 완료') return 'is-pilot';
+      if (stage === '제작 준비완료') return 'is-ready';
+      return 'is-plan';
+    }
+
+    function stageDefinition(stage) {
+      return STAGE_DEFINITIONS[stage] || '';
     }
 
     function heartIcon(active) {
@@ -1111,13 +1187,12 @@
       const mediaItems = relatedMedia(item);
       document.title = `${item.title} | 제작협업 상세`;
       root.innerHTML = `
-        <a class="back-link" href="producer-collaboration.html">← 제작협업 기획안</a>
         <section class="hero">
           <div class="reference-media">
             ${mediaMarkup(item)}
           </div>
           <aside class="summary-card">
-            <span class="stage-badge ${stageClass(item.stage)}">${item.stage}</span>
+            <span class="stage-badge ${stageClass(item.stage)}" data-tooltip="${stageDefinition(item.stage)}" title="${stageDefinition(item.stage)}">${item.stage}</span>
             <h1 class="detail-title">${item.title}</h1>
             <div class="detail-producer">${item.producer}</div>
             <div class="genre-row">
@@ -1134,8 +1209,8 @@
               </div>
             </div>
             <div class="action-row">
-              <button class="action-button primary" type="button" id="inquiryButton">제작 문의하기</button>
-              <button class="action-button ${interested ? 'is-active' : ''}" type="button" id="interestButton">
+              <button class="action-button primary" type="button" id="inquiryButton" aria-disabled="true" data-tooltip="미리보기 모드에서는 사용할 수 없습니다." title="미리보기 모드에서는 사용할 수 없습니다.">제작 문의하기</button>
+              <button class="action-button ${interested ? 'is-active' : ''}" type="button" id="interestButton" aria-disabled="true" data-tooltip="미리보기 모드에서는 사용할 수 없습니다." title="미리보기 모드에서는 사용할 수 없습니다.">
                 ${heartIcon(interested)}
                 즐겨찾기
               </button>
@@ -1194,13 +1269,6 @@
         </section>
       `;
 
-      document.getElementById('interestButton').addEventListener('click', () => {
-        interested = !interested;
-        render();
-      });
-      document.getElementById('inquiryButton').addEventListener('click', () => {
-        openInquiryModal();
-      });
       document.querySelectorAll('[data-media-index]').forEach((button) => {
         button.addEventListener('click', () => {
           openMediaViewer(mediaItems[Number(button.dataset.mediaIndex)]);
