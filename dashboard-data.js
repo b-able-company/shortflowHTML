@@ -58,6 +58,8 @@
         id: item.id || `pc-stored-${index}`,
         inquiryType: item.inquiryType || '제작협업',
         title: item.title || '제작협업 문의',
+        contentTitle: item.contentTitle || item.content || '',
+        producerName: item.producerName || item.producer || '',
         date: item.date || '',
         time: item.time || '',
         statusLabel: item.statusLabel || '전송됨',
@@ -72,13 +74,12 @@
       id: 'm-production-1',
       inquiryType: '제작협업',
       title: '죽었다가 회귀한 톱스타 제작 문의',
+      contentTitle: '죽었다가 회귀한 톱스타',
+      producerName: 'Orbit Pictures',
       date: '2026.07.07',
       time: '13:20',
       statusLabel: '전송됨',
-      full: `콘텐츠: 죽었다가 회귀한 톱스타
-제작사: Orbit Pictures
-
-파일럿 촬영 완료본 기준으로 플랫폼 오리지널 편성을 검토하고 싶습니다.
+      full: `파일럿 촬영 완료본 기준으로 플랫폼 오리지널 편성을 검토하고 싶습니다.
 희망 제작 일정, 추가 회차 확장 가능 여부, 주요 캐스팅 조건을 함께 논의하고 싶습니다.`,
     },
     {

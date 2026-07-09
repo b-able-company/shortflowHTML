@@ -247,8 +247,8 @@
       cursor: pointer;
     }
     .action-button.primary {
-      border-color: #1d1d1f;
-      background: #1d1d1f;
+      border-color: #1D1C1C;
+      background: #1D1C1C;
       color: #fff;
     }
     .action-button.is-active svg {
@@ -595,7 +595,7 @@
       padding: 0 16px;
       border: 0;
       border-radius: 7px;
-      background: #1d1d1f;
+      background: #1D1C1C;
       color: #fff;
       font-size: 13.5px;
       font-weight: 700;
@@ -603,7 +603,7 @@
       transition: background 0.16s ease, transform 0.16s ease;
     }
     .inquiry-action:hover {
-      background: #000;
+      background: #1D1C1C;
       transform: translateY(-1px);
     }
     .inquiry-modal.is-submitted .inquiry-action {
@@ -1028,13 +1028,12 @@
         id: `pc-${timestamp}`,
         inquiryType: '제작협업',
         title: `${item.title} 제작 문의`,
+        contentTitle: item.title,
+        producerName: item.producer,
         date: dateParts.date,
         time: dateParts.time,
         statusLabel: '전송됨',
-        full: `콘텐츠: ${item.title}
-제작사: ${item.producer}
-
-${message}`,
+        full: message,
       };
 
       localStorage.setItem(PRODUCTION_INQUIRY_STORAGE_KEY, JSON.stringify([inquiry, ...savedItems].slice(0, 20)));

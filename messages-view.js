@@ -40,6 +40,51 @@
     `;
   }
 
+  function messageContextOf(message) {
+    const full = message.full || '';
+    const lines = full.split(/\r?\n/);
+    const context = {
+      contentTitle: message.contentTitle || message.content || '',
+      producerName: message.producerName || message.producer || '',
+    };
+
+    lines.forEach(line => {
+      const contentMatch = line.match(/^콘텐츠\s*:\s*(.+)$/);
+      const producerMatch = line.match(/^제작사\s*:\s*(.+)$/);
+      if (contentMatch && !context.contentTitle) context.contentTitle = contentMatch[1].trim();
+      if (producerMatch && !context.producerName) context.producerName = producerMatch[1].trim();
+    });
+
+    return context;
+  }
+
+  function messageBodyOf(message) {
+    const lines = (message.full || '').split(/\r?\n/);
+    const cleaned = [];
+    let skippingHeader = true;
+
+    lines.forEach(line => {
+      if (skippingHeader && (/^콘텐츠\s*:/.test(line) || /^제작사\s*:/.test(line) || line.trim() === '')) {
+        return;
+      }
+      skippingHeader = false;
+      cleaned.push(line);
+    });
+
+    return cleaned.join('\n').trim() || message.full || '';
+  }
+
+  function renderMessageContext(message) {
+    const context = messageContextOf(message);
+    if (!context.contentTitle && !context.producerName) return '';
+    return `
+      <article class="message-context-bubble" aria-label="문의 대상 정보">
+        ${context.contentTitle ? `<div><span>콘텐츠명</span><strong>${escapeHtml(context.contentTitle)}</strong></div>` : ''}
+        ${context.producerName ? `<div><span>제작사명</span><strong>${escapeHtml(context.producerName)}</strong></div>` : ''}
+      </article>
+    `;
+  }
+
   function renderInquiryTypeChip(message) {
     const type = inquiryTypeOf(message);
     return `<span class="message-sender-name">${escapeHtml(type)}</span>`;
@@ -92,7 +137,7 @@
                 <time>${escapeHtml(message.date)}</time>
               </span>
               <span class="message-preview-row">
-                <span class="message-title">${escapeHtml(previewText(message.full, 34))}</span>
+                <span class="message-title">${escapeHtml(previewText(messageBodyOf(message), 34))}</span>
                 <span class="message-comment-slot">${renderCommentBadge(message)}</span>
               </span>
             </span>
@@ -116,10 +161,11 @@
           </div>
         </div>
         <div class="message-thread">
+          ${renderMessageContext(selected)}
           <article class="message-bubble-row is-user">
             <div class="message-bubble-col">
               <div class="message-bubble">
-                <div class="message-body">${escapeHtml(selected.full)}</div>
+                <div class="message-body">${escapeHtml(messageBodyOf(selected))}</div>
               </div>
               <time class="message-bubble-time">${escapeHtml(selected.date)} ${escapeHtml(selected.time)}</time>
             </div>

@@ -141,6 +141,7 @@
       min-height: 450px;
     }
     .stage-badge {
+      position: relative;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -157,15 +158,42 @@
       margin-bottom: 16px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.7);
     }
-    .stage-badge.is-casting {
-      background: rgba(12,12,12,0.88);
+    .stage-badge::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      top: 50%;
+      left: calc(100% + 10px);
+      z-index: 8;
+      width: max-content;
+      max-width: 240px;
+      padding: 9px 11px;
+      border-radius: 8px;
+      background: rgba(17,24,39,0.94);
       color: #fff;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.16), inset 0 1px 0 rgba(255,255,255,0.14);
+      font-size: 11.5px;
+      font-weight: 500;
+      line-height: 1.45;
+      white-space: normal;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-3px, -50%);
+      transition: opacity 140ms ease, transform 140ms ease;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.2);
     }
-    .stage-badge.is-pilot {
-      background: rgba(18,101,66,0.92);
+    .stage-badge:hover::after,
+    .stage-badge:focus-visible::after {
+      opacity: 1;
+      transform: translate(0, -50%);
+    }
+    .stage-badge.is-plan,
+    .stage-badge.is-synopsis,
+    .stage-badge.is-script,
+    .stage-badge.is-casting,
+    .stage-badge.is-pilot,
+    .stage-badge.is-ready {
+      background: rgba(12,12,12,0.82);
       color: #fff;
-      box-shadow: 0 8px 24px rgba(3,54,33,0.14), inset 0 1px 0 rgba(255,255,255,0.16);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.14);
     }
     .detail-title {
       margin: 0;
@@ -247,8 +275,8 @@
       cursor: pointer;
     }
     .action-button.primary {
-      border-color: #1d1d1f;
-      background: #1d1d1f;
+      border-color: #1D1C1C;
+      background: #1D1C1C;
       color: #fff;
     }
     .action-button.is-active svg {
@@ -657,7 +685,7 @@
       padding: 0 16px;
       border: 0;
       border-radius: 7px;
-      background: #1d1d1f;
+      background: #1D1C1C;
       color: #fff;
       font-size: 13.5px;
       font-weight: 700;
@@ -665,7 +693,7 @@
       transition: background 0.16s ease, transform 0.16s ease;
     }
     .inquiry-action:hover {
-      background: #000;
+      background: #1D1C1C;
       transform: translateY(-1px);
     }
     .inquiry-modal.is-submitted .inquiry-action {
@@ -894,7 +922,7 @@
         producer: 'Orbit Pictures',
         producerIntro: 'Orbit Pictures는 판타지 설정과 액션 리듬을 결합한 숏폼 시리즈를 제작합니다. 빠른 사건 전개와 시각적 콘셉트가 명확한 작품을 선호하며, 회귀·복수·연예계 소재처럼 초반 후킹이 강한 장르를 주로 개발합니다. 파일럿 단계에서 액션 동선과 화면 톤을 먼저 검증하는 방식으로 제작 리스크를 줄이고, 플랫폼별 숏클립 홍보에 활용하기 쉬운 장면을 기획 단계부터 함께 설계합니다.',
         genres: ['타임슬립', '액션'],
-        stage: '파일럿 촬영 완료',
+        stage: '파일럿 완료',
         image: 'images/return-topstar-poster.png',
         fallback: 'images/죽었다가회귀한.png',
         episodes: '36부작 예정',
@@ -926,10 +954,27 @@
     const PRODUCTION_INQUIRY_STORAGE_KEY = 'shortflow-production-inquiries';
     let interested = false;
 
+    const STAGE_DEFINITIONS = {
+      '기획': '기획안(로그라인·소재·타깃) 보유',
+      '시놉 확정': '확정 시놉시스·기획서 완성',
+      '대본 확보': '대본 완성(전회차 또는 파일럿분)',
+      '캐스팅 확정': '주연 캐스팅 확정',
+      '파일럿 완료': '파일럿/티저 영상 완성',
+      '제작 준비완료': '예산·스태프·일정 확정, 자금만 확보되면 촬영 개시'
+    };
+
     function stageClass(stage) {
-      if (stage === '캐스팅중') return 'is-casting';
-      if (stage === '파일럿 촬영 완료') return 'is-pilot';
-      return '';
+      if (stage === '기획') return 'is-plan';
+      if (stage === '시놉 확정') return 'is-synopsis';
+      if (stage === '대본 확보') return 'is-script';
+      if (stage === '캐스팅 확정') return 'is-casting';
+      if (stage === '파일럿 완료') return 'is-pilot';
+      if (stage === '제작 준비완료') return 'is-ready';
+      return 'is-plan';
+    }
+
+    function stageDefinition(stage) {
+      return STAGE_DEFINITIONS[stage] || '';
     }
 
     function heartIcon(active) {
@@ -1049,13 +1094,12 @@
         id: `pc-${timestamp}`,
         inquiryType: '제작협업',
         title: `${item.title} 제작 문의`,
+        contentTitle: item.title,
+        producerName: item.producer,
         date: dateParts.date,
         time: dateParts.time,
         statusLabel: '전송됨',
-        full: `콘텐츠: ${item.title}
-제작사: ${item.producer}
-
-${message}`,
+        full: message,
       };
 
       localStorage.setItem(PRODUCTION_INQUIRY_STORAGE_KEY, JSON.stringify([inquiry, ...savedItems].slice(0, 20)));
@@ -1071,7 +1115,7 @@ ${message}`,
             ${mediaMarkup(item)}
           </div>
           <aside class="summary-card">
-            <span class="stage-badge ${stageClass(item.stage)}">${item.stage}</span>
+            <span class="stage-badge ${stageClass(item.stage)}" data-tooltip="${stageDefinition(item.stage)}" title="${stageDefinition(item.stage)}">${item.stage}</span>
             <h1 class="detail-title">${item.title}</h1>
             <div class="detail-producer">${item.producer}</div>
             <div class="genre-row">
