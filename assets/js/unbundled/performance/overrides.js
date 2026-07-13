@@ -15,7 +15,7 @@ var PERF_MOCK_CONTENT = {
   p1: {
     title: "대표님이 내 전남친입니다",
     subtitle: "80부작 · 로맨스",
-    posterImage: "images/대표님이내전남친.png",
+    posterImage: "images/대표님이내전남친입니다.png",
     platforms: ["NovaShort", "PlayStory", "VeloDrama", "StoryWave"]
   },
   p2: {
@@ -68,6 +68,21 @@ var compactK = function compactK(value) {
 var PERF_VISIBLE_METRICS = METRIC_ORDER.filter(function (metric) {
   return metric.key !== "ads";
 });
+var perfPageButtonStyle = function perfPageButtonStyle(t, active, disabled) {
+  return {
+    minWidth: 28,
+    height: 28,
+    padding: "0 8px",
+    border: 0,
+    borderRadius: 7,
+    background: active ? "rgba(26, 26, 24, 0.09)" : "transparent",
+    color: disabled ? t.inkFaint : active ? t.ink : t.inkMute,
+    fontFamily: t.sans,
+    fontSize: 12,
+    fontWeight: 700,
+    cursor: disabled ? "default" : "pointer"
+  };
+};
 var latestUpdateDate = function latestUpdateDate(platforms) {
   return platforms.map(function (p) {
     return p.lastUpdate;
@@ -541,6 +556,13 @@ PerfListCompact = function PerfListCompact(_ref5) {
   var list = _toConsumableArray(PERF_CONTENTS).sort(function (a, b) {
     return (contentTotals(b).views || 0) - (contentTotals(a).views || 0);
   });
+  var pageSize = 10;
+  var pageState = React.useState(1),
+    page = pageState[0],
+    setPage = pageState[1];
+  var totalPages = Math.max(1, Math.ceil(list.length / pageSize));
+  var currentPage = Math.min(page, totalPages);
+  var pageItems = list.slice((currentPage - 1) * pageSize, currentPage * pageSize);
   var cols = [{
     key: "views",
     label: "조회수"
@@ -615,7 +637,7 @@ PerfListCompact = function PerfListCompact(_ref5) {
         textAlign: "right"
       }
     }, c.label);
-  }), /*#__PURE__*/React.createElement("div", null)), list.map(function (c, i) {
+  }), /*#__PURE__*/React.createElement("div", null)), pageItems.map(function (c, i) {
     var tot = contentTotals(c);
     return /*#__PURE__*/React.createElement("div", {
       key: c.id,
@@ -628,7 +650,7 @@ PerfListCompact = function PerfListCompact(_ref5) {
         padding: "14px 22px",
         alignItems: "center",
         cursor: "pointer",
-        borderBottom: i === list.length - 1 ? "none" : "0.5px solid " + t.line
+        borderBottom: i === pageItems.length - 1 ? "none" : "0.5px solid " + t.line
       },
       onMouseEnter: function onMouseEnter(e) {
         return e.currentTarget.style.background = t.surfaceAlt;
@@ -706,5 +728,44 @@ PerfListCompact = function PerfListCompact(_ref5) {
       color: t.ink,
       fontWeight: 600
     }
-  }, "\uB204\uC801\uAC12"), " \uAE30\uC900\uC785\uB2C8\uB2E4."))));
+  }, "\uB204\uC801\uAC12"), " \uAE30\uC900\uC785\uB2C8\uB2E4.")), totalPages > 1 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 4,
+      minHeight: 34,
+      marginTop: 34
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    disabled: currentPage === 1,
+    onClick: function onClick() {
+      return setPage(Math.max(1, currentPage - 1));
+    },
+    style: perfPageButtonStyle(t, false, currentPage === 1),
+    "aria-label": "이전 페이지"
+  }, "\u2039"), Array.from({
+    length: totalPages
+  }, function (_, index) {
+    var nextPage = index + 1;
+    return /*#__PURE__*/React.createElement("button", {
+      key: nextPage,
+      type: "button",
+      onClick: function onClick() {
+        return setPage(nextPage);
+      },
+      style: perfPageButtonStyle(t, nextPage === currentPage, false),
+      "aria-label": nextPage + "\uD398\uC774\uC9C0",
+      "aria-current": nextPage === currentPage ? "page" : undefined
+    }, nextPage);
+  }), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    disabled: currentPage === totalPages,
+    onClick: function onClick() {
+      return setPage(Math.min(totalPages, currentPage + 1));
+    },
+    style: perfPageButtonStyle(t, false, currentPage === totalPages),
+    "aria-label": "다음 페이지"
+  }, "\u203A"))));
 };

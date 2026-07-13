@@ -580,7 +580,7 @@ function PlanSubmittedToast({
     style: {
       position: 'fixed',
       inset: 0,
-      zIndex: 2000,
+      zIndex: 15000,
       background: 'rgba(15,17,21,0.42)',
       display: 'flex',
       alignItems: 'center',

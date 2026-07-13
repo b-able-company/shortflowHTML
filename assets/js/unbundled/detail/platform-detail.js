@@ -480,58 +480,44 @@ function PreviewSection(_ref9) {
     type: '예고편',
     title: '예고편',
     duration: '00:48',
-    tone: 'linear-gradient(145deg, #151923 0%, #332536 48%, #9f6a55 100%)'
-  }, {
-    type: '예고편',
-    title: '예고편',
-    duration: '00:36',
-    tone: 'linear-gradient(145deg, #202938 0%, #475064 52%, #d0a187 100%)'
-  }, {
-    type: '예고편',
-    title: '예고편',
-    duration: '00:42',
-    tone: 'linear-gradient(145deg, #2b1c26 0%, #704150 54%, #dfb7a7 100%)'
+    tone: 'linear-gradient(145deg, #151923 0%, #332536 48%, #9f6a55 100%)',
+    thumbnail: 'images/비밀사내예고편.png'
   }];
   var freeEpisodes = [{
     type: '무료회차',
     title: '1화',
-    duration: '12:04'
+    duration: '12:04',
+    thumbnail: 'images/비밀사내결혼무료1.png'
   }, {
     type: '무료회차',
     title: '2화',
-    duration: '11:38'
+    duration: '11:38',
+    thumbnail: 'images/비밀사내결혼무료2.png'
   }, {
     type: '무료회차',
     title: '3화',
-    duration: '12:21'
+    duration: '12:21',
+    thumbnail: 'images/비밀사내결혼무료3.png'
   }, {
     type: '무료회차',
     title: '4화',
-    duration: '10:57'
+    duration: '10:57',
+    thumbnail: 'images/비밀사내결혼무료4.png'
   }, {
     type: '무료회차',
     title: '5화',
-    duration: '11:42'
+    duration: '11:42',
+    thumbnail: 'images/비밀사내결혼무료5.png'
   }, {
     type: '무료회차',
     title: '6화',
-    duration: '12:10'
+    duration: '12:16',
+    thumbnail: 'images/비밀사내결혼무료6.png'
   }, {
     type: '무료회차',
     title: '7화',
-    duration: '10:46'
-  }, {
-    type: '무료회차',
-    title: '8화',
-    duration: '11:55'
-  }, {
-    type: '무료회차',
-    title: '9화',
-    duration: '12:18'
-  }, {
-    type: '무료회차',
-    title: '10화',
-    duration: '11:07'
+    duration: '11:29',
+    thumbnail: 'images/비밀사내결혼무료7.png'
   }];
   var openPreview = function openPreview(item) {
     return setModalItem(item);
@@ -601,7 +587,7 @@ function PreviewSection(_ref9) {
         border: '0.5px solid ' + t.line,
         borderRadius: 14,
         overflow: 'hidden',
-        background: video.tone,
+        background: video.thumbnail ? '#111827' : video.tone,
         cursor: 'pointer',
         position: 'relative',
         color: '#fff',
@@ -612,28 +598,57 @@ function PreviewSection(_ref9) {
         flexDirection: 'column',
         justifyContent: 'space-between'
       }
-    }, /*#__PURE__*/React.createElement("div", {
+    }, video.thumbnail && /*#__PURE__*/React.createElement("img", {
+      src: video.thumbnail,
+      alt: video.title + ' 썸네일',
       style: {
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover'
+      }
+    }), video.thumbnail && /*#__PURE__*/React.createElement("span", {
+      "aria-hidden": "true",
+      style: {
+        position: 'absolute',
+        inset: 0,
+        background: 'linear-gradient(180deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0.06) 48%, rgba(0,0,0,0.42) 100%)'
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: 'relative',
+        zIndex: 1,
         fontSize: 11,
         letterSpacing: 1.1,
         color: 'rgba(255,255,255,0.68)'
       }
     }, "TRAILER"), /*#__PURE__*/React.createElement("span", {
       style: {
+        position: 'relative',
+        zIndex: 1,
         alignSelf: 'center',
-        width: 42,
-        height: 42,
+        width: 46,
+        height: 46,
         borderRadius: '50%',
-        background: 'rgba(255,255,255,0.92)',
+        background: 'rgba(17,24,39,0.34)',
+        border: '1px solid rgba(255,255,255,0.72)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: '#E85D2C',
-        boxShadow: '0 8px 24px rgba(17,24,39,0.16)'
+        color: '#fff',
+        boxShadow: '0 12px 30px rgba(0,0,0,0.22)'
       }
     }, /*#__PURE__*/React.createElement(PlayIcon, {
-      size: 17
-    })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      size: 18
+    })), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: 'relative',
+        zIndex: 1
+      }
+    }, /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: 15,
         fontWeight: 800
@@ -678,7 +693,7 @@ function PreviewSection(_ref9) {
         border: '0.5px solid ' + t.line,
         borderRadius: 14,
         overflow: 'hidden',
-        background: ['linear-gradient(145deg, #1b2433 0%, #4c596f 58%, #d8b7a1 100%)', 'linear-gradient(145deg, #201b2b 0%, #604557 58%, #d7a79a 100%)', 'linear-gradient(145deg, #17212a 0%, #445c60 58%, #c2d2c6 100%)', 'linear-gradient(145deg, #251d21 0%, #6d473d 58%, #e0b88d 100%)', 'linear-gradient(145deg, #151923 0%, #3f4657 58%, #bfa7c6 100%)'][i % 5],
+        background: episode.thumbnail ? '#111827' : ['linear-gradient(145deg, #1b2433 0%, #4c596f 58%, #d8b7a1 100%)', 'linear-gradient(145deg, #201b2b 0%, #604557 58%, #d7a79a 100%)', 'linear-gradient(145deg, #17212a 0%, #445c60 58%, #c2d2c6 100%)', 'linear-gradient(145deg, #251d21 0%, #6d473d 58%, #e0b88d 100%)', 'linear-gradient(145deg, #151923 0%, #3f4657 58%, #bfa7c6 100%)'][i % 5],
         cursor: 'pointer',
         position: 'relative',
         color: '#fff',
@@ -689,8 +704,27 @@ function PreviewSection(_ref9) {
         flexDirection: 'column',
         justifyContent: 'space-between'
       }
-    }, /*#__PURE__*/React.createElement("div", {
+    }, episode.thumbnail && /*#__PURE__*/React.createElement("img", {
+      src: episode.thumbnail,
+      alt: episode.title + ' 썸네일',
       style: {
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover'
+      }
+    }), episode.thumbnail && /*#__PURE__*/React.createElement("span", {
+      "aria-hidden": "true",
+      style: {
+        position: 'absolute',
+        inset: 0,
+        background: 'linear-gradient(180deg, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.08) 48%, rgba(0,0,0,0.46) 100%)'
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: 'relative',
+        zIndex: 1,
         fontSize: 11,
         letterSpacing: 1.1,
         color: 'rgba(255,255,255,0.68)',
@@ -698,20 +732,30 @@ function PreviewSection(_ref9) {
       }
     }, "FREE EPISODE"), /*#__PURE__*/React.createElement("span", {
       style: {
+        position: 'relative',
+        zIndex: 1,
         alignSelf: 'center',
-        width: 42,
-        height: 42,
+        width: 46,
+        height: 46,
         borderRadius: '50%',
-        background: 'rgba(255,255,255,0.92)',
+        background: 'rgba(17,24,39,0.34)',
+        border: '1px solid rgba(255,255,255,0.72)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: '#E85D2C',
-        boxShadow: '0 8px 24px rgba(17,24,39,0.16)'
+        color: '#fff',
+        boxShadow: '0 12px 30px rgba(0,0,0,0.22)'
       }
     }, /*#__PURE__*/React.createElement(PlayIcon, {
-      size: 16
-    })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      size: 18
+    })), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: 'relative',
+        zIndex: 1
+      }
+    }, /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: 18,
         fontWeight: 800,
@@ -747,12 +791,29 @@ function PreviewSection(_ref9) {
     style: {
       aspectRatio: '9 / 16',
       position: 'relative',
-      background: modalItem.tone || 'linear-gradient(145deg, #151923 0%, #3b465a 100%)',
+      background: modalItem.thumbnail ? '#111827' : modalItem.tone || 'linear-gradient(145deg, #151923 0%, #3b465a 100%)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center'
     }
-  }, /*#__PURE__*/React.createElement("div", {
+  }, modalItem.thumbnail && /*#__PURE__*/React.createElement("img", {
+    src: modalItem.thumbnail,
+    alt: modalItem.title + ' 썸네일',
+    style: {
+      position: 'absolute',
+      inset: 0,
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover'
+    }
+  }), modalItem.thumbnail && /*#__PURE__*/React.createElement("span", {
+    "aria-hidden": "true",
+    style: {
+      position: 'absolute',
+      inset: 0,
+      background: 'linear-gradient(180deg, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.46) 100%)'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
     style: {
       position: 'absolute',
       top: 16,
@@ -767,7 +828,7 @@ function PreviewSection(_ref9) {
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 18,
-      color: '#111827',
+      color: '#fff',
       fontWeight: 900
     }
   }, modalItem.title), /*#__PURE__*/React.createElement("button", {
@@ -784,7 +845,7 @@ function PreviewSection(_ref9) {
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
-      color: '#111827'
+      color: '#fff'
     },
     "aria-label": "\uB2EB\uAE30"
   }, /*#__PURE__*/React.createElement("svg", {
@@ -799,22 +860,28 @@ function PreviewSection(_ref9) {
     d: "M18 6 6 18M6 6l12 12"
   })))), /*#__PURE__*/React.createElement("span", {
     style: {
-      width: 64,
-      height: 64,
-      borderRadius: 32,
-      background: 'rgba(255,255,255,0.92)',
-      color: '#E85D2C',
+      position: 'relative',
+      zIndex: 1,
+      width: 72,
+      height: 72,
+      borderRadius: 36,
+      background: 'rgba(17,24,39,0.34)',
+      border: '1px solid rgba(255,255,255,0.76)',
+      backdropFilter: 'blur(12px)',
+      WebkitBackdropFilter: 'blur(12px)',
+      color: '#fff',
       display: 'inline-flex',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      boxShadow: '0 18px 44px rgba(0,0,0,0.28)'
     }
   }, /*#__PURE__*/React.createElement(PlayIcon, {
-    size: 24
+    size: 28
   }))))));
 }
 function StillsSection(_ref1) {
   var t = _ref1.t;
-  var stills = ['images/톱스타스틸컷1.png', 'images/톱스타스틸컷2.png', 'images/톱스타스틸컷3.png'];
+  var stills = ['images/비밀사내결혼.png', 'images/비밀사내결혼스틸컷1.png', 'images/비밀사내결혼스틸컷2.png'];
   var _React$useState3 = React.useState(null),
     _React$useState4 = _slicedToArray(_React$useState3, 2),
     selected = _React$useState4[0],
@@ -859,7 +926,7 @@ function StillsSection(_ref1) {
       }
     }, /*#__PURE__*/React.createElement("img", {
       src: src,
-      alt: '죽었다가 회귀한 톱스타 스틸컷 ' + (index + 1),
+      alt: '비밀 사내 결혼 스틸컷 ' + (index + 1),
       style: {
         display: 'block',
         width: '100%',
@@ -947,21 +1014,46 @@ function DetailContentTabs(_ref10) {
 }
 function LoglineSection(_ref11) {
   var t = _ref11.t;
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  var sections = [{
+    title: '로그라인',
+    body: '회사에서는 완벽한 동료, 퇴근 후에는 비밀 부부인 두 사람이 모두의 시선 속에서 사랑과 일을 지켜내는 오피스 로맨스.'
+  }, {
+    title: '시놉시스',
+    body: '기획마케팅팀의 에이스 차서연은 일도 사람도 흐트러짐 없이 처리하는 완벽주의자다. 그런 그녀에게 단 하나의 약점이 있다면, 전환기획팀의 강지훈 과장과 이미 비밀리에 결혼했다는 사실이다. 두 사람은 같은 회사, 같은 층, 같은 프로젝트 안에서 매일 마주치지만 회사에서는 철저히 남처럼 행동한다. 회의실에서는 의견을 날카롭게 주고받고, 복도에서는 아무렇지 않게 스쳐 지나가며, 사내 메신저에서도 업무용 문장만 남긴다. 하지만 감춰둔 마음은 작은 순간마다 새어 나온다.\n\n대형 신규 캠페인을 함께 맡게 되면서 두 사람의 비밀은 점점 위험해진다. 야근, 출장, 합동 회의, 팀 회식까지 이어지는 일정 속에서 서로를 챙기지 않는 척하는 일이 오히려 더 어려워진다. 여기에 눈치 빠른 동료 한지윤과 사내 정치에 능한 박도현이 두 사람의 묘한 기류를 의심하기 시작하면서, 완벽했던 비밀 결혼 생활은 균열을 맞는다. 들키면 커리어도 관계도 흔들릴 수 있는 상황에서 서연과 지훈은 처음으로 질문하게 된다. 사랑을 지키기 위해 숨겨야 하는 걸까, 아니면 사랑하기 때문에 드러내야 하는 걸까.'
+  }, {
+    title: '캐릭터 설명',
+    body: '차서연 | 기획마케팅팀 차석 대리. 빠른 판단력과 꼼꼼한 실행력으로 회사 안에서 인정받는 실무형 에이스다. 감정을 쉽게 드러내지 않고 언제나 프로답게 행동하려 하지만, 지훈 앞에서는 오래 참아온 불안과 애정이 동시에 새어 나온다. 비밀 결혼을 유지하는 것이 서로를 지키는 방법이라고 믿지만, 시간이 지날수록 숨기는 일이 사랑을 작게 만드는 건 아닌지 고민한다.\n\n강지훈 | 전환기획팀 과장. 차분하고 단단한 태도로 팀을 이끄는 사람이며, 회사 안에서는 냉정할 만큼 선을 잘 지킨다. 서연과의 관계를 보호하기 위해 일부러 더 무심하게 굴지만, 사실 누구보다 서연의 하루와 감정을 세심하게 보고 있다. 완벽한 팀워크 뒤에 감춰진 진심을 언젠가는 정면으로 말해야 한다는 걸 알고 있다.\n\n한지윤 | 서연의 동료이자 가장 가까운 관찰자. 밝고 솔직한 성격으로 팀 분위기를 살리지만, 사람 사이의 미묘한 변화에는 누구보다 빠르다. 서연과 지훈 사이의 어색할 만큼 완벽한 거리감을 이상하게 여기며 두 사람의 비밀에 가장 먼저 다가선다.\n\n박도현 | 경쟁 부서의 핵심 실무자. 능력 있고 매력적이지만 원하는 결과를 위해 관계를 전략적으로 활용하는 인물이다. 서연과 지훈의 관계를 의심하면서 프로젝트와 사내 권력 구도에 두 사람의 비밀을 이용하려 한다.'
+  }];
+  return /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 22,
-      fontWeight: 800,
-      color: '#E85D2C',
-      marginBottom: 18
+      display: 'grid',
+      gap: 58,
+      maxWidth: 900
     }
-  }, "\uB85C\uADF8\uB77C\uC778"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 15,
-      color: t.ink,
-      lineHeight: 1.7,
-      maxWidth: 760
-    }
-  }, "\uB538\uC758 \uC5F0\uC778\uC744 \uD5A5\uD55C \uC5C4\uB9C8\uC758 \uAE08\uAE30\uB41C \uAC10\uC815. \uD55C \uBC88\uC758 \uC811\uCD09\uC73C\uB85C \uC2DC\uC791\uB41C \uC695\uB9DD\uC740 \uAC00\uC871\uC774\uB77C\uB294 \uC548\uC804\uD55C \uC6B8\uD0C0\uB9AC\uB97C \uBB34\uB108\uB728\uB9AC\uACE0, \uC138 \uC0AC\uB78C\uC758 \uC6B4\uBA85\uC744 \uB3CC\uC774\uD0AC \uC218 \uC5C6\uB294 \uACF3\uC73C\uB85C \uB04C\uACE0 \uAC04\uB2E4."));
+  }, sections.map(function (section) {
+    return /*#__PURE__*/React.createElement("section", {
+      key: section.title,
+      style: {
+        paddingBottom: 0
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 22,
+        fontWeight: 800,
+        color: '#E85D2C',
+        marginBottom: 14,
+        letterSpacing: -0.2
+      }
+    }, section.title), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 15,
+        color: t.ink,
+        lineHeight: 1.85,
+        whiteSpace: 'pre-line',
+        letterSpacing: -0.1
+      }
+    }, section.body));
+  }));
 }
 
 // ─── Heart icon button (square ghost) ────────────────────────
@@ -1353,7 +1445,7 @@ function ContentDetailPageD(_ref20) {
   }, /*#__PURE__*/React.createElement("main", {
     style: {
       margin: '0 auto',
-      padding: '32px 40px 80px',
+      padding: '32px 40px 140px',
       maxWidth: 1140
     }
   }, /*#__PURE__*/React.createElement("button", {
@@ -1414,7 +1506,7 @@ function ContentDetailPage(_ref21) {
   }, /*#__PURE__*/React.createElement("main", {
     style: {
       margin: '0 auto',
-      padding: '32px 40px 80px',
+      padding: '32px 40px 140px',
       maxWidth: 1140
     }
   }, /*#__PURE__*/React.createElement("button", {

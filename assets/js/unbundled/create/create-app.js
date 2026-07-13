@@ -119,7 +119,7 @@ function AIIntroModal({
     style: {
       position: 'fixed',
       inset: 0,
-      zIndex: 2100,
+      zIndex: 15000,
       background: 'rgba(15,17,21,0.42)',
       display: 'flex',
       alignItems: 'center',
@@ -239,7 +239,7 @@ function AIPlanUploadModal({
     style: {
       position: 'fixed',
       inset: 0,
-      zIndex: 2100,
+      zIndex: 15000,
       background: 'rgba(15,17,21,0.42)',
       display: 'flex',
       alignItems: 'center',

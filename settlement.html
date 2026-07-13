@@ -603,7 +603,7 @@ const CONTENTS = [
     releaseDate: '2024.08.15',
     platforms: ['PlayStory', 'MiniStage', 'VeloDrama'],
     posterTone: 'rose',
-    posterImage: 'images/대표님이내전남친.png',
+    posterImage: 'images/대표님이내전남친입니다.png',
     // platform별 월별 RS + 일회성 MG
     rs: {
       'MiniStage': {
@@ -1297,7 +1297,7 @@ const SETTLE_CONTENT = {
   title: '대표님이 내 전남친입니다',
   subtitle: '80부작 로맨스 · 2min/ep',
   posterTone: 'rose',
-  posterImage: 'images/대표님이내전남친.png',
+  posterImage: 'images/대표님이내전남친입니다.png',
 };
 
 // 단위 메모
@@ -1940,6 +1940,9 @@ function SettlementPaneHeader({ hasRsTrend, activePane, setActivePane, t }) {
                   height: 34,
                   minWidth: 82,
                   padding: '0 15px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   border: active ? 0 : `0.5px solid ${t.lineStrong}`,
                   borderRadius: 999,
                   background: active ? '#1d1d1f' : t.surface,
@@ -1949,9 +1952,10 @@ function SettlementPaneHeader({ hasRsTrend, activePane, setActivePane, t }) {
                   fontSize: 11.5,
                   fontWeight: active ? 600 : 500,
                   letterSpacing: 0,
+                  lineHeight: 1,
                   cursor: 'pointer'
                 }}>
-                {button.label}
+                <span style={{ transform: 'translateY(-1px)' }}>{button.label}</span>
               </button>
             );
           })}

@@ -6,7 +6,7 @@ window.CART_ITEMS = [
     episodes: 80,
     year: 2026,
     posterTone: "rose",
-    posterImage: "images/대표님이내전남친.png",
+    posterImage: "images/대표님이내전남친입니다.png",
     genres: ["로맨스"],
     language: "한국어",
     addedDays: 2

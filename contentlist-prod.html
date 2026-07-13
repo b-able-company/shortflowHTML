@@ -433,24 +433,23 @@
 
   <script>
     const myContents = [
-      { title: '오피스 와이프의 남자 사냥법', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'rose', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
-      { title: '재벌집 비서', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'indigo', image: 'images/재벌집막내비서.png', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
-      { title: '우리 반 전학생은 아이돌', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'teal', note: '아직 제출 전이에요. 필수 정보를 입력한 뒤 검토 요청해주세요.' },
-      { title: '그녀의 두 번째 엔딩', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'indigo', note: '회차 정보가 임시 저장되어 있어요.' },
-      { title: '대표님, 계약 연애는 처음이라서요', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'violet', image: 'images/대표님이내전남친.png', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
-      { title: '달빛 아래 편의점', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'slate', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
+      { title: '우주 택배 기사님', type: '숏애니', status: 'approved', statusLabel: '승인됨', tone: 'indigo', image: 'images/우주택배기사님.png', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
+      { title: '재벌집 막내 비서', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'indigo', image: 'images/재벌집막내비서.png', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
+      { title: '우리 반 전학생은 아이돌', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'teal', image: 'images/우리반전학생은아이돌.png', note: '아직 제출 전이에요. 필수 정보를 입력한 뒤 검토 요청해주세요.' },
+      { title: '비밀 사내 결혼', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'teal', image: 'images/비밀사내결혼.png', workflowId: 'prod-secret-marriage', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
+      { title: '왕자님의 퇴근길', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'violet', image: 'images/왕자님의퇴근길.png', note: '아직 제출 전이에요. 필수 정보를 입력한 뒤 검토 요청해주세요.' },
       { title: '남편이 AI입니다', type: 'AI', status: 'approved', statusLabel: '승인됨', tone: 'amber', image: 'images/남편이AI.png', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
-      { title: '퇴사했더니 황제가 됐다', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'rose', image: 'images/퇴사했더니황제.png', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
-      { title: '살인범과 룸메이트가 되었다', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'slate', image: 'images/살인범과룸메이트.png', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
       { title: '오늘부터 악녀 대행합니다', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'teal', image: 'images/오늘부터악녀대행.png', note: '아직 제출 전이에요. 필수 정보를 입력한 뒤 검토 요청해주세요.' },
-      { title: '우주 택배 기사님', type: '숏애니', status: 'approved', statusLabel: '승인됨', tone: 'indigo', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
-      { title: '나의 위험한 파트너', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'violet', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
-      { title: '새벽 배송 로맨스', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'rose', note: '아직 제출 전이에요. 필수 정보를 입력한 뒤 검토 요청해주세요.' },
-      { title: '내 매니저는 구미호', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'amber', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
-      { title: '비밀 사내 결혼', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'teal', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
-      { title: '왕자님의 퇴근길', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'violet', note: '아직 제출 전이에요. 필수 정보를 입력한 뒤 검토 요청해주세요.' },
-      { title: '첫사랑 리셋 버튼', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'slate', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
-      { title: '계약 종료 3일 전', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'indigo', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' }
+      { title: '퇴사했더니 황제가 됐다', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'rose', image: 'images/퇴사했더니황제.png', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
+      { title: '나의 위험한 파트너', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'violet', image: 'images/나의위험한파트너.png', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
+      { title: '그녀의 두 번째 엔딩', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'indigo', image: 'images/그녀의두번째엔딩.png', note: '회차 정보가 임시 저장되어 있어요.' },
+      { title: '대표님, 계약 연애는 처음이라서요', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'violet', image: 'images/대표님이내전남친입니다.png', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
+      { title: '달빛 아래 편의점', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'slate', image: 'images/달빛아래편의점.png', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
+      { title: '살인범과 룸메이트가 되었다', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'slate', image: 'images/살인범과룸메이트.png', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' },
+      { title: '새벽 배송 로맨스', type: '숏드라마', status: 'draft', statusLabel: '임시저장', tone: 'rose', image: 'images/새벽배송로맨스.png', note: '아직 제출 전이에요. 필수 정보를 입력한 뒤 검토 요청해주세요.' },
+      { title: '내 매니저는 구미호', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'amber', image: 'images/내매니저는구미호.png', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
+      { title: '첫사랑 리셋 버튼', type: '숏드라마', status: 'review', statusLabel: '검토중', tone: 'slate', image: 'images/첫사랑리셋버튼.png', note: '관리자 검토가 진행 중이에요. 검토 완료 전까지 일부 수정이 제한됩니다.' },
+      { title: '계약 종료 3일 전', type: '숏드라마', status: 'approved', statusLabel: '승인됨', tone: 'indigo', image: 'images/계약종료3일전.png', note: '관리자 승인 완료. 콘텐츠 상세에서 노출 정보를 확인할 수 있어요.' }
     ];
 
     const grid = document.getElementById('contentGrid');
@@ -478,10 +477,12 @@
     }
 
     function menuItemsFor(item) {
-      if (item.status === 'approved') return ['수정하기', '검토 요청 보내기', '워크플로우 보기'];
-      if (item.status === 'review') return ['워크플로우 보기'];
-      if (item.status === 'draft') return ['이어서 작성', '검토 요청 보내기', '삭제'];
-      return ['워크플로우 보기'];
+      const workflowId = item.workflowId || '';
+      const workflowItem = { label: '워크플로우 보기', action: 'workflow', workflowId };
+      if (item.status === 'approved') return [{ label: '수정하기' }, { label: '검토 요청 보내기' }, workflowItem];
+      if (item.status === 'review') return [workflowItem];
+      if (item.status === 'draft') return [{ label: '이어서 작성' }, { label: '검토 요청 보내기' }, { label: '삭제', danger: true }];
+      return [workflowItem];
     }
 
     function escapeAttr(value) {
@@ -517,9 +518,9 @@
             </button>
           </div>
           <div class="prod-menu" role="menu">
-            ${menuItemsFor(item).map(label => `
-              <button class="prod-menu-item ${label === '삭제' ? 'danger' : ''}" type="button" role="menuitem">
-                <span>${label}</span>
+            ${menuItemsFor(item).map(menuItem => `
+              <button class="prod-menu-item ${menuItem.danger ? 'danger' : ''}" type="button" role="menuitem" data-menu-action="${escapeAttr(menuItem.action || '')}" data-workflow-id="${escapeAttr(menuItem.workflowId || '')}">
+                <span>${menuItem.label}</span>
               </button>
             `).join('')}
           </div>
@@ -580,6 +581,15 @@
 
       if (!event.target.closest('.prod-menu')) {
         document.querySelectorAll('.prod-card.menu-open').forEach(item => item.classList.remove('menu-open'));
+      }
+
+      const workflowMenuButton = event.target.closest('.prod-menu-item[data-menu-action="workflow"]');
+      if (workflowMenuButton) {
+        const workflowId = workflowMenuButton.dataset.workflowId || '';
+        const nextUrl = workflowId
+          ? `producer-dashboard.html?tab=workflow&workflow=${encodeURIComponent(workflowId)}`
+          : 'producer-dashboard.html?tab=workflow';
+        window.location.href = nextUrl;
       }
     });
 

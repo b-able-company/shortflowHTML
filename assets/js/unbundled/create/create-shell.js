@@ -592,7 +592,7 @@ function SubmitModal(_ref6) {
     style: {
       position: 'fixed',
       inset: 0,
-      zIndex: 2000,
+      zIndex: 15000,
       background: 'rgba(15,17,21,0.42)',
       display: 'flex',
       alignItems: 'center',
@@ -747,7 +747,7 @@ function SubmittedToast(_ref7) {
     style: {
       position: 'fixed',
       inset: 0,
-      zIndex: 2000,
+      zIndex: 15000,
       background: 'rgba(15,17,21,0.42)',
       display: 'flex',
       alignItems: 'center',

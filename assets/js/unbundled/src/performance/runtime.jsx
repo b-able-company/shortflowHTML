@@ -1,6 +1,6 @@
 function installPerformancePosterImages() {
     const posters = {
-      '대표님이 내 전남친입니다': 'images/대표님이내전남친.png',
+      '대표님이 내 전남친입니다': 'images/대표님이내전남친입니다.png',
       '재벌집 막내 비서': 'images/재벌집막내비서.png',
       '죽었다가 회귀한 톱스타': 'images/죽었다가회귀한.png',
       '우리 집에 킬러가 산다': 'images/우리집에킬러가.png',

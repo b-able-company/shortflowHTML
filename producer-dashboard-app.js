@@ -4,6 +4,15 @@
   const { renderShell } = window.ShortflowNav;
   const { renderWorkflowView } = window.ShortflowWorkflow;
 
+  const initialParams = new URLSearchParams(window.location.search);
+  const initialWorkflowId = initialParams.get('workflow');
+
+  if (initialWorkflowId) {
+    appState.selectedWorkflowId = initialWorkflowId;
+  } else if (!appState.selectedWorkflowId) {
+    appState.selectedWorkflowId = 'prod-secret-marriage';
+  }
+
   function render() {
     root.innerHTML = renderShell(renderWorkflowView(appState, { dashboardKind: 'producer' }), {
       activePage: 'producer-dashboard',
@@ -25,6 +34,7 @@
     const workflowButton = event.target.closest('[data-workflow-id]');
     if (workflowButton) {
       appState.selectedWorkflowId = workflowButton.dataset.workflowId;
+      window.history.replaceState(null, '', `producer-dashboard.html?tab=workflow&workflow=${encodeURIComponent(appState.selectedWorkflowId)}`);
       render();
     }
   });

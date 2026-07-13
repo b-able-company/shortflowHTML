@@ -46,8 +46,13 @@
   ];
 
   const producerTimelineByStatus = {
+    CONTENT_DRAFT: [
+      { title: '콘텐츠 정보가 임시 저장되었습니다.', active: true },
+      { title: '필수 정보를 입력한 뒤 검토 요청할 수 있습니다.' },
+    ],
     CONTENT_SUBMITTED: [
-      { title: '콘텐츠 등록 신청이 접수되었습니다.', active: true },
+      { title: '관리자 검토가 진행 중입니다.', active: true },
+      { title: '콘텐츠 등록 신청이 접수되었습니다.' },
       { title: '콘텐츠 정보가 저장되었습니다.' },
     ],
     CONTENT_APPROVED: [
@@ -114,9 +119,10 @@
       : subtitle ? `<p>${escapeHtml(subtitle)}</p>` : '';
     const status = isUnconfirmedPlatformItem ? '메타데이터 전달됨' : (item.statusLabel || item.status);
     const detailTimeline = isProducer
-      ? (producerTimelineByStatus[item.status] || []).map(step => ({ ...step, date: item.date }))
+      ? (item.timeline || producerTimelineByStatus[item.status] || []).map(step => ({ ...step, date: step.date || item.date }))
       : timelineItems;
     const showGoogleDrive = isProducer && item.status !== 'CONTENT_SUBMITTED' && item.driveUrl;
+    const detailUrl = item.detailUrl || `my-content-detail.html?title=${encodeURIComponent(item.title)}`;
 
     return `
       <section class="workflow-detail">
@@ -128,7 +134,7 @@
             ${subtitleHtml}
             ${isProducer ? `
               <div class="detail-actions">
-                <button>콘텐츠 상세 보기</button>
+                <a href="${escapeHtml(detailUrl)}">콘텐츠 상세 보기</a>
                 ${showGoogleDrive ? `<a href="${escapeHtml(item.driveUrl)}" target="_blank" rel="noopener noreferrer">구글 드라이브</a>` : ''}
               </div>
             ` : `
