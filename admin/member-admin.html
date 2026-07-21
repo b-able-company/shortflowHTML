@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>회원 관리 — Shortflow Admin</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
-<link rel="stylesheet" href="admin-common.css"/>
-<script src="admin-common.js"></script>
+<link rel="stylesheet" href="admin-common.css?v=logo-left-20260715"/>
+<script src="admin-common.js?v=nav-trade-20260716"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5f4f0; display: flex; height: 100vh; overflow: hidden; font-size: 13px; color: #1a1a18; }
+body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb(242, 242, 242); display: flex; height: 100vh; overflow: hidden; font-size: 13px; color: #1a1a18; }
 
 /* SIDEBAR */
 .sb { width: 210px; min-width: 210px; background: #13130f; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
@@ -33,16 +33,36 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 .uemail { font-size: 10px; color: rgba(255,255,255,0.28); margin-top: 1px; }
 
 /* MAIN */
-.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
-.topbar { height: 46px; background: #fff; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; padding: 0 18px; flex-shrink: 0; }
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; position: relative; }
+.main.user-detail-open::before,
+.main.company-detail-open::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #e5e7eb;
+  z-index: 20;
+  pointer-events: none;
+}
+.main.user-detail-open > .topbar::after,
+.main.company-detail-open > .topbar::after {
+  right: 50%;
+}
+.topbar { height: 46px; background: #fff; border-bottom: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; padding: 0 18px; flex-shrink: 0; }
 .topbar-title { font-size: 14px; font-weight: 600; }
 
 /* VIEWS */
 .view { display: none; flex-direction: column; flex: 1; overflow: hidden; }
 .view.active { display: flex; }
+.main.user-detail-open #view-users,
+.main.company-detail-open #view-companies {
+  overflow: visible;
+}
 
 /* TABBAR */
-.tabbar { background: #fff; border-bottom: 0.5px solid #e8e6e0; display: flex; padding: 0 18px; flex-shrink: 0; }
+.tabbar { background: #fff; border-bottom: 0.5px solid rgb(242, 242, 242); display: flex; padding: 0 18px; flex-shrink: 0; }
 .tab { padding: 10px 14px; font-size: 12.5px; color: #999; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -0.5px; display: flex; align-items: center; gap: 5px; user-select: none; }
 .tab:hover { color: #555; }
 .tab.active { color: #1a1a18; border-bottom-color: #1a1a18; font-weight: 500; }
@@ -50,37 +70,1195 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5
 /* SPLIT */
 .split { flex: 1; display: flex; overflow: hidden; }
 .lp { width: 420px; min-width: 420px; display: flex; flex-direction: column; border-right: 0.5px solid #e8e6e0; overflow: hidden; flex-shrink: 0; }
-.dp { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #fafaf7; }
+.dp { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: rgb(242, 242, 242); }
+.member-user-split:not(.has-detail) .lp,
+.member-company-split:not(.has-detail) .lp { width: 100% !important; min-width: 0; flex: 1 1 auto !important; border-right: 0; }
+.member-user-split:not(.has-detail) .dp,
+.member-user-split:not(.has-detail) .admin-split-resizer,
+.member-company-split:not(.has-detail) .dp,
+.member-company-split:not(.has-detail) .admin-split-resizer { display: none !important; }
+.main .member-user-split > .lp,
+.main .member-user-split > .dp,
+.main .member-company-split > .lp,
+.main .member-company-split > .dp {
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+.main .member-user-split > .lp,
+.main .member-company-split > .lp {
+  border-right: 0 !important;
+}
+.member-user-split.has-detail .lp,
+.member-company-split.has-detail .lp { width: 50% !important; min-width: 420px; flex: 0 0 50% !important; }
+.member-user-split.has-detail .user-list-pane,
+.member-company-split.has-detail .user-list-pane {
+  padding-right: 14px;
+}
+.member-user-split.has-detail .dp,
+.member-company-split.has-detail .dp {
+  flex: 1 1 auto !important;
+  min-width: 0;
+  height: calc(100% + 74px);
+  margin-top: -74px;
+  background: #fff !important;
+  border-left: 0 !important;
+  position: relative;
+  z-index: 10;
+}
+.member-user-split.has-detail,
+.member-company-split.has-detail {
+  overflow: visible;
+  padding-right: 0 !important;
+}
+.member-user-split .admin-split-resizer,
+.member-company-split .admin-split-resizer {
+  width: 0 !important;
+  flex: 0 0 0 !important;
+  display: none !important;
+}
 
 /* TOOLBAR */
-.toolbar { background: #fff; border-bottom: 0.5px solid #e8e6e0; padding: 8px 14px; display: flex; align-items: center; gap: 5px; flex-shrink: 0; flex-wrap: wrap; }
-.chip { font-size: 11px; padding: 3px 9px; border-radius: 20px; border: 0.5px solid #e0dfd9; color: #666; cursor: pointer; background: #fff; user-select: none; white-space: nowrap; }
+.toolbar { background: #fff; border-bottom: 0.5px solid rgb(242, 242, 242); padding: 8px 14px; display: flex; align-items: center; gap: 5px; flex-shrink: 0; flex-wrap: wrap; }
+.chip { font-size: 11px; padding: 3px 9px; border-radius: 20px; border: 0.5px solid rgb(242, 242, 242); color: #666; cursor: pointer; background: #fff; user-select: none; white-space: nowrap; }
 .chip:hover { border-color: #bbb; }
 .chip.on { background: #1a1a18; color: #fff; border-color: #1a1a18; }
 .csub { font-size: 9.5px; margin-left: 2px; background: #FAEEDA; color: #854F0B; padding: 0 4px; border-radius: 6px; }
-.psel { font-size: 11px; padding: 3px 8px; border: 0.5px solid #e0dfd9; border-radius: 6px; background: #fff; color: #555; outline: none; cursor: pointer; font-family: inherit; height: 26px; }
+.psel { font-size: 11px; padding: 3px 8px; border: 0.5px solid rgb(242, 242, 242); border-radius: 6px; background: #fff; color: #555; outline: none; cursor: pointer; font-family: inherit; height: 26px; }
 .srch { position: relative; display: flex; align-items: center; margin-left: auto; }
 .srch i { position: absolute; left: 7px; font-size: 12px; color: #bbb; pointer-events: none; }
-.srch input { font-size: 11.5px; padding: 4px 8px 4px 25px; border: 0.5px solid #e0dfd9; border-radius: 7px; background: #f7f6f2; width: 160px; outline: none; color: #1a1a18; }
+.srch input { font-size: 11.5px; padding: 4px 8px 4px 25px; border: 0.5px solid rgb(242, 242, 242); border-radius: 7px; background: rgb(242, 242, 242); width: 160px; outline: none; color: #1a1a18; }
 
 /* TABLE */
 .tscroll { flex: 1; overflow-y: auto; background: #fff; }
 table { width: 100%; border-collapse: collapse; }
-thead th { background: #f7f6f2; padding: 7px 12px; text-align: left; font-size: 10px; font-weight: 500; color: #aaa; border-bottom: 0.5px solid #e8e6e0; position: sticky; top: 0; white-space: nowrap; }
-tbody tr { border-bottom: 0.5px solid #f0efe9; cursor: pointer; }
-tbody tr:hover { background: #fafaf7; }
-tbody tr.sel { background: #f3f2ee; }
+thead th { background: rgb(242, 242, 242); padding: 7px 12px; text-align: left; font-size: 10px; font-weight: 500; color: #aaa; border-bottom: 0.5px solid rgb(242, 242, 242); position: sticky; top: 0; white-space: nowrap; }
+tbody tr { border-bottom: 0.5px solid rgb(242, 242, 242); cursor: pointer; }
+tbody tr:hover { background: rgb(242, 242, 242); }
+tbody tr.sel { background: rgb(242, 242, 242); }
 td { padding: 9px 12px; vertical-align: middle; }
 .tname { font-size: 12.5px; font-weight: 500; }
 .tsub { font-size: 11px; color: #aaa; margin-top: 2px; }
 .tmeta { font-size: 12.5px; color: #888; }
+
+/* USER LIST REDESIGN */
+.user-list-pane { background: #fff; }
+#view-users,
+#view-companies,
+.member-user-split,
+.member-company-split,
+.member-user-split .lp,
+.member-company-split .lp,
+.member-user-split .dp,
+.member-company-split .dp,
+.member-user-split #user-detail,
+.member-company-split #company-detail,
+.member-user-split .dh,
+.member-company-split .dh,
+.member-user-split .detail-tabbar,
+.member-user-split .dbody,
+.member-company-split .dbody,
+.member-user-split .detail-savebar,
+.member-user-split .tscroll,
+.member-company-split .tscroll,
+.member-user-split:not(.has-detail),
+.member-company-split:not(.has-detail),
+.member-user-split:not(.has-detail) .lp,
+.member-company-split:not(.has-detail) .lp {
+  background: #fff !important;
+}
+.member-user-split #user-detail .dh,
+.member-company-split #company-detail .dh {
+  min-height: 100px;
+  padding: 10px 20px 8px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.member-user-split #user-detail .dh {
+  border-bottom: 0;
+}
+.member-company-split #company-detail .dh {
+  border-bottom: 0;
+}
+.member-company-split #company-detail {
+  min-height: 0;
+  overflow: hidden;
+}
+.member-company-split #company-detail .dbody {
+  min-height: 0;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  overscroll-behavior: contain;
+}
+.member-company-split #company-detail .detail-savebar {
+  flex: 0 0 auto;
+}
+.member-user-split #user-detail .dh-acts,
+.member-company-split #company-detail .dh-acts {
+  margin-top: 6px;
+}
+.user-detail-side-top {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.member-user-split #user-detail .dh-acts {
+  margin-top: 0;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-left: auto;
+  transform: translateY(-7px);
+}
+.member-user-split #user-detail .dh-acts .btn {
+  min-height: 34px;
+  min-width: 116px;
+  padding: 0 18px;
+  border-radius: 14px;
+  justify-content: center;
+}
+.member-user-split #user-detail .btn-close-panel,
+.member-company-split #company-detail .btn-close-panel {
+  margin-top: -2px;
+}
+.member-user-split #user-detail .btn-close-panel {
+  width: 32px;
+  height: 32px;
+  margin-right: -8px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 21px;
+}
+.member-user-split #user-detail .dh-title {
+  font-size: 16px;
+}
+.member-user-split #user-detail .dh-sub {
+  font-size: 13px;
+}
+.user-detail-copy {
+  min-width: 0;
+}
+.user-detail-email {
+  margin-top: 5px;
+  font-size: 12.5px;
+  color: #666;
+  line-height: 1.3;
+}
+.user-detail-meta-row {
+  display: block;
+  margin-top: 7px;
+  font-size: 11.5px;
+  color: #777;
+  line-height: 1.35;
+}
+.user-detail-identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+.user-detail-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  flex: 0 0 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid #eceef2;
+  background: #f5f6f8;
+  color: #777;
+  font-size: 12px;
+  font-weight: 500;
+}
+.user-detail-avatar.production {
+  background: #f5f1ea;
+  color: #8a6a3f;
+}
+.user-detail-avatar.platform {
+  background: #edf3f8;
+  color: #476d8d;
+}
+.user-detail-avatar.has-image {
+  background-size: 135%;
+  background-position: center 38%;
+  color: transparent;
+}
+.member-company-split #company-detail .user-detail-avatar.has-image {
+  background-size: 100%;
+  background-position: center center;
+}
+.member-user-split #user-detail .detail-tab {
+  font-size: 12.5px;
+}
+.member-user-split #user-detail .sec-title {
+  margin-bottom: 9px;
+  padding-bottom: 0;
+  border-bottom: 0;
+  color: #4f5965;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.member-user-split #user-detail .sec-title::before {
+  width: 5px;
+  height: 5px;
+  flex-basis: 5px;
+  background: #e85d2c;
+}
+.member-user-split #user-detail .edit-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 0.5px solid #dedede;
+  background: #fff;
+}
+.member-user-split #user-detail .fg {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  min-height: 38px;
+  gap: 0;
+  border-right: 0.5px solid #dedede;
+  border-bottom: 0.5px solid #dedede;
+}
+.member-user-split #user-detail .fg:last-child {
+  border-right: 0;
+}
+.member-user-split #user-detail .fg:last-child,
+.member-user-split #user-detail .fg:nth-last-child(2):nth-child(odd) {
+  border-bottom: 0;
+}
+.member-user-split #user-detail .fg.full {
+  grid-column: 1 / -1;
+  border-right: 0;
+}
+.member-user-split #user-detail .fg.form-right {
+  border-right: 0;
+}
+.member-user-split #user-detail .fg.form-last-row {
+  border-bottom: 0;
+}
+.member-user-split #user-detail .fg label {
+  min-width: 0;
+  padding: 0 12px;
+  background: #f7f7f7;
+  border-right: 0.5px solid #dedede;
+  color: #4f5965;
+  display: flex;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 500;
+}
+.member-user-split #user-detail .fg input,
+.member-user-split #user-detail .fg select {
+  height: 100%;
+  min-height: 37px;
+  border: 0;
+  border-radius: 0;
+  background-color: #fff;
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: background 0.14s ease, box-shadow 0.14s ease;
+}
+.member-user-split #user-detail .fg input:hover,
+.member-user-split #user-detail .fg select:hover {
+  background-color: #fcfcfc;
+}
+.member-user-split #user-detail .fg input:focus,
+.member-user-split #user-detail .fg select:focus {
+  background-color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(232, 93, 44, 0.26);
+}
+.member-user-split #user-detail .fg:focus-within label {
+  color: #1a1a18;
+}
+.member-user-split #user-detail .readonly-value,
+.member-user-split #user-detail .account-status-row {
+  min-height: 37px;
+  height: 100%;
+  padding: 0 12px;
+  border-radius: 0;
+  background: #fbfbfb;
+  font-size: 12.5px;
+  color: #303030;
+  font-weight: 400;
+  cursor: default;
+  user-select: text;
+}
+.member-user-split #user-detail .readonly-value.company-link {
+  padding-right: 12px;
+  color: #303030;
+  cursor: pointer;
+}
+.member-user-split #user-detail .readonly-value.company-link:hover {
+  background: #f7f7f7;
+  color: #1a1a18;
+}
+.member-user-split #user-detail .readonly-value.company-link i {
+  color: #a8a8a8;
+  font-size: 14px;
+}
+.member-user-split #user-detail #ud-edit-phone-country {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 34px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+}
+.member-user-split #user-detail .status-plain-value {
+  font-weight: 400;
+  color: #1a1a18;
+}
+.member-user-split #user-detail .btn {
+  font-size: 12px;
+}
+.member-user-split #user-detail .operation-setting-name {
+  font-size: 12.8px;
+}
+.member-user-split #user-detail .operation-setting-desc {
+  font-size: 11.5px;
+}
+.member-company-split #company-detail .detail-tab {
+  font-size: 12.5px;
+}
+.member-company-split #company-detail .sec-title {
+  margin-bottom: 9px;
+  padding-bottom: 0;
+  border-bottom: 0;
+  color: #4f5965;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.member-company-split #company-detail .sec-title::before {
+  width: 5px;
+  height: 5px;
+  flex-basis: 5px;
+  background: #e85d2c;
+}
+.member-company-split #company-detail .edit-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 0.5px solid #dedede;
+  background: #fff;
+}
+.member-company-split #company-detail .fg {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  min-height: 38px;
+  gap: 0;
+  border-right: 0.5px solid #dedede;
+  border-bottom: 0.5px solid #dedede;
+}
+.member-company-split #company-detail .fg.full {
+  grid-column: 1 / -1;
+  border-right: 0;
+}
+.member-company-split #company-detail .fg.form-right {
+  border-right: 0;
+}
+.member-company-split #company-detail .fg.form-last-row {
+  border-bottom: 0;
+}
+.member-company-split #company-detail .fg label {
+  min-width: 0;
+  padding: 0 12px;
+  background: #f7f7f7;
+  border-right: 0.5px solid #dedede;
+  color: #4f5965;
+  display: flex;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 500;
+}
+.member-company-split #company-detail .fg input,
+.member-company-split #company-detail .fg select,
+.member-company-split #company-detail .fg textarea {
+  width: 100%;
+  height: 100%;
+  min-height: 37px;
+  border: 0;
+  border-radius: 0;
+  background-color: #fff;
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: background 0.14s ease, box-shadow 0.14s ease;
+}
+.member-company-split #company-detail .fg textarea {
+  min-height: 68px;
+  padding: 11px 12px;
+  resize: vertical;
+  line-height: 1.45;
+}
+.member-company-split #company-detail #cd-edit-phone-country {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 34px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+}
+.member-company-split #company-detail .fg input:hover,
+.member-company-split #company-detail .fg select:hover,
+.member-company-split #company-detail .fg textarea:hover {
+  background-color: #fcfcfc;
+}
+.member-company-split #company-detail .fg input:focus,
+.member-company-split #company-detail .fg select:focus,
+.member-company-split #company-detail .fg textarea:focus {
+  background-color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(232, 93, 44, 0.26);
+}
+.member-company-split #company-detail .fg:focus-within label {
+  color: #1a1a18;
+}
+.member-company-split #company-detail .readonly-value {
+  min-height: 37px;
+  height: 100%;
+  padding: 0 12px;
+  border-radius: 0;
+  background: #fbfbfb;
+  font-size: 12.5px;
+  color: #303030;
+  font-weight: 400;
+  cursor: default;
+  user-select: text;
+}
+.company-works-section {
+  margin-bottom: 18px;
+}
+.company-works-helper {
+  margin: 0 0 12px;
+}
+.admin-company-works-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.admin-company-work-card {
+  position: relative;
+  min-width: 0;
+}
+.admin-company-work-main,
+.admin-company-work-add {
+  width: 100%;
+  min-height: 142px;
+  border: 0.5px solid #dedede;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.16s ease, background 0.16s ease;
+}
+.admin-company-work-main {
+  display: block;
+  padding: 6px;
+  text-align: left;
+}
+.admin-company-work-main:hover {
+  border-color: #c7c7c7;
+  background: #fcfcfc;
+}
+.admin-company-work-delete {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 25px;
+  height: 25px;
+  border: 0.5px solid #dedede;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.94);
+  color: #8a8f98;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.94);
+  transition: opacity 0.14s ease, transform 0.14s ease, color 0.14s ease, background 0.14s ease;
+  z-index: 2;
+}
+.admin-company-work-card:hover .admin-company-work-delete,
+.admin-company-work-delete:focus-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+.admin-company-work-delete:hover {
+  background: #1a1a18;
+  color: #fff;
+  border-color: #1a1a18;
+}
+.admin-company-work-delete i {
+  font-size: 14px;
+}
+.admin-company-work-image {
+  aspect-ratio: 16 / 10;
+  border-radius: 6px;
+  background: #f7f7f7;
+  overflow: hidden;
+}
+.admin-company-work-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.admin-company-work-placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: #a7abb2;
+  font-size: 11.5px;
+  font-weight: 500;
+}
+.admin-company-work-body {
+  padding: 9px 3px 2px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.admin-company-work-body strong {
+  min-width: 0;
+  flex: 1;
+  color: #1a1a18;
+  font-size: 12.8px;
+  font-weight: 450;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.admin-company-work-body span {
+  flex: 0 0 auto;
+  color: #8a8f98;
+  font-size: 11px;
+  font-weight: 500;
+}
+.admin-company-work-add {
+  min-height: 142px;
+  border-style: dashed;
+  color: #a7abb2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.admin-company-work-add:hover {
+  border-color: #e85d2c;
+  background: #fff8f3;
+  color: #e85d2c;
+}
+.admin-company-work-add i {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #f7f7f7;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+}
+.admin-company-work-add span {
+  font-size: 12px;
+  font-weight: 520;
+}
+.admin-work-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(15, 17, 21, 0.34);
+}
+.admin-work-modal {
+  width: min(460px, 100%);
+  max-height: min(720px, calc(100vh - 48px));
+  overflow: auto;
+  border: 0.5px solid #dedede;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 18px 44px rgba(15, 17, 21, 0.18);
+}
+.admin-work-modal-head {
+  min-height: 56px;
+  padding: 16px 20px;
+  border-bottom: 0.5px solid #ececec;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.admin-work-modal-head::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #e85d2c;
+}
+.admin-work-modal-head strong {
+  color: #1a1a18;
+  font-size: 14px;
+  font-weight: 600;
+}
+.admin-work-modal-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.admin-work-upload-well {
+  position: relative;
+  width: min(220px, 100%);
+  aspect-ratio: 2 / 3;
+  margin: 0 auto;
+}
+.admin-work-upload-surface {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0.5px dashed #bfc4cc;
+  border-radius: 8px;
+  background: #f7f7f7;
+  overflow: hidden;
+  cursor: pointer;
+}
+.admin-work-upload-surface:hover {
+  border-color: #e85d2c;
+}
+.admin-work-upload-surface img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.admin-work-upload-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #9aa0a9;
+  font-size: 12px;
+  font-weight: 520;
+}
+.admin-work-upload-empty i {
+  font-size: 22px;
+}
+.admin-work-upload-hint {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 8px;
+  background: linear-gradient(to top, rgba(15,17,21,0.62), rgba(15,17,21,0));
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 520;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+.admin-work-upload-surface:hover .admin-work-upload-hint,
+.admin-work-upload-surface:focus-visible .admin-work-upload-hint {
+  opacity: 1;
+  transform: translateY(0);
+}
+.admin-work-upload-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  border: 0.5px solid #dedede;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.94);
+  color: #8a8f98;
+  cursor: pointer;
+}
+.admin-work-upload-remove:hover {
+  background: #1a1a18;
+  color: #fff;
+  border-color: #1a1a18;
+}
+.admin-work-modal-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 108px;
+  gap: 12px;
+}
+.admin-work-modal-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.admin-work-modal-field label {
+  display: block;
+  margin-bottom: 5px;
+  color: #8a8f98;
+  font-size: 11px;
+  font-weight: 500;
+}
+.admin-work-modal-field input {
+  width: 100%;
+  height: 34px;
+  min-height: 34px;
+  border: 0.5px solid #dedede;
+  border-radius: 7px;
+  padding: 0 10px;
+  background: #fff;
+  color: #1a1a18;
+  font-family: inherit;
+  font-size: 12.5px;
+  outline: none;
+}
+.admin-work-modal-field input:focus {
+  border-color: #b8b8b8;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.03);
+}
+.admin-work-modal-foot {
+  padding: 14px 20px 18px;
+  border-top: 0.5px solid #ececec;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.admin-work-modal-foot .btn {
+  min-width: 88px;
+}
+.member-user-split #user-detail .login-log-table td {
+  font-size: 13px;
+}
+.member-user-split #user-detail .login-log-table thead th {
+  font-size: 12px;
+}
+.user-list-pane .toolbar.user-list-toolbar {
+  min-height: 38px;
+  margin: 10px 0 8px;
+  padding: 5px 7px;
+  background: rgb(242, 242, 242);
+  border: 0;
+  border-radius: 8px;
+  gap: 8px;
+  position: relative;
+  overflow: visible;
+  z-index: 35;
+}
+.list-icon-btn {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #111;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.list-icon-btn:hover { background: rgb(242, 242, 242); }
+.list-icon-btn.open {
+  background: #fff;
+  color: #111;
+  box-shadow: inset 0 0 0 0.5px #d4d4d4;
+}
+.list-icon-btn i { font-size: 16px; }
+.user-filter-panel {
+  display: none;
+  min-height: 38px;
+  margin: 0 0 8px;
+  padding: 0 7px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  gap: 8px;
+}
+.user-filter-panel.show {
+  display: flex;
+  align-items: center;
+}
+.user-filter-control {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 35px;
+  min-width: 104px;
+  padding: 0 36px 0 12px;
+  border: 0.5px solid #dedede;
+  border-radius: 7px;
+  background: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238d8d8d' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  color: #1b1d21;
+  font-size: 12px;
+  line-height: 33px;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+}
+.user-filter-control:hover {
+  border-color: #cfcfcf;
+  background: #fff;
+}
+.user-filter-control.active {
+  border: 1.5px solid rgba(232, 93, 44, 0.72);
+  background-color: #fff7ef;
+  color: #e85d2c;
+  font-weight: 500;
+}
+.user-filter-empty {
+  height: 96px !important;
+  cursor: default !important;
+}
+.user-filter-empty td {
+  text-align: center;
+  color: #aaa;
+  font-size: 12px;
+}
+.user-filter-empty:hover {
+  background: #fff !important;
+}
+.user-list-search {
+  position: relative;
+  width: 126px;
+  margin-left: auto;
+}
+.member-user-split .user-list-search {
+  width: 148px;
+}
+.member-company-split .user-list-search {
+  width: 158px;
+}
+.user-list-search i {
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #c5c7cc;
+  font-size: 13px;
+  pointer-events: none;
+}
+.user-list-search input {
+  width: 100%;
+  height: 28px;
+  padding: 0 10px 0 27px;
+  border: 0;
+  border-radius: 8px;
+  background: #fff;
+  color: #1b1d21;
+  outline: none;
+  font-family: inherit;
+  font-size: 12px;
+}
+.user-list-search input::placeholder { color: #b6bac2; }
+.user-list-table {
+  overflow: auto;
+  flex: 0 1 auto;
+  max-height: calc(100% - 102px);
+}
+.user-list-table table {
+  min-width: 980px;
+  table-layout: fixed;
+}
+.company-users-table {
+  max-height: none;
+  border: 0;
+  flex: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.company-users-table table {
+  min-width: 760px;
+}
+.company-users-table tbody tr {
+  cursor: pointer;
+}
+.company-invite-box {
+  margin-bottom: 12px;
+  border: 0.5px solid #dedede;
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+}
+.company-invite-section {
+  margin-top: 30px;
+}
+.company-invite-row {
+  min-height: 42px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+}
+.company-invite-label {
+  padding: 0 12px;
+  border-right: 0.5px solid #dedede;
+  background: #f7f7f7;
+  color: #4f5965;
+  display: flex;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 500;
+}
+.company-invite-code {
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  color: #1a1a18;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  min-width: 0;
+}
+.company-invite-copy {
+  margin: 6px;
+  min-width: 124px;
+  border: 0.5px solid #dedede;
+  border-radius: 8px;
+  background: #fff;
+  color: #444;
+  font-size: 11.5px;
+  font-family: inherit;
+  cursor: pointer;
+}
+.company-invite-copy:hover {
+  background: #f7f7f7;
+}
+.company-owned-content-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.company-owned-content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 180px);
+  gap: 20px 18px;
+}
+.company-owned-content-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.company-owned-content-group-title {
+  color: #8a8f98;
+  font-size: 11.5px;
+  font-weight: 430;
+  margin-bottom: 1px;
+}
+.company-owned-content-item {
+  width: 100%;
+  min-height: 62px;
+  padding: 7px 10px;
+  border: 0.5px solid #dedede;
+  border-radius: 8px;
+  background: #fff;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.company-owned-content-item:hover {
+  background: #fafafa;
+  border-color: #cfcfcf;
+}
+.company-owned-content-poster {
+  width: 42px;
+  height: 48px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgb(242, 242, 242);
+  flex-shrink: 0;
+}
+.company-owned-content-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.company-owned-content-title {
+  color: #1a1a18;
+  font-size: 13px;
+  font-weight: 460;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.company-owned-content-year {
+  margin-top: 4px;
+  color: #8a8f98;
+  font-size: 12px;
+  font-weight: 400;
+}
+.company-owned-content-item i {
+  color: #b5b5b5;
+  font-size: 15px;
+}
+.company-owned-content-card {
+  width: 180px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.company-owned-content-card:hover .company-owned-content-card-poster {
+  border-color: #cfcfcf;
+  filter: brightness(0.98);
+}
+.company-owned-content-card-poster {
+  display: block;
+  width: 180px;
+  height: 180px;
+  border: 0.5px solid #dedede;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgb(242, 242, 242);
+}
+.company-owned-content-card-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.company-owned-content-card-title {
+  display: block;
+  color: #1a1a18;
+  font-size: 12.5px;
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.company-owned-content-card-meta {
+  margin-top: 7px;
+  display: block;
+}
+.company-owned-plan-item {
+  min-height: 44px;
+  grid-template-columns: minmax(0, 1fr);
+  cursor: default;
+}
+.company-owned-plan-title {
+  font-weight: 400;
+}
+.company-owned-plan-item:hover {
+  background: #fff;
+  border-color: #dedede;
+}
+.company-owned-empty {
+  min-height: 52px;
+  border: 0.5px solid #dedede;
+  border-radius: 8px;
+  background: #fff;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+.user-list-table thead th {
+  height: 40px;
+  padding: 0 14px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  color: #9aa0a9;
+  font-size: 11px;
+  font-weight: 400;
+  text-align: left;
+}
+.user-list-table tbody tr {
+  height: 39px;
+  border-bottom: 1px solid #eef0f3;
+  background: #fff;
+}
+.user-list-table tbody tr:hover { background: #fafafa; }
+.user-list-table tbody tr.sel { background: rgb(242, 242, 242); }
+.user-list-table td {
+  padding: 0 14px;
+  color: #14171c;
+  font-size: 12px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.user-code { font-size: 12px; color: #1b1d21; letter-spacing: -0.01em; }
+.user-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.user-avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  background: #dfe9ea;
+  color: #4b5560;
+  font-size: 10px;
+  font-weight: 600;
+}
+.user-avatar.avatar-2 { background: #ebe7e1; color: #4c4f55; }
+.user-avatar.avatar-3 { background: #e5eef6; color: #325a7d; }
+.user-avatar.avatar-4 { background: #ececec; color: #555; }
+.user-avatar.avatar-5 { background: #d9eff0; color: #43727a; }
+.user-cell-name { overflow: hidden; text-overflow: ellipsis; }
+.user-muted-cell { color: #3f4650; overflow: hidden; text-overflow: ellipsis; }
+.user-date {
+  display: inline-flex;
+  align-items: center;
+}
+.user-status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+  vertical-align: 1px;
+}
+.user-status-text {
+  min-height: 26px;
+  padding: 0 12px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  line-height: 1;
+}
+.user-status-pending { color: #9b7a14; }
+.user-status-pending .user-status-dot { background: #f4c84f; }
+.user-status-approved { color: #2f8f68; }
+.user-status-approved .user-status-dot { background: #69d2a2; }
+.user-status-rejected,
+.user-status-inactive { color: #9a4b4b; }
+.user-status-rejected .user-status-dot,
+.user-status-inactive .user-status-dot { background: #e47a7a; }
+.user-status-setup_required { color: #2d6fa3; }
+.user-status-setup_required .user-status-dot { background: #6db8ee; }
 
 /* BADGES */
 .bdg { display: inline-flex; align-items: center; font-size: 10px; padding: 2px 7px; border-radius: 9px; font-weight: 500; white-space: nowrap; }
 .b-pending  { background: #FAEEDA; color: #854F0B; }
 .b-approved { background: #EAF3DE; color: #3B6D11; }
 .b-rejected { background: #FCEBEB; color: #A32D2D; }
-.b-inactive { background: #f0efe9; color: #aaa; }
+.b-inactive { background: rgb(242, 242, 242); color: #aaa; }
 .b-setup-required { background: #E6F1FB; color: #185FA5; }
 .plain-meta { font-size: 11.5px; color: #666; font-weight: 500; }
 .plain-meta.subtle { color: #888; font-weight: 400; }
@@ -91,12 +1269,12 @@ td { padding: 9px 12px; vertical-align: middle; }
 .empty p { font-size: 12px; }
 
 /* DETAIL HEADER */
-.dh { background: #fff; border-bottom: 0.5px solid #e8e6e0; padding: 14px 18px; flex-shrink: 0; }
+.dh { background: #fff; border-bottom: 0.5px solid rgb(242, 242, 242); padding: 14px 18px; flex-shrink: 0; }
 .dh-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
 .dh-title { font-size: 15px; font-weight: 600; }
-.dh-sub { font-size: 11.5px; color: #999; margin-top: 3px; }
+.dh-sub { font-size: 12.5px; color: #777; margin-top: 3px; }
 .dh-acts { display: flex; gap: 5px; margin-top: 11px; flex-wrap: wrap; }
-.btn { font-size: 11.5px; padding: 5px 11px; border-radius: 6px; border: 0.5px solid #e0dfd9; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; background: #fff; color: #444; }
+.btn { font-size: 11.5px; padding: 5px 11px; border-radius: 6px; border: 0.5px solid rgb(242, 242, 242); cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; background: #fff; color: #444; }
 .btn:hover { opacity: 0.8; }
 .btn-approve { background: #EAF3DE; color: #3B6D11; border-color: #C0DD97; }
 .btn-reject  { background: #FCEBEB; color: #A32D2D; border-color: #F7C1C1; }
@@ -111,20 +1289,22 @@ td { padding: 9px 12px; vertical-align: middle; }
 .rr-acts { display: flex; gap: 6px; margin-top: 8px; justify-content: flex-end; }
 
 /* DETAIL BODY */
-.dbody { flex: 1; overflow-y: auto; padding: 16px 18px; }
-.detail-tabbar { background: #fff; border-bottom: 0.5px solid #e8e6e0; display: flex; padding: 0 18px; flex-shrink: 0; }
+.dbody { flex: 1; overflow-y: auto; padding: 16px 18px 16px 8px; }
+.detail-tabbar { background: #fff; border-bottom: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; gap: 8px; padding: 0 18px 0 8px; flex-shrink: 0; }
 .detail-tab { padding: 9px 12px; font-size: 12px; color: #aaa; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -0.5px; user-select: none; }
 .detail-tab:hover { color: #666; }
-.detail-tab.active { color: #1a1a18; border-bottom-color: #1a1a18; font-weight: 500; }
+.detail-tab.active { color: #1a1a18; border-bottom-color: transparent; background: rgba(0,0,0,0.045); border-radius: 8px; font-weight: 500; }
 .detail-panel { display: none; }
 .detail-panel.active { display: block; }
 
 /* SECTIONS */
 .sec { margin-bottom: 20px; }
-.sec-title { font-size: 11px; font-weight: 500; color: #aaa; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 0.5px solid #eeede8; display: flex; align-items: center; justify-content: space-between; }
+.sec-title { font-size: 11px; font-weight: 500; color: #aaa; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 0.5px solid #eeede8; display: flex; align-items: center; justify-content: flex-start; gap: 7px; }
+.sec-title::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #ff8a3d; flex: 0 0 6px; }
+.sec-title > div { margin-left: auto; }
 
 /* INFO ROWS */
-.irow { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 12px; border-bottom: 0.5px solid #f5f4f0; }
+.irow { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 12px; border-bottom: 0.5px solid rgb(242, 242, 242); }
 .irow:last-child { border-bottom: none; }
 .ik { color: #aaa; flex-shrink: 0; min-width: 80px; }
 .iv { color: #1a1a18; text-align: right; }
@@ -132,25 +1312,111 @@ td { padding: 9px 12px; vertical-align: middle; }
 .fg { display: flex; flex-direction: column; gap: 4px; }
 .fg.full { grid-column: 1 / -1; }
 .fg label { font-size: 10px; color: #b4b2aa; font-weight: 500; }
-.fg input, .fg select { font-size: 12px; padding: 7px 10px; border: 0.5px solid #e0dfd9; border-radius: 6px; background: #fff; color: #1a1a18; outline: none; font-family: inherit; width: 100%; }
-.fg input:focus, .fg select:focus { border-color: #aaa; }
-.fg input[readonly] { background: #f7f6f2; color: #aaa; }
-.detail-savebar { margin-top: auto; background: #fff; border-top: 0.5px solid #e8e6e0; padding: 10px 18px; display: flex; justify-content: flex-end; gap: 7px; flex-shrink: 0; }
+.fg input, .fg select, .fg textarea { font-size: 12px; padding: 7px 10px; border: 0.5px solid rgb(242, 242, 242); border-radius: 6px; background: #fff; color: #1a1a18; outline: none; font-family: inherit; width: 100%; }
+.fg textarea { min-height: 64px; resize: vertical; line-height: 1.45; }
+.fg input:focus, .fg select:focus, .fg textarea:focus { border-color: #aaa; }
+.fg input[readonly] { background: rgb(242, 242, 242); color: #aaa; }
+.readonly-value {
+  min-height: 35px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: rgb(242, 242, 242);
+  color: #666;
+  display: flex;
+  align-items: center;
+  font-size: 12.8px;
+  line-height: 1.35;
+}
+.readonly-value.company-link {
+  justify-content: space-between;
+  gap: 8px;
+  border: 0;
+  width: 100%;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+.readonly-value.company-link:hover {
+  background: #ececec;
+  color: #222;
+}
+.readonly-value.company-link:disabled {
+  cursor: default;
+  color: #aaa;
+}
+.readonly-value.company-link:disabled:hover {
+  background: rgb(242, 242, 242);
+}
+.company-type-fields[hidden] { display: none !important; }
+.account-status-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 35px;
+}
+.account-status-row .dh-acts {
+  margin-left: 0 !important;
+  transform: none !important;
+}
+.account-status-row .dh-acts .btn {
+  min-height: 32px !important;
+  min-width: 92px !important;
+}
+.detail-savebar { margin-top: auto; background: #fff; border-top: 0; padding: 12px 30px 8px 8px; display: flex; justify-content: flex-end; gap: 7px; flex-shrink: 0; }
 .detail-savebar .btn { min-height: 32px; border-radius: 9px; padding: 0 14px; font-weight: 600; letter-spacing: -0.01em; transition: background 0.16s, border-color 0.16s, color 0.16s, box-shadow 0.16s, transform 0.16s; }
 .detail-savebar .btn:hover { opacity: 1; transform: translateY(-1px); }
 .detail-savebar .danger-left { margin-right: auto; border-color: rgba(255,59,48,0.18); background: rgba(255,59,48,0.08); color: #ff3b30; }
 .detail-savebar .danger-left:hover { border-color: rgba(255,59,48,0.24); background: rgba(255,59,48,0.12); }
 .detail-savebar .btn-save { border-color: transparent; background: #007aff; color: #fff; box-shadow: 0 2px 6px rgba(0,122,255,0.22); }
 .detail-savebar .btn-save:hover { background: #006ee6; box-shadow: 0 3px 8px rgba(0,122,255,0.26); }
+#user-savebar .btn-save,
+#company-savebar .btn-save {
+  min-width: 152px;
+  min-height: 38px;
+  border-radius: 12px;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 425;
+}
+.member-user-split #user-detail #user-savebar .btn-save,
+.member-company-split #company-detail #company-savebar .btn-save {
+  padding: 0 14px 2px;
+  font-size: 13px;
+  font-weight: 400;
+}
+.member-company-split.has-detail #dp-company {
+  height: calc(100% + 74px) !important;
+  max-height: none;
+  overflow: hidden !important;
+}
+.member-company-split #company-detail {
+  height: 100% !important;
+  max-height: none;
+  min-height: 0;
+  overflow: hidden !important;
+  overscroll-behavior: contain;
+}
+.member-company-split #company-detail .dbody {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+.member-company-split #company-detail .detail-savebar {
+  position: static;
+  bottom: auto;
+  z-index: 5;
+}
 .extra-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-.extra-panel { border: 0.5px solid #e8e6e0; border-radius: 8px; background: #fff; overflow: hidden; }
-.extra-panel-head { padding: 11px 13px; border-bottom: 0.5px solid #f0efe9; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.extra-panel { border: 0.5px solid rgb(242, 242, 242); border-radius: 8px; background: #fff; overflow: hidden; }
+.extra-panel-head { padding: 11px 13px; border-bottom: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.member-user-split #user-tab-operation .extra-panel-head { background: #f7f7f7; }
 .extra-panel-title { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 500; color: #333; }
 .extra-panel-title i { font-size: 14px; color: #aaa; }
 .extra-panel-body { padding: 12px 13px; }
 .operation-settings-body { padding-top: 0; padding-bottom: 0; }
 .operation-setting-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 72px; }
-.operation-setting-row + .operation-setting-row { border-top: 0.5px solid #f0efe9; }
+.operation-setting-row + .operation-setting-row { border-top: 0.5px solid rgb(242, 242, 242); }
 .operation-setting-copy { min-width: 0; }
 .operation-setting-name { font-size: 12px; font-weight: 600; color: #2b2b28; }
 .operation-setting-desc { margin-top: 4px; font-size: 11px; line-height: 1.45; color: #99978f; }
@@ -162,67 +1428,168 @@ td { padding: 9px 12px; vertical-align: middle; }
 
 /* USER LIST IN COMPANY */
 .user-list { display: flex; flex-direction: column; gap: 6px; }
-.user-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #fff; border: 0.5px solid #e8e6e0; border-radius: 7px; }
-.user-ava { width: 28px; height: 28px; border-radius: 50%; background: #f0efe9; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #888; font-weight: 500; flex-shrink: 0; }
+.user-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #fff; border: 0.5px solid rgb(242, 242, 242); border-radius: 7px; }
+.user-ava { width: 28px; height: 28px; border-radius: 50%; background: rgb(242, 242, 242); display: flex; align-items: center; justify-content: center; font-size: 11px; color: #888; font-weight: 500; flex-shrink: 0; }
 .user-name { font-size: 12.5px; font-weight: 500; }
 .user-email { font-size: 11px; color: #aaa; margin-top: 1px; }
 .user-status { margin-left: auto; display: flex; align-items: center; gap: 5px; }
 
 /* CREDIT */
-.credit-balance { background: #f7f6f2; border: 0.5px solid #e8e6e0; border-radius: 8px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.credit-balance { background: #fff; border: 0.5px solid #dedede; border-radius: 8px; padding: 8px 6px 8px 14px; min-height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 10px; }
+.credit-current { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .credit-amount { font-size: 20px; font-weight: 600; color: #1a1a18; font-family: monospace; }
-.credit-label { font-size: 11px; color: #aaa; margin-top: 2px; }
-.credit-actions { display: flex; gap: 6px; }
-.credit-form { background: #fff; border: 0.5px solid #e8e6e0; border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; display: none; }
+.credit-label { font-size: 12px; color: #777; margin-top: 0; font-weight: 430; white-space: nowrap; }
+.credit-actions { display: flex; justify-content: flex-end; gap: 8px; flex-shrink: 0; }
+.credit-actions .btn { width: 104px; min-height: 36px; padding: 0 12px; border-radius: 11px; font-size: 12px; font-weight: 430; justify-content: center; }
+.credit-actions .credit-toggle-btn { background: #fff; color: #444; border-color: #d8d8d8; }
+.credit-actions .credit-toggle-btn:hover { opacity: 1; background: #f7f7f7; border-color: #cfcfcf; }
+.credit-actions .credit-toggle-btn.active { background: #1D1C1C; color: #fff; border-color: #1D1C1C; }
+.credit-actions .credit-toggle-btn.active:hover { background: #2b2929; border-color: #2b2929; }
+.credit-form { background: #fff; border: 0.5px solid rgb(242, 242, 242); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; display: none; }
 .credit-form.show { display: block; }
 .credit-form label { font-size: 10.5px; color: #aaa; font-weight: 500; display: block; margin-bottom: 5px; }
-.credit-form input { width: 100%; font-size: 12px; padding: 7px 10px; border: 0.5px solid #e0dfd9; border-radius: 6px; background: #fff; color: #1a1a18; outline: none; font-family: inherit; margin-bottom: 8px; }
+.credit-form input { width: 100%; font-size: 12px; padding: 7px 10px; border: 0.5px solid rgb(242, 242, 242); border-radius: 6px; background: #fff; color: #1a1a18; outline: none; font-family: inherit; margin-bottom: 8px; }
 .credit-form textarea { width: 100%; font-size: 12px; padding: 7px 10px; border: 0.5px solid #e0dfd9; border-radius: 6px; resize: none; height: 56px; outline: none; font-family: inherit; }
 .credit-form-acts { display: flex; gap: 6px; margin-top: 8px; justify-content: flex-end; }
+.credit-form-acts .btn-primary { min-width: 104px; justify-content: center; }
 
 /* CREDIT HISTORY TABLE */
-.cr-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.cr-table thead th { background: #f7f6f2; padding: 6px 10px; text-align: left; font-size: 10px; font-weight: 500; color: #aaa; border-bottom: 0.5px solid #e8e6e0; }
-.cr-table tbody tr { border-bottom: 0.5px solid #f5f4f0; }
-.cr-table td { padding: 7px 10px; }
-.cr-type { font-size: 10.5px; padding: 2px 6px; border-radius: 5px; font-weight: 500; }
-.cr-charge { background: #EAF3DE; color: #3B6D11; }
-.cr-use    { background: #FCEBEB; color: #A32D2D; }
-.cr-refund { background: #E6F1FB; color: #185FA5; }
-.cr-adjust { background: #FAEEDA; color: #854F0B; }
-.cr-amt-pos { font-family: monospace; color: #3B6D11; font-weight: 500; }
-.cr-amt-neg { font-family: monospace; color: #A32D2D; font-weight: 500; }
-.login-log-table { background: #fff; border: 0.5px solid #e8e6e0; }
+.cr-table { width: 100%; border-collapse: collapse; font-size: 12px; background: #fff; border: 0.5px solid rgb(242, 242, 242); border-radius: 8px; overflow: hidden; }
+.cr-table thead th { background: #f7f7f7; padding: 8px 12px; text-align: left; font-size: 11.5px; font-weight: 400; color: #8f8d86; border-bottom: 0.5px solid rgb(242, 242, 242); }
+.cr-table tbody tr { border-bottom: 0.5px solid rgb(242, 242, 242); }
+.cr-table tbody tr:last-child { border-bottom: none; }
+.cr-table tbody tr:hover { background: transparent; }
+.cr-table td { padding: 8px 12px; color: #444; font-size: 12.5px; line-height: 1.35; }
+.cr-table .cr-no-col,
+.cr-table .cr-no {
+  width: 38px;
+  color: #9aa0a9;
+}
+.cr-table .cr-type-col,
+.cr-table .cr-type-cell {
+  width: 70px;
+}
+.cr-table .cr-no-col,
+.cr-table .cr-no,
+.cr-table .cr-type-col,
+.cr-table .cr-type-cell {
+  padding-left: 10px;
+  padding-right: 8px;
+}
+.cr-date,
+.cr-reason,
+.cr-balance,
+.cr-amt-pos,
+.cr-amt-neg {
+  color: #444;
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+.cr-date,
+.cr-balance,
+.cr-amt-pos,
+.cr-amt-neg {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+.cr-type {
+  min-height: 26px;
+  min-width: 52px;
+  padding: 0 10px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+}
+.cr-charge { color: #2f8f68; }
+.cr-use    { color: #9a4b4b; }
+.cr-refund { color: #2d6fa3; }
+.cr-adjust { color: #9b7a14; }
+.cr-amt-pos { color: #2f8f68; font-weight: 500; }
+.cr-amt-neg { color: #9a4b4b; font-weight: 500; }
+.login-log-table { background: #fff; border: 0.5px solid rgb(242, 242, 242); border-radius: 8px; overflow: hidden; }
 .login-log-table table { table-layout: fixed; }
-.login-log-table thead th { background: #fff; padding: 8px 12px; font-size: 11.5px; color: #8f8d86; border-bottom: 0.5px solid #e8e6e0; }
+.login-log-table thead th { background: #f7f7f7; padding: 8px 12px; font-size: 11.5px; color: #8f8d86; border-bottom: 0.5px solid rgb(242, 242, 242); }
 .login-log-table tbody tr { cursor: default; }
 .login-log-table tbody tr:hover { background: transparent; }
 .login-log-table tbody tr:last-child { border-bottom: none; }
 .login-log-table td { font-size: 12.5px; padding: 8px 12px; color: #444; line-height: 1.35; }
-.login-log-table .bdg { min-width: 38px; justify-content: center; font-size: 10.5px; }
+.login-result-badge {
+  min-height: 26px;
+  min-width: 58px;
+  padding: 0 12px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+}
+.login-result-badge.is-success { color: #2f8f68; }
+.login-result-badge.is-fail { color: #9a4b4b; }
 .login-log-table th.log-date,
 .login-log-table td.log-date,
+.login-log-table th.log-no,
+.login-log-table td.log-no,
 .login-log-table th.log-ip,
-.login-log-table td.log-ip { text-align: left; }
+.login-log-table td.log-ip,
+.login-log-table th.log-location,
+.login-log-table td.log-location { text-align: left; }
 .login-log-table th.log-result,
 .login-log-table td.log-result { text-align: center; }
 .login-log-table .log-date,
+.login-log-table .log-no,
 .login-ip { font-variant-numeric: tabular-nums; }
+.login-log-table .log-no { color: #9aa0a9; font-size: 12px; font-weight: 400; }
 .login-ip { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: #444; }
-.login-retention-note { margin-bottom: 8px; font-size: 10.5px; color: #b4b2aa; text-align: right; }
-.login-empty { padding: 28px 12px; color: #bbb; font-size: 12px; text-align: center; background: #fff; border: 0.5px solid #e8e6e0; border-radius: 8px; }
-.login-pagebar { min-height: 48px; padding: 13px 12px 2px; display: flex; align-items: center; justify-content: center; gap: 18px; background: #fff; }
+.login-location { color: #555; }
+.login-location-note {
+  min-height: 46px;
+  margin-top: 10px;
+  padding: 0 18px;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: #777;
+  font-size: 12px;
+}
+.login-location-note-label {
+  height: 18px;
+  padding: 0 8px;
+  border: 0.5px solid #d6d6d6;
+  border-radius: 999px;
+  color: #999;
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+.login-empty { padding: 28px 12px; color: #bbb; font-size: 12px; text-align: center; background: #fff; border: 0.5px solid rgb(242, 242, 242); border-radius: 8px; }
+.login-pagebar { min-height: 44px; padding: 14px 12px 0; display: flex; align-items: center; justify-content: center; gap: 18px; background: #fff; }
 .login-page-btn { min-width: 18px; height: 24px; padding: 0; border: none; background: transparent; color: #9b9a94; font-size: 12px; cursor: pointer; font-family: inherit; }
 .login-page-btn.active { color: #1a1a18; font-weight: 600; }
 .login-page-btn:hover:not(:disabled) { color: #1a1a18; }
 .login-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.list-pagebar { min-height: 52px; padding: 18px 14px 8px; display: flex; align-items: center; justify-content: center; gap: 18px; background: #fff; flex-shrink: 0; }
+.list-page-btn { min-width: 20px; height: 24px; padding: 0; border: none; background: transparent; color: #9b9a94; font-size: 12px; cursor: pointer; font-family: inherit; }
+.list-page-btn.active { color: #1a1a18; font-weight: 600; }
+.list-page-btn:hover:not(:disabled) { color: #1a1a18; }
+.list-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* scrollbar */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
 .note { font-size: 11px; color: #bbb; margin-top: 4px; }
-.divider { height: 1px; background: #f0efe9; margin: 14px 0; }
+.divider { height: 1px; background: rgb(242, 242, 242); margin: 14px 0; }
 </style>
 </head>
 <body>
@@ -249,7 +1616,7 @@ td { padding: 9px 12px; vertical-align: middle; }
       <a class="ni" href="content-admin-full.html#list">전체 콘텐츠</a>
       <a class="ni" href="content-admin-full.html#revisions">수정 요청</a>
     </div>
-    <div class="nav-label">거래</div>
+    <div class="nav-label">거래 관리</div>
     <a class="ni" href="workflow-admin.html"><i class="ti ti-git-branch"></i> 워크플로우</a>
     <div class="sub">
       <a class="ni" href="workflow-admin.html#platform">단일 거래</a>
@@ -257,7 +1624,7 @@ td { padding: 9px 12px; vertical-align: middle; }
       <a class="ni" href="workflow-admin.html#turnkey">턴키 거래</a>
     </div>
     <a class="ni" href="turnkey-intent-admin.html"><i class="ti ti-inbox"></i> 문의함</a>
-    <a class="ni" href="platform-contract-admin.html"><i class="ti ti-file-dollar"></i> 플랫폼 계약 관리</a>
+    <a class="ni" href="platform-contract-admin.html"><i class="ti ti-file-dollar"></i> 유통 계약 관리</a>
     <div class="nav-label">운영</div>
     <a class="ni" href="settlement-admin.html"><i class="ti ti-receipt"></i> 정산</a>
     <div class="sub">
@@ -291,31 +1658,56 @@ td { padding: 9px 12px; vertical-align: middle; }
       </div>
       <div class="tab" onclick="switchTab('companies')">회사</div>
     </div>
-    <div class="split">
+    <div class="split member-user-split" id="user-split">
       <!-- 유저 목록 -->
-      <div class="lp">
-        <div class="toolbar">
-          <div class="chip on" onclick="setChip(this)">전체</div>
-          <div class="chip" onclick="setChip(this)">PENDING</div>
-          <div class="chip" onclick="setChip(this)">APPROVED</div>
-          <div class="chip" onclick="setChip(this)">REJECTED</div>
-          <div class="chip" onclick="setChip(this)">INACTIVE</div>
-          <div class="srch"><i class="ti ti-search"></i><input placeholder="이름, 이메일 검색"/></div>
+      <div class="lp user-list-pane">
+        <div class="toolbar user-list-toolbar">
+          <button class="list-icon-btn" id="user-filter-toggle" type="button" aria-label="필터" aria-expanded="false" onclick="toggleUserFilterPanel()"><i class="ti ti-filter"></i></button>
+          <div class="user-list-search">
+            <i class="ti ti-search"></i>
+            <input placeholder="이름 검색" aria-label="유저 이름 검색" onkeydown="handleUserSearchKey(event)" />
+          </div>
         </div>
-        <div class="tscroll">
+        <div class="user-filter-panel" id="user-filter-panel">
+          <select class="user-filter-control" id="user-status-filter" aria-label="상태 필터" onchange="setUserFilter('status', this.value)">
+            <option value="">상태 전체</option>
+            <option value="PENDING">Pending</option>
+            <option value="APPROVED">Approved</option>
+            <option value="REJECTED">Rejected</option>
+            <option value="SETUP_REQUIRED">Onboarding</option>
+          </select>
+          <select class="user-filter-control" id="user-role-filter" aria-label="유형 필터" onchange="setUserFilter('role', this.value)">
+            <option value="">유형 전체</option>
+            <option value="PRODUCTION">제작사</option>
+            <option value="PLATFORM">플랫폼</option>
+          </select>
+        </div>
+        <div class="tscroll user-list-table">
           <table>
+            <colgroup>
+              <col style="width:58px">
+              <col style="width:184px">
+              <col>
+              <col style="width:170px">
+              <col style="width:100px">
+              <col style="width:118px">
+              <col style="width:130px">
+            </colgroup>
             <thead>
               <tr>
-                <th>이름 / 이메일</th>
+                <th>No</th>
+                <th>이름</th>
+                <th>이메일</th>
                 <th>회사</th>
                 <th>역할</th>
-                <th class="status-col">상태</th>
                 <th>가입일</th>
+                <th>상태</th>
               </tr>
             </thead>
             <tbody id="user-tbody"></tbody>
           </table>
         </div>
+        <div class="list-pagebar" id="user-pagebar"></div>
       </div>
 
       <!-- 유저 상세 -->
@@ -327,16 +1719,19 @@ td { padding: 9px 12px; vertical-align: middle; }
         <div id="user-detail" style="display:none;flex-direction:column;height:100%">
           <div class="dh">
             <div class="dh-top">
-              <div>
-                <div class="dh-title" id="ud-name"></div>
-                <div class="dh-sub" id="ud-email"></div>
+              <div class="user-detail-identity">
+                <div class="user-detail-avatar" id="ud-avatar" aria-hidden="true">제작</div>
+                <div class="user-detail-copy">
+                  <div class="dh-title" id="ud-name"></div>
+                  <div class="user-detail-email" id="ud-email"></div>
+                  <div class="user-detail-meta-row" id="ud-meta-line"></div>
+                </div>
               </div>
-              <div style="display:flex;align-items:center;gap:7px">
-                <span class="bdg" id="ud-status"></span>
+              <div class="user-detail-side-top">
+                <span class="user-status-text" id="ud-status"></span>
                 <button class="btn-close-panel" onclick="closeUserDetail()"><i class="ti ti-x"></i></button>
               </div>
             </div>
-            <div class="dh-acts" id="ud-acts"></div>
             <div class="rr-box" id="user-rr-box">
               <label>거절 사유를 입력해주세요 (필수)</label>
               <textarea placeholder="유저에게 전달될 거절 사유입니다"></textarea>
@@ -350,34 +1745,50 @@ td { padding: 9px 12px; vertical-align: middle; }
             <div class="detail-tab active" onclick="switchUserDetailTab(this,'user-tab-basic')">기본 정보</div>
             <div class="detail-tab" onclick="switchUserDetailTab(this,'user-tab-login')">접속 기록</div>
             <div class="detail-tab" onclick="switchUserDetailTab(this,'user-tab-operation')">계정 설정</div>
+            <div class="dh-acts" id="ud-acts"></div>
           </div>
           <div class="dbody">
             <div class="detail-panel active" id="user-tab-basic">
               <div class="sec">
+                <div class="sec-title">기본 프로필</div>
                 <div class="edit-grid">
-                  <div class="fg"><label>이름</label><input id="ud-edit-name" /></div>
-                  <div class="fg"><label>이메일</label><input id="ud-edit-email" type="email" /></div>
-                  <div class="fg"><label>전화번호</label><input id="ud-edit-phone" /></div>
-                  <div class="fg"><label>역할</label>
-                    <select id="ud-edit-role">
-                      <option value="PRODUCTION">PRODUCTION</option>
-                      <option value="PLATFORM">PLATFORM</option>
+                  <div class="fg"><label>유저 ID</label><div class="readonly-value" id="ud-read-id"></div></div>
+                  <div class="fg form-right"><label>이름</label><input id="ud-edit-name" /></div>
+                  <div class="fg form-last-row"><label>전화 국가 코드</label>
+                    <select id="ud-edit-phone-country">
+                      <option value="+82">+82</option>
+                      <option value="+1">+1</option>
+                      <option value="+81">+81</option>
+                      <option value="+86">+86</option>
+                      <option value="+886">+886</option>
+                      <option value="+65">+65</option>
                     </select>
                   </div>
-                  <div class="fg"><label>권한 레벨</label>
-                    <select id="ud-edit-perm">
-                      <option value="OWNER">OWNER</option>
-                      <option value="WRITE">WRITE</option>
-                      <option value="READ">READ</option>
-                    </select>
-                  </div>
-                  <div class="fg"><label>소속 회사</label><select id="ud-edit-company"></select></div>
-                  <div class="fg"><label>가입일</label><input id="ud-edit-date" readonly /></div>
+                  <div class="fg form-right form-last-row"><label>전화번호</label><input id="ud-edit-phone" /></div>
                 </div>
               </div>
-              <div class="sec" id="ud-reject-sec" style="display:none">
-                <div class="sec-title">거절 사유</div>
-                <div style="font-size:12px;color:#A32D2D;background:#FCEBEB;border-radius:7px;padding:10px 12px" id="ud-reject-reason"></div>
+              <div class="sec">
+                <div class="sec-title">계정 정보</div>
+                <div class="edit-grid">
+                  <div class="fg full"><label>이메일</label><div class="readonly-value" id="ud-read-email"></div></div>
+                  <div class="fg"><label>역할</label><div class="readonly-value" id="ud-read-role"></div></div>
+                  <div class="fg form-right"><label>상태</label><div class="readonly-value status-plain-value" id="ud-account-status"></div></div>
+                  <div class="fg form-last-row"><label>가입일</label><div class="readonly-value" id="ud-read-date"></div></div>
+                  <div class="fg form-right form-last-row"><label>정보 수정일</label><div class="readonly-value" id="ud-read-updated"></div></div>
+                </div>
+              </div>
+              <div class="sec">
+                <div class="sec-title">소속/권한</div>
+                <div class="edit-grid">
+                  <div class="fg full"><label>회사명</label>
+                    <button class="readonly-value company-link" id="ud-company-link" type="button" onclick="openUserCompanyDetail()">
+                      <span id="ud-read-company"></span>
+                      <i class="ti ti-arrow-up-right"></i>
+                    </button>
+                  </div>
+                  <div class="fg form-last-row"><label>회사 ID</label><div class="readonly-value" id="ud-read-company-id"></div></div>
+                  <div class="fg form-right form-last-row"><label>권한 레벨</label><div class="readonly-value" id="ud-read-perm"></div></div>
+                </div>
               </div>
             </div>
             <div class="detail-panel" id="user-tab-login">
@@ -405,7 +1816,6 @@ td { padding: 9px 12px; vertical-align: middle; }
             </div>
           </div>
           <div class="detail-savebar" id="user-savebar">
-            <button class="btn danger-left" onclick="deleteUser()">삭제하기</button>
             <button class="btn btn-save" onclick="saveUserDetail()">저장</button>
           </div>
         </div>
@@ -419,29 +1829,53 @@ td { padding: 9px 12px; vertical-align: middle; }
       <div class="tab" onclick="switchTab('users')">유저</div>
       <div class="tab active" onclick="switchTab('companies')">회사</div>
     </div>
-    <div class="split">
+    <div class="split member-company-split" id="company-split">
       <!-- 회사 목록 -->
-      <div class="lp">
-        <div class="toolbar">
-          <div class="chip on" onclick="setChip(this)">전체</div>
-          <div class="chip" onclick="setChip(this)">PRODUCTION</div>
-          <div class="chip" onclick="setChip(this)">PLATFORM</div>
-          <div class="srch"><i class="ti ti-search"></i><input placeholder="회사명 검색"/></div>
+      <div class="lp user-list-pane company-list-pane">
+        <div class="toolbar user-list-toolbar">
+          <button class="list-icon-btn" id="company-filter-toggle" type="button" aria-label="필터" aria-expanded="false" onclick="toggleCompanyFilterPanel()"><i class="ti ti-filter"></i></button>
+          <div class="user-list-search">
+            <i class="ti ti-search"></i>
+            <input placeholder="회사명 검색" aria-label="회사명 검색"/>
+          </div>
         </div>
-        <div class="tscroll">
+        <div class="user-filter-panel" id="company-filter-panel">
+          <select class="user-filter-control" id="company-status-filter" aria-label="회사 상태 필터" onchange="setCompanyFilter('status', this.value)">
+            <option value="">상태 전체</option>
+            <option value="PENDING">Pending</option>
+            <option value="APPROVED">Approved</option>
+            <option value="REJECTED">Rejected</option>
+          </select>
+          <select class="user-filter-control" id="company-type-filter" aria-label="회사 타입 필터" onchange="setCompanyFilter('type', this.value)">
+            <option value="">타입 전체</option>
+            <option value="PRODUCTION">제작사</option>
+            <option value="PLATFORM">플랫폼</option>
+          </select>
+        </div>
+        <div class="tscroll user-list-table company-list-table">
           <table>
+            <colgroup>
+              <col style="width:58px">
+              <col style="width:284px">
+              <col style="width:84px">
+              <col style="width:110px">
+              <col style="width:130px">
+              <col style="width:118px">
+            </colgroup>
             <thead>
               <tr>
+                <th>No</th>
                 <th>회사명</th>
-                <th>유형</th>
+                <th>타입</th>
                 <th>유저 수</th>
-                <th class="status-col">상태</th>
                 <th>등록일</th>
+                <th>상태</th>
               </tr>
             </thead>
             <tbody id="company-tbody"></tbody>
           </table>
         </div>
+        <div class="list-pagebar" id="company-pagebar"></div>
       </div>
 
       <!-- 회사 상세 -->
@@ -453,103 +1887,178 @@ td { padding: 9px 12px; vertical-align: middle; }
         <div id="company-detail" style="display:none;flex-direction:column;height:100%">
           <div class="dh">
             <div class="dh-top">
-              <div>
-                <div class="dh-title" id="cd-name"></div>
-                <div class="dh-sub" id="cd-sub"></div>
+              <div class="user-detail-identity">
+                <div class="user-detail-avatar" id="cd-avatar" aria-hidden="true">회사</div>
+                <div class="user-detail-copy">
+                  <div class="dh-title" id="cd-name"></div>
+                  <div class="dh-sub" id="cd-sub"></div>
+                </div>
               </div>
               <div style="display:flex;align-items:center;gap:7px">
-                <span class="bdg" id="cd-status"></span>
+                <span class="user-status-text" id="cd-status"></span>
                 <button class="btn-close-panel" onclick="closeCompanyDetail()"><i class="ti ti-x"></i></button>
               </div>
             </div>
             <div class="dh-acts" id="cd-acts"></div>
           </div>
+          <div class="detail-tabbar">
+            <div class="detail-tab active" onclick="switchCompanyDetailTab(this,'company-tab-info')">회사 정보</div>
+            <div class="detail-tab" id="company-works-tab" onclick="switchCompanyDetailTab(this,'company-tab-works')">대표작</div>
+            <div class="detail-tab" onclick="switchCompanyDetailTab(this,'company-tab-users')">소속 유저</div>
+            <div class="detail-tab" id="company-credit-tab" onclick="switchCompanyDetailTab(this,'company-tab-credit')">크레딧</div>
+            <div class="detail-tab" id="company-owned-content-tab" onclick="switchCompanyDetailTab(this,'company-tab-owned-content')">보유 콘텐츠</div>
+            <div class="detail-tab" id="company-owned-plan-tab" onclick="switchCompanyDetailTab(this,'company-tab-owned-plans')">보유 기획안</div>
+          </div>
           <div class="dbody">
 
             <!-- 회사 기본 정보 -->
-            <div class="sec">
-              <div class="sec-title">회사 정보</div>
-              <div class="edit-grid">
-                <div class="fg"><label>회사명</label><input id="cd-edit-name" /></div>
-                <div class="fg"><label>이메일</label><input id="cd-edit-email" type="email" /></div>
-                <div class="fg"><label>유형</label>
-                  <select id="cd-edit-type">
-                    <option value="PRODUCTION">PRODUCTION</option>
-                    <option value="PLATFORM">PLATFORM</option>
-                  </select>
+            <div class="detail-panel active" id="company-tab-info">
+              <div class="sec">
+                <div class="sec-title">기본 정보</div>
+                <div class="edit-grid">
+                  <div class="fg"><label>회사 ID</label><div class="readonly-value" id="cd-read-id"></div></div>
+                  <div class="fg form-right"><label>회사명</label><input id="cd-edit-name" /></div>
+                  <div class="fg"><label>회사 국적</label><input id="cd-edit-country" /></div>
+                  <div class="fg form-right"><label>주소</label><input id="cd-edit-address" /></div>
+                  <div class="fg full"><label>회사 공식 페이지</label><input id="cd-edit-website" type="url" /></div>
+                  <div class="fg full form-last-row"><label>회사 소개</label><textarea id="cd-edit-description"></textarea></div>
                 </div>
-                <div class="fg"><label>등록일</label><input id="cd-edit-date" readonly /></div>
+              </div>
+              <div class="sec">
+                <div class="sec-title">연락 정보</div>
+                <div class="edit-grid">
+                  <div class="fg full"><label>대표 이메일</label><div class="readonly-value" id="cd-read-email"></div></div>
+                  <div class="fg form-last-row"><label>전화 국가 코드</label>
+                    <select id="cd-edit-phone-country">
+                      <option value="+82">+82</option>
+                      <option value="+1">+1</option>
+                      <option value="+81">+81</option>
+                      <option value="+86">+86</option>
+                      <option value="+886">+886</option>
+                      <option value="+65">+65</option>
+                    </select>
+                  </div>
+                  <div class="fg form-right form-last-row"><label>회사 번호</label><input id="cd-edit-phone" /></div>
+                </div>
+              </div>
+              <div class="sec">
+                <div class="sec-title">운영 정보</div>
+                <div class="edit-grid">
+                  <div class="fg"><label>유형</label><div class="readonly-value" id="cd-read-type"></div></div>
+                  <div class="fg form-right"><label>상태</label><div class="readonly-value" id="cd-read-status"></div></div>
+                  <div class="fg form-last-row"><label>멤버 수</label><div class="readonly-value" id="cd-read-members"></div></div>
+                  <div class="fg form-right form-last-row"><label>등록일</label><div class="readonly-value" id="cd-read-created"></div></div>
+                </div>
+              </div>
+              <div class="sec">
+                <div class="sec-title">서비스 정보</div>
+                <div class="edit-grid">
+                  <div class="fg full form-last-row company-type-fields" id="cd-production-fields"><label>구글 드라이브 이메일</label><input id="cd-edit-google-email" type="email" /></div>
+                  <div class="fg full company-type-fields" id="cd-platform-url-field"><label>플랫폼 앱/웹 주소</label><input id="cd-edit-app-url" type="url" /></div>
+                  <div class="fg full form-last-row company-type-fields" id="cd-platform-desc-field"><label>플랫폼 앱 설명</label><textarea id="cd-edit-app-description"></textarea></div>
+                </div>
               </div>
             </div>
 
-            <!-- 소속 유저 -->
-            <div class="sec">
-              <div class="sec-title">소속 유저 <span style="font-size:10px;color:#bbb;text-transform:none;font-weight:400;letter-spacing:0" id="cd-user-count"></span></div>
-              <div class="user-list" id="cd-users"></div>
+            <!-- 대표작 관리 -->
+            <div class="detail-panel" id="company-tab-works">
+              <div class="sec company-works-section" id="company-works-section" hidden>
+                <div class="sec-title">대표작 관리</div>
+                <div class="admin-company-works-grid" id="company-works-grid"></div>
+                <div class="company-works-helper login-location-note">
+                  <span class="login-location-note-label">NOTE</span>
+                  <span>회사 프로필에 노출할 대표작을 최대 3개까지 등록할 수 있습니다.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 유저 관리 -->
+            <div class="detail-panel" id="company-tab-users">
+              <div class="sec">
+                <div class="sec-title">소속 유저 <span style="font-size:10px;color:#bbb;text-transform:none;font-weight:400;letter-spacing:0" id="cd-user-count"></span></div>
+                <div class="user-list" id="cd-users"></div>
+              </div>
+              <div class="sec company-invite-section">
+                <div class="sec-title">초대 코드</div>
+                <div id="cd-invite-code"></div>
+              </div>
+            </div>
+
+            <!-- 보유 콘텐츠 (PRODUCTION 회사만) -->
+            <div class="detail-panel" id="company-tab-owned-content">
+              <div class="sec">
+                <div class="company-owned-content-list" id="cd-owned-contents"></div>
+              </div>
+            </div>
+
+            <!-- 보유 기획안 (PRODUCTION 회사만) -->
+            <div class="detail-panel" id="company-tab-owned-plans">
+              <div class="sec">
+                <div class="company-owned-content-list" id="cd-owned-plans"></div>
+              </div>
             </div>
 
             <!-- 크레딧 (PRODUCTION 회사만) -->
-            <div class="sec" id="credit-sec">
-              <div class="sec-title">
-                크레딧
-                <div style="display:flex;gap:5px">
-                  <button class="btn" style="font-size:11px;padding:3px 8px" onclick="showCreditForm('charge')"><i class="ti ti-plus"></i> 충전</button>
-                  <button class="btn" style="font-size:11px;padding:3px 8px" onclick="showCreditForm('adjust')"><i class="ti ti-adjustments"></i> 수동 조정</button>
+            <div class="detail-panel" id="company-tab-credit">
+              <div class="sec" id="credit-sec">
+                <div class="credit-balance">
+                  <div class="credit-current">
+                    <span class="credit-label">현재 잔액 (크레딧)</span>
+                    <span class="credit-amount" id="credit-amount">1,250</span>
+                  </div>
+                  <div class="credit-actions">
+                    <button class="btn credit-toggle-btn" id="credit-charge-toggle" onclick="showCreditForm('charge')"><i class="ti ti-plus"></i> 충전</button>
+                    <button class="btn credit-toggle-btn" id="credit-adjust-toggle" onclick="showCreditForm('adjust')"><i class="ti ti-adjustments"></i> 수동 조정</button>
+                  </div>
                 </div>
-              </div>
-              <div class="credit-balance">
-                <div>
-                  <div class="credit-amount" id="credit-amount">1,250</div>
-                  <div class="credit-label">현재 잔액 (크레딧)</div>
-                </div>
-                <i class="ti ti-coin" style="font-size:28px;color:#e0dfd9"></i>
-              </div>
 
-              <!-- 충전 폼 -->
-              <div class="credit-form" id="charge-form">
-                <label>충전 금액 *</label>
-                <input type="number" placeholder="충전할 크레딧 수량" />
-                <div class="credit-form-acts">
-                  <button class="btn" onclick="hideCreditForm('charge-form')">취소</button>
-                  <button class="btn btn-primary"><i class="ti ti-plus"></i> 충전</button>
+                <!-- 충전 폼 -->
+                <div class="credit-form" id="charge-form">
+                  <label>충전 금액 *</label>
+                  <input type="number" placeholder="충전할 크레딧 수량" />
+                  <div class="credit-form-acts">
+                    <button class="btn" onclick="hideCreditForm('charge-form')">취소</button>
+                    <button class="btn btn-primary"><i class="ti ti-plus"></i> 충전</button>
+                  </div>
                 </div>
-              </div>
 
-              <!-- 수동 조정 폼 -->
-              <div class="credit-form" id="adjust-form">
-                <label>조정 금액 * <span style="font-size:10px;color:#bbb">(음수 입력 시 차감)</span></label>
-                <input type="number" placeholder="예: +100 또는 -50" />
-                <label style="margin-top:4px">사유 *</label>
-                <textarea placeholder="조정 사유를 입력하세요"></textarea>
-                <div class="credit-form-acts">
-                  <button class="btn" onclick="hideCreditForm('adjust-form')">취소</button>
-                  <button class="btn btn-primary"><i class="ti ti-adjustments"></i> 조정</button>
+                <!-- 수동 조정 폼 -->
+                <div class="credit-form" id="adjust-form">
+                  <label>조정 금액 * <span style="font-size:10px;color:#bbb">(음수 입력 시 차감)</span></label>
+                  <input type="number" placeholder="예: +100 또는 -50" />
+                  <label style="margin-top:4px">사유 *</label>
+                  <textarea placeholder="조정 사유를 입력하세요"></textarea>
+                  <div class="credit-form-acts">
+                    <button class="btn" onclick="hideCreditForm('adjust-form')">취소</button>
+                    <button class="btn btn-primary"><i class="ti ti-adjustments"></i> 조정</button>
+                  </div>
                 </div>
-              </div>
 
-              <!-- 거래 내역 -->
-              <div style="margin-top:10px">
-                <div style="font-size:10.5px;color:#aaa;margin-bottom:7px;font-weight:500">거래 내역</div>
-                <table class="cr-table">
-                  <thead>
-                    <tr>
-                      <th>유형</th>
-                      <th>금액</th>
-                      <th>잔액</th>
-                      <th>사유</th>
-                      <th>일시</th>
-                    </tr>
-                  </thead>
-                  <tbody id="credit-history"></tbody>
-                </table>
+                <!-- 거래 내역 -->
+                <div style="margin-top:10px">
+                  <table class="cr-table">
+                    <thead>
+                      <tr>
+                        <th class="cr-no-col">No</th>
+                        <th class="cr-type-col">유형</th>
+                        <th>일시</th>
+                        <th>사유</th>
+                        <th>변동</th>
+                        <th>잔액</th>
+                      </tr>
+                    </thead>
+                    <tbody id="credit-history"></tbody>
+                  </table>
+                </div>
               </div>
             </div>
 
           </div>
-          <div class="detail-savebar">
-            <button class="btn danger-left" onclick="deleteCompany()">삭제하기</button>
-            <button class="btn btn-save" onclick="saveCompanyDetail()">저장</button>
+          <div class="detail-savebar" id="company-savebar">
+            <button class="btn btn-save" id="company-info-save-btn" onclick="saveCompanyDetail()">회사 정보 저장</button>
+            <button class="btn btn-save" id="company-works-save-btn" onclick="saveCompanyWorks()">대표작 저장</button>
           </div>
+          <div id="company-work-modal"></div>
         </div>
       </div>
     </div>
@@ -560,24 +2069,124 @@ td { padding: 9px 12px; vertical-align: middle; }
 <script>
 const users = [
   { id:1, name:'김은진', email:'eunji@nextwave.io', phone:'010-1234-5678', company:'NextWave Studios', companyId:1, role:'PRODUCTION', perm:'OWNER', status:'PENDING', date:'2026.05.08', rejectReason:'' },
-  { id:2, name:'이준혁', email:'junhyeok@nextwave.io', phone:'010-2345-6789', company:'NextWave Studios', companyId:1, role:'PRODUCTION', perm:'READ', status:'PENDING', date:'2026.05.08', rejectReason:'' },
+  { id:2, name:'이준혁', email:'junhyeok@nextwave.io', phone:'010-2345-6789', company:'NextWave Studios', companyId:1, role:'PRODUCTION', perm:'READ', status:'SETUP_REQUIRED', date:'2026.05.08', rejectReason:'' },
   { id:3, name:'박소연', email:'soyeon@onetake.io', phone:'010-3456-7890', company:'OneTake Media', companyId:2, role:'PRODUCTION', perm:'OWNER', status:'PENDING', date:'2026.05.07', rejectReason:'' },
   { id:4, name:'최민준', email:'minjun@shortreel.com', phone:'010-4567-8901', company:'ShortReel (US)', companyId:3, role:'PLATFORM', perm:'OWNER', status:'APPROVED', date:'2026.05.01', rejectReason:'' },
   { id:5, name:'정하은', email:'haeun@viki.com', phone:'010-5678-9012', company:'Viki', companyId:4, role:'PLATFORM', perm:'OWNER', status:'APPROVED', date:'2026.04.28', rejectReason:'' },
   { id:6, name:'한지수', email:'jisu@brightframe.io', phone:'010-6789-0123', company:'BrightFrame', companyId:5, role:'PRODUCTION', perm:'OWNER', status:'REJECTED', date:'2026.04.25', rejectReason:'사업자등록증을 확인할 수 없습니다. 다시 제출해주세요.' },
   { id:7, name:'임도현', email:'dohyun@paperlens.io', phone:'010-7890-1234', company:'PaperLens', companyId:6, role:'PRODUCTION', perm:'OWNER', status:'PENDING', date:'2026.04.24', rejectReason:'' },
   { id:8, name:'강민서', email:'minseo@wetv.com', phone:'010-8901-2345', company:'WeTV', companyId:7, role:'PLATFORM', perm:'OWNER', status:'APPROVED', date:'2026.04.20', rejectReason:'' },
+  { id:9, name:'윤서아', email:'seoa@nextwave.io', phone:'010-9012-3456', company:'NextWave Studios', companyId:1, role:'PRODUCTION', perm:'WRITE', status:'APPROVED', date:'2026.04.18', rejectReason:'' },
+  { id:10, name:'문태오', email:'taeo@onetake.io', phone:'010-0123-4567', company:'OneTake Media', companyId:2, role:'PRODUCTION', perm:'READ', status:'PENDING', date:'2026.04.16', rejectReason:'' },
+  { id:11, name:'서유나', email:'yuna@shortreel.com', phone:'010-1122-3344', company:'ShortReel (US)', companyId:3, role:'PLATFORM', perm:'WRITE', status:'APPROVED', date:'2026.04.14', rejectReason:'' },
+  { id:12, name:'오지훈', email:'jihoon@viki.com', phone:'010-2233-4455', company:'Viki', companyId:4, role:'PLATFORM', perm:'READ', status:'SETUP_REQUIRED', date:'2026.04.12', rejectReason:'' },
+  { id:13, name:'신아린', email:'arin@brightframe.io', phone:'010-3344-5566', company:'BrightFrame', companyId:5, role:'PRODUCTION', perm:'WRITE', status:'REJECTED', date:'2026.04.10', rejectReason:'회사 이메일 인증이 완료되지 않았습니다.' },
+  { id:14, name:'배도윤', email:'doyun@paperlens.io', phone:'010-4455-6677', company:'PaperLens', companyId:6, role:'PRODUCTION', perm:'READ', status:'PENDING', date:'2026.04.09', rejectReason:'' },
+  { id:15, name:'장하린', email:'harin@wetv.com', phone:'010-5566-7788', company:'WeTV', companyId:7, role:'PLATFORM', perm:'WRITE', status:'APPROVED', date:'2026.04.07', rejectReason:'' },
+  { id:16, name:'남시우', email:'siwoo@nextwave.io', phone:'010-6677-8899', company:'NextWave Studios', companyId:1, role:'PRODUCTION', perm:'READ', status:'APPROVED', date:'2026.04.05', rejectReason:'' },
+  { id:17, name:'권라희', email:'rahee@onetake.io', phone:'010-7788-9900', company:'OneTake Media', companyId:2, role:'PRODUCTION', perm:'WRITE', status:'PENDING', date:'2026.04.03', rejectReason:'' },
+  { id:18, name:'홍준서', email:'junseo@shortreel.com', phone:'010-8899-0011', company:'ShortReel (US)', companyId:3, role:'PLATFORM', perm:'READ', status:'APPROVED', date:'2026.04.01', rejectReason:'' },
+  { id:19, name:'차예린', email:'yerin@viki.com', phone:'010-9900-1122', company:'Viki', companyId:4, role:'PLATFORM', perm:'WRITE', status:'SETUP_REQUIRED', date:'2026.03.30', rejectReason:'' },
+  { id:20, name:'유건우', email:'geonwoo@brightframe.io', phone:'010-1010-2020', company:'BrightFrame', companyId:5, role:'PRODUCTION', perm:'READ', status:'APPROVED', date:'2026.03.28', rejectReason:'' },
+  { id:21, name:'노수빈', email:'subin@paperlens.io', phone:'010-2020-3030', company:'PaperLens', companyId:6, role:'PRODUCTION', perm:'WRITE', status:'REJECTED', date:'2026.03.26', rejectReason:'필수 담당자 정보가 누락되었습니다.' },
+  { id:22, name:'백이안', email:'ian@wetv.com', phone:'010-3030-4040', company:'WeTV', companyId:7, role:'PLATFORM', perm:'READ', status:'PENDING', date:'2026.03.24', rejectReason:'' },
+  { id:23, name:'고나은', email:'naeun@nextwave.io', phone:'010-4040-5050', company:'NextWave Studios', companyId:1, role:'PRODUCTION', perm:'WRITE', status:'APPROVED', date:'2026.03.22', rejectReason:'' },
 ];
 
 const companies = [
-  { id:1, name:'NextWave Studios', email:'contact@nextwave.io', type:'PRODUCTION', status:'APPROVED', date:'2026.03.01', users:[1,2] },
-  { id:2, name:'OneTake Media', email:'hi@onetake.io', type:'PRODUCTION', status:'PENDING', date:'2026.05.07', users:[3] },
-  { id:3, name:'ShortReel (US)', email:'ops@shortreel.com', type:'PLATFORM', status:'APPROVED', date:'2026.04.01', users:[4] },
-  { id:4, name:'Viki', email:'admin@viki.com', type:'PLATFORM', status:'APPROVED', date:'2026.03.15', users:[5] },
-  { id:5, name:'BrightFrame', email:'info@brightframe.io', type:'PRODUCTION', status:'REJECTED', date:'2026.04.25', users:[6] },
-  { id:6, name:'PaperLens', email:'ops@paperlens.io', type:'PRODUCTION', status:'PENDING', date:'2026.04.24', users:[7] },
-  { id:7, name:'WeTV', email:'bd@wetv.com', type:'PLATFORM', status:'APPROVED', date:'2026.03.10', users:[8] },
+  { id:1, name:'NextWave Studios', email:'contact@nextwave.io', type:'PRODUCTION', status:'APPROVED', date:'2026.03.01', users:[1,2,9,16,23] },
+  { id:2, name:'OneTake Media', email:'hi@onetake.io', type:'PRODUCTION', status:'PENDING', date:'2026.05.07', users:[3,10,17] },
+  { id:3, name:'ShortReel (US)', email:'ops@shortreel.com', type:'PLATFORM', status:'APPROVED', date:'2026.04.01', users:[4,11,18] },
+  { id:4, name:'Viki', email:'admin@viki.com', type:'PLATFORM', status:'APPROVED', date:'2026.03.15', users:[5,12,19] },
+  { id:5, name:'BrightFrame', email:'info@brightframe.io', type:'PRODUCTION', status:'REJECTED', date:'2026.04.25', users:[6,13,20] },
+  { id:6, name:'PaperLens', email:'ops@paperlens.io', type:'PRODUCTION', status:'PENDING', date:'2026.04.24', users:[7,14,21] },
+  { id:7, name:'WeTV', email:'bd@wetv.com', type:'PLATFORM', status:'APPROVED', date:'2026.03.10', users:[8,15,22] },
+  { id:8, name:'Studio Dragon', email:'ops@studiodragon.net', type:'PRODUCTION', status:'APPROVED', date:'2026.03.08', users:[] },
+  { id:9, name:'Blue Moon Studio', email:'contact@bluemoon.io', type:'PRODUCTION', status:'APPROVED', date:'2026.03.06', users:[] },
+  { id:10, name:'Wave Pictures', email:'ops@wavepictures.io', type:'PRODUCTION', status:'PENDING', date:'2026.03.03', users:[] },
+  { id:11, name:'ShortMax', email:'partner@shortmax.com', type:'PLATFORM', status:'APPROVED', date:'2026.02.28', users:[] },
+  { id:12, name:'ReelShort', email:'acquisitions@reelshort.com', type:'PLATFORM', status:'APPROVED', date:'2026.02.24', users:[] },
+  { id:13, name:'Netflix Korea', email:'licensing@netflix.kr', type:'PLATFORM', status:'APPROVED', date:'2026.02.21', users:[] },
+  { id:14, name:'Rakuten Viki', email:'partner@rakuten-viki.com', type:'PLATFORM', status:'REJECTED', date:'2026.02.18', users:[] },
+  { id:15, name:'Red Lantern Media', email:'hello@redlantern.io', type:'PRODUCTION', status:'PENDING', date:'2026.02.14', users:[] },
+  { id:16, name:'Mango TV Global', email:'bd@mangotv.com', type:'PLATFORM', status:'APPROVED', date:'2026.02.10', users:[] },
+  { id:17, name:'Silverline Works', email:'ops@silverline.co', type:'PRODUCTION', status:'APPROVED', date:'2026.02.06', users:[] },
+  { id:18, name:'DramaBox', email:'content@dramabox.com', type:'PLATFORM', status:'PENDING', date:'2026.02.01', users:[] },
+  { id:19, name:'Nova Shorts', email:'hello@novashorts.io', type:'PRODUCTION', status:'APPROVED', date:'2026.01.28', users:[] },
+  { id:20, name:'Moonrise Content', email:'rights@moonrise.tv', type:'PRODUCTION', status:'REJECTED', date:'2026.01.22', users:[] },
 ];
+
+const companyOwnedContents = {
+  1: [
+    { id:'cnt-1-1', adminContentId:1, title:'대표님이 내 전남친입니다', year:'2026', poster:'../images/대표님이내전남친입니다.png' },
+    { id:'cnt-1-2', adminContentId:6, title:'우주 택배 기사님', year:'2022', poster:'../images/우주택배기사님.png' },
+    { id:'cnt-1-3', title:'비밀 사내 결혼', year:'2026', poster:'../images/비밀사내결혼.png' },
+  ],
+  2: [
+    { id:'cnt-2-1', adminContentId:2, title:'재벌집 막내 비서', year:'2026', poster:'../images/재벌집막내비서.png' },
+    { id:'cnt-2-2', title:'그녀의 두 번째 엔딩', year:'2026', poster:'../images/그녀의두번째엔딩.png' },
+  ],
+  5: [
+    { id:'cnt-5-1', title:'남편이 AI입니다', year:'2024', poster:'../images/ai-husband.png' },
+    { id:'cnt-5-2', title:'살인범과 룸메이트가 되었다', year:'2026', poster:'../images/murderer-roommate.png' },
+  ],
+  6: [
+    { id:'cnt-6-1', title:'오늘부터 악녀 대행합니다', year:'2024', poster:'../images/villainess-agent.png' },
+  ],
+  8: [
+    { id:'cnt-8-1', title:'퇴사했더니 황제가 됐다', year:'2023', poster:'../images/resigned-emperor.png' },
+    { id:'cnt-8-2', title:'달빛 아래 편의점', year:'2022', poster:'../images/달빛아래편의점.png' },
+  ],
+  9: [
+    { id:'cnt-9-1', title:'우리 집에 킬러가 산다', year:'2025', poster:'../images/killer-at-home.png' },
+  ],
+  10: [
+    { id:'cnt-10-1', title:'첫사랑은 계약 종료', year:'2023', poster:'../images/첫사랑은계약종료.png' },
+  ],
+  15: [
+    { id:'cnt-15-1', title:'내 남편의 비밀 계정', year:'2025', poster:'../images/내남편의비밀계정.png' },
+  ],
+  17: [
+    { id:'cnt-17-1', title:'황후의 복수 노트', year:'2026', poster:'../images/황후의복수노트.png' },
+  ],
+  19: [
+    { id:'cnt-19-1', title:'나의 위험한 파트너', year:'2025', poster:'../images/나의위험한파트너.png' },
+  ],
+  20: [
+    { id:'cnt-20-1', adminContentId:1, title:'계약 종료 3일 전', year:'2026', poster:'../images/계약종료3일전.png' },
+    { id:'cnt-20-2', adminContentId:2, title:'첫사랑은 계약 종료', year:'2023', poster:'../images/첫사랑은계약종료.png' },
+    { id:'cnt-20-3', adminContentId:3, title:'나의 위험한 파트너', year:'2025', poster:'../images/나의위험한파트너.png' },
+    { id:'cnt-20-4', adminContentId:4, title:'내 남편의 비밀 계정', year:'2025', poster:'../images/내남편의비밀계정.png' },
+    { id:'cnt-20-5', adminContentId:5, title:'황후의 복수 노트', year:'2026', poster:'../images/황후의복수노트.png' },
+    { id:'cnt-20-6', adminContentId:6, title:'달빛 아래 편의점', year:'2022', poster:'../images/달빛아래편의점.png' },
+  ],
+};
+
+const companyCollaborationPlans = {
+  1: [
+    { id:'plan-1-1', title:'글로벌 숏폼 로맨스 공동 제작 제안', poster:'../images/ceo-ex-boyfriend.png' },
+    { id:'plan-1-2', title:'SF 가족 애니메이션 시즌 기획안', poster:'../images/우주택배기사님.png' },
+  ],
+  2: [
+    { id:'plan-2-1', title:'하이틴 판타지 숏드라마 제작협업안', poster:'../images/그녀의두번째엔딩.png' },
+  ],
+  5: [
+    { id:'plan-5-1', title:'AI 로맨스 콘텐츠 후속 시즌 기획안', poster:'../images/ai-husband.png' },
+    { id:'plan-5-2', title:'스릴러 미니시리즈 공동 제작 제안', poster:'../images/murderer-roommate.png' },
+  ],
+  6: [
+    { id:'plan-6-1', title:'여성향 복수극 제작협업 기획안', poster:'../images/villainess-agent.png' },
+  ],
+  8: [
+    { id:'plan-8-1', title:'판타지 코미디 숏애니 공동 개발안', poster:'../images/resigned-emperor.png' },
+  ],
+  15: [
+    { id:'plan-15-1', title:'비밀 계정 스핀오프 기획안', poster:'../images/내남편의비밀계정.png' },
+  ],
+  17: [
+    { id:'plan-17-1', title:'사극 로맨스 숏폼 시리즈 기획안', poster:'../images/황후의복수노트.png' },
+  ],
+};
 
 const creditHistory = [
   { type:'CHARGE', amount:500, balance:1250, reason:'크레딧 충전', date:'2026.05.08 · 14:00' },
@@ -622,56 +2231,303 @@ const userLoginHistory = {
   ],
 };
 
+const loginLocationByIp = {
+  '121.134.82.10': '대한민국, 서울',
+  '211.36.142.55': '대한민국, 부산',
+  '118.235.5.91': '대한민국, 인천',
+  '58.140.21.77': '대한민국, 성남',
+  '175.223.31.91': '대한민국, 대전',
+  '104.28.211.34': '미국, 로스앤젤레스',
+  '203.0.113.42': '싱가포르, 싱가포르',
+  '198.51.100.18': '대만, 타이베이'
+};
+
 const sc = { PENDING:'b-pending', APPROVED:'b-approved', REJECTED:'b-rejected', INACTIVE:'b-inactive', SETUP_REQUIRED:'b-setup-required' };
+const userStatusLabel = {
+  APPROVED: 'Approved',
+  REJECTED: 'Rejected',
+  PENDING: 'Pending',
+  SETUP_REQUIRED: 'Onboarding',
+  INACTIVE: 'Rejected'
+};
+const userRoleLabel = {
+  PRODUCTION: '제작사',
+  PLATFORM: '플랫폼'
+};
 let selectedUserId = null;
 let selectedCompanyId = null;
+let userPage = 1;
+let companyPage = 1;
+const userFilters = { status: '', role: '', search: '' };
+const companyFilters = { status: '', type: '' };
 let loginHistoryPage = 1;
+const USER_PAGE_SIZE = 15;
+const COMPANY_PAGE_SIZE = 15;
 const LOGIN_HISTORY_PAGE_SIZE = 10;
+const MAX_COMPANY_REPRESENTATIVE_WORKS = 3;
+let companyWorkIdSeq = 3;
+const companyWorkEditor = {
+  open: false,
+  companyId: null,
+  workId: '',
+  draftImage: '',
+  draftTitle: '',
+  draftYear: ''
+};
+
+function escapeHtml(value = '') {
+  return String(value).replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[ch]));
+}
+
+function defaultCompanyRepresentativeWorks(c) {
+  const samples = [
+    { image: '../images/대표님이내전남친입니다.png', title: '대표님이 내 전남친입니다', year: '2026' },
+    { image: '../images/return-topstar-poster.png', title: '죽었다가 회귀한 톱스타', year: '2025' },
+    { image: '../images/재벌집막내비서.png', title: '재벌집 막내 비서', year: '2025' }
+  ];
+  return samples.map((work, index) => ({
+    id: `company-${c.id}-work-${index + 1}`,
+    ...work
+  }));
+}
+
+function getCompanyPortfolios(c) {
+  if (!c || c.type !== 'PRODUCTION') return [];
+  if (!Array.isArray(c.portfolios)) c.portfolios = defaultCompanyRepresentativeWorks(c);
+  return c.portfolios;
+}
+
+function getDisplayUserId(u) {
+  return users.length - users.findIndex(user => user.id === u.id);
+}
+
+function getDisplayCompanyId(c) {
+  return companies.length - companies.findIndex(company => company.id === c.id);
+}
+
+function getCompanyCreatedAt(c) {
+  return c.createdAt || `${c.date.replaceAll('.', '-')}T09:00:00`;
+}
+
+function getCompanyInviteCode(c) {
+  if (!c.inviteCode) {
+    const paddedId = String(c.id).padStart(2, '0');
+    const seed = c.name.replace(/[^A-Za-z0-9]/g, '').slice(0, 3).toUpperCase() || 'COM';
+    c.inviteCode = `${seed}-${paddedId}K-${c.type === 'PLATFORM' ? 'PLT' : 'PRD'}`;
+  }
+  return c.inviteCode;
+}
+
+function copyCompanyInviteCode() {
+  const c = companies.find(x => x.id === selectedCompanyId);
+  if (!c) return;
+  const code = getCompanyInviteCode(c);
+  navigator.clipboard?.writeText(code);
+  const btn = document.getElementById('company-invite-copy');
+  if (!btn) return;
+  btn.textContent = '복사됨';
+  setTimeout(() => {
+    const current = document.getElementById('company-invite-copy');
+    if (current) current.textContent = '복사';
+  }, 1200);
+}
+
+function ensureCompanyDetailDefaults(c) {
+  const slug = c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `company-${c.id}`;
+  const members = c.members || c.users || [];
+  const portfolios = getCompanyPortfolios(c);
+  return {
+    description: c.description || (c.type === 'PLATFORM' ? '콘텐츠 유통 플랫폼입니다.' : '드라마 및 숏폼 콘텐츠 제작사입니다.'),
+    phoneCountryCode: c.phoneCountryCode || '+82',
+    phone: c.phone || '0212345678',
+    country: c.country || (c.type === 'PLATFORM' ? 'US' : 'KR'),
+    websiteUrl: c.websiteUrl || `https://${slug}.com`,
+    address: c.address || (c.type === 'PLATFORM' ? 'Global' : '서울시 강남구'),
+    appUrl: c.appUrl || (c.type === 'PLATFORM' ? `https://play.google.com/store/apps/details?id=com.${slug}` : ''),
+    appDescription: c.appDescription || (c.type === 'PLATFORM' ? '자체 OTT 앱 운영' : ''),
+    googleEmail: c.googleEmail || (c.type === 'PRODUCTION' ? `drive@${slug}.com` : ''),
+    createdAt: getCompanyCreatedAt(c),
+    membersCount: Array.isArray(members) ? members.length : Number(members) || 0,
+    portfoliosCount: Array.isArray(portfolios) ? portfolios.length : Number(portfolios) || 0
+  };
+}
+
+function syncCompanyTypeFields(type) {
+  const isProduction = type === 'PRODUCTION';
+  document.getElementById('cd-production-fields').hidden = !isProduction;
+  document.getElementById('cd-platform-url-field').hidden = isProduction;
+  document.getElementById('cd-platform-desc-field').hidden = isProduction;
+}
+
+function getUserUpdatedDate(u) {
+  return u.updatedAt || '-';
+}
+
+function openUserCompanyDetail() {
+  const u = users.find(user => user.id === selectedUserId);
+  if (!u?.companyId) return;
+  switchTab('companies');
+  selectCompany(u.companyId);
+}
+
+function renderUserStatusChip(u) {
+  return `<span class="user-status-text user-status-${u.status.toLowerCase()}">
+    <span class="user-status-dot"></span>${userStatusLabel[u.status] || u.status}
+  </span>`;
+}
+
+function updateUserDetailStatusForElement(elementId, u) {
+  const st = document.getElementById(elementId);
+  st.className = `user-status-text user-status-${u.status.toLowerCase()}`;
+  st.innerHTML = `<span class="user-status-dot"></span>${userStatusLabel[u.status] || u.status}`;
+}
+
+function updateUserDetailStatus(u) {
+  updateUserDetailStatusForElement('ud-status', u);
+  const accountStatus = document.getElementById('ud-account-status');
+  if (accountStatus) accountStatus.textContent = userStatusLabel[u.status] || u.status;
+}
+
+function updateUserDetailAvatar(u) {
+  const avatar = document.getElementById('ud-avatar');
+  const isPlatform = u.role === 'PLATFORM';
+  avatar.className = `user-detail-avatar ${isPlatform ? 'platform' : 'production'} has-image`;
+  avatar.textContent = '';
+  avatar.style.backgroundImage = isPlatform
+    ? "url('../images/icon/플랫폼프로필.png')"
+    : "url('../images/icon/제작사프로필.png')";
+}
+
+function updateCompanyDetailAvatar(c) {
+  const avatar = document.getElementById('cd-avatar');
+  const isPlatform = c.type === 'PLATFORM';
+  avatar.className = `user-detail-avatar ${isPlatform ? 'platform' : 'production'} has-image`;
+  avatar.textContent = '';
+  avatar.style.backgroundImage = isPlatform
+    ? "url('../images/icon/플랫폼회사프로필.png')"
+    : "url('../images/icon/제작사회사프로필.png')";
+}
 
 function renderUsers() {
   const tbody = document.getElementById('user-tbody');
-  tbody.innerHTML = users.map(u => `
+  const filteredUsers = users.filter(u =>
+    (!userFilters.status || u.status === userFilters.status) &&
+    (!userFilters.role || u.role === userFilters.role) &&
+    (!userFilters.search || u.name.toLowerCase().includes(userFilters.search.toLowerCase()))
+  );
+  const totalPages = Math.max(1, Math.ceil(filteredUsers.length / USER_PAGE_SIZE));
+  userPage = Math.min(Math.max(userPage, 1), totalPages);
+  const start = (userPage - 1) * USER_PAGE_SIZE;
+  const pageUsers = filteredUsers.slice(start, start + USER_PAGE_SIZE);
+  tbody.innerHTML = pageUsers.length ? pageUsers.map((u, index) => `
     <tr class="${u.id === selectedUserId ? 'sel' : ''}" onclick="selectUser(${u.id})">
-      <td><div class="tname">${u.name}</div><div class="tsub">${u.email}</div></td>
-      <td class="tmeta">${u.company}</td>
-      <td><span class="plain-meta">${u.role}</span></td>
-      <td><span class="bdg ${sc[u.status]}">${u.status}</span></td>
-      <td class="tmeta">${u.date}</td>
-    </tr>`).join('');
+      <td><span class="user-code">${filteredUsers.length - start - index}</span></td>
+      <td>
+        <span class="user-cell">
+          <span class="user-avatar avatar-${((u.id - 1) % 5) + 1}">${u.name[0]}</span>
+          <span class="user-cell-name">${u.name}</span>
+        </span>
+      </td>
+      <td class="user-muted-cell">${u.email}</td>
+      <td class="user-muted-cell">${u.company || '회사 없음'}</td>
+      <td class="user-muted-cell">${userRoleLabel[u.role] || u.role}</td>
+      <td><span class="user-date">${u.date}</span></td>
+      <td>${renderUserStatusChip(u)}</td>
+    </tr>`).join('') : '<tr class="user-filter-empty"><td colspan="7">조건에 맞는 유저가 없습니다</td></tr>';
+  renderUserPagination(totalPages);
+}
+
+function renderUserPagination(totalPages) {
+  const pagebar = document.getElementById('user-pagebar');
+  if (!pagebar) return;
+  pagebar.innerHTML = totalPages > 1
+    ? Array.from({ length: totalPages }).map((_, index) => {
+      const page = index + 1;
+      return `<button class="list-page-btn ${page === userPage ? 'active' : ''}" onclick="setUserPage(${page})">${page}</button>`;
+    }).join('')
+    : '<button class="list-page-btn active" disabled>1</button>';
+}
+
+function setUserPage(page) {
+  userPage = page;
+  renderUsers();
+}
+
+function updateUserFilterToggle() {
+  const toggle = document.getElementById('user-filter-toggle');
+  if (!toggle) return;
+  const panel = document.getElementById('user-filter-panel');
+  const isOpen = !!panel?.classList.contains('show');
+  toggle.classList.toggle('open', isOpen);
+  toggle.setAttribute('aria-expanded', String(isOpen));
+  document.getElementById('user-status-filter')?.classList.toggle('active', !!userFilters.status);
+  document.getElementById('user-role-filter')?.classList.toggle('active', !!userFilters.role);
+}
+
+function toggleUserFilterPanel() {
+  const panel = document.getElementById('user-filter-panel');
+  if (!panel) return;
+  panel.classList.toggle('show');
+  updateUserFilterToggle();
+}
+
+function setUserFilter(type, value) {
+  userFilters[type] = value;
+  userPage = 1;
+  renderUsers();
+  updateUserFilterToggle();
+}
+
+function setUserSearch(value) {
+  userFilters.search = value.trim();
+  userPage = 1;
+  renderUsers();
+}
+
+function handleUserSearchKey(event) {
+  if (event.key !== 'Enter') return;
+  setUserSearch(event.currentTarget.value);
 }
 
 function selectUser(id) {
   selectedUserId = id;
+  document.getElementById('user-split')?.classList.add('has-detail');
+  document.querySelector('.main')?.classList.remove('company-detail-open');
+  document.querySelector('.main')?.classList.add('user-detail-open');
   renderUsers();
   const u = users.find(x => x.id === id);
 
   document.getElementById('ud-name').textContent = u.name;
   document.getElementById('ud-email').textContent = u.email;
-  const st = document.getElementById('ud-status');
-  st.className = `bdg ${sc[u.status]}`; st.textContent = u.status;
+  document.getElementById('ud-meta-line').textContent = `${userRoleLabel[u.role] || u.role} / ${u.company || '회사 없음'}`;
+  updateUserDetailAvatar(u);
+  updateUserDetailStatus(u);
   document.getElementById('ud-edit-name').value = u.name;
-  document.getElementById('ud-edit-email').value = u.email;
+  document.getElementById('ud-read-id').textContent = getDisplayUserId(u);
+  document.getElementById('ud-edit-phone-country').value = u.phoneCountryCode || '+82';
   document.getElementById('ud-edit-phone').value = u.phone;
-  document.getElementById('ud-edit-role').value = u.role;
-  document.getElementById('ud-edit-perm').value = u.perm;
-  document.getElementById('ud-edit-company').innerHTML = `<option value="" ${u.companyId ? '' : 'selected'}>회사 없음</option>`
-    + companies.map(c => `<option value="${c.id}" ${c.id === u.companyId ? 'selected' : ''}>${c.name}</option>`).join('');
-  document.getElementById('ud-edit-date').value = u.date;
+  document.getElementById('ud-read-email').textContent = u.email;
+  document.getElementById('ud-read-role').textContent = userRoleLabel[u.role] || u.role;
+  document.getElementById('ud-read-date').textContent = u.date;
+  document.getElementById('ud-read-updated').textContent = getUserUpdatedDate(u);
+  document.getElementById('ud-read-company').textContent = u.company || '회사 없음';
+  document.getElementById('ud-read-company-id').textContent = u.companyId || '-';
+  document.getElementById('ud-read-perm').textContent = u.perm;
+  document.getElementById('ud-company-link').disabled = !u.companyId;
 
   const acts = document.getElementById('ud-acts');
   const isPending = u.status === 'PENDING';
   acts.innerHTML = isPending
     ? `<button class="btn btn-approve" onclick="approveUser(${u.id})"><i class="ti ti-check"></i> 승인</button>
        <button class="btn btn-reject" onclick="document.getElementById('user-rr-box').classList.add('show')"><i class="ti ti-x"></i> 거절</button>`
-    : `<span style="font-size:11.5px;color:#bbb">이미 처리된 유저입니다</span>`;
+    : '';
 
-  const rjSec = document.getElementById('ud-reject-sec');
-  if (u.rejectReason) {
-    rjSec.style.display = '';
-    document.getElementById('ud-reject-reason').textContent = u.rejectReason;
-  } else {
-    rjSec.style.display = 'none';
-  }
   document.getElementById('user-rr-box').classList.remove('show');
   loginHistoryPage = 1;
   renderUserLoginHistory(id);
@@ -711,13 +2567,12 @@ function toggleUserSetupRequirement() {
     u.status = nextStatus;
   }
   renderUsers();
-  document.getElementById('ud-status').className = `bdg ${sc[u.status]}`;
-  document.getElementById('ud-status').textContent = u.status;
+  updateUserDetailStatus(u);
   const isPending = u.status === 'PENDING';
   document.getElementById('ud-acts').innerHTML = isPending
     ? `<button class="btn btn-approve" onclick="approveUser(${u.id})"><i class="ti ti-check"></i> 승인</button>
        <button class="btn btn-reject" onclick="document.getElementById('user-rr-box').classList.add('show')"><i class="ti ti-x"></i> 거절</button>`
-    : `<span style="font-size:11.5px;color:#bbb">이미 처리된 유저입니다</span>`;
+    : '';
   renderUserOperations(u);
 }
 
@@ -734,39 +2589,48 @@ function renderUserLoginHistory(userId) {
   const start = (loginHistoryPage - 1) * LOGIN_HISTORY_PAGE_SIZE;
   const pageRows = rows.slice(start, start + LOGIN_HISTORY_PAGE_SIZE);
   wrap.innerHTML = `
-    <div class="login-retention-note">접속 기록은 최근 14일간 저장됩니다.</div>
     <div class="login-log-table">
       <table>
         <colgroup>
-          <col style="width:42%" />
-          <col style="width:38%" />
-          <col style="width:20%" />
+          <col style="width:7%" />
+          <col style="width:27%" />
+          <col style="width:24%" />
+          <col style="width:24%" />
+          <col style="width:18%" />
         </colgroup>
         <thead>
           <tr>
+            <th class="log-no">No</th>
             <th class="log-date">일시</th>
             <th class="log-ip">IP</th>
+            <th class="log-location">위치</th>
             <th class="log-result">결과</th>
           </tr>
         </thead>
         <tbody>
-          ${pageRows.map(row => `
+          ${pageRows.map((row, index) => `
             <tr>
+              <td class="log-no">${rows.length - start - index}</td>
               <td class="tmeta log-date">${row.date}</td>
               <td class="login-ip log-ip">${row.ip}</td>
-              <td class="log-result"><span class="bdg ${row.result === '성공' ? 'b-approved' : 'b-rejected'}">${row.result}</span></td>
+              <td class="login-location log-location">${row.location || loginLocationByIp[row.ip] || '-'}</td>
+              <td class="log-result"><span class="login-result-badge ${row.result === '성공' ? 'is-success' : 'is-fail'}">${row.result === '성공' ? 'Success' : 'Failed'}</span></td>
             </tr>
           `).join('')}
         </tbody>
       </table>
-      <div class="login-pagebar">
-        ${totalPages > 1 ? `
-          ${Array.from({ length: totalPages }).map((_, index) => {
-            const page = index + 1;
-            return `<button class="login-page-btn ${page === loginHistoryPage ? 'active' : ''}" onclick="setUserLoginPage(${page})">${page}</button>`;
-          }).join('')}
-        ` : '<button class="login-page-btn active" disabled>1</button>'}
-      </div>
+    </div>
+    <div class="login-location-note">
+      <span class="login-location-note-label">NOTE</span>
+      <span>접속 국가는 정확하며, 도시는 참고용으로만 확인해 주세요.</span>
+    </div>
+    <div class="login-pagebar">
+      ${totalPages > 1 ? `
+        ${Array.from({ length: totalPages }).map((_, index) => {
+          const page = index + 1;
+          return `<button class="login-page-btn ${page === loginHistoryPage ? 'active' : ''}" onclick="setUserLoginPage(${page})">${page}</button>`;
+        }).join('')}
+      ` : '<button class="login-page-btn active" disabled>1</button>'}
     </div>`;
 }
 
@@ -804,68 +2668,487 @@ function approveUser(id) {
 
 function closeUserDetail() {
   selectedUserId = null;
+  document.getElementById('user-split')?.classList.remove('has-detail');
+  document.querySelector('.main')?.classList.remove('user-detail-open');
   renderUsers();
   document.getElementById('user-empty').style.display = '';
   document.getElementById('user-detail').style.display = 'none';
 }
 
+function resetCompanyDetailTab(company) {
+  const showCredit = company?.type === 'PRODUCTION';
+  document.getElementById('company-works-tab').style.display = showCredit ? '' : 'none';
+  document.getElementById('company-credit-tab').style.display = showCredit ? '' : 'none';
+  document.getElementById('company-owned-content-tab').style.display = showCredit ? '' : 'none';
+  document.getElementById('company-owned-plan-tab').style.display = showCredit ? '' : 'none';
+  document.querySelectorAll('#company-detail .detail-tab').forEach((tab, index) => tab.classList.toggle('active', index === 0));
+  document.querySelectorAll('#company-detail .detail-panel').forEach((panel, index) => panel.classList.toggle('active', index === 0));
+  syncCompanySavebar('company-tab-info');
+}
+
+function switchCompanyDetailTab(el, panelId) {
+  document.querySelectorAll('#company-detail .detail-tab').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('#company-detail .detail-panel').forEach(panel => panel.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+  syncCompanySavebar(panelId);
+}
+
+function syncCompanySavebar(panelId) {
+  const savebar = document.getElementById('company-savebar');
+  if (!savebar) return;
+  const isInfoTab = panelId === 'company-tab-info';
+  const isWorksTab = panelId === 'company-tab-works';
+  savebar.style.display = isInfoTab || isWorksTab ? 'flex' : 'none';
+  document.getElementById('company-info-save-btn').style.display = isInfoTab ? 'inline-flex' : 'none';
+  document.getElementById('company-works-save-btn').style.display = isWorksTab ? 'inline-flex' : 'none';
+}
+
 function renderCompanies() {
   const tbody = document.getElementById('company-tbody');
-  tbody.innerHTML = companies.map(c => `
+  const filteredCompanies = companies.filter(c =>
+    (!companyFilters.status || c.status === companyFilters.status) &&
+    (!companyFilters.type || c.type === companyFilters.type)
+  );
+  const totalPages = Math.max(1, Math.ceil(filteredCompanies.length / COMPANY_PAGE_SIZE));
+  companyPage = Math.min(Math.max(companyPage, 1), totalPages);
+  const start = (companyPage - 1) * COMPANY_PAGE_SIZE;
+  const pageCompanies = filteredCompanies.slice(start, start + COMPANY_PAGE_SIZE);
+  tbody.innerHTML = pageCompanies.length ? pageCompanies.map((c, index) => `
     <tr class="${c.id === selectedCompanyId ? 'sel' : ''}" onclick="selectCompany(${c.id})">
-      <td><div class="tname">${c.name}</div></td>
-      <td><span class="plain-meta">${c.type}</span></td>
-      <td class="tmeta">${c.users.length}명</td>
-      <td><span class="bdg ${sc[c.status]}">${c.status}</span></td>
-      <td class="tmeta">${c.date}</td>
-    </tr>`).join('');
+      <td><span class="user-code">${filteredCompanies.length - start - index}</span></td>
+      <td>
+        <span class="user-cell">
+          <span class="user-avatar avatar-${((c.id - 1) % 5) + 1}">${c.name[0]}</span>
+          <span class="user-cell-name">${c.name}</span>
+        </span>
+      </td>
+      <td class="user-muted-cell">${userRoleLabel[c.type] || c.type}</td>
+      <td class="user-muted-cell">${c.users.length}명</td>
+      <td><span class="user-date">${c.date}</span></td>
+      <td>${renderUserStatusChip(c)}</td>
+    </tr>`).join('') : '<tr class="user-filter-empty"><td colspan="6">조건에 맞는 회사가 없습니다</td></tr>';
+  renderCompanyPagination(totalPages);
+  updateCompanyFilterToggle();
+}
+
+function renderCompanyPagination(totalPages) {
+  const pagebar = document.getElementById('company-pagebar');
+  if (!pagebar) return;
+  pagebar.innerHTML = totalPages > 1
+    ? Array.from({ length: totalPages }).map((_, index) => {
+      const page = index + 1;
+      return `<button class="list-page-btn ${page === companyPage ? 'active' : ''}" onclick="setCompanyPage(${page})">${page}</button>`;
+    }).join('')
+    : '<button class="list-page-btn active" disabled>1</button>';
+}
+
+function setCompanyPage(page) {
+  companyPage = page;
+  renderCompanies();
+}
+
+function updateCompanyFilterToggle() {
+  const toggle = document.getElementById('company-filter-toggle');
+  if (!toggle) return;
+  const panel = document.getElementById('company-filter-panel');
+  const isOpen = !!panel?.classList.contains('show');
+  toggle.classList.toggle('open', isOpen);
+  toggle.setAttribute('aria-expanded', String(isOpen));
+  document.getElementById('company-status-filter')?.classList.toggle('active', !!companyFilters.status);
+  document.getElementById('company-type-filter')?.classList.toggle('active', !!companyFilters.type);
+}
+
+function toggleCompanyFilterPanel() {
+  const panel = document.getElementById('company-filter-panel');
+  if (!panel) return;
+  panel.classList.toggle('show');
+  updateCompanyFilterToggle();
+}
+
+function setCompanyFilter(type, value) {
+  companyFilters[type] = value;
+  companyPage = 1;
+  renderCompanies();
+  updateCompanyFilterToggle();
+}
+
+function renderCompanyWorkImage(image, alt) {
+  return image
+    ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(alt)}">`
+    : '<div class="admin-company-work-placeholder">이미지 추가</div>';
+}
+
+function renderCompanyWorkCard(work) {
+  return `
+    <div class="admin-company-work-card">
+      <button class="admin-company-work-delete" type="button" onclick="event.stopPropagation(); deleteCompanyWork('${escapeHtml(work.id)}')" aria-label="대표작 삭제">
+        <i class="ti ti-x"></i>
+      </button>
+      <button class="admin-company-work-main" type="button" onclick="openCompanyWorkEditor('${escapeHtml(work.id)}')">
+        <div class="admin-company-work-image">${renderCompanyWorkImage(work.image, work.title)}</div>
+        <div class="admin-company-work-body">
+          <strong>${escapeHtml(work.title)}</strong>
+          <span>${escapeHtml(work.year)}</span>
+        </div>
+      </button>
+    </div>
+  `;
+}
+
+function renderCompanyAddWorkCard() {
+  return `
+    <button class="admin-company-work-add" type="button" onclick="openCompanyWorkEditor('')">
+      <i class="ti ti-plus"></i>
+      <span>대표작 추가</span>
+    </button>
+  `;
+}
+
+function renderCompanyRepresentativeWorks(c) {
+  const section = document.getElementById('company-works-section');
+  const grid = document.getElementById('company-works-grid');
+  if (!section || !grid) return;
+  if (!c || c.type !== 'PRODUCTION') {
+    section.hidden = true;
+    grid.innerHTML = '';
+    return;
+  }
+  const works = getCompanyPortfolios(c);
+  section.hidden = false;
+  const slots = Array.from({ length: MAX_COMPANY_REPRESENTATIVE_WORKS }, (_, index) => works[index] || null);
+  grid.innerHTML = slots.map(work => work ? renderCompanyWorkCard(work) : renderCompanyAddWorkCard()).join('');
+}
+
+function getCompanyOwnedContents(c) {
+  if (!c || c.type !== 'PRODUCTION') return [];
+  return companyOwnedContents[c.id] || [];
+}
+
+function getCompanyCollaborationPlans(c) {
+  if (!c || c.type !== 'PRODUCTION') return [];
+  return companyCollaborationPlans[c.id] || [];
+}
+
+function renderCompanyOwnedContents(c) {
+  const list = document.getElementById('cd-owned-contents');
+  if (!list) return;
+  const contents = getCompanyOwnedContents(c);
+  list.innerHTML = contents.length ? `
+    <div class="company-owned-content-grid">
+      ${contents.map(item => `
+        <button class="company-owned-content-card" type="button" onclick="openCompanyOwnedContent('${escapeHtml(item.id)}')">
+          <span class="company-owned-content-card-poster">
+            <img src="${escapeHtml(item.poster)}" alt="${escapeHtml(item.title)} 포스터">
+          </span>
+          <span class="company-owned-content-card-meta">
+            <span class="company-owned-content-card-title">${escapeHtml(item.title)}</span>
+          </span>
+        </button>
+      `).join('')}
+    </div>
+  ` : '<div class="user-filter-empty" style="height:96px;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px">보유 콘텐츠가 없습니다</div>';
+}
+
+function renderCompanyOwnedPlans(c) {
+  const list = document.getElementById('cd-owned-plans');
+  if (!list) return;
+  const plans = getCompanyCollaborationPlans(c);
+  list.innerHTML = plans.length ? plans.map(item => `
+    <button class="company-owned-content-item" type="button" onclick="openCompanyOwnedPlan('${escapeHtml(item.id)}')">
+      <span class="company-owned-content-poster">
+        <img src="${escapeHtml(item.poster)}" alt="${escapeHtml(item.title)} 포스터">
+      </span>
+      <span>
+        <span class="company-owned-content-title company-owned-plan-title">${escapeHtml(item.title)}</span>
+      </span>
+      <i class="ti ti-chevron-right" aria-hidden="true"></i>
+    </button>
+  `).join('') : '<div class="company-owned-empty">보유 기획안이 없습니다</div>';
+}
+
+function openCompanyOwnedPlan(planId) {
+  const c = companies.find(x => x.id === selectedCompanyId);
+  const item = getCompanyCollaborationPlans(c).find(plan => plan.id === planId);
+  if (!item) return;
+  window.location.href = `turnkey-intent-admin.html?plan=${encodeURIComponent(item.id)}`;
+}
+
+function openCompanyOwnedContent(contentId) {
+  const c = companies.find(x => x.id === selectedCompanyId);
+  const item = getCompanyOwnedContents(c).find(content => content.id === contentId);
+  if (!item) return;
+  const params = item.adminContentId
+    ? `contentId=${encodeURIComponent(item.adminContentId)}`
+    : `title=${encodeURIComponent(item.title)}`;
+  window.location.href = `content-admin-full.html?${params}#list`;
+}
+
+function openCompanyWorkEditor(workId) {
+  const c = companies.find(x => x.id === selectedCompanyId);
+  if (!c || c.type !== 'PRODUCTION') return;
+  const works = getCompanyPortfolios(c);
+  const isNew = !workId;
+  if (isNew && works.length >= MAX_COMPANY_REPRESENTATIVE_WORKS) return;
+  const work = isNew ? null : works.find(item => item.id === workId);
+  if (!isNew && !work) return;
+
+  companyWorkEditor.open = true;
+  companyWorkEditor.companyId = c.id;
+  companyWorkEditor.workId = isNew ? '' : work.id;
+  companyWorkEditor.draftImage = work ? work.image || '' : '';
+  companyWorkEditor.draftTitle = work ? work.title || '' : '';
+  companyWorkEditor.draftYear = work ? work.year || '' : '';
+  renderCompanyWorkEditorModal();
+  setTimeout(() => document.getElementById('company-work-title-input')?.focus(), 0);
+}
+
+function closeCompanyWorkEditor() {
+  companyWorkEditor.open = false;
+  companyWorkEditor.companyId = null;
+  companyWorkEditor.workId = '';
+  companyWorkEditor.draftImage = '';
+  companyWorkEditor.draftTitle = '';
+  companyWorkEditor.draftYear = '';
+  renderCompanyWorkEditorModal();
+}
+
+function deleteCompanyWork(workId) {
+  const c = companies.find(x => x.id === selectedCompanyId);
+  if (!c || c.type !== 'PRODUCTION') return;
+  const works = getCompanyPortfolios(c);
+  const index = works.findIndex(item => item.id === workId);
+  if (index === -1) return;
+  if (!confirm('이 대표작을 삭제할까요?')) return;
+
+  works.splice(index, 1);
+  if (companyWorkEditor.workId === workId) closeCompanyWorkEditor();
+  renderCompanyRepresentativeWorks(c);
+}
+
+function updateCompanyWorkDraft(field, value) {
+  if (field === 'year') {
+    const year = value.replace(/\D/g, '').slice(0, 4);
+    companyWorkEditor.draftYear = year;
+    const input = document.getElementById('company-work-year-input');
+    if (input && input.value !== year) input.value = year;
+    return;
+  }
+  if (field === 'title') companyWorkEditor.draftTitle = value;
+}
+
+function clearCompanyWorkImage() {
+  companyWorkEditor.draftImage = '';
+  renderCompanyWorkEditorModal();
+}
+
+function handleCompanyWorkImageChange(input) {
+  const file = input.files?.[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) {
+    alert('이미지 파일을 선택해주세요.');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    companyWorkEditor.draftImage = String(reader.result || '');
+    renderCompanyWorkEditorModal();
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveCompanyWorkEditor() {
+  const c = companies.find(x => x.id === companyWorkEditor.companyId);
+  if (!c || c.type !== 'PRODUCTION') return;
+  const works = getCompanyPortfolios(c);
+  const isNew = !companyWorkEditor.workId;
+  const work = isNew ? null : works.find(item => item.id === companyWorkEditor.workId);
+  if (!isNew && !work) return;
+
+  const title = (document.getElementById('company-work-title-input')?.value || companyWorkEditor.draftTitle).trim();
+  const year = (document.getElementById('company-work-year-input')?.value || companyWorkEditor.draftYear).trim();
+  if (!companyWorkEditor.draftImage) {
+    alert('대표 이미지를 선택해주세요.');
+    return;
+  }
+  if (!title) {
+    alert('대표작 제목을 입력해주세요.');
+    return;
+  }
+  if (!/^\d{4}$/.test(year)) {
+    alert('제작연도는 4자리 숫자로 입력해주세요.');
+    return;
+  }
+
+  if (isNew) {
+    companyWorkIdSeq += 1;
+    works.push({ id: `company-${c.id}-work-${companyWorkIdSeq}`, image: companyWorkEditor.draftImage, title, year });
+  } else {
+    work.image = companyWorkEditor.draftImage;
+    work.title = title;
+    work.year = year;
+  }
+  closeCompanyWorkEditor();
+  renderCompanyRepresentativeWorks(c);
+}
+
+function saveCompanyWorks() {
+  const c = companies.find(x => x.id === selectedCompanyId);
+  if (!c || c.type !== 'PRODUCTION') return;
+  getCompanyPortfolios(c);
+  alert('대표작 정보가 저장되었습니다.');
+}
+
+function renderCompanyWorkEditorModal() {
+  const modal = document.getElementById('company-work-modal');
+  if (!modal) return;
+  if (!companyWorkEditor.open) {
+    modal.innerHTML = '';
+    return;
+  }
+  const isNew = !companyWorkEditor.workId;
+  modal.innerHTML = `
+    <div class="admin-work-modal-backdrop" onclick="if(event.target === this) closeCompanyWorkEditor()">
+      <section class="admin-work-modal" role="dialog" aria-modal="true" aria-labelledby="company-work-modal-title">
+        <header class="admin-work-modal-head">
+          <strong id="company-work-modal-title">${isNew ? '대표작 추가' : '대표작 편집'}</strong>
+        </header>
+        <div class="admin-work-modal-body">
+          <div class="admin-work-upload-well">
+            <button class="admin-work-upload-surface" type="button" onclick="document.getElementById('company-work-image-input')?.click()" aria-label="${companyWorkEditor.draftImage ? '이미지 변경' : '이미지 선택'}">
+              ${companyWorkEditor.draftImage ? `
+                <img src="${escapeHtml(companyWorkEditor.draftImage)}" alt="${escapeHtml(companyWorkEditor.draftTitle || '대표작 이미지')}">
+                <span class="admin-work-upload-hint"><i class="ti ti-upload"></i><span>이미지 변경</span></span>
+              ` : `
+                <span class="admin-work-upload-empty"><i class="ti ti-upload"></i><span>대표 이미지 선택</span></span>
+              `}
+            </button>
+            ${companyWorkEditor.draftImage ? `
+              <button class="admin-work-upload-remove" type="button" onclick="clearCompanyWorkImage()" aria-label="이미지 삭제">
+                <i class="ti ti-x"></i>
+              </button>
+            ` : ''}
+            <input id="company-work-image-input" type="file" accept="image/*" onchange="handleCompanyWorkImageChange(this)" hidden>
+          </div>
+          <div class="admin-work-modal-fields">
+            <div class="admin-work-modal-field"><label>제목</label><input id="company-work-title-input" type="text" value="${escapeHtml(companyWorkEditor.draftTitle)}" placeholder="대표작 제목" oninput="updateCompanyWorkDraft('title', this.value)"></div>
+            <div class="admin-work-modal-field"><label>제작연도</label><input id="company-work-year-input" type="text" inputmode="numeric" maxlength="4" value="${escapeHtml(companyWorkEditor.draftYear)}" placeholder="2026" oninput="updateCompanyWorkDraft('year', this.value)"></div>
+          </div>
+        </div>
+        <footer class="admin-work-modal-foot">
+          <button class="btn" type="button" onclick="closeCompanyWorkEditor()">취소</button>
+          <button class="btn btn-save" type="button" onclick="saveCompanyWorkEditor()">저장</button>
+        </footer>
+      </section>
+    </div>
+  `;
 }
 
 function selectCompany(id) {
+  if (selectedCompanyId !== id && companyWorkEditor.open) closeCompanyWorkEditor();
   selectedCompanyId = id;
+  document.getElementById('company-split')?.classList.add('has-detail');
+  document.querySelector('.main')?.classList.remove('user-detail-open');
+  document.querySelector('.main')?.classList.add('company-detail-open');
   renderCompanies();
   const c = companies.find(x => x.id === id);
 
   document.getElementById('cd-name').textContent = c.name;
-  document.getElementById('cd-sub').textContent = `${c.type} · ${c.email}`;
-  const st = document.getElementById('cd-status');
-  st.className = `bdg ${sc[c.status]}`; st.textContent = c.status;
+  document.getElementById('cd-sub').textContent = userRoleLabel[c.type] || c.type;
+  updateCompanyDetailAvatar(c);
+  updateUserDetailStatusForElement('cd-status', c);
+  const detail = ensureCompanyDetailDefaults(c);
+  document.getElementById('cd-read-id').textContent = c.id;
   document.getElementById('cd-edit-name').value = c.name;
-  document.getElementById('cd-edit-email').value = c.email;
-  document.getElementById('cd-edit-type').value = c.type;
-  document.getElementById('cd-edit-date').value = c.date;
+  document.getElementById('cd-edit-description').value = detail.description;
+  document.getElementById('cd-read-email').textContent = c.email;
+  document.getElementById('cd-edit-phone-country').value = detail.phoneCountryCode;
+  document.getElementById('cd-edit-phone').value = detail.phone;
+  document.getElementById('cd-edit-country').value = detail.country;
+  document.getElementById('cd-edit-website').value = detail.websiteUrl;
+  document.getElementById('cd-edit-address').value = detail.address;
+  document.getElementById('cd-read-type').textContent = c.type;
+  document.getElementById('cd-read-status').textContent = userStatusLabel[c.status] || c.status;
+  document.getElementById('cd-read-members').textContent = `${detail.membersCount}명`;
+  document.getElementById('cd-edit-google-email').value = detail.googleEmail;
+  document.getElementById('cd-edit-app-url').value = detail.appUrl;
+  document.getElementById('cd-edit-app-description').value = detail.appDescription;
+  document.getElementById('cd-read-created').textContent = detail.createdAt;
+  syncCompanyTypeFields(c.type);
+  renderCompanyRepresentativeWorks(c);
+  renderCompanyOwnedContents(c);
+  renderCompanyOwnedPlans(c);
   document.getElementById('cd-acts').innerHTML = '';
 
-  // 소속 유저
+  // 유저 관리
   document.getElementById('cd-user-count').textContent = `${c.users.length}명`;
+  document.getElementById('cd-invite-code').innerHTML = `
+    <div class="company-invite-box">
+      <div class="company-invite-row">
+        <div class="company-invite-code">${escapeHtml(getCompanyInviteCode(c))}</div>
+        <button class="company-invite-copy" id="company-invite-copy" type="button" onclick="copyCompanyInviteCode()">복사</button>
+      </div>
+    </div>`;
   const companyUsers = users.filter(u => c.users.includes(u.id));
-  document.getElementById('cd-users').innerHTML = companyUsers.map(u => `
-    <div class="user-item">
-      <div class="user-ava">${u.name[0]}</div>
-      <div>
-        <div class="user-name">${u.name} <span class="plain-meta subtle" style="margin-left:4px">${u.perm}</span></div>
-        <div class="user-email">${u.email}</div>
-      </div>
-      <div class="user-status">
-        <span class="bdg ${sc[u.status]}">${u.status}</span>
-      </div>
-    </div>`).join('');
-
-  // 크레딧 (PRODUCTION만)
-  const creditSec = document.getElementById('credit-sec');
-  creditSec.style.display = c.type === 'PRODUCTION' ? '' : 'none';
+  document.getElementById('cd-users').innerHTML = `
+    <div class="user-list-table company-users-table">
+      <table>
+        <colgroup>
+          <col style="width:52px">
+          <col style="width:128px">
+          <col>
+          <col style="width:72px">
+          <col style="width:95px">
+          <col style="width:110px">
+          <col style="width:120px">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>역할</th>
+            <th>권한</th>
+            <th>가입일</th>
+            <th>상태</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${companyUsers.length ? companyUsers.map(u => `
+            <tr onclick="switchTab('users'); selectUser(${u.id})">
+              <td><span class="user-code">${getDisplayUserId(u)}</span></td>
+              <td>
+                <span class="user-cell">
+                  <span class="user-avatar avatar-${((u.id - 1) % 5) + 1}">${u.name[0]}</span>
+                  <span class="user-cell-name">${u.name}</span>
+                </span>
+              </td>
+              <td class="user-muted-cell">${u.email}</td>
+              <td class="user-muted-cell">${userRoleLabel[u.role] || u.role}</td>
+              <td class="user-muted-cell">${u.perm}</td>
+              <td><span class="user-date">${u.date}</span></td>
+              <td>${renderUserStatusChip(u)}</td>
+            </tr>
+          `).join('') : '<tr class="user-filter-empty"><td colspan="7">소속 유저가 없습니다</td></tr>'}
+        </tbody>
+      </table>
+    </div>`;
 
   // 크레딧 내역
-  renderCreditHistory();
+  if (c.type === 'PRODUCTION') renderCreditHistory();
   hideCreditForm('charge-form');
   hideCreditForm('adjust-form');
+  resetCompanyDetailTab(c);
 
   document.getElementById('company-empty').style.display = 'none';
   document.getElementById('company-detail').style.display = 'flex';
 }
 
 function closeCompanyDetail() {
+  if (companyWorkEditor.open) closeCompanyWorkEditor();
   selectedCompanyId = null;
+  document.getElementById('company-split')?.classList.remove('has-detail');
+  document.querySelector('.main')?.classList.remove('company-detail-open');
   renderCompanies();
   document.getElementById('company-empty').style.display = '';
   document.getElementById('company-detail').style.display = 'none';
@@ -875,20 +3158,10 @@ function saveUserDetail() {
   if (!selectedUserId) return;
   const u = users.find(x => x.id === selectedUserId);
   if (!u) return;
-  const companyValue = document.getElementById('ud-edit-company').value;
-  const companyId = companyValue ? Number(companyValue) : null;
-  const company = companies.find(c => c.id === companyId);
   u.name = document.getElementById('ud-edit-name').value.trim() || u.name;
-  u.email = document.getElementById('ud-edit-email').value.trim() || u.email;
+  u.phoneCountryCode = document.getElementById('ud-edit-phone-country').value;
   u.phone = document.getElementById('ud-edit-phone').value.trim();
-  u.role = document.getElementById('ud-edit-role').value;
-  u.perm = document.getElementById('ud-edit-perm').value;
-  u.companyId = companyId;
-  u.company = company ? company.name : '';
-  companies.forEach(c => {
-    c.users = c.users.filter(userId => userId !== u.id);
-  });
-  if (company && !company.users.includes(u.id)) company.users.push(u.id);
+  u.updatedAt = new Date().toISOString().slice(0, 10).replaceAll('-', '.');
   renderCompanies();
   selectUser(u.id);
   if (selectedCompanyId) selectCompany(selectedCompanyId);
@@ -915,8 +3188,15 @@ function saveCompanyDetail() {
   const c = companies.find(x => x.id === selectedCompanyId);
   if (!c) return;
   c.name = document.getElementById('cd-edit-name').value.trim() || c.name;
-  c.email = document.getElementById('cd-edit-email').value.trim() || c.email;
-  c.type = document.getElementById('cd-edit-type').value;
+  c.description = document.getElementById('cd-edit-description').value.trim();
+  c.phoneCountryCode = document.getElementById('cd-edit-phone-country').value;
+  c.phone = document.getElementById('cd-edit-phone').value.trim();
+  c.country = document.getElementById('cd-edit-country').value.trim();
+  c.websiteUrl = document.getElementById('cd-edit-website').value.trim();
+  c.address = document.getElementById('cd-edit-address').value.trim();
+  c.googleEmail = document.getElementById('cd-edit-google-email').value.trim();
+  c.appUrl = document.getElementById('cd-edit-app-url').value.trim();
+  c.appDescription = document.getElementById('cd-edit-app-description').value.trim();
   users.forEach(u => {
     if (u.companyId === c.id) {
       u.company = c.name;
@@ -949,13 +3229,14 @@ function renderCreditHistory() {
   const tbody = document.getElementById('credit-history');
   const typeLabel = { CHARGE:'충전', USE:'사용', REFUND:'환불', ADJUST:'조정' };
   const typeClass = { CHARGE:'cr-charge', USE:'cr-use', REFUND:'cr-refund', ADJUST:'cr-adjust' };
-  tbody.innerHTML = creditHistory.map(h => `
+  tbody.innerHTML = creditHistory.map((h, index) => `
     <tr>
-      <td><span class="cr-type ${typeClass[h.type]}">${typeLabel[h.type]}</span></td>
+      <td class="cr-no">${creditHistory.length - index}</td>
+      <td class="cr-type-cell"><span class="cr-type ${typeClass[h.type]}">${typeLabel[h.type]}</span></td>
+      <td class="cr-date">${h.date}</td>
+      <td class="cr-reason">${h.reason}</td>
       <td class="${h.amount > 0 ? 'cr-amt-pos' : 'cr-amt-neg'}">${h.amount > 0 ? '+' : ''}${h.amount}</td>
-      <td style="font-family:monospace;color:#888">${h.balance}</td>
-      <td style="color:#666;font-size:11.5px">${h.reason}</td>
-      <td style="color:#bbb;font-size:11px;white-space:nowrap">${h.date}</td>
+      <td class="cr-balance">${h.balance}</td>
     </tr>`).join('');
 }
 
@@ -963,16 +3244,25 @@ function showCreditForm(type) {
   hideCreditForm('charge-form');
   hideCreditForm('adjust-form');
   document.getElementById(type + '-form').classList.add('show');
+  syncCreditActionState(type);
 }
 
 function hideCreditForm(id) {
   document.getElementById(id).classList.remove('show');
+  syncCreditActionState('');
+}
+
+function syncCreditActionState(type) {
+  document.getElementById('credit-charge-toggle')?.classList.toggle('active', type === 'charge');
+  document.getElementById('credit-adjust-toggle')?.classList.toggle('active', type === 'adjust');
 }
 
 function switchTab(tab) {
   const isUsers = tab === 'users';
   document.getElementById('view-users').classList.toggle('active', isUsers);
   document.getElementById('view-companies').classList.toggle('active', !isUsers);
+  document.querySelector('.main')?.classList.toggle('user-detail-open', isUsers && !!selectedUserId);
+  document.querySelector('.main')?.classList.toggle('company-detail-open', !isUsers && !!selectedCompanyId);
   document.querySelectorAll('.nav a[href="#users"], .nav a[href="#companies"]').forEach((n,i) => n.classList.toggle('active', isUsers ? i===0 : i===1));
 }
 
@@ -982,6 +3272,7 @@ function setChip(el) {
 }
 
 renderUsers();
+updateUserFilterToggle();
 renderCompanies();
 if (['users', 'companies'].includes(location.hash.slice(1))) {
   switchTab(location.hash.slice(1));

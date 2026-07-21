@@ -1,4 +1,4 @@
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap");
 
 /* Shared shell styles for the Shortflow admin HTML pages. */
 :root {
@@ -7,7 +7,76 @@
 }
 
 body {
-  font-family: "Pretendard Variable", "Pretendard", "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-family: "Noto Sans KR", "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+}
+
+/* Admin navigation refresh */
+.sb {
+  background: #fff !important;
+  border-right: 1px solid #e7e8ec !important;
+  color: #151515 !important;
+}
+
+.sb-logo {
+  border-bottom: 0 !important;
+  text-align: center;
+}
+
+.sb-logo-main {
+  color: #151515 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sb-logo-sub,
+.nav-label {
+  color: #a0a5ae !important;
+}
+
+.sb-toggle {
+  background: #f4f5f7 !important;
+  color: #7b818c !important;
+  display: none !important;
+}
+
+.sb-toggle:hover {
+  background: #eceef2 !important;
+  color: #151515 !important;
+}
+
+.sb-foot {
+  border-top-color: #eceef2 !important;
+  padding: 10px 12px 10px 22px !important;
+  gap: 10px !important;
+}
+
+.ava {
+  background: #f0f1f4 !important;
+  color: #555b66 !important;
+}
+
+.uname {
+  color: #151515 !important;
+  font-size: 12.5px !important;
+  font-weight: 400 !important;
+  line-height: 1.2;
+}
+
+.sb-foot .uname {
+  font-weight: 425 !important;
+}
+
+.uemail {
+  color: #9aa0aa !important;
+}
+
+.main > .topbar {
+  background: #fff !important;
+}
+
+.main > .topbar::after {
+  background: #e7e8ec !important;
 }
 
 /* Shared admin page header */
@@ -16,7 +85,7 @@ body {
   height: 62px !important;
   padding: 7px 32px 0 !important;
   border-bottom: 0 !important;
-  background: #f5f4f0 !important;
+  background: #fff !important;
   display: flex !important;
   align-items: center !important;
   justify-content: flex-start !important;
@@ -26,21 +95,22 @@ body {
 .main > .topbar::after {
   content: "";
   position: absolute;
-  left: 30px;
-  right: 30px;
+  left: 0;
+  right: 0;
   bottom: 0;
   height: 0.5px;
-  background: #d6d4cd;
+  background: #e7e8ec;
 }
 
 .admin-breadcrumb {
   display: flex;
   align-items: center;
   gap: 9px;
-  color: #1a1a18;
-  font-size: 19px;
-  font-weight: 550;
+  color: #777;
+  font-size: 16px;
+  font-weight: 400;
   line-height: 1;
+  transform: translateY(-2px);
 }
 
 .admin-breadcrumb-separator {
@@ -49,9 +119,9 @@ body {
 }
 
 .admin-breadcrumb-current {
-  color: #777;
+  color: #1a1a18;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* Primary section switching is handled by the sidebar navigation. */
@@ -94,7 +164,7 @@ html.admin-sidebar-collapsed-pending .sb {
   border-radius: 6px;
   background: rgba(255,255,255,0.08);
   color: rgba(255,255,255,0.62);
-  display: inline-flex;
+  display: none !important;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -149,10 +219,12 @@ html.admin-sidebar-collapsed-pending .sb {
   top: 18px;
   width: 24px;
   height: 24px;
-  border: 0.5px solid rgba(255,255,255,0.1);
+  border: 0.5px solid #e0e3e8;
   border-radius: 50%;
-  background: #1b1b17;
+  background: #fff;
+  color: #6f7682;
   z-index: 5;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
 }
 
 .sb.collapsed .sb-toggle i {
@@ -170,13 +242,25 @@ html.admin-sidebar-collapsed-pending .sb {
   display: none !important;
 }
 
+.sb .nav-label.admin-menu-label {
+  display: block !important;
+  margin: 8px 4px 7px;
+  padding: 0 18px;
+  color: #b2b6bf !important;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
 .sb.collapsed .nav {
   padding: 10px 0;
 }
 
 .sb .nav {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,0.18) transparent;
+  scrollbar-color: rgba(15,23,42,0.18) transparent;
 }
 
 .sb .nav::-webkit-scrollbar {
@@ -188,38 +272,107 @@ html.admin-sidebar-collapsed-pending .sb {
 }
 
 .sb .nav::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.16);
+  background: rgba(15,23,42,0.14);
   border-radius: 999px;
 }
 
 .sb .nav::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,0.24);
+  background: rgba(15,23,42,0.24);
+}
+
+.sb .nav {
+  padding: 10px 10px !important;
+}
+
+.sb .sub {
+  display: none !important;
+}
+
+.sb .sub.admin-sub-open {
+  display: grid !important;
+  gap: 2px;
+  margin: 0 4px 6px !important;
 }
 
 .ni {
   text-decoration: none;
-  font-size: 13.5px !important;
+  min-height: 40px !important;
+  margin: 3px 4px !important;
+  padding: 0 18px 0 58px !important;
+  border-left: 0 !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  color: #8b919b !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  position: relative;
 }
 
 .sub .ni {
-  font-size: 12.5px !important;
+  font-size: 13px !important;
+  padding-left: 58px !important;
 }
 
 a.ni {
-  color: rgba(255,255,255,0.42);
+  color: #8b919b !important;
 }
 
 a.ni:visited {
-  color: rgba(255,255,255,0.42);
+  color: #8b919b !important;
 }
 
 a.ni:hover {
-  color: rgba(255,255,255,0.7);
+  color: #151515 !important;
+  background: rgb(247, 247, 247);
 }
 
 a.ni.active,
 a.ni.active:visited {
-  color: #fff;
+  color: #151515 !important;
+}
+
+.ni i {
+  position: absolute;
+  left: 30px;
+  width: 18px;
+  min-width: 18px;
+  color: #8b919b;
+  font-size: 16px !important;
+  font-weight: 300 !important;
+  line-height: 1;
+  text-align: center;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+.admin-nav-chevron {
+  position: absolute;
+  left: 12px;
+  width: 12px;
+  min-width: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0;
+  color: #a8adb5;
+}
+
+.admin-nav-chevron i {
+  position: static;
+  left: auto;
+  width: 12px;
+  min-width: 12px;
+  color: inherit;
+  font-size: 14.5px !important;
+  transition: transform 140ms ease;
+}
+
+.admin-nav-parent[aria-expanded="true"] .admin-nav-chevron i {
+  transform: rotate(90deg);
 }
 
 .sb .ni-badge,
@@ -229,8 +382,17 @@ a.ni.active:visited {
 }
 
 .ni.active {
-  border-left-color: #fff;
-  background: rgba(255,255,255,0.04);
+  border-left-color: transparent !important;
+  background: rgb(242, 242, 242) !important;
+}
+
+.ni.active i,
+a.ni:hover i {
+  color: #151515 !important;
+}
+
+.ni.active .admin-nav-chevron {
+  color: #151515;
 }
 
 .sb-logo-main a {
@@ -238,25 +400,73 @@ a.ni.active:visited {
   text-decoration: none;
 }
 
+.admin-sidebar-logo-link {
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.admin-sidebar-logo-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.admin-sidebar-logo-img {
+  display: block;
+  width: auto;
+  height: 19px;
+}
+
+.admin-sidebar-logo-sub {
+  align-self: flex-end;
+  margin-top: 2px;
+  color: #a0a5ae;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
 .admin-app-link {
   color: inherit;
   text-decoration: none;
 }
 
+.sb.collapsed .admin-sidebar-logo-link,
+.sb.collapsed .admin-sidebar-logo-img,
+.sb.collapsed .admin-sidebar-logo-stack,
+.sb.collapsed .admin-sidebar-logo-sub {
+  display: none;
+}
+
 .sb.collapsed .ni {
   width: 100%;
   min-height: 44px;
-  padding: 0;
-  justify-content: center;
-  gap: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  justify-content: center !important;
+  gap: 0 !important;
   overflow: visible;
   font-size: 0 !important;
   position: relative;
   border-left-width: 0;
+  border-radius: 0 !important;
+}
+
+.sb.collapsed .admin-nav-chevron {
+  display: none;
+}
+
+.sb.collapsed .sub.admin-sub-open {
+  display: none !important;
 }
 
 .sb.collapsed .ni i {
-  font-size: 18px;
+  position: static;
+  left: auto;
+  font-size: 17px !important;
 }
 
 .sb.collapsed .ni-badge {
@@ -273,7 +483,7 @@ a.ni.active:visited {
   font-size: 9px;
   line-height: 1;
   margin-left: 0;
-  border: 1px solid #13130f;
+  border: 1px solid #fff;
 }
 
 .sb.collapsed .ni-badge:not(.hot) {
@@ -293,7 +503,7 @@ a.ni.active:visited {
 
 .sb-foot {
   justify-content: flex-start;
-  background: rgba(255,255,255,0.04);
+  background: #fff;
 }
 
 .sb-foot .uemail {
@@ -315,7 +525,7 @@ a.ni.active:visited {
 
 .sb-profile-link:hover .uname,
 .sb-profile-link:focus-visible .uname {
-  color: rgba(255,255,255,0.78);
+  color: #151515;
 }
 
 .admin-logout-btn {
@@ -323,7 +533,7 @@ a.ni.active:visited {
   height: 28px;
   margin-left: auto;
   border-radius: 7px;
-  color: rgba(255,255,255,0.42);
+  color: #8a919c;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -334,8 +544,8 @@ a.ni.active:visited {
 
 .admin-logout-btn:hover,
 .admin-logout-btn:focus-visible {
-  background: rgba(255,255,255,0.08);
-  color: #fff;
+  background: #f3f4f6;
+  color: #151515;
   outline: none;
 }
 
@@ -363,7 +573,7 @@ a.ni.active:visited {
   min-width: 0;
   padding: 20px 30px 30px;
   gap: 22px;
-  background: #f5f4f0;
+  background: rgb(242, 242, 242);
 }
 
 .main .split.admin-resizable-split {
@@ -401,7 +611,7 @@ a.ni.active:visited {
   top: 50%;
   padding: 5px 2px;
   border-radius: 5px;
-  background: #f5f4f0;
+  background: rgb(242, 242, 242);
   color: #aaa;
   font-size: 12px;
   font-weight: 700;
@@ -595,7 +805,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .main .dh-acts .btn-edit:hover {
-  background: #f7f6f2;
+  background: rgb(242, 242, 242);
   border-color: #c9c7bf;
 }
 
@@ -771,7 +981,7 @@ input[type="number"]::-webkit-inner-spin-button {
   min-height: 22px;
   padding: 2px 8px;
   border-radius: 999px;
-  background: #f0efe9;
+  background: rgb(242, 242, 242);
   color: #555;
   font-size: 11px;
   font-weight: 500;
@@ -848,7 +1058,7 @@ th.status-col {
 }
 
 .utility-remote-collapse:hover {
-  background: #f0efeb;
+  background: rgb(242, 242, 242);
   color: #333;
 }
 
