@@ -21,11 +21,15 @@ document.addEventListener('DOMContentLoaded', () => {
     'kpi-admin.html': ['대시보드', () => 'KPI'],
     'member-admin.html': ['회원 관리', () =>
       document.getElementById('view-companies')?.classList.contains('active') ? '회사' : '유저'],
-    'content-admin-full.html': ['콘텐츠 관리', () =>
-      document.getElementById('pane-revisions')?.style.display === 'flex' ? '수정 요청' : '전체 콘텐츠'],
+    'content-admin-full.html': ['콘텐츠 관리', () => {
+      const activeContentTab = document.querySelector('.nav [data-main-tab].active')?.dataset.mainTab || location.hash.slice(1);
+      if (activeContentTab === 'plans') return '전체 기획안';
+      return document.getElementById('pane-revisions')?.style.display === 'flex' ? '수정 요청' : '전체 콘텐츠';
+    }],
     'workflow-admin.html': ['거래 관리', () => {
       const activeView = document.querySelector('.view.active')?.id;
-      return activeView === 'view-bundle' ? '묶음 거래' : activeView === 'view-turnkey' ? '턴키 거래' : '단일 거래';
+      const tradeType = activeView === 'view-bundle' ? '묶음 거래' : activeView === 'view-turnkey' ? '턴키 거래' : '단일 거래';
+      return ['워크플로우', tradeType];
     }],
     'turnkey-intent-admin.html': ['거래 관리', () => '문의함'],
     'platform-contract-admin.html': ['거래 관리', () => '유통 계약 관리'],
@@ -50,16 +54,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const config = breadcrumbMap[fileName];
     if (!config) return;
     const [parent, getCurrent] = config;
-    const current = getCurrent();
-    const key = `${parent}/${current}`;
+    const currentItems = [getCurrent()].flat().filter(Boolean);
+    const current = currentItems[currentItems.length - 1] || '';
+    const key = `${parent}/${currentItems.join('/')}`;
     if (topbar.dataset.breadcrumbKey === key) return;
     topbar.dataset.breadcrumbKey = key;
     const helpText = pageHelpMap[fileName];
     topbar.innerHTML = `
       <div class="admin-breadcrumb">
         <span>${parent}</span>
-        <span class="admin-breadcrumb-separator">/</span>
-        <span class="admin-breadcrumb-current">${current}</span>
+        ${currentItems.map((item, index) => `
+          <span class="admin-breadcrumb-separator">/</span>
+          <span class="${index === currentItems.length - 1 ? 'admin-breadcrumb-current' : ''}">${item}</span>
+        `).join('')}
         ${helpText ? `<button class="page-help" type="button" aria-label="${current} 페이지 설명" data-tooltip="${helpText}">i</button>` : ''}
       </div>
     `;
@@ -85,6 +92,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const initResizableSplits = () => {
     document.querySelectorAll('.main .split').forEach((split, index) => {
       if (split.classList.contains('content-split')) return;
+      if (split.classList.contains('workflow-split')) return;
+      if (split.classList.contains('intent-split')) return;
       if (split.dataset.resizableBound) return;
 
       const leftPane = Array.from(split.children).find(child => child.classList.contains('lp'));
@@ -269,6 +278,25 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const nav = sidebar.querySelector('.nav');
+  if (nav && !nav.querySelector('a[href="content-admin-full.html#plans"], a[href="#plans"][data-main-tab="plans"]')) {
+    const contentSub = Array.from(nav.children)
+      .find((child) => child.classList?.contains('sub')
+        && child.querySelector('a[href="content-admin-full.html#list"], a[href="#list"][data-main-tab="contents"]'));
+    const revisionsLink = contentSub?.querySelector('a[href="content-admin-full.html#revisions"], a[href="#revisions"][data-main-tab="revisions"]');
+
+    if (contentSub) {
+      const plansLink = document.createElement('a');
+      plansLink.className = 'ni';
+      plansLink.href = 'content-admin-full.html#plans';
+      plansLink.textContent = '전체 기획안';
+      if (revisionsLink) {
+        revisionsLink.insertAdjacentElement('beforebegin', plansLink);
+      } else {
+        contentSub.appendChild(plansLink);
+      }
+    }
+  }
+
   if (nav && !nav.querySelector('[data-admin-trade-parent]')) {
     const currentFile = location.pathname.split('/').pop() || 'dashboard-admin.html';
     const workflowLink = Array.from(nav.children)
@@ -292,8 +320,8 @@ document.addEventListener('DOMContentLoaded', () => {
       tradeSub.className = 'sub';
       tradeSub.innerHTML = `
         <a class="ni${currentFile === 'workflow-admin.html' ? ' active' : ''}" href="workflow-admin.html">워크플로우</a>
-        <a class="ni${currentFile === 'turnkey-intent-admin.html' ? ' active' : ''}" href="turnkey-intent-admin.html">문의함</a>
         <a class="ni${currentFile === 'platform-contract-admin.html' ? ' active' : ''}" href="platform-contract-admin.html">유통 계약 관리</a>
+        <a class="ni${currentFile === 'turnkey-intent-admin.html' ? ' active' : ''}" href="turnkey-intent-admin.html">문의함</a>
       `;
 
       (workflowLink || intentLink || contractLink).insertAdjacentElement('beforebegin', tradeParent);

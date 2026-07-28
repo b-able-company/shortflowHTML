@@ -6,7 +6,7 @@
 <title>회원 관리 — Shortflow Admin</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
 <link rel="stylesheet" href="admin-common.css?v=logo-left-20260715"/>
-<script src="admin-common.js?v=nav-trade-20260716"></script>
+<script src="admin-common.js?v=nav-trade-order-20260727"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb(242, 242, 242); display: flex; height: 100vh; overflow: hidden; font-size: 13px; color: #1a1a18; }
@@ -1159,6 +1159,51 @@ td { padding: 9px 12px; vertical-align: middle; }
   background: #fff;
   border-color: #dedede;
 }
+.company-distribution-contract-list {
+  gap: 10px;
+}
+.company-distribution-contract-item {
+  min-height: 64px;
+  grid-template-columns: 42px minmax(0, 1fr) 74px;
+  cursor: pointer;
+}
+.company-distribution-contract-copy {
+  min-width: 0;
+}
+.company-distribution-contract-period {
+  display: block;
+  margin-top: 5px;
+  color: #8a8f98;
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.company-distribution-dday {
+  min-width: 58px;
+  height: 26px;
+  padding: 0 10px;
+  border: 0.5px solid #d7dbe1;
+  border-radius: 999px;
+  color: #4d535c;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+  justify-self: end;
+}
+.company-distribution-dday.is-urgent {
+  border-color: #ff3b30;
+  color: #ff3b30;
+}
+.company-distribution-dday.is-expired {
+  color: #8f949c;
+  font-weight: 400;
+}
+.company-distribution-contract-pagebar {
+  min-height: 38px;
+  padding: 12px 0 0;
+}
 .company-owned-empty {
   min-height: 52px;
   border: 0.5px solid #dedede;
@@ -1623,8 +1668,9 @@ td { padding: 9px 12px; vertical-align: middle; }
       <a class="ni" href="workflow-admin.html#bundle">묶음 거래</a>
       <a class="ni" href="workflow-admin.html#turnkey">턴키 거래</a>
     </div>
-    <a class="ni" href="turnkey-intent-admin.html"><i class="ti ti-inbox"></i> 문의함</a>
     <a class="ni" href="platform-contract-admin.html"><i class="ti ti-file-dollar"></i> 유통 계약 관리</a>
+    <a class="ni" href="turnkey-intent-admin.html"><i class="ti ti-inbox"></i> 문의함</a>
+
     <div class="nav-label">운영</div>
     <a class="ni" href="settlement-admin.html"><i class="ti ti-receipt"></i> 정산</a>
     <div class="sub">
@@ -1905,6 +1951,7 @@ td { padding: 9px 12px; vertical-align: middle; }
             <div class="detail-tab active" onclick="switchCompanyDetailTab(this,'company-tab-info')">회사 정보</div>
             <div class="detail-tab" id="company-works-tab" onclick="switchCompanyDetailTab(this,'company-tab-works')">대표작</div>
             <div class="detail-tab" onclick="switchCompanyDetailTab(this,'company-tab-users')">소속 유저</div>
+            <div class="detail-tab" id="company-distribution-contract-tab" onclick="switchCompanyDetailTab(this,'company-tab-distribution-contracts')">유통 계약</div>
             <div class="detail-tab" id="company-credit-tab" onclick="switchCompanyDetailTab(this,'company-tab-credit')">크레딧</div>
             <div class="detail-tab" id="company-owned-content-tab" onclick="switchCompanyDetailTab(this,'company-tab-owned-content')">보유 콘텐츠</div>
             <div class="detail-tab" id="company-owned-plan-tab" onclick="switchCompanyDetailTab(this,'company-tab-owned-plans')">보유 기획안</div>
@@ -1995,6 +2042,14 @@ td { padding: 9px 12px; vertical-align: middle; }
             <div class="detail-panel" id="company-tab-owned-plans">
               <div class="sec">
                 <div class="company-owned-content-list" id="cd-owned-plans"></div>
+              </div>
+            </div>
+
+            <!-- 유통 계약 (PLATFORM 회사만) -->
+            <div class="detail-panel" id="company-tab-distribution-contracts">
+              <div class="sec">
+                <div class="company-owned-content-list company-distribution-contract-list" id="cd-distribution-contracts"></div>
+                <div class="list-pagebar company-distribution-contract-pagebar" id="cd-distribution-contract-pagebar"></div>
               </div>
             </div>
 
@@ -2188,6 +2243,37 @@ const companyCollaborationPlans = {
   ],
 };
 
+const distributionContractContents = {
+  'content-101': { title:'대표님이 내 전남친입니다', poster:'../images/대표님이내전남친입니다.png' },
+  'content-102': { title:'재벌집 막내 비서', poster:'../images/재벌집막내비서.png' },
+  'content-103': { title:'죽었다가 회귀한 톱스타', poster:'../images/return-topstar-poster.png' },
+  'content-104': { title:'우리 집에 킬러가 산다', poster:'../images/killer-at-home.png' },
+  'content-105': { title:'연애 계약서', poster:'../images/비밀사내결혼.png' },
+  'content-108': { title:'비밀 상속자', poster:'../images/내남편의비밀계정.png' },
+  'content-110': { title:'첫사랑 리벤지', poster:'../images/첫사랑은계약종료.png' },
+  'content-111': { title:'위험한 이웃', poster:'../images/나의위험한파트너.png' },
+  'content-112': { title:'로열 룸메이트', poster:'../images/우주택배기사님.png' },
+  'content-113': { title:'알고리즘이 정한 사랑', poster:'../images/ai-husband.png' },
+  'content-114': { title:'자정의 결혼식', poster:'../images/황후의복수노트.png' },
+  'content-115': { title:'일주일만 사랑해', poster:'../images/그녀의두번째엔딩.png' },
+};
+
+const distributionContracts = [
+  { id:1, company:'ShortReel (US)', content:'content-101', launchDate:'2026-05-01', expireDate:'2028-04-30' },
+  { id:2, company:'Viki', content:'content-102', launchDate:'2025-08-01', expireDate:'2026-06-30' },
+  { id:3, company:'WeTV', content:'content-104', launchDate:'2026-08-15', expireDate:'2026-12-14' },
+  { id:4, company:'DramaBox', content:'content-103', launchDate:'2025-12-15', expireDate:'2026-08-30' },
+  { id:5, company:'ShortReel (US)', content:'content-105', launchDate:'2026-01-20', expireDate:'2026-08-15' },
+  { id:6, company:'ShortReel (US)', content:'content-108', launchDate:'2026-04-01', expireDate:'2026-10-31' },
+  { id:7, company:'Viki', content:'content-110', launchDate:'2026-03-15', expireDate:'2026-09-15' },
+  { id:8, company:'WeTV', content:'content-111', launchDate:'2026-05-10', expireDate:'2026-08-05' },
+  { id:9, company:'DramaBox', content:'content-112', launchDate:'2026-07-01', expireDate:'2027-01-10' },
+  { id:10, company:'ShortReel (US)', content:'content-113', launchDate:'2026-06-01', expireDate:'2026-09-02' },
+  { id:11, company:'ShortReel (US)', content:'content-114', launchDate:'2026-07-15', expireDate:'2026-11-30' },
+  { id:12, company:'ShortReel (US)', content:'content-115', launchDate:'2026-02-10', expireDate:'2026-07-20' },
+  { id:13, company:'ShortReel (US)', content:'content-103', launchDate:'2026-03-01', expireDate:'2027-03-01' },
+];
+
 const creditHistory = [
   { type:'CHARGE', amount:500, balance:1250, reason:'크레딧 충전', date:'2026.05.08 · 14:00' },
   { type:'USE', amount:-1, balance:750, reason:'대본 분석 사용', date:'2026.05.07 · 11:23' },
@@ -2264,7 +2350,9 @@ let loginHistoryPage = 1;
 const USER_PAGE_SIZE = 15;
 const COMPANY_PAGE_SIZE = 15;
 const LOGIN_HISTORY_PAGE_SIZE = 10;
+const COMPANY_DISTRIBUTION_CONTRACT_PAGE_SIZE = 10;
 const MAX_COMPANY_REPRESENTATIVE_WORKS = 3;
+let companyDistributionContractPage = 1;
 let companyWorkIdSeq = 3;
 const companyWorkEditor = {
   open: false,
@@ -2677,10 +2765,12 @@ function closeUserDetail() {
 
 function resetCompanyDetailTab(company) {
   const showCredit = company?.type === 'PRODUCTION';
+  const showDistributionContracts = company?.type === 'PLATFORM';
   document.getElementById('company-works-tab').style.display = showCredit ? '' : 'none';
   document.getElementById('company-credit-tab').style.display = showCredit ? '' : 'none';
   document.getElementById('company-owned-content-tab').style.display = showCredit ? '' : 'none';
   document.getElementById('company-owned-plan-tab').style.display = showCredit ? '' : 'none';
+  document.getElementById('company-distribution-contract-tab').style.display = showDistributionContracts ? '' : 'none';
   document.querySelectorAll('#company-detail .detail-tab').forEach((tab, index) => tab.classList.toggle('active', index === 0));
   document.querySelectorAll('#company-detail .detail-panel').forEach((panel, index) => panel.classList.toggle('active', index === 0));
   syncCompanySavebar('company-tab-info');
@@ -2867,6 +2957,98 @@ function renderCompanyOwnedPlans(c) {
   `).join('') : '<div class="company-owned-empty">보유 기획안이 없습니다</div>';
 }
 
+function memberContractDateValue(value) {
+  const time = new Date(`${value || ''}T00:00:00`).getTime();
+  return Number.isNaN(time) ? Number.MAX_SAFE_INTEGER : time;
+}
+
+function memberFormatContractDate(value) {
+  return value ? String(value).replaceAll('-', '.') : '—';
+}
+
+function memberFormatContractPeriod(contract) {
+  return `${memberFormatContractDate(contract.launchDate)} ~ ${memberFormatContractDate(contract.expireDate)}`;
+}
+
+function memberDaysUntilDate(value) {
+  if (!value) return null;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const target = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(target.getTime())) return null;
+  return Math.ceil((target - today) / 86400000);
+}
+
+function compareDistributionContractByDday(a, b) {
+  const aDays = memberDaysUntilDate(a.expireDate);
+  const bDays = memberDaysUntilDate(b.expireDate);
+  const aExpired = aDays != null && aDays < 0 ? 1 : 0;
+  const bExpired = bDays != null && bDays < 0 ? 1 : 0;
+  if (aExpired !== bExpired) return aExpired - bExpired;
+  const expireDiff = memberContractDateValue(a.expireDate) - memberContractDateValue(b.expireDate);
+  if (expireDiff !== 0) return expireDiff;
+  return b.id - a.id;
+}
+
+function getCompanyDistributionContracts(c) {
+  if (!c || c.type !== 'PLATFORM') return [];
+  return distributionContracts
+    .filter(contract => contract.company === c.name)
+    .slice()
+    .sort(compareDistributionContractByDday);
+}
+
+function renderDistributionDdayBadge(contract) {
+  const days = memberDaysUntilDate(contract.expireDate);
+  if (days == null) return '<span class="company-distribution-dday">—</span>';
+  if (days < 0) return '<span class="company-distribution-dday is-expired">종료</span>';
+  const label = days === 0 ? 'D-DAY' : `D-${days}`;
+  const urgent = days <= 90 ? ' is-urgent' : '';
+  return `<span class="company-distribution-dday${urgent}">${label}</span>`;
+}
+
+function renderCompanyDistributionContracts(c) {
+  const list = document.getElementById('cd-distribution-contracts');
+  const pagebar = document.getElementById('cd-distribution-contract-pagebar');
+  if (!list) return;
+  const contracts = getCompanyDistributionContracts(c);
+  const totalPages = Math.max(1, Math.ceil(contracts.length / COMPANY_DISTRIBUTION_CONTRACT_PAGE_SIZE));
+  companyDistributionContractPage = Math.min(Math.max(companyDistributionContractPage, 1), totalPages);
+  const start = (companyDistributionContractPage - 1) * COMPANY_DISTRIBUTION_CONTRACT_PAGE_SIZE;
+  const pageContracts = contracts.slice(start, start + COMPANY_DISTRIBUTION_CONTRACT_PAGE_SIZE);
+  list.innerHTML = pageContracts.length ? pageContracts.map(contract => {
+    const content = distributionContractContents[contract.content] || { title:'—', poster:'' };
+    return `
+      <button class="company-owned-content-item company-distribution-contract-item" type="button" onclick="openCompanyDistributionContract(${contract.id})">
+        <span class="company-owned-content-poster">
+          ${content.poster ? `<img src="${escapeHtml(content.poster)}" alt="${escapeHtml(content.title)} 포스터">` : ''}
+        </span>
+        <span class="company-distribution-contract-copy">
+          <span class="company-owned-content-title company-owned-plan-title">${escapeHtml(content.title)}</span>
+          <span class="company-distribution-contract-period">${escapeHtml(memberFormatContractPeriod(contract))}</span>
+        </span>
+        ${renderDistributionDdayBadge(contract)}
+      </button>
+    `;
+  }).join('') : '<div class="company-owned-empty">유통 계약이 없습니다</div>';
+  if (!pagebar) return;
+  pagebar.innerHTML = totalPages > 1
+    ? Array.from({ length: totalPages }).map((_, index) => {
+      const page = index + 1;
+      return `<button class="list-page-btn ${page === companyDistributionContractPage ? 'active' : ''}" onclick="setCompanyDistributionContractPage(${page})">${page}</button>`;
+    }).join('')
+    : '<button class="list-page-btn active" disabled>1</button>';
+}
+
+function setCompanyDistributionContractPage(page) {
+  companyDistributionContractPage = page;
+  renderCompanyDistributionContracts(companies.find(x => x.id === selectedCompanyId));
+}
+
+function openCompanyDistributionContract(contractId) {
+  window.location.href = `platform-contract-admin.html?contractId=${encodeURIComponent(contractId)}`;
+}
+
 function openCompanyOwnedPlan(planId) {
   const c = companies.find(x => x.id === selectedCompanyId);
   const item = getCompanyCollaborationPlans(c).find(plan => plan.id === planId);
@@ -3045,7 +3227,9 @@ function renderCompanyWorkEditorModal() {
 }
 
 function selectCompany(id) {
-  if (selectedCompanyId !== id && companyWorkEditor.open) closeCompanyWorkEditor();
+  const isNewCompany = selectedCompanyId !== id;
+  if (isNewCompany && companyWorkEditor.open) closeCompanyWorkEditor();
+  if (isNewCompany) companyDistributionContractPage = 1;
   selectedCompanyId = id;
   document.getElementById('company-split')?.classList.add('has-detail');
   document.querySelector('.main')?.classList.remove('user-detail-open');
@@ -3078,6 +3262,7 @@ function selectCompany(id) {
   renderCompanyRepresentativeWorks(c);
   renderCompanyOwnedContents(c);
   renderCompanyOwnedPlans(c);
+  renderCompanyDistributionContracts(c);
   document.getElementById('cd-acts').innerHTML = '';
 
   // 유저 관리

@@ -6,7 +6,7 @@
 <title>문의함 — Shortflow Admin</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
 <link rel="stylesheet" href="admin-common.css?v=logo-left-20260715" />
-<script src="admin-common.js?v=nav-trade-20260716"></script>
+<script src="admin-common.js?v=nav-trade-order-20260727"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb(242, 242, 242); display: flex; height: 100vh; overflow: hidden; font-size: 13px; color: #1a1a18; }
@@ -60,16 +60,23 @@ tbody tr { border-bottom: 0.5px solid rgb(242, 242, 242); cursor: pointer; }
 tbody tr:hover { background: rgb(242, 242, 242); }
 tbody tr.sel { background: rgb(242, 242, 242); }
 td { padding: 10px 12px; vertical-align: middle; }
-.col-type { width: 24%; }
-.col-platform { width: 28%; }
-.col-status { width: 19%; }
-.col-comments { width: 13%; }
-.col-date { width: 16%; }
-.th-platform, .td-platform { text-align: left; }
+.col-no { width: 46px; }
+.col-type { width: 150px; }
+.col-company { width: auto; }
+.col-status { width: 112px; }
+.col-comments { width: 88px; }
+.col-date { width: 128px; }
+.th-company, .td-company { text-align: left; }
 .th-type, .td-type,
 .th-status, .td-status,
 .th-count, .tcount,
 .th-date, .tmeta { text-align: center; }
+.intent-no {
+  color: #9aa0a9;
+  font-size: 12px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
 .tname { font-size: 12.5px; font-weight: 500; }
 .type-text { color: #5f5f59; font-size: 12px; font-weight: 500; white-space: nowrap; }
 .tmeta { font-size: 12.5px; color: #888; }
@@ -97,22 +104,634 @@ td { padding: 10px 12px; vertical-align: middle; }
 .message-text { font-size: 12px; line-height: 1.65; color: #444; }
 .btn { font-size: 11.5px; padding: 6px 12px; border-radius: 6px; border: 0.5px solid rgb(242, 242, 242); cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; background: #fff; color: #444; }
 .btn-primary { background: #1a1a18; color: #fff; border-color: #1a1a18; }
-.comment-box { background: #fff; border: 0.5px solid rgb(242, 242, 242); border-radius: 8px; overflow: hidden; }
-.comment-list { display: flex; flex-direction: column; padding: 4px 14px; border-bottom: 0.5px solid rgb(242, 242, 242); }
-.comment-empty { min-height: 96px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 12px; color: #aaa; }
-.comment-item { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 9px; row-gap: 7px; padding: 12px 0; border-bottom: 0.5px solid rgb(242, 242, 242); }
-.comment-item:last-child { border-bottom: none; }
-.comment-avatar { width: 24px; height: 24px; border-radius: 50%; background: #1a1a18; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; flex-shrink: 0; }
-.comment-main { display: contents; }
-.comment-meta { grid-column: 2; min-height: 24px; display: flex; align-items: center; gap: 6px; }
-.comment-author { font-size: 12px; font-weight: 600; color: #333; }
-.comment-date { font-size: 11px; color: #aaa; }
-.comment-text { grid-column: 2; font-size: 12px; line-height: 1.6; color: #444; white-space: pre-wrap; word-break: break-word; background: rgb(242, 242, 242); border: 0.5px solid rgb(242, 242, 242); border-radius: 7px; padding: 9px 10px; }
-.comment-write { display: flex; gap: 8px; align-items: flex-end; padding: 12px 14px; background: rgb(242, 242, 242); }
-.comment-input { flex: 1; min-height: 64px; max-height: 140px; resize: vertical; border: 0.5px solid rgb(242, 242, 242); border-radius: 7px; padding: 9px 10px; background: #fff; color: #1a1a18; font-family: inherit; font-size: 12px; line-height: 1.5; outline: none; }
-.comment-input:focus { border-color: #aaa; }
+.comment-box { min-height: 0; flex: 1 1 auto; background: transparent; border: 0; border-radius: 0; overflow: visible; display: flex; flex-direction: column; }
+.comment-list { min-height: 0; display: flex; flex: 1 1 auto; flex-direction: column; gap: 18px; padding: 2px 0 18px; border-bottom: 0; overflow-y: auto; }
+.comment-item { display: grid; grid-template-columns: 32px minmax(0, auto); column-gap: 10px; align-items: end; max-width: min(560px, 92%); }
+.comment-item.sender-admin { grid-template-columns: minmax(0, 1fr); margin-left: auto; text-align: right; }
+.comment-avatar { width: 32px; height: 32px; border-radius: 50%; background: #f2f2f2 center / cover no-repeat; box-shadow: inset 0 0 0 0.5px #e6e6e6; }
+.comment-main { min-width: 0; max-width: 100%; }
+.comment-time { margin-top: 9px; padding-left: 10px; color: #6f747c; font-size: 12px; line-height: 1.2; text-align: left; }
+.comment-item:not(.sender-admin) .comment-review-row { grid-column: 2; }
+.comment-item.sender-admin .comment-time { padding-left: 0; padding-right: 10px; text-align: right; }
+.comment-review-row { margin-top: 9px; display: flex; align-items: center; gap: 8px; }
+.comment-review-row .comment-time { margin-top: 0; padding-left: 10px; }
+.message-review-check { width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; background: #f1f1f1; color: #777; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background .14s ease, color .14s ease, transform .14s ease; }
+.message-review-check i { font-size: 14px; }
+.message-review-check:hover { background: #eaf3de; color: #3b6d11; transform: translateY(-1px); }
+.message-review-check.reviewed { background: #eaf3de; color: #3b6d11; cursor: default; transform: none; }
+.comment-text { max-width: 100%; font-size: 12.5px; line-height: 1.65; color: #333; white-space: pre-wrap; word-break: break-word; background: #f6f6f6; border: 0; border-radius: 12px; padding: 14px 16px; }
+.comment-item.sender-admin .comment-text { background: #f6f6f6; border: 0; color: #1a1a18; }
+.comment-item.production-user-message .comment-main { display: flex; flex-direction: column; gap: 12px; }
+.production-chat-summary { width: min(340px, 76%); margin-right: auto; padding: 14px 18px; border-radius: 16px; background: #f1f1f1; display: grid; grid-template-columns: 72px minmax(0, 1fr); column-gap: 18px; row-gap: 10px; color: #1a1a18; font-size: 12.5px; line-height: 1.45; }
+.production-chat-label { color: #1a1a18; font-weight: 500; }
+.production-chat-value { min-width: 0; color: #1a1a18; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.comment-item.production-user-message .comment-text { border-radius: 18px; padding: 16px 18px; background: #f1f1f1; }
+.production-chat-time { margin-top: 0; padding-left: 0; color: #6f747c; font-size: 12px; line-height: 1.2; }
+.comment-write { padding: 16px 0 0; background: transparent; }
+.comment-composer { width: 100%; border: 0.5px solid #dedede; border-radius: 14px; background: #fff; display: flex; flex-direction: column; overflow: hidden; transition: border-color .14s ease, box-shadow .14s ease; }
+.comment-composer:focus-within { border-color: #b7b7b7; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+.comment-input { width: 100%; min-height: 58px; max-height: 140px; resize: vertical; border: 0; border-radius: 0; padding: 12px 14px 8px; background: transparent; color: #1a1a18; font-family: inherit; font-size: 12.5px; line-height: 1.5; outline: none; }
+.comment-input::placeholder { color: #a8abb2; }
+.comment-composer-actions { min-height: 38px; padding: 0 8px 8px 10px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+.comment-send-btn { width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%; background: #1a1a18; color: #fff; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.comment-send-btn i { font-size: 15px; }
+.comment-send-btn:hover { background: #000; }
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+/* CONTENT ADMIN STYLE ALIGNMENT */
+html,
+body { background: #fff !important; }
+.main { background: #fff !important; }
+.main.intent-detail-open .topbar {
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+.main.intent-detail-open .topbar::after {
+  right: 50% !important;
+}
+.main.intent-detail-expanded .topbar::after {
+  display: none !important;
+}
+.intent-split,
+.intent-split .lp,
+.intent-split .dp,
+.intent-split .dh,
+.intent-split .dbody,
+.intent-split .tscroll {
+  min-height: 0;
+}
+.intent-split {
+  width: 100% !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  background: #fff !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  overflow: hidden !important;
+}
+.intent-split:not(.has-detail) .lp {
+  width: 100% !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+}
+.intent-split:not(.has-detail) .dp {
+  display: none !important;
+}
+.intent-split.has-detail {
+  overflow: visible !important;
+}
+.intent-split.has-detail .lp {
+  width: 50% !important;
+  min-width: 420px !important;
+  flex: 0 0 50% !important;
+}
+.intent-split.has-detail .dp {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: none !important;
+  height: calc(100% + 62px) !important;
+  max-height: calc(100% + 62px) !important;
+  margin-top: -62px !important;
+  margin-left: 0 !important;
+  background: #fff !important;
+  border-left: 0 !important;
+  box-shadow: none !important;
+  position: relative !important;
+  overflow: visible !important;
+  z-index: 80 !important;
+}
+.intent-split.has-detail .dp::after {
+  display: none !important;
+}
+.intent-split.has-detail .dp::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 1px !important;
+  background: #e5e7eb !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+  display: block !important;
+}
+.intent-split .admin-split-resizer { display: none !important; }
+.intent-split.has-detail.is-expanded .lp {
+  display: none !important;
+}
+.intent-split.has-detail.is-expanded .dp {
+  flex: 1 1 100% !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin-top: -62px !important;
+}
+.intent-split.has-detail.is-expanded .dp::before {
+  display: none !important;
+}
+.intent-list-pane {
+  padding: 0 18px !important;
+  background: #fff !important;
+  border-right: 0 !important;
+}
+.intent-split.has-detail .intent-list-pane {
+  padding: 0 0 0 18px !important;
+}
+.intent-list-toolbar {
+  min-height: 38px;
+  margin: 10px 0 8px;
+  padding: 5px 7px;
+  background: rgb(242, 242, 242);
+  border: 0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: visible;
+  z-index: 35;
+}
+.list-icon-btn {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #111;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.list-icon-btn:hover { background: rgb(242, 242, 242); }
+.list-icon-btn.open {
+  background: #fff;
+  color: #111;
+  box-shadow: inset 0 0 0 0.5px #d4d4d4;
+}
+.list-icon-btn i { font-size: 16px; }
+.intent-filter-panel {
+  display: none;
+  min-height: 38px;
+  margin: 0 0 8px;
+  padding: 0 7px;
+  border: 0;
+  background: transparent;
+  gap: 8px;
+}
+.intent-filter-panel.show {
+  display: flex;
+  align-items: center;
+}
+.intent-filter-dropdown {
+  position: relative;
+  display: inline-flex;
+}
+.intent-filter-control {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  height: 35px;
+  min-width: 112px;
+  padding: 0 36px 0 12px;
+  border: 0.5px solid #dedede;
+  border-radius: 7px;
+  background: #fff;
+  color: #1b1d21;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 33px;
+  text-align: left;
+  cursor: pointer;
+}
+.intent-filter-control.active {
+  border: 1.5px solid rgba(232, 93, 44, 0.72);
+  background-color: #fff7ef;
+  color: #e85d2c;
+  font-weight: 500;
+}
+.intent-filter-control::after {
+  content: "";
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-right: 1px solid #8d8d8d;
+  border-bottom: 1px solid #8d8d8d;
+  transform: translateY(-65%) rotate(45deg);
+  pointer-events: none;
+}
+.intent-filter-menu {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 6px);
+  z-index: 90;
+  min-width: 156px;
+  padding: 6px;
+  border: 0.5px solid #dedede;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.10);
+  display: none;
+}
+.intent-filter-dropdown.open .intent-filter-menu {
+  display: block;
+}
+.intent-company-filter .intent-filter-menu {
+  min-width: 210px;
+}
+.intent-filter-search {
+  width: 100%;
+  height: 30px;
+  margin-bottom: 5px;
+  padding: 0 9px;
+  border: 0.5px solid #dedede;
+  border-radius: 7px;
+  background: #fff;
+  color: #1b1d21;
+  outline: none;
+  font-family: inherit;
+  font-size: 12px;
+}
+.intent-filter-search::placeholder {
+  color: #b6bac2;
+}
+.intent-filter-menu-empty {
+  display: none;
+  min-height: 30px;
+  padding: 0 9px;
+  color: #9aa0a9;
+  align-items: center;
+  font-size: 12px;
+}
+.intent-filter-menu-empty.show {
+  display: flex;
+}
+.intent-filter-menu-item {
+  width: 100%;
+  min-height: 30px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-family: inherit;
+  font-size: 12px;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.intent-filter-menu-item:hover {
+  background: #f7f7f7;
+}
+.intent-filter-menu-item.active {
+  background: #fff1ec;
+  color: #e85d2c;
+  font-weight: 500;
+}
+.intent-list-table {
+  flex: 0 1 auto;
+  overflow: auto;
+  background: #fff !important;
+}
+.intent-list-table table {
+  min-width: 740px;
+  table-layout: fixed;
+  background: #fff !important;
+}
+.intent-list-table thead th {
+  height: 40px;
+  padding: 0 14px;
+  background: #fff !important;
+  border-bottom: 1px solid #e5e7eb;
+  color: #9aa0a9;
+  font-size: 11px;
+  font-weight: 400;
+}
+.intent-list-table tbody tr {
+  height: 48px;
+  border-bottom: 1px solid #eef0f3;
+  background: #fff;
+}
+.intent-list-table tbody tr:hover {
+  background: #fafafa;
+}
+.intent-list-table tbody tr.sel {
+  background: rgb(242, 242, 242);
+}
+.intent-list-table td {
+  padding: 0 14px;
+  color: #14171c;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.intent-list-table .bdg,
+.intent-split #intent-detail .bdg {
+  min-height: 26px;
+  min-width: 58px;
+  padding: 0 12px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+}
+.intent-filter-empty {
+  height: 96px !important;
+  cursor: default !important;
+}
+.intent-filter-empty td {
+  text-align: center;
+  color: #aaa;
+  font-size: 12px;
+}
+.intent-filter-empty:hover {
+  background: #fff !important;
+}
+.list-pagebar {
+  min-height: 52px;
+  padding: 18px 14px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: #fff;
+  flex-shrink: 0;
+}
+.list-page-btn {
+  min-width: 20px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #9b9a94;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.list-page-btn.active {
+  color: #1a1a18;
+  font-weight: 600;
+}
+.list-page-btn:hover:not(:disabled) {
+  color: #1a1a18;
+}
+.list-page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.intent-split #intent-detail {
+  height: 100% !important;
+  display: flex;
+  flex-direction: column;
+  background: #fff !important;
+}
+.intent-split #intent-detail .dh {
+  min-height: 88px !important;
+  padding: 10px 14px 8px !important;
+  background: #fff !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: relative;
+}
+.intent-split #intent-detail .dh-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.intent-split #intent-detail .content-detail-head {
+  min-width: 0;
+  min-height: 64px;
+  flex: 1 1 auto;
+  padding-right: 16px;
+  padding-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.intent-detail-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex: 0 0 48px;
+  background: #f2f2f2 url('../images/icon/플랫폼프로필.png') center 38% / 136% no-repeat;
+  box-shadow: inset 0 0 0 0.5px #e6e6e6;
+}
+.intent-detail-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transform: translateY(-3px);
+}
+.intent-split #intent-detail .dh-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1a1a18;
+  line-height: 1.25;
+}
+.intent-split #intent-detail .dh-type {
+  color: #777;
+  font-size: 12px;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.intent-split #intent-detail .dh-sub {
+  margin-top: 0;
+  color: #777;
+  font-size: 12px;
+  line-height: 26px;
+  white-space: nowrap;
+}
+.intent-split #intent-detail .dh-review {
+  height: 30px;
+  min-height: 30px;
+  padding: 0 12px;
+  margin-top: 0;
+  border-radius: 9px;
+  font-size: 11.5px;
+}
+.intent-split #intent-detail .dh-actions {
+  flex: 0 0 auto;
+  padding-right: 92px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.intent-split #intent-detail .dh-actions #intent-status {
+  position: absolute;
+  top: 10px;
+  right: 48px;
+}
+.intent-split #intent-detail .dh-actions .dh-review {
+  position: absolute;
+  top: 46px;
+  right: 14px;
+}
+.intent-split #intent-detail .dh-actions .btn-close-panel {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+}
+.intent-split #intent-detail .sec {
+  margin-bottom: 18px;
+}
+.intent-split #intent-detail .dbody > .sec {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0;
+}
+.intent-split #intent-detail .sec-title {
+  justify-content: flex-start;
+  gap: 7px;
+  color: #aaa;
+  border-bottom: 0;
+  padding-bottom: 0;
+  margin-bottom: 10px;
+}
+.intent-split #intent-detail .sec-title::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff8a3d;
+  flex: 0 0 6px;
+}
+.intent-split #intent-detail .sec-title span {
+  margin-left: auto;
+  color: #aaa;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.intent-split #intent-detail .inq-box { border: 0.5px solid #eeede8; border-radius: 8px; background: #fff; }
+.intent-split #intent-detail .comment-box {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.intent-split #intent-detail .inq-box {
+  padding: 13px 14px 14px;
+}
+.intent-split #intent-detail .inq-row {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 18px;
+  padding: 8px 0 9px;
+  border-bottom: 0.5px solid #f2f1ed;
+}
+.intent-split #intent-detail .inq-row:last-of-type {
+  border-bottom: 0;
+}
+.intent-split #intent-detail .inq-k {
+  flex: initial;
+  color: #aaa79f;
+  font-size: 10px;
+  font-weight: 500;
+}
+.intent-split #intent-detail .inq-v {
+  min-width: 0;
+  color: #1a1a18;
+  font-size: 12.5px;
+  text-align: left;
+}
+.intent-split #intent-detail .message-text {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 0.5px solid #f2f1ed;
+  color: #1a1a18;
+  font-size: 12.5px;
+  line-height: 1.65;
+}
+.intent-split #intent-detail .comment-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 2px 0 18px;
+  border-bottom: 0;
+  overflow-y: auto;
+}
+.intent-split #intent-detail .comment-item {
+  border-bottom: 0;
+}
+.intent-split #intent-detail .comment-text {
+  border: 0;
+  background: #f6f6f6;
+  color: #333;
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.intent-split #intent-detail .comment-item.sender-admin .comment-text {
+  border: 0;
+  background: #f6f6f6;
+  color: #1a1a18;
+}
+.intent-split #intent-detail .comment-item.production-user-message .comment-text {
+  background: #f1f1f1;
+  border-radius: 18px;
+  padding: 16px 18px;
+}
+.intent-split #intent-detail .comment-write {
+  flex: 0 0 auto;
+  padding: 16px 0 0;
+  background: transparent;
+}
+.intent-split #intent-detail .comment-input {
+  border: 0;
+  background: transparent;
+}
+.intent-split #intent-detail .comment-input:focus {
+  border-color: transparent;
+}
+.btn-panel-expand,
+.btn-close-panel {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #aaa;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+}
+.btn-panel-expand:hover,
+.btn-close-panel:hover {
+  background: #f7f7f7;
+  color: #555;
+}
+.intent-split #intent-detail .dbody {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: hidden !important;
+  overscroll-behavior: contain;
+  padding: 18px 14px 16px !important;
+  border-top: 1px solid #e5e7eb !important;
+  background: #fff !important;
+  display: flex;
+  flex-direction: column;
+}
 </style>
 </head>
 <body>
@@ -144,8 +763,9 @@ td { padding: 10px 12px; vertical-align: middle; }
       <a class="ni" href="workflow-admin.html#bundle">묶음 거래</a>
       <a class="ni" href="workflow-admin.html#turnkey">턴키 거래</a>
     </div>
-    <a class="ni active" href="turnkey-intent-admin.html"><i class="ti ti-inbox"></i> 문의함</a>
     <a class="ni" href="platform-contract-admin.html"><i class="ti ti-file-dollar"></i> 유통 계약 관리</a>
+    <a class="ni active" href="turnkey-intent-admin.html"><i class="ti ti-inbox"></i> 문의함</a>
+
     <div class="nav-label">운영</div>
     <a class="ni" href="settlement-admin.html"><i class="ti ti-receipt"></i> 정산</a>
     <div class="sub">
@@ -167,75 +787,90 @@ td { padding: 10px 12px; vertical-align: middle; }
 
 <div class="main">
   <div class="topbar"><span class="topbar-title">문의함</span></div>
-  <div class="split">
-    <div class="lp">
-      <div class="toolbar">
-        <select class="filter-select" id="type-filter" aria-label="문의 유형 필터" onchange="setTypeFilter(this)">
-          <option value="전체">전체 문의</option>
-          <option value="턴키 판매 의사">턴키 판매 의사</option>
-          <option value="제작협업">제작협업</option>
-        </select>
-        <select class="filter-select" id="status-filter" aria-label="문의 상태 필터" onchange="setStatusFilter(this)">
-          <option value="전체">전체 상태</option>
-          <option value="접수">접수</option>
-          <option value="검토 완료">검토 완료</option>
-        </select>
+  <div class="split intent-split" id="pane-intents">
+    <div class="lp intent-list-pane">
+      <div class="toolbar intent-list-toolbar">
+        <button class="list-icon-btn" id="intent-filter-toggle" type="button" aria-label="필터" aria-expanded="false" onclick="toggleIntentFilterPanel()"><i class="ti ti-filter"></i></button>
       </div>
-      <div class="tscroll">
+      <div class="intent-filter-panel" id="intent-filter-panel">
+        <div class="intent-filter-dropdown" id="intent-type-filter-dropdown">
+          <button class="intent-filter-control" id="intent-type-filter-button" type="button" aria-expanded="false" onclick="toggleIntentFilterDropdown('intent-type-filter-dropdown')">전체 문의</button>
+          <div class="intent-filter-menu">
+            <button class="intent-filter-menu-item active" type="button" data-value="전체" onclick="selectIntentFilter('type', '전체', '전체 문의')">전체 문의</button>
+            <button class="intent-filter-menu-item" type="button" data-value="턴키판매" onclick="selectIntentFilter('type', '턴키판매', '턴키판매')">턴키판매</button>
+            <button class="intent-filter-menu-item" type="button" data-value="제작협업" onclick="selectIntentFilter('type', '제작협업', '제작협업')">제작협업</button>
+          </div>
+        </div>
+        <div class="intent-filter-dropdown intent-company-filter" id="intent-platform-filter-dropdown">
+          <button class="intent-filter-control" id="intent-platform-filter-button" type="button" aria-expanded="false" onclick="toggleIntentFilterDropdown('intent-platform-filter-dropdown')">플랫폼 전체</button>
+          <div class="intent-filter-menu">
+            <input class="intent-filter-search" type="text" placeholder="플랫폼명 검색" oninput="filterIntentDropdownOptions(this)" onclick="event.stopPropagation()" />
+            <button class="intent-filter-menu-item active" type="button" data-value="전체" onclick="selectIntentFilter('platform', '전체', '플랫폼 전체')">플랫폼 전체</button>
+            <button class="intent-filter-menu-item" type="button" data-value="WeTV" onclick="selectIntentFilter('platform', 'WeTV', 'WeTV')">WeTV</button>
+            <button class="intent-filter-menu-item" type="button" data-value="iQIYI" onclick="selectIntentFilter('platform', 'iQIYI', 'iQIYI')">iQIYI</button>
+            <button class="intent-filter-menu-item" type="button" data-value="Rakuten Viki" onclick="selectIntentFilter('platform', 'Rakuten Viki', 'Rakuten Viki')">Rakuten Viki</button>
+            <button class="intent-filter-menu-item" type="button" data-value="Reelio" onclick="selectIntentFilter('platform', 'Reelio', 'Reelio')">Reelio</button>
+            <button class="intent-filter-menu-item" type="button" data-value="PlayShort Korea" onclick="selectIntentFilter('platform', 'PlayShort Korea', 'PlayShort Korea')">PlayShort Korea</button>
+            <div class="intent-filter-menu-empty">검색 결과 없음</div>
+          </div>
+        </div>
+        <div class="intent-filter-dropdown" id="intent-status-filter-dropdown">
+          <button class="intent-filter-control" id="intent-status-filter-button" type="button" aria-expanded="false" onclick="toggleIntentFilterDropdown('intent-status-filter-dropdown')">상태 전체</button>
+          <div class="intent-filter-menu">
+            <button class="intent-filter-menu-item active" type="button" data-value="전체" onclick="selectIntentFilter('status', '전체', '상태 전체')">상태 전체</button>
+            <button class="intent-filter-menu-item" type="button" data-value="pending" onclick="selectIntentFilter('status', 'pending', 'PENDING')">PENDING</button>
+            <button class="intent-filter-menu-item" type="button" data-value="reviewed" onclick="selectIntentFilter('status', 'reviewed', 'REVIEWED')">REVIEWED</button>
+          </div>
+        </div>
+      </div>
+      <div class="tscroll intent-list-table">
         <table>
           <colgroup>
+            <col class="col-no" />
             <col class="col-type" />
-            <col class="col-platform" />
+            <col class="col-company" />
             <col class="col-status" />
             <col class="col-comments" />
             <col class="col-date" />
           </colgroup>
-          <thead><tr><th class="th-type">유형</th><th class="th-platform">문의처</th><th class="th-status">상태</th><th class="th-count">댓글</th><th class="th-date">날짜</th></tr></thead>
+          <thead><tr><th>No</th><th class="th-type">유형</th><th class="th-company">회사명</th><th class="th-status">Status</th><th class="th-count">댓글수</th><th class="th-date">문의온날짜</th></tr></thead>
           <tbody id="inquiry-list"></tbody>
         </table>
       </div>
+      <div class="list-pagebar" id="intent-pagebar"></div>
     </div>
 
     <div class="dp">
-      <div class="dh">
-        <div>
-          <div class="dh-title" id="intent-platform">WeTV</div>
-          <div class="dh-sub" id="intent-date">턴키 판매 의사 · 2026.05.12 · 11:10</div>
-          <button class="btn btn-primary dh-review" id="review-btn" onclick="completeReview()"><i class="ti ti-check"></i> 검토 완료 처리</button>
-        </div>
-        <div class="dh-actions">
-          <span class="bdg b-received" id="intent-status">접수</span>
-        </div>
-      </div>
-      <div class="dbody">
-        <div class="sec">
-          <div class="sec-title">메시지</div>
-          <div class="inq-box">
-            <div class="inq-row">
-              <div class="inq-k">문의 유형</div>
-              <div class="inq-v" id="intent-type">턴키 판매 의사</div>
+      <div class="empty" id="intent-empty"><i class="ti ti-inbox"></i><p>문의를 선택해주세요</p></div>
+      <div id="intent-detail" style="display:none">
+        <div class="dh">
+          <div class="dh-top">
+            <div class="content-detail-head">
+              <div class="intent-detail-avatar" aria-hidden="true"></div>
+              <div class="intent-detail-copy">
+                <div class="dh-title" id="intent-platform">WeTV</div>
+                <div class="dh-type" id="intent-type-label">턴키판매</div>
+              </div>
             </div>
-            <div class="inq-row production-meta">
-              <div class="inq-k">제작사</div>
-              <div class="inq-v" id="intent-producer">-</div>
+            <div class="dh-actions">
+              <span class="bdg b-received" id="intent-status">PENDING</span>
+              <button class="btn-close-panel" type="button" onclick="closeIntentDetailPane()"><i class="ti ti-x"></i></button>
             </div>
-            <div class="inq-row production-meta">
-              <div class="inq-k">콘텐츠</div>
-              <div class="inq-v" id="intent-content">-</div>
-            </div>
-            <div class="message-text" id="intent-message">아시아권 숏폼 콘텐츠 공급 가능 여부와 추천 라인업을 검토받고 싶습니다. 협상 전 내부 편성 검토용으로 사용할 예정입니다.</div>
           </div>
         </div>
-        <div class="sec">
-          <div class="sec-title">
-            관리자 댓글
-            <span id="comment-count">0개</span>
-          </div>
-          <div class="comment-box">
-            <div class="comment-list" id="comment-list"></div>
-            <div class="comment-write">
-              <textarea class="comment-input" id="comment-input" placeholder="내부 검토 내용이나 후속 액션을 남겨주세요"></textarea>
-              <button class="btn btn-primary" onclick="addComment()"><i class="ti ti-message-plus"></i> 등록</button>
+
+        <div class="dbody">
+          <div class="sec">
+            <div class="comment-box">
+              <div class="comment-list" id="comment-list"></div>
+              <div class="comment-write">
+                <div class="comment-composer">
+                  <textarea class="comment-input" id="comment-input" placeholder="관리자 답장을 입력하세요"></textarea>
+                  <div class="comment-composer-actions">
+                    <button class="comment-send-btn" type="button" onclick="addComment()" aria-label="발송"><i class="ti ti-arrow-up"></i></button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -248,33 +883,33 @@ td { padding: 10px 12px; vertical-align: middle; }
 const baseInquiries = [
   {
     id: 'turnkey-wetv',
-    type: '턴키 판매 의사',
+    type: '턴키판매',
     name: 'WeTV',
     sub: '아시아권 라인업 검토',
     date: '2026.05.12 · 11:10',
     shortDate: '05.12',
     message: '아시아권 숏폼 콘텐츠 공급 가능 여부와 추천 라인업을 검토받고 싶습니다. 협상 전 내부 편성 검토용으로 사용할 예정입니다.',
-    status: '접수',
+    status: 'pending',
   },
   {
     id: 'turnkey-iqiyi',
-    type: '턴키 판매 의사',
+    type: '턴키판매',
     name: 'iQIYI',
     sub: '중화권 묶음 후보 검토',
     date: '2026.05.09 · 16:25',
     shortDate: '05.09',
     message: '중화권 서비스에 적합한 콘텐츠 묶음을 검토하고 싶습니다. 예산은 아직 확정 전입니다.',
-    status: '검토 완료',
+    status: 'reviewed',
   },
   {
     id: 'turnkey-viki',
-    type: '턴키 판매 의사',
+    type: '턴키판매',
     name: 'Rakuten Viki',
     sub: '북미/유럽 로맨스 후보',
     date: '2026.05.06 · 09:45',
     shortDate: '05.06',
     message: '북미/유럽 사용자 반응을 볼 수 있는 로맨스 장르 후보군이 있는지 확인 부탁드립니다.',
-    status: '접수',
+    status: 'pending',
   },
   {
     id: 'production-topstar',
@@ -286,7 +921,7 @@ const baseInquiries = [
     date: '2026.05.13 · 14:20',
     shortDate: '05.13',
     message: '회귀물 톤을 살린 세로형 숏드라마 공동 제작 가능성과 예상 제작 일정을 검토하고 싶습니다.',
-    status: '접수',
+    status: 'pending',
   },
   {
     id: 'production-office-wife',
@@ -298,7 +933,7 @@ const baseInquiries = [
     date: '2026.05.08 · 10:30',
     shortDate: '05.08',
     message: '치정 로맨스 장르의 현지화 제작 가능 여부와 캐스팅 방향에 대한 의견을 요청드립니다.',
-    status: '검토 완료',
+    status: 'reviewed',
   },
 ];
 
@@ -321,7 +956,7 @@ function storedProductionInquiries() {
       const date = item.date && item.time ? `${item.date} · ${item.time}` : '2026.05.13 · 12:00';
       return {
         id: item.id || `production-saved-${index}`,
-        type: item.inquiryType || '제작협업',
+        type: normalizeIntentType(item.inquiryType || '제작협업'),
         name: item.platformName || item.platform || 'Reelio',
         sub: item.contentTitle || item.title || '제작협업 문의',
         producerName: item.producerName || '-',
@@ -329,7 +964,7 @@ function storedProductionInquiries() {
         date,
         shortDate: date.slice(5, 10),
         message: item.full || item.message || '제작협업 문의가 접수되었습니다.',
-        status: item.status || '접수',
+        status: normalizeIntentStatus(item.status || 'pending'),
       };
     });
   } catch (error) {
@@ -339,9 +974,30 @@ function storedProductionInquiries() {
 
 clearLegacyProductionInquiriesOnce();
 
-let inquiryItems = [...storedProductionInquiries(), ...baseInquiries];
+function normalizeIntentStatus(status) {
+  if (status === '검토 완료' || status === 'reviewed') return 'reviewed';
+  return 'pending';
+}
+
+function normalizeIntentType(type) {
+  if (type === '턴키 판매 의사' || type === '턴키판매') return '턴키판매';
+  return '제작협업';
+}
+
+function intentStatusLabel(status) {
+  return normalizeIntentStatus(status).toUpperCase();
+}
+
+let inquiryItems = [...storedProductionInquiries(), ...baseInquiries].map(item => ({
+  ...item,
+  type: normalizeIntentType(item.type),
+  status: normalizeIntentStatus(item.status),
+}));
 let activeTypeFilter = '전체';
+let activePlatformFilter = '전체';
 let activeStatusFilter = '전체';
+const INTENT_PAGE_SIZE = 10;
+let intentPage = 1;
 
 const commentsByIntent = {
   'turnkey-wetv': [
@@ -354,25 +1010,101 @@ const commentsByIntent = {
     { author: 'Lee Admin', date: '2026.05.08 15:05', text: '제작비 범위와 심의 가능성 먼저 확인 필요.' },
   ],
 };
-let selectedInquiryId = inquiryItems[0]?.id || '';
+let selectedInquiryId = '';
 
 function setTypeFilter(el) {
   activeTypeFilter = el.value || '전체';
+  intentPage = 1;
   renderInquiryList();
 }
 
 function setStatusFilter(el) {
   activeStatusFilter = el.value || '전체';
+  intentPage = 1;
+  renderInquiryList();
+}
+
+function closeIntentFilterDropdowns() {
+  document.querySelectorAll('.intent-filter-dropdown.open').forEach(dropdown => {
+    dropdown.classList.remove('open');
+    dropdown.querySelector('.intent-filter-control')?.setAttribute('aria-expanded', 'false');
+  });
+}
+
+function resetIntentDropdownSearch(dropdown) {
+  const search = dropdown?.querySelector('.intent-filter-search');
+  if (search) {
+    search.value = '';
+    filterIntentDropdownOptions(search);
+  }
+}
+
+function toggleIntentFilterPanel() {
+  const panel = document.getElementById('intent-filter-panel');
+  const toggle = document.getElementById('intent-filter-toggle');
+  if (!panel || !toggle) return;
+  const isOpen = panel.classList.toggle('show');
+  toggle.classList.toggle('open', isOpen);
+  toggle.setAttribute('aria-expanded', String(isOpen));
+  if (!isOpen) closeIntentFilterDropdowns();
+}
+
+function toggleIntentFilterDropdown(id) {
+  const dropdown = document.getElementById(id);
+  if (!dropdown) return;
+  const wasOpen = dropdown.classList.contains('open');
+  closeIntentFilterDropdowns();
+  dropdown.classList.toggle('open', !wasOpen);
+  dropdown.querySelector('.intent-filter-control')?.setAttribute('aria-expanded', String(!wasOpen));
+  if (!wasOpen) {
+    setTimeout(() => dropdown.querySelector('.intent-filter-search')?.focus(), 0);
+  }
+}
+
+function filterIntentDropdownOptions(input) {
+  const query = (input.value || '').trim().toLowerCase();
+  const menu = input.closest('.intent-filter-menu');
+  let visibleCount = 0;
+  menu?.querySelectorAll('.intent-filter-menu-item').forEach(item => {
+    const text = (item.dataset.value || item.textContent || '').toLowerCase();
+    const isVisible = !query || text.includes(query);
+    item.style.display = isVisible ? '' : 'none';
+    if (isVisible) visibleCount += 1;
+  });
+  menu?.querySelector('.intent-filter-menu-empty')?.classList.toggle('show', visibleCount === 0);
+}
+
+function selectIntentFilter(type, value, label) {
+  if (type === 'type') {
+    activeTypeFilter = value || '전체';
+    document.getElementById('intent-type-filter-button').textContent = label;
+  }
+  if (type === 'platform') {
+    activePlatformFilter = value || '전체';
+    document.getElementById('intent-platform-filter-button').textContent = label;
+  }
+  if (type === 'status') {
+    activeStatusFilter = value || '전체';
+    document.getElementById('intent-status-filter-button').textContent = label;
+  }
+  const dropdown = document.getElementById(`intent-${type}-filter-dropdown`);
+  dropdown?.querySelectorAll('.intent-filter-menu-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.value === value);
+  });
+  resetIntentDropdownSearch(dropdown);
+  closeIntentFilterDropdowns();
+  intentPage = 1;
   renderInquiryList();
 }
 
 function statusClass(status) {
-  return status === '검토 완료' ? 'b-done' : 'b-received';
+  return normalizeIntentStatus(status) === 'reviewed' ? 'b-done' : 'b-received';
 }
 
 function filteredInquiries() {
   return inquiryItems.filter(item => {
     if (activeTypeFilter !== '전체' && item.type !== activeTypeFilter) return false;
+    if (activePlatformFilter !== '전체' && item.name !== activePlatformFilter) return false;
     if (activeStatusFilter !== '전체' && item.status !== activeStatusFilter) return false;
     return true;
   });
@@ -381,30 +1113,67 @@ function filteredInquiries() {
 function renderInquiryList() {
   const list = document.getElementById('inquiry-list');
   const items = filteredInquiries();
-  if (!items.some(item => item.id === selectedInquiryId)) {
-    selectedInquiryId = items[0]?.id || '';
+  const totalPages = Math.max(1, Math.ceil(items.length / INTENT_PAGE_SIZE));
+  if (intentPage > totalPages) intentPage = totalPages;
+  const pageItems = items.slice((intentPage - 1) * INTENT_PAGE_SIZE, intentPage * INTENT_PAGE_SIZE);
+  const shouldCloseDetail = selectedInquiryId && !items.some(item => item.id === selectedInquiryId);
+  if (shouldCloseDetail) {
+    selectedInquiryId = '';
+    setIntentDetailExpanded(false);
+    document.getElementById('pane-intents')?.classList.remove('has-detail', 'is-expanded');
+    document.querySelector('.main')?.classList.remove('intent-detail-open', 'intent-detail-expanded');
   }
-  list.innerHTML = items.length ? items.map(item => `
+  list.innerHTML = pageItems.length ? pageItems.map((item, index) => `
     <tr class="${item.id === selectedInquiryId ? 'sel' : ''}" data-inquiry-id="${escapeHtml(item.id)}" onclick="selectInquiry('${escapeHtml(item.id)}')">
+      <td><span class="intent-no">${items.length - ((intentPage - 1) * INTENT_PAGE_SIZE + index)}</span></td>
       <td class="td-type"><span class="type-text">${escapeHtml(item.type)}</span></td>
-      <td class="td-platform">
+      <td class="td-company">
         <div class="tname">${escapeHtml(item.name)}</div>
       </td>
-      <td class="td-status"><span class="bdg ${statusClass(item.status)}">${escapeHtml(item.status)}</span></td>
+      <td class="td-status"><span class="bdg ${statusClass(item.status)}">${escapeHtml(intentStatusLabel(item.status))}</span></td>
       <td class="tcount" data-comment-count-for="${escapeHtml(item.id)}"></td>
-      <td class="tmeta">${escapeHtml(item.shortDate)}</td>
+      <td class="tmeta">${escapeHtml(formatIntentListDate(item.date))}</td>
     </tr>
-  `).join('') : '<tr><td colspan="5" class="tmeta" style="padding:24px 12px;">조건에 맞는 문의가 없습니다.</td></tr>';
+  `).join('') : '<tr class="intent-filter-empty"><td colspan="6">조건에 맞는 문의가 없습니다.</td></tr>';
   if (selectedInquiryId) {
     renderDetail();
   } else {
     renderEmptyDetail();
   }
+  renderIntentPagination(totalPages);
+  updateIntentFilterButtonStates();
   updateIntentCommentCounts();
+}
+
+function renderIntentPagination(totalPages) {
+  const pagebar = document.getElementById('intent-pagebar');
+  if (!pagebar) return;
+  pagebar.innerHTML = totalPages > 1
+    ? Array.from({ length: totalPages }).map((_, index) => {
+      const page = index + 1;
+      return `<button class="list-page-btn ${page === intentPage ? 'active' : ''}" onclick="setIntentPage(${page})">${page}</button>`;
+    }).join('')
+    : '<button class="list-page-btn active" disabled>1</button>';
+}
+
+function formatIntentListDate(value) {
+  return String(value || '').split(' · ')[0] || '-';
+}
+
+function setIntentPage(page) {
+  intentPage = page;
+  renderInquiryList();
+}
+
+function updateIntentFilterButtonStates() {
+  document.getElementById('intent-type-filter-button')?.classList.toggle('active', activeTypeFilter !== '전체');
+  document.getElementById('intent-platform-filter-button')?.classList.toggle('active', activePlatformFilter !== '전체');
+  document.getElementById('intent-status-filter-button')?.classList.toggle('active', activeStatusFilter !== '전체');
 }
 
 function selectInquiry(id) {
   selectedInquiryId = id;
+  openIntentDetailPane();
   renderInquiryList();
 }
 
@@ -415,47 +1184,84 @@ function selectedInquiry() {
 function renderDetail() {
   const item = selectedInquiry();
   if (!item) return renderEmptyDetail();
+  document.getElementById('intent-empty').style.display = 'none';
+  document.getElementById('intent-detail').style.display = 'flex';
   document.getElementById('intent-platform').textContent = item.name;
-  document.getElementById('intent-date').textContent = `${item.type} · ${item.date}`;
-  document.getElementById('intent-type').textContent = item.type;
-  document.getElementById('intent-producer').textContent = item.producerName || '-';
-  document.getElementById('intent-content').textContent = item.contentTitle || item.sub || '-';
-  document.getElementById('intent-message').textContent = item.message;
+  document.getElementById('intent-type-label').textContent = item.type;
+  setOptionalText('intent-type', item.type);
+  setOptionalText('intent-producer', item.producerName || '-');
+  setOptionalText('intent-content', item.contentTitle || item.sub || '-');
   document.querySelectorAll('.production-meta').forEach(row => {
-    row.style.display = item.type === '제작협업' ? 'flex' : 'none';
+    row.style.display = item.type === '제작협업' ? '' : 'none';
   });
   const badge = document.getElementById('intent-status');
-  badge.textContent = item.status;
+  badge.textContent = intentStatusLabel(item.status);
   badge.className = `bdg ${statusClass(item.status)}`;
-  document.getElementById('review-btn').style.display = item.status === '검토 완료' ? 'none' : 'inline-flex';
   document.getElementById('comment-input').value = '';
   renderComments();
 }
 
 function renderEmptyDetail() {
+  document.getElementById('intent-empty').style.display = '';
+  document.getElementById('intent-detail').style.display = 'none';
   document.getElementById('intent-platform').textContent = '문의 없음';
-  document.getElementById('intent-date').textContent = '-';
-  document.getElementById('intent-type').textContent = '-';
-  document.getElementById('intent-producer').textContent = '-';
-  document.getElementById('intent-content').textContent = '-';
-  document.getElementById('intent-message').textContent = '선택 가능한 문의가 없습니다.';
+  document.getElementById('intent-type-label').textContent = '-';
+  setOptionalText('intent-type', '-');
+  setOptionalText('intent-producer', '-');
+  setOptionalText('intent-content', '-');
   document.querySelectorAll('.production-meta').forEach(row => {
     row.style.display = 'none';
   });
   document.getElementById('intent-status').textContent = '-';
-  document.getElementById('review-btn').style.display = 'none';
-  selectedInquiryId = '';
   renderComments();
 }
 
-function completeReview() {
+function setOptionalText(id, value) {
+  const element = document.getElementById(id);
+  if (element) element.textContent = value;
+}
+
+function openIntentDetailPane() {
+  document.getElementById('pane-intents')?.classList.add('has-detail');
+  document.querySelector('.main')?.classList.add('intent-detail-open');
+}
+
+function setIntentDetailExpanded(isExpanded) {
+  const pane = document.getElementById('pane-intents');
+  const main = document.querySelector('.main');
+  pane?.classList.toggle('is-expanded', isExpanded);
+  main?.classList.toggle('intent-detail-expanded', isExpanded);
+  const toggle = document.getElementById('intent-expand-toggle');
+  if (toggle) {
+    toggle.setAttribute('aria-pressed', String(isExpanded));
+    toggle.setAttribute('aria-label', isExpanded ? '상세 축소' : '상세 확장');
+    toggle.innerHTML = `<i class="ti ${isExpanded ? 'ti-arrows-minimize' : 'ti-arrows-maximize'}"></i>`;
+  }
+}
+
+function toggleIntentDetailExpanded() {
+  const pane = document.getElementById('pane-intents');
+  setIntentDetailExpanded(!pane?.classList.contains('is-expanded'));
+}
+
+function closeIntentDetailPane() {
+  selectedInquiryId = '';
+  setIntentDetailExpanded(false);
+  document.getElementById('pane-intents')?.classList.remove('has-detail', 'is-expanded');
+  document.querySelector('.main')?.classList.remove('intent-detail-open', 'intent-detail-expanded');
+  document.querySelectorAll('#inquiry-list tr').forEach(row => row.classList.remove('sel'));
+  renderEmptyDetail();
+  renderInquiryList();
+}
+
+function completeReview(event) {
+  event?.stopPropagation?.();
   const item = selectedInquiry();
   if (!item) return;
-  item.status = '검토 완료';
+  item.status = 'reviewed';
   const badge = document.getElementById('intent-status');
-  badge.textContent = '검토 완료';
+  badge.textContent = 'REVIEWED';
   badge.className = 'bdg b-done';
-  document.getElementById('review-btn').style.display = 'none';
   renderInquiryList();
 }
 
@@ -480,33 +1286,72 @@ function formatDateTime(date) {
   return `${date.getFullYear()}.${pad(date.getMonth() + 1)}.${pad(date.getDate())} · ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
+function chatTimeLabel(value) {
+  return String(value || '').replace(' · ', ' ');
+}
+
+function reviewCheckControl(item) {
+  if (normalizeIntentStatus(item.status) === 'reviewed') {
+    return '<span class="message-review-check reviewed" aria-label="검토 완료"><i class="ti ti-check"></i></span>';
+  }
+  return '<button class="message-review-check" type="button" aria-label="검토 완료로 변경" onclick="completeReview(event)"><i class="ti ti-check"></i></button>';
+}
+
 function renderComments() {
   const list = document.getElementById('comment-list');
+  const item = selectedInquiry();
   const comments = commentsByIntent[selectedInquiryId] || [];
-  document.getElementById('comment-count').textContent = `${comments.length}개`;
   updateIntentCommentCounts();
-  if (comments.length === 0) {
-    list.innerHTML = '<div class="comment-empty">아직 등록된 관리자 댓글이 없습니다.</div>';
+  if (!item) {
+    list.innerHTML = '';
     return;
   }
-  list.innerHTML = comments.map(comment => `
-    <div class="comment-item">
-      <div class="comment-avatar">L</div>
+  const isProductionInquiry = item.type === '제작협업';
+  const userMessage = isProductionInquiry ? `
+    <div class="comment-item sender-user production-user-message">
+      <div class="comment-avatar" style="background-image:url('../images/icon/플랫폼프로필.png')" aria-hidden="true"></div>
       <div class="comment-main">
-        <div class="comment-meta">
-          <span class="comment-author">${escapeHtml(comment.author)}</span>
-          <span class="comment-date">${escapeHtml(comment.date)}</span>
+        <div class="production-chat-summary">
+          <div class="production-chat-label">콘텐츠명</div>
+          <div class="production-chat-value">${escapeHtml(item.contentTitle || item.sub || '-')}</div>
+          <div class="production-chat-label">제작사명</div>
+          <div class="production-chat-value">${escapeHtml(item.producerName || '-')}</div>
         </div>
+        <div class="comment-text">${escapeHtml(item.message)}</div>
+      </div>
+      <div class="comment-review-row">
+        <div class="comment-time production-chat-time">${escapeHtml(chatTimeLabel(item.date))}</div>
+        ${reviewCheckControl(item)}
+      </div>
+    </div>
+  ` : `
+    <div class="comment-item sender-user">
+      <div class="comment-avatar" style="background-image:url('../images/icon/플랫폼프로필.png')" aria-hidden="true"></div>
+      <div class="comment-main">
+        <div class="comment-text">${escapeHtml(item.message)}</div>
+      </div>
+      <div class="comment-review-row">
+        <div class="comment-time">${escapeHtml(chatTimeLabel(item.date))}</div>
+        ${reviewCheckControl(item)}
+      </div>
+    </div>
+  `;
+  const adminMessages = comments.map(comment => `
+    <div class="comment-item sender-admin">
+      <div class="comment-main">
         <div class="comment-text">${escapeHtml(comment.text)}</div>
+        <div class="comment-time">${escapeHtml(chatTimeLabel(comment.date))}</div>
       </div>
     </div>
   `).join('');
+  list.innerHTML = userMessage + adminMessages;
+  list.scrollTop = list.scrollHeight;
 }
 
 function updateIntentCommentCounts() {
   document.querySelectorAll('[data-comment-count-for]').forEach(el => {
     const count = (commentsByIntent[el.dataset.commentCountFor] || []).length;
-    el.textContent = `${count}개`;
+    el.textContent = String(count);
     el.classList.toggle('zero', count === 0);
   });
 }
@@ -524,6 +1369,12 @@ function addComment() {
   input.value = '';
   renderComments();
 }
+
+document.addEventListener('click', event => {
+  if (!event.target.closest('.intent-filter-dropdown')) {
+    closeIntentFilterDropdowns();
+  }
+});
 
 renderInquiryList();
 </script>

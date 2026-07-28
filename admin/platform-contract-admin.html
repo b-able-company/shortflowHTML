@@ -6,7 +6,7 @@
 <title>유통 계약 관리 — Shortflow Admin</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
 <link rel="stylesheet" href="admin-common.css?v=logo-left-20260715" />
-<script src="admin-common.js?v=nav-trade-20260716"></script>
+<script src="admin-common.js?v=nav-trade-order-20260727"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb(242, 242, 242); display: flex; height: 100vh; overflow: hidden; font-size: 13px; color: #1a1a18; }
@@ -52,10 +52,6 @@ td { padding: 9px 12px; vertical-align: middle; }
 .tname { font-size: 12.5px; font-weight: 500; }
 .tsub { font-size: 11px; color: #aaa; margin-top: 2px; }
 .tmeta { font-size: 12px; color: #777; }
-.date-cell { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; color: #555; white-space: nowrap; }
-.dday-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 46px; padding: 3px 8px; border-radius: 999px; background: rgb(242, 242, 242); color: #555; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; font-weight: 700; }
-.dday-badge.urgent { background: #FAEEDA; color: #854F0B; }
-.dday-badge.expired { background: #FCEBEB; color: #A32D2D; }
 .type-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px; font-size: 10.5px; font-weight: 600; font-family: monospace; white-space: nowrap; }
 .type-mgrs { background: #EFF1FB; color: #3245A6; }
 .type-rs { background: #E8F1EA; color: #1F5A33; }
@@ -83,11 +79,26 @@ td { padding: 9px 12px; vertical-align: middle; }
 .savebar .btn { min-height: 32px; border-radius: 9px; padding: 0 14px; font-weight: 600; letter-spacing: -0.01em; transition: background 0.16s, border-color 0.16s, color 0.16s, box-shadow 0.16s, transform 0.16s; }
 .savebar .btn:hover { opacity: 1; transform: translateY(-1px); }
 .savebar .danger-left { margin-right: auto; border-color: rgba(255, 59, 48, 0.18); background: rgba(255, 59, 48, 0.08); color: #ff3b30; box-shadow: none; }
+#contract-delete-button {
+  height: 32px;
+  min-height: 32px;
+  margin-left: 14px;
+  padding: 0 14px;
+  border-radius: 9px;
+  min-width: 84px;
+  justify-content: center;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
 .savebar .danger-left:hover { border-color: rgba(255, 59, 48, 0.24); background: rgba(255, 59, 48, 0.12); box-shadow: none; }
 .savebar .btn-save { border-color: transparent; background: #007aff; color: #fff; box-shadow: 0 2px 6px rgba(0, 122, 255, 0.22); }
 .savebar .btn-save:hover { background: #006ee6; box-shadow: 0 3px 8px rgba(0, 122, 255, 0.26); }
 .hint { color: #aaa; font-size: 11px; line-height: 1.5; }
-.content-selected { min-height: 42px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 10px; border: 0.5px solid rgb(242, 242, 242); border-radius: 8px; background: #fff; }
+.content-selected { min-height: 42px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 10px; border: 0.5px solid rgb(242, 242, 242); border-radius: 8px; background: #fff; cursor: pointer; }
+.content-selected:hover { border-color: #dedede; background: #fafafa; }
 .content-selected-main { min-width: 0; }
 .content-selected-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12.5px; font-weight: 500; color: #1a1a18; }
 .modal-backdrop { display: none; position: fixed; inset: 0; z-index: 100; align-items: center; justify-content: center; padding: 24px; background: rgba(19,19,15,.42); }
@@ -103,11 +114,86 @@ td { padding: 9px 12px; vertical-align: middle; }
 .modal-search-input { position: relative; }
 .modal-search-input i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #bbb; font-size: 13px; }
 .modal-search-input input { width: 100%; font-size: 12px; padding: 8px 10px 8px 30px; border: 0.5px solid rgb(242, 242, 242); border-radius: 8px; outline: none; background: rgb(242, 242, 242); font-family: inherit; }
+.contract-content-modal { width: min(500px, 100%); border: 0.5px solid #dedede; box-shadow: none; }
+.contract-company-modal { width: min(340px, 100%); border: 0.5px solid #dedede; box-shadow: none; }
+.contract-content-modal .modal-body,
+.contract-company-modal .modal-body { padding: 14px 16px; overflow: auto; }
+.contract-content-modal .modal-search,
+.contract-company-modal .modal-search { display: block; position: relative; margin-bottom: 12px; }
+.contract-content-modal .modal-search i,
+.contract-company-modal .modal-search i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #bbb; font-size: 13px; }
+.contract-content-modal .modal-search input,
+.contract-company-modal .modal-search input { width: 100%; height: 40px; font-size: 12px; padding: 0 10px 0 30px; border: 0.5px solid #dedede; border-radius: 8px; outline: none; background: #fff; font-family: inherit; }
+.result-table { border: 0.5px solid #dedede; border-radius: 6px; overflow: hidden; background: #fff; }
+.result-head { display: grid; grid-template-columns: 24px minmax(0, 1.25fr) minmax(0, 1fr); align-items: center; gap: 10px; padding: 8px 10px; border-bottom: 0.5px solid #dedede; background: #fff; color: #5f646d; font-size: 11px; font-weight: 500; }
+.result-list { display: flex; flex-direction: column; gap: 0; }
+.result-item { display: grid; grid-template-columns: 24px minmax(0, 1.25fr) minmax(0, 1fr); align-items: center; gap: 10px; padding: 9px 10px; border-bottom: 0.5px solid #ededed; cursor: pointer; }
+.result-item:last-child { border-bottom: 0; }
+.contract-company-result-table .result-head,
+.contract-company-result-table .result-item {
+  grid-template-columns: 24px minmax(0, 1fr);
+}
+.modal-pagebar { min-height: 42px; padding: 8px 10px; border-top: 0; display: flex; align-items: center; justify-content: center; gap: 4px; background: #fff; box-shadow: none; }
+.modal-page-btn,
+.modal-page-number { min-width: 22px; height: 24px; padding: 0 5px; border: 0; border-radius: 0; background: transparent; color: #777; justify-content: center; font-size: 12px; font-weight: 400; }
+.modal-page-btn i { font-size: 14px; stroke-width: 1.8; }
+.modal-page-btn:hover,
+.modal-page-number:hover { opacity: 1; color: #1a1a18; }
+.modal-page-btn:disabled { opacity: .3; cursor: default; }
+.modal-page-number.active { color: #1a1a18; font-weight: 600; }
+.modal-page-numbers { display: flex; align-items: center; gap: 2px; }
 .content-result-table { width: 100%; border-collapse: collapse; table-layout: fixed; border-top: 0.5px solid #e8e6e0; }
 .content-result-table th { padding: 6px 10px; border-bottom: 0.5px solid rgb(242, 242, 242); background: #fff; color: #aaa; font-size: 10.5px; font-weight: 600; text-align: left; }
 .content-result-table td { padding: 7px 10px; border-bottom: 0.5px solid rgb(242, 242, 242); vertical-align: middle; }
 .content-result-table tbody tr { cursor: default; }
 .content-result-table tbody tr:hover { background: rgb(242, 242, 242); }
+.result-check-wrap { display: flex; align-items: center; justify-content: center; }
+.result-check {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border: 1px solid #d2d2d2;
+  border-radius: 5px;
+  background: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .08s ease, border-color .08s ease;
+}
+.result-check::before {
+  content: "";
+  width: 5px;
+  height: 9px;
+  border-right: 2.4px solid #fff;
+  border-bottom: 2.4px solid #fff;
+  border-radius: 1px;
+  transform: translateY(-1px) rotate(45deg) scale(0);
+  transform-origin: center;
+  transition: transform .08s ease;
+}
+.result-check:checked { border-color: #252525; background: #252525; }
+.result-check:checked::before { transform: translateY(-1px) rotate(45deg) scale(1); }
+.modal-actions { padding: 4px 16px 14px; border-top: 0; display: flex; justify-content: flex-end; gap: 7px; }
+.modal-cancel-btn,
+.modal-confirm-btn {
+  min-width: 96px;
+  height: 38px;
+  padding: 0 18px;
+  justify-content: center;
+  border-radius: 999px;
+  font-size: 12px;
+}
+.modal-cancel-btn { border-color: #dedede; background: #fff; color: #1a1a18; }
+.modal-confirm-btn { border-color: #1a1a18; background: #1a1a18; color: #fff; }
+.modal-confirm-btn:disabled {
+  border-color: #dedede;
+  background: #dedede;
+  color: #999;
+  cursor: not-allowed;
+}
 .content-result-table th:nth-child(2),
 .content-result-table td:nth-child(2) { width: 78px; }
 .content-result-table th:nth-child(4),
@@ -117,8 +203,1085 @@ td { padding: 9px 12px; vertical-align: middle; }
 .company-result-table th:first-child,
 .company-result-table td:first-child { width: auto; }
 .result-name { font-size: 12.5px; font-weight: 500; }
-.result-meta { font-size: 11.5px; color: #aaa; }
+.result-meta { font-size: 12.5px; color: #1a1a18; font-weight: 500; }
 .btn-added { background: rgb(242, 242, 242); color: #999; cursor: default; }
+
+/* CONTENT ADMIN STYLE ALIGNMENT */
+html,
+body { background: #fff !important; }
+.main { background: #fff !important; position: relative; }
+.topbar {
+  position: relative;
+  border-bottom: 0 !important;
+}
+.topbar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: rgb(242, 242, 242);
+  pointer-events: none;
+}
+.main.contract-detail-open .topbar {
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+.main.contract-detail-open .topbar::after {
+  right: 50% !important;
+}
+.main.contract-detail-expanded .topbar::after {
+  display: none !important;
+}
+.contract-split,
+.contract-split .lp,
+.contract-split .dp,
+.contract-split .dh,
+.contract-split .dbody,
+.contract-split .table-wrap {
+  min-height: 0;
+}
+.contract-split {
+  width: 100% !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  background: #fff !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  overflow: hidden !important;
+}
+.contract-split:not(.has-detail) .contract-list-pane {
+  width: 100% !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  border-right: 0 !important;
+}
+.contract-split:not(.has-detail) .dp {
+  display: none !important;
+}
+.contract-split.has-detail {
+  overflow: visible !important;
+}
+.contract-split.has-detail .contract-list-pane {
+  width: 50% !important;
+  min-width: 420px !important;
+  flex: 0 0 50% !important;
+  padding: 0 0 0 18px !important;
+  border-right: 0 !important;
+}
+.contract-split.has-detail .dp {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: calc(100% + 62px) !important;
+  max-height: calc(100% + 62px) !important;
+  margin-top: -62px !important;
+  margin-left: 0 !important;
+  background: #fff !important;
+  border-left: 0 !important;
+  box-shadow: none !important;
+  position: relative !important;
+  z-index: 80 !important;
+  overflow: visible !important;
+}
+.contract-split.has-detail .dp::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: -90px !important;
+  bottom: -24px !important;
+  width: 1px !important;
+  background: #e5e7eb !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+.contract-split .admin-split-resizer,
+.contract-split .split-resizer,
+.contract-split .resizer {
+  display: none !important;
+}
+.contract-split.has-detail.is-expanded .contract-list-pane {
+  display: none !important;
+}
+.contract-split.has-detail.is-expanded .dp {
+  flex: 1 1 100% !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin-top: -62px !important;
+}
+.contract-split.has-detail.is-expanded .dp::before {
+  display: none !important;
+}
+.contract-list-pane {
+  padding: 0 18px !important;
+  background: #fff !important;
+  overflow: hidden !important;
+}
+.contract-list-toolbar {
+  min-height: 38px !important;
+  margin: 10px 0 8px !important;
+  padding: 5px 7px !important;
+  background: rgb(242, 242, 242) !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  position: relative !important;
+  overflow: visible !important;
+  z-index: 35 !important;
+}
+.list-icon-btn {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #111;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.list-icon-btn:hover { background: rgb(242, 242, 242); }
+.list-icon-btn.open {
+  background: #fff;
+  color: #111;
+  box-shadow: inset 0 0 0 0.5px #d4d4d4;
+}
+.list-icon-btn i { font-size: 16px; }
+.contract-list-search {
+  position: relative;
+  width: 172px;
+  margin-left: auto;
+}
+.contract-list-search i {
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #c5c7cc;
+  font-size: 13px;
+  pointer-events: none;
+}
+.contract-list-search input {
+  width: 100%;
+  height: 28px;
+  padding: 0 10px 0 27px;
+  border: 0;
+  border-radius: 8px;
+  background: #fff;
+  color: #1b1d21;
+  outline: none;
+  font-family: inherit;
+  font-size: 12px;
+}
+.contract-list-search input::placeholder { color: #b6bac2; }
+.contract-sort-dropdown {
+  position: relative;
+  display: inline-flex;
+}
+.contract-sort-menu {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 6px);
+  z-index: 120;
+  min-width: 132px;
+  padding: 6px;
+  border: 0.5px solid #dedede;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.10);
+  display: none;
+}
+.contract-sort-dropdown.open .contract-sort-menu {
+  display: block;
+}
+.contract-sort-menu-item {
+  width: 100%;
+  min-height: 30px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-family: inherit;
+  font-size: 12px;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.contract-sort-menu-item:hover {
+  background: #f7f7f7;
+}
+.contract-sort-menu-item.active {
+  background: #fff1ec;
+  color: #e85d2c;
+  font-weight: 500;
+}
+.contract-filter-panel {
+  display: none;
+  min-height: 38px;
+  margin: 0 0 8px;
+  padding: 0 7px;
+  background: transparent;
+  border: 0;
+  gap: 8px;
+}
+.contract-filter-panel.show {
+  display: flex;
+  align-items: center;
+}
+.contract-filter-control {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 35px;
+  min-width: 112px;
+  padding: 0 36px 0 12px;
+  border: 0.5px solid #dedede;
+  border-radius: 7px;
+  background: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238d8d8d' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  color: #1b1d21;
+  font-size: 12px;
+  line-height: 33px;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+}
+.contract-filter-control.active {
+  border: 1.5px solid rgba(232, 93, 44, 0.72);
+  background-color: #fff7ef;
+  color: #e85d2c;
+  font-weight: 500;
+}
+.contract-expiring-filter {
+  height: 35px;
+  padding: 0 12px;
+  border: 0.5px solid #dedede;
+  border-radius: 7px;
+  background: #fff;
+  color: #1b1d21;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+  user-select: none;
+}
+.contract-expiring-filter input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  border: 1px solid #d2d2d2;
+  border-radius: 4px;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.contract-expiring-filter input::before {
+  content: "";
+  width: 4px;
+  height: 8px;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  border-radius: 1px;
+  transform: translateY(-1px) rotate(45deg) scale(0);
+}
+.contract-expiring-filter input:checked {
+  border-color: #e85d2c;
+  background: #e85d2c;
+}
+.contract-expiring-filter input:checked::before {
+  transform: translateY(-1px) rotate(45deg) scale(1);
+}
+.contract-expiring-filter.active {
+  border: 1.5px solid rgba(232, 93, 44, 0.72);
+  background: #fff7ef;
+  color: #e85d2c;
+  font-weight: 500;
+}
+.contract-filter-dropdown {
+  position: relative;
+  display: inline-flex;
+}
+.contract-filter-dropdown .contract-filter-control {
+  text-align: left;
+}
+.contract-filter-menu {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 6px);
+  z-index: 120;
+  min-width: 178px;
+  padding: 6px;
+  border: 0.5px solid #dedede;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.10);
+  display: none;
+}
+.contract-company-filter .contract-filter-menu {
+  min-width: 210px;
+}
+.contract-filter-dropdown.open .contract-filter-menu {
+  display: block;
+}
+.contract-filter-search {
+  width: 100%;
+  height: 30px;
+  margin-bottom: 5px;
+  padding: 0 9px;
+  border: 0.5px solid #dedede;
+  border-radius: 7px;
+  background: #fff;
+  color: #1b1d21;
+  outline: none;
+  font-family: inherit;
+  font-size: 12px;
+}
+.contract-filter-search::placeholder {
+  color: #b6bac2;
+}
+.contract-filter-empty {
+  display: none;
+  min-height: 30px;
+  padding: 0 9px;
+  color: #9aa0a9;
+  align-items: center;
+  font-size: 12px;
+}
+.contract-filter-empty.show {
+  display: flex;
+}
+.contract-filter-menu-item {
+  width: 100%;
+  min-height: 30px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-family: inherit;
+  font-size: 12px;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.contract-filter-menu-item:hover {
+  background: #f7f7f7;
+}
+.contract-filter-menu-item.active {
+  background: #fff1ec;
+  color: #e85d2c;
+  font-weight: 500;
+}
+.contract-list-table {
+  overflow: auto;
+  flex: 0 1 auto;
+  background: #fff !important;
+}
+.contract-list-table table {
+  min-width: 760px;
+  table-layout: fixed;
+  background: #fff !important;
+}
+.contract-list-table thead th {
+  height: 40px;
+  padding: 0 14px;
+  background: #fff !important;
+  border-bottom: 1px solid #e5e7eb;
+  color: #9aa0a9;
+  font-size: 11px;
+  font-weight: 400;
+}
+.contract-list-table tbody tr {
+  height: 60px;
+  border-bottom: 1px solid #eef0f3;
+  background: #fff;
+}
+.contract-list-table tbody tr:hover { background: #fafafa; }
+.contract-list-table tbody tr.sel { background: rgb(242, 242, 242); }
+.contract-list-table td {
+  padding: 0 14px;
+  color: #14171c;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.contract-list-table th:nth-last-child(-n+3),
+.contract-list-table td:nth-last-child(-n+3) {
+  text-align: center;
+}
+.contract-list-table .contract-no {
+  color: #9aa0a9;
+  font-size: 12px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+.contract-content-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.contract-content-cell > div:last-child {
+  min-width: 0;
+}
+.contract-list-table .tname {
+  color: #14171c;
+  font-size: 12.5px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.contract-list-table .tmeta {
+  color: #3f4650;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.contract-list-table .dday-badge {
+  min-width: 58px;
+  min-height: 26px;
+  padding: 0 10px;
+  border: 1px solid #d7dbe1;
+  border-radius: 999px;
+  background: transparent;
+  color: #3f4650;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+}
+.contract-list-table .dday-badge.is-expired {
+  color: #8f949c;
+  font-weight: 400;
+}
+.contract-list-table .dday-badge.is-urgent {
+  color: #ff3b30;
+  border-color: currentColor;
+}
+.contract-poster {
+  width: 52px;
+  height: 52px;
+  margin: 0;
+  border: 0.5px solid #e5e5e5;
+  border-radius: 8px;
+  background: #f2f2f2;
+  overflow: hidden;
+}
+.contract-poster img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+.bdg { display: inline-flex; align-items: center; font-size: 10px; padding: 2px 7px; border-radius: 9px; font-weight: 500; white-space: nowrap; }
+.b-inquiry  { background: #FFF6D8; color: #9b7a14; }
+.b-meta     { background: #EAF3DE; color: #2f8f68; }
+.b-closed   { background: rgb(242, 242, 242); color: #8f949c; }
+.contract-list-table .bdg,
+.contract-detail-status .bdg {
+  min-height: 26px;
+  min-width: 58px;
+  padding: 0 12px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  justify-content: center;
+}
+.contract-list-empty {
+  height: 96px !important;
+  cursor: default !important;
+}
+.contract-list-empty td {
+  text-align: center;
+  color: #aaa;
+  font-size: 12px;
+}
+.contract-list-empty:hover { background: #fff !important; }
+.contract-list-pagebar {
+  min-height: 48px;
+  padding: 13px 14px 8px;
+  border-top: 1px solid #eef0f3;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  flex-shrink: 0;
+}
+.contract-list-page-btn {
+  min-width: 20px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #9b9a94;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+}
+.contract-list-page-btn.active {
+  color: #1a1a18;
+  font-weight: 600;
+}
+.contract-list-page-btn:hover:not(:disabled) {
+  color: #1a1a18;
+}
+.contract-list-page-btn:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+.contract-split .detail {
+  background: #fff !important;
+}
+.contract-split .detail > .dh {
+  min-height: 100px !important;
+  padding: 10px 14px 8px !important;
+  border-bottom: 0 !important;
+  background: #fff !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  position: relative !important;
+}
+.contract-split .detail .dh-top {
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+}
+.contract-detail-copy {
+  min-width: 0;
+  min-height: 96px;
+  padding-top: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.contract-split .detail .dh-title {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: #1a1a18 !important;
+  line-height: 1.25 !important;
+}
+.contract-split .detail .dh-sub {
+  margin-top: 5px !important;
+  color: #777 !important;
+  font-size: 12px !important;
+}
+.contract-detail-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+.contract-detail-head > div:last-child {
+  min-width: 0;
+  min-height: 96px;
+  padding-top: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.contract-detail-poster {
+  width: 72px;
+  height: 96px;
+  flex: 0 0 72px;
+  border: 0.5px solid #e5e5e5;
+  border-radius: 10px;
+  background: #f2f2f2;
+  overflow: hidden;
+}
+.contract-detail-poster img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+.contract-detail-status {
+  min-height: 26px;
+  display: inline-flex;
+  align-items: center;
+}
+.contract-detail-tabs {
+  background: #fff !important;
+  border-bottom: 0.5px solid rgb(242, 242, 242) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-top: 4px !important;
+  padding: 0 14px !important;
+  flex-shrink: 0 !important;
+  overflow-x: auto !important;
+}
+.contract-detail-tab {
+  padding: 9px 12px !important;
+  border-bottom: 2px solid transparent !important;
+  margin-bottom: -0.5px !important;
+  color: #aaa !important;
+  font-size: 12px !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+}
+.contract-detail-tab:hover {
+  color: #666 !important;
+}
+.contract-detail-tab.active {
+  color: #1a1a18 !important;
+  border-bottom-color: transparent !important;
+  background: rgba(0, 0, 0, 0.045) !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+}
+.contract-detail-readonly {
+  width: min(960px, calc(100% - 36px));
+  margin: 0 auto 28px;
+}
+.contract-detail-group {
+  margin-bottom: 18px;
+}
+.contract-detail-group:last-child {
+  margin-bottom: 0;
+}
+.contract-detail-group-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 10px;
+  color: #4f5965;
+  font-size: 12px;
+  font-weight: 600;
+}
+.contract-detail-group-title::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  flex: 0 0 5px;
+  border-radius: 50%;
+  background: #e85d2c;
+}
+.contract-detail-table {
+  width: 100%;
+  border: 0.5px solid #dedede;
+  border-collapse: collapse;
+  table-layout: fixed;
+  background: #fff;
+}
+.contract-detail-table tr {
+  border-bottom: 0.5px solid #dedede;
+  cursor: default;
+}
+.contract-detail-table tr:last-child {
+  border-bottom: 0;
+}
+.contract-detail-table tr:hover th {
+  background: #f7f7f7;
+}
+.contract-detail-table tr:hover td {
+  background: #fff;
+}
+.contract-detail-table th {
+  width: 128px;
+  padding: 8px 12px;
+  border-right: 0.5px solid #dedede;
+  background: #f7f7f7;
+  color: #5f646d;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  vertical-align: middle;
+}
+.contract-detail-table tr > th:not(:first-child) {
+  border-left: 0.5px solid #dedede;
+}
+.contract-detail-table td {
+  min-height: 34px;
+  padding: 9px 12px;
+  color: #1a1a18;
+  font-size: 12.5px;
+  line-height: 1.55;
+  vertical-align: middle;
+}
+.contract-detail-table td.is-empty {
+  background: #fafafa;
+  color: #c4c7cc;
+}
+.contract-split .detail:not(.is-create) #contract-detail-readonly {
+  display: none !important;
+}
+.contract-split .detail.is-create #contract-detail-readonly,
+.contract-split .detail.is-create .contract-detail-tabs,
+.contract-split .detail.is-create .contract-detail-poster,
+.contract-split .detail.is-create .contract-detail-status {
+  display: none !important;
+}
+.contract-split .detail.is-create .contract-edit-only,
+.contract-split .detail:not(.is-create) .contract-create-only {
+  display: none !important;
+}
+.contract-split .detail:not(.is-create) .contract-edit-only td {
+  background: #fafafa;
+}
+.contract-locked-value {
+  min-height: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #444;
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 1.5;
+  display: block;
+}
+.contract-locked-value.is-empty {
+  color: #b8bcc3;
+}
+.contract-split .detail.is-create .dh {
+  min-height: 58px !important;
+  padding: 8px 14px 6px 28px !important;
+}
+.contract-split .detail.is-create .contract-detail-copy {
+  min-height: 0;
+  padding-top: 0;
+}
+.contract-split .detail.is-create .dh-title {
+  font-size: 17px !important;
+  font-weight: 500 !important;
+  color: #343434 !important;
+  transform: translateY(6px);
+}
+.contract-split .detail.is-create .dh-sub {
+  display: none !important;
+}
+.contract-split .detail.is-create .dh-right {
+  transform: translateY(4px);
+}
+.contract-split .detail.is-create .btn-close-panel {
+  font-size: 18px;
+}
+.dh-right {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  flex-shrink: 0;
+}
+.btn-panel-expand,
+.btn-close-panel {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #aaa;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+}
+.btn-panel-expand:hover,
+.btn-close-panel:hover {
+  background: #f7f7f7;
+  color: #555;
+}
+.contract-split .dbody {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  padding: 16px 14px !important;
+  background: #fff !important;
+}
+.contract-create-stage {
+  width: min(960px, calc(100% - 36px));
+  margin: 0 auto 28px;
+}
+.contract-create-combined-box {
+  padding: 16px;
+  border: 0.5px solid #dedede;
+  border-radius: 10px;
+  background: #fff;
+}
+.contract-split .detail:not(.is-create) .contract-create-combined-box {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.contract-create-group {
+  margin-bottom: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.contract-create-group:last-child {
+  margin-bottom: 0;
+}
+.contract-create-group-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: #4f5965;
+  font-size: 12px;
+  font-weight: 500;
+}
+.contract-create-group-title::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e85d2c;
+  flex: 0 0 6px;
+}
+.contract-create-table {
+  width: 100%;
+  border: 0.5px solid #dedede;
+  border-collapse: collapse;
+  table-layout: fixed;
+  background: #fff;
+}
+.contract-create-table tr {
+  border-bottom: 0.5px solid #dedede;
+  cursor: default;
+}
+.contract-create-table tr:hover,
+.contract-create-table tr:hover td {
+  background: #fff;
+}
+.contract-create-table tr:last-child {
+  border-bottom: 0;
+}
+.contract-create-table th {
+  width: 128px;
+  padding: 8px 12px;
+  border-right: 0.5px solid #dedede;
+  background: #f7f7f7;
+  color: #5f646d;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  vertical-align: middle;
+}
+.contract-condition-table th {
+  width: 128px;
+}
+.contract-field-table {
+  width: 100%;
+  border: 0.5px solid #dedede;
+  background: #fff;
+}
+.contract-field-row {
+  display: grid;
+  border-bottom: 0.5px solid #dedede;
+}
+.contract-field-row:last-child {
+  border-bottom: 0;
+}
+.contract-field-row.is-three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.contract-field-row.is-two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.contract-field-item {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 128px minmax(0, 1fr);
+  border-right: 0.5px solid #dedede;
+}
+.contract-field-item:last-child {
+  border-right: 0;
+}
+.contract-field-label {
+  padding: 8px 12px;
+  border-right: 0.5px solid #dedede;
+  background: #f7f7f7;
+  color: #5f646d;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+}
+.contract-field-value {
+  min-width: 0;
+  min-height: 34px;
+  padding: 4px 10px;
+  color: #1a1a18;
+  display: flex;
+  align-items: center;
+}
+.contract-field-value.is-disabled {
+  background: #fafafa;
+}
+.contract-field-value input,
+.contract-field-value select {
+  width: 100%;
+}
+.contract-create-table td {
+  min-height: 34px;
+  padding: 4px 10px;
+  border-right: 0.5px solid #dedede;
+  color: #1a1a18;
+  vertical-align: middle;
+}
+.contract-create-table td:last-child {
+  border-right: 0;
+}
+.contract-create-table input,
+.contract-create-table select,
+.contract-create-table textarea,
+.contract-field-table input,
+.contract-field-table select {
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  color: #1a1a18;
+  font-family: inherit;
+  font-size: 12.5px;
+  outline: none;
+}
+.contract-create-table input,
+.contract-create-table select,
+.contract-field-table input,
+.contract-field-table select {
+  height: 28px;
+  padding: 0 10px;
+}
+.contract-create-table input[type="date"],
+.contract-field-table input[type="date"] {
+  padding-right: 6px;
+}
+.contract-create-table input[type="date"]::-webkit-calendar-picker-indicator,
+.contract-field-table input[type="date"]::-webkit-calendar-picker-indicator {
+  margin-right: -3px;
+}
+.contract-create-table input::placeholder,
+.contract-field-table input::placeholder {
+  color: #b6bac2;
+  font-weight: 300;
+}
+.contract-create-table select,
+.contract-field-table select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 34px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238d8d8d' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+.contract-create-table input:disabled,
+.contract-create-table select:disabled,
+.contract-field-table input:disabled,
+.contract-field-table select:disabled {
+  background-color: #fafafa;
+  color: #aeb4bd;
+  -webkit-text-fill-color: #aeb4bd;
+  border-radius: 4px;
+  cursor: default;
+  font-weight: 400;
+  opacity: 1;
+}
+.contract-field-value.is-disabled input:disabled,
+.contract-field-value.is-disabled select:disabled {
+  background-color: transparent;
+  border-radius: 0;
+}
+.contract-create-picker-cell {
+  padding: 0 !important;
+}
+.contract-create-picker {
+  min-height: 36px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.contract-create-picker .content-selected-main {
+  flex: 1;
+}
+.contract-create-picker .content-selected-name {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  font-size: 12.5px;
+  color: #333;
+}
+.contract-create-table .amount-row {
+  grid-template-columns: 86px minmax(0, 1fr);
+  gap: 6px;
+}
+.contract-split .contract-form-section {
+  margin-bottom: 18px;
+  border: 0.5px solid #eeede8;
+  border-radius: 8px;
+  background: #fff;
+}
+.contract-split .form-subtitle {
+  justify-content: flex-start;
+  gap: 7px;
+  color: #aaa;
+  border-bottom: 0;
+  padding-bottom: 0;
+  margin-bottom: 10px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.contract-split .form-subtitle::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff8a3d;
+  flex: 0 0 6px;
+}
+.contract-split .savebar {
+  border-top: 0;
+  padding: 12px 30px 8px 8px;
+}
+.contract-split .detail.is-create .savebar {
+  padding-top: 6px;
+  padding-bottom: 14px;
+}
+.contract-split .savebar .btn-save {
+  min-width: 152px;
+  min-height: 38px;
+  padding: 0 14px 2px;
+  border-radius: 12px;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 400;
+}
 @media (max-width: 980px) {
   .split { flex-direction: column; }
   .lp { width: 100%; min-width: 0; max-height: 42vh; border-right: 0; border-bottom: 0.5px solid #e8e6e0; }
@@ -127,8 +1290,8 @@ td { padding: 9px 12px; vertical-align: middle; }
   .srch { grid-column: 1 / -1; }
   .form-grid { grid-template-columns: 1fr; }
   .modal-search { grid-template-columns: 1fr; }
-  .content-result-table th:nth-child(2),
-  .content-result-table td:nth-child(2) { display: none; }
+  .content-result-table:not(.contract-content-result-table) th:nth-child(2),
+  .content-result-table:not(.contract-content-result-table) td:nth-child(2) { display: none; }
 }
 </style>
 </head>
@@ -161,8 +1324,8 @@ td { padding: 9px 12px; vertical-align: middle; }
       <a class="ni" href="workflow-admin.html#bundle">묶음 거래</a>
       <a class="ni" href="workflow-admin.html#turnkey">턴키 거래</a>
     </div>
-    <a class="ni" href="turnkey-intent-admin.html"><i class="ti ti-inbox"></i> 문의함</a>
     <a class="ni active" href="platform-contract-admin.html"><i class="ti ti-file-dollar"></i> 유통 계약 관리</a>
+    <a class="ni" href="turnkey-intent-admin.html"><i class="ti ti-inbox"></i> 문의함</a>
     <div class="nav-label">운영</div>
     <a class="ni" href="settlement-admin.html"><i class="ti ti-receipt"></i> 정산</a>
     <div class="sub">
@@ -185,30 +1348,64 @@ td { padding: 9px 12px; vertical-align: middle; }
 <main class="main">
   <div class="topbar">
     <span class="topbar-title">유통 계약 관리</span>
-    <button class="btn btn-primary" type="button" onclick="newContract()"><i class="ti ti-plus"></i> 새 계약 추가</button>
   </div>
-  <div class="split">
-    <section class="lp">
-      <div class="toolbar">
-        <div class="toolbar-controls" aria-label="계약 조회 조건">
-          <select class="filter-select" id="platform-filter" onchange="renderContracts()" aria-label="플랫폼사 필터"></select>
-          <select class="filter-select" id="expire-filter" onchange="renderContracts()" aria-label="만료일 필터">
-            <option value="">만료일 전체</option>
-            <option value="1">1개월 이내</option>
-            <option value="3">3개월 이내</option>
-            <option value="6">6개월 이내</option>
-          </select>
-          <div class="srch"><i class="ti ti-search"></i><input id="contract-search" type="search" placeholder="콘텐츠명으로 검색" oninput="renderContracts()" /></div>
+  <div class="split contract-split" id="pane-contracts">
+    <section class="lp contract-list-pane">
+      <div class="toolbar contract-list-toolbar">
+        <button class="list-icon-btn" type="button" aria-label="새 계약 추가" onclick="newContract()"><i class="ti ti-plus"></i></button>
+        <button class="list-icon-btn" id="contract-filter-toggle" type="button" aria-label="필터" aria-expanded="false" onclick="toggleContractFilterPanel()"><i class="ti ti-filter"></i></button>
+        <div class="contract-sort-dropdown" id="contract-sort-dropdown">
+          <button class="list-icon-btn" id="contract-sort-toggle" type="button" aria-label="정렬" aria-expanded="false" onclick="toggleContractSortMenu()"><i class="ti ti-arrows-sort"></i></button>
+          <div class="contract-sort-menu">
+            <button class="contract-sort-menu-item active" type="button" data-value="created" onclick="selectContractSortMode('created')">기본순</button>
+            <button class="contract-sort-menu-item" type="button" data-value="expiring" onclick="selectContractSortMode('expiring')">만료임박순</button>
+          </div>
+        </div>
+        <div class="srch contract-list-search">
+          <i class="ti ti-search"></i>
+          <input id="contract-search" type="search" placeholder="콘텐츠명 검색" oninput="handleContractSearchInput()" />
         </div>
       </div>
-      <div class="table-wrap">
+      <div class="contract-filter-panel" id="contract-filter-panel" aria-label="계약 조회 조건">
+        <div class="contract-filter-dropdown" id="contract-status-filter-dropdown">
+          <button class="contract-filter-control" id="contract-status-filter-button" type="button" aria-expanded="false" onclick="toggleContractFilterDropdown('contract-status-filter-dropdown')">상태 전체</button>
+          <div class="contract-filter-menu">
+            <button class="contract-filter-menu-item active" type="button" data-value="" onclick="selectContractStatusFilter('', '상태 전체')">상태 전체</button>
+            <button class="contract-filter-menu-item" type="button" data-value="upcoming" onclick="selectContractStatusFilter('upcoming', 'UPCOMING')">UPCOMING</button>
+            <button class="contract-filter-menu-item" type="button" data-value="active" onclick="selectContractStatusFilter('active', 'ACTIVE')">ACTIVE</button>
+            <button class="contract-filter-menu-item" type="button" data-value="ended" onclick="selectContractStatusFilter('ended', 'EXPIRED')">EXPIRED</button>
+          </div>
+        </div>
+        <div class="contract-filter-dropdown contract-company-filter" id="contract-platform-filter-dropdown">
+          <button class="contract-filter-control" id="contract-platform-filter-button" type="button" aria-expanded="false" onclick="toggleContractFilterDropdown('contract-platform-filter-dropdown')">플랫폼 전체</button>
+          <div class="contract-filter-menu" id="contract-platform-filter-menu">
+            <input class="contract-filter-search" type="text" placeholder="플랫폼명 검색" oninput="filterContractDropdownOptions(this)" onclick="event.stopPropagation()" />
+            <button class="contract-filter-menu-item active" type="button" data-value="" onclick="selectContractPlatformFilter('', '플랫폼 전체')">플랫폼 전체</button>
+            <div class="contract-filter-empty">검색 결과 없음</div>
+          </div>
+        </div>
+        <label class="contract-expiring-filter" id="contract-expiring-filter-label">
+          <input id="contract-expiring-filter" type="checkbox" onchange="toggleContractExpiringFilter(this.checked)" />
+          <span>만료 임박</span>
+        </label>
+      </div>
+      <div class="table-wrap contract-list-table">
         <table>
+          <colgroup>
+            <col style="width:46px">
+            <col style="width:260px">
+            <col style="width:148px">
+            <col style="width:104px">
+            <col style="width:178px">
+            <col style="width:92px">
+          </colgroup>
           <thead>
-            <tr><th>콘텐츠명</th><th>플랫폼사명</th><th>릴리즈기간</th><th>만료까지</th></tr>
+            <tr><th>No</th><th>콘텐츠</th><th>플랫폼사</th><th>Status</th><th>계약 기간</th><th>D-DAY</th></tr>
           </thead>
           <tbody id="contract-list"></tbody>
         </table>
       </div>
+      <div class="contract-list-pagebar" id="contract-pagebar"></div>
     </section>
 
     <section class="dp">
@@ -220,92 +1417,161 @@ td { padding: 9px 12px; vertical-align: middle; }
       <div class="detail" id="contract-detail">
         <div class="dh">
           <div class="dh-top">
-            <div>
-              <div class="dh-title" id="detail-title">플랫폼 계약</div>
-              <div class="dh-sub" id="detail-sub">ContentPlatformContract</div>
+            <div class="contract-detail-head">
+              <div class="contract-detail-poster" id="detail-poster"></div>
+              <div class="contract-detail-copy">
+                <div class="dh-title" id="detail-title">플랫폼 계약</div>
+                <div class="dh-sub" id="detail-sub">ContentPlatformContract</div>
+              </div>
+            </div>
+            <div class="dh-right">
+              <div class="contract-detail-status" id="detail-status"></div>
+              <button class="btn-panel-expand" id="contract-expand-toggle" type="button" aria-label="상세 확장" aria-pressed="false" onclick="toggleContractDetailExpanded()"><i class="ti ti-arrows-maximize"></i></button>
+              <button class="btn-close-panel" type="button" onclick="closeContractDetailPane()" aria-label="계약 상세 닫기"><i class="ti ti-x"></i></button>
             </div>
           </div>
         </div>
+        <div class="contract-detail-tabs">
+          <div class="contract-detail-tab active">계약관리</div>
+        </div>
         <div class="dbody">
-          <div class="contract-form-section">
-            <div class="form-subtitle">대상</div>
-            <div class="form-grid">
-              <div class="fg">
-                <label>콘텐츠</label>
-                <input id="field-content" type="hidden" />
-                <div class="content-selected">
-                  <div class="content-selected-main">
-                    <div class="content-selected-name" id="selected-content-name">콘텐츠를 선택하세요</div>
-                  </div>
-                  <button class="btn" type="button" onclick="openContentModal()"><i class="ti ti-search"></i> 콘텐츠 선택</button>
-                </div>
-              </div>
-              <div class="fg">
-                <label>플랫폼 회사</label>
-                <input id="field-company" type="hidden" />
-                <div class="content-selected">
-                  <div class="content-selected-main">
-                    <div class="content-selected-name" id="selected-company-name">플랫폼 회사를 선택하세요</div>
-                  </div>
-                  <button class="btn" type="button" onclick="openCompanyModal()"><i class="ti ti-search"></i> 회사 선택</button>
-                </div>
-              </div>
-            </div>
+          <div class="contract-detail-readonly" id="contract-detail-readonly">
+            <section class="contract-detail-group">
+              <div class="contract-detail-group-title">계약 대상</div>
+              <table class="contract-detail-table">
+                <colgroup><col style="width:128px"><col><col style="width:128px"><col></colgroup>
+                <tbody id="contract-detail-target-info"></tbody>
+              </table>
+            </section>
+            <section class="contract-detail-group">
+              <div class="contract-detail-group-title">계약 조건</div>
+              <table class="contract-detail-table">
+                <colgroup><col style="width:128px"><col><col style="width:128px"><col><col style="width:128px"><col></colgroup>
+                <tbody id="contract-detail-condition-info"></tbody>
+              </table>
+            </section>
           </div>
-          <div class="contract-form-section">
-            <div class="form-subtitle">계약 기간</div>
-            <div class="form-grid">
-              <div class="fg"><label>계약 시작일</label><input id="field-launchDate" type="date" /></div>
-              <div class="fg"><label>계약 만료일</label><input id="field-expireDate" type="date" /></div>
-              <div class="fg"><label>계약 기간(개월)</label><input id="field-contractPeriodMonths" type="number" min="1" step="1" /></div>
-              <div class="fg">
-                <label>독점 여부</label>
-                <select id="field-exclusive">
-                  <option value="true">독점</option>
-                  <option value="false">비독점</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="contract-form-section">
-            <div class="form-subtitle">권리/정산 조건</div>
-            <div class="form-grid">
-              <div class="fg">
-                <label>계약 지역</label>
-                <select id="field-region">
-                  <option value="GLOBAL_EXCLUDING_CHINA">중국 제외 글로벌</option>
-                  <option value="GLOBAL_EXCLUDING_CHINA_THAILAND">중국·태국 제외 글로벌</option>
-                  <option value="GLOBAL_EXCLUDING_CHINA_JAPAN">중국·일본 제외 글로벌</option>
-                  <option value="OTHER">기타</option>
-                </select>
-              </div>
-              <div class="fg">
-                <label>정산 방식</label>
-                <select id="field-settlementType" onchange="syncSettlementFields()">
-                  <option value="RS">RS</option>
-                  <option value="MG_RS">MG_RS</option>
-                  <option value="FLAT_FEE">FLAT_FEE</option>
-                </select>
-              </div>
-              <div class="fg"><label>RS 비율(%)</label><input id="field-rsRatio" type="number" min="0" max="100" step="0.01" placeholder="RS / MG+RS만 입력" /></div>
-              <div class="fg">
-                <label>계약 금액</label>
-                <div class="amount-row">
-                  <select id="field-currency">
-                    <option value="USD">USD</option>
-                    <option value="KRW">KRW</option>
-                    <option value="CNY">CNY</option>
-                    <option value="JPY">JPY</option>
-                  </select>
-                  <input id="field-contractAmount" type="number" min="0" step="0.01" placeholder="Flat Fee / MG+RS만 입력" />
+          <div class="contract-create-stage" id="contract-form-view">
+            <div class="contract-create-combined-box">
+              <section class="contract-create-group">
+                <div class="contract-create-group-title">계약 대상</div>
+                <table class="contract-create-table">
+                  <colgroup><col style="width:128px"><col><col style="width:128px"><col></colgroup>
+                  <tbody>
+                    <tr class="contract-edit-only">
+                      <th>유통계약 ID</th>
+                      <td><div class="contract-locked-value" id="selected-contract-id">—</div></td>
+                      <th>플랫폼명</th>
+                      <td><div class="contract-locked-value" id="selected-company-edit-name">—</div></td>
+                    </tr>
+                    <tr class="contract-edit-only">
+                      <th>콘텐츠명</th>
+                      <td colspan="3"><div class="contract-locked-value" id="selected-content-edit-name">—</div></td>
+                    </tr>
+                    <tr class="contract-create-only">
+                      <th>콘텐츠명</th>
+                      <td class="contract-create-picker-cell" colspan="3">
+                        <input id="field-content" type="hidden" />
+                        <div class="content-selected contract-create-picker contract-target-picker" role="button" tabindex="0" onclick="openContentModal()" onkeydown="handlePickerKeydown(event, openContentModal)" aria-label="콘텐츠 선택">
+                          <div class="content-selected-main">
+                            <div class="content-selected-name" id="selected-content-name">콘텐츠를 선택하세요</div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr class="contract-create-only">
+                      <th>플랫폼사</th>
+                      <td class="contract-create-picker-cell" colspan="3">
+                        <input id="field-company" type="hidden" />
+                        <div class="content-selected contract-create-picker contract-target-picker" role="button" tabindex="0" onclick="openCompanyModal()" onkeydown="handlePickerKeydown(event, openCompanyModal)" aria-label="플랫폼사 선택">
+                          <div class="content-selected-main">
+                            <div class="content-selected-name" id="selected-company-name">플랫폼사를 선택하세요</div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+
+              <section class="contract-create-group">
+                <div class="contract-create-group-title">계약 조건</div>
+                <div class="contract-field-table">
+                  <div class="contract-field-row is-three">
+                    <div class="contract-field-item">
+                      <div class="contract-field-label">계약 시작일</div>
+                      <div class="contract-field-value"><input id="field-launchDate" type="date" /></div>
+                    </div>
+                    <div class="contract-field-item">
+                      <div class="contract-field-label">계약 만료일</div>
+                      <div class="contract-field-value"><input id="field-expireDate" type="date" /></div>
+                    </div>
+                    <div class="contract-field-item">
+                      <div class="contract-field-label">계약 기간(개월)</div>
+                      <div class="contract-field-value"><input id="field-contractPeriodMonths" type="number" min="1" step="1" /></div>
+                    </div>
+                  </div>
+                  <div class="contract-field-row is-two">
+                    <div class="contract-field-item">
+                      <div class="contract-field-label">계약 지역</div>
+                      <div class="contract-field-value">
+                        <select id="field-region">
+                          <option value="GLOBAL_EXCLUDING_CHINA">중국 제외 글로벌</option>
+                          <option value="GLOBAL_EXCLUDING_CHINA_THAILAND">중국·태국 제외 글로벌</option>
+                          <option value="GLOBAL_EXCLUDING_CHINA_JAPAN">중국·일본 제외 글로벌</option>
+                          <option value="OTHER">기타</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="contract-field-item">
+                      <div class="contract-field-label">독점 여부</div>
+                      <div class="contract-field-value">
+                        <select id="field-exclusive">
+                          <option value="true">독점</option>
+                          <option value="false">비독점</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="contract-field-row is-two">
+                    <div class="contract-field-item">
+                      <div class="contract-field-label">정산 방식</div>
+                      <div class="contract-field-value">
+                        <select id="field-settlementType" onchange="syncSettlementFields()">
+                          <option value="RS">RS</option>
+                          <option value="MG_RS">MG_RS</option>
+                          <option value="FLAT_FEE">FLAT_FEE</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="contract-field-item">
+                      <div class="contract-field-label">RS 비율(%)</div>
+                      <div class="contract-field-value"><input id="field-rsRatio" type="number" min="0" max="100" step="0.01" /></div>
+                    </div>
+                  </div>
+                  <div class="contract-field-row is-two">
+                    <div class="contract-field-item">
+                      <div class="contract-field-label">통화</div>
+                      <div class="contract-field-value">
+                        <select id="field-currency">
+                          <option value="USD">USD</option>
+                          <option value="KRW">KRW</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="contract-field-item">
+                      <div class="contract-field-label">계약 금액</div>
+                      <div class="contract-field-value"><input id="field-contractAmount" type="number" min="0" step="0.01" /></div>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </section>
             </div>
           </div>
         </div>
         <div class="savebar">
-          <button class="btn danger-left" type="button" onclick="deleteContract()">삭제하기</button>
-          <button class="btn btn-save" type="button" onclick="saveContract()">저장</button>
+          <button class="btn danger-left" id="contract-delete-button" type="button" onclick="deleteContract()">삭제</button>
+          <button class="btn btn-save" id="contract-save-button" type="button" onclick="saveContract()">저장</button>
         </div>
       </div>
     </section>
@@ -313,90 +1579,155 @@ td { padding: 9px 12px; vertical-align: middle; }
 </main>
 
 <div class="modal-backdrop" id="content-modal" onclick="closeContentModal(event)">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="content-modal-title">
-    <div class="modal-head">
-      <div class="modal-title" id="content-modal-title">계약 콘텐츠 선택</div>
-      <button class="btn-close-panel" type="button" onclick="closeContentModal()" aria-label="계약 콘텐츠 선택 닫기"><i class="ti ti-x"></i></button>
-    </div>
+  <div class="modal contract-content-modal" role="dialog" aria-modal="true" aria-labelledby="content-modal-title">
+    <div class="modal-title" id="content-modal-title" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">콘텐츠 검색</div>
     <div class="modal-body">
       <div class="modal-search">
-        <select class="modal-search-select" id="content-search-type" onchange="filterContentModal()">
-          <option value="title">콘텐츠명</option>
-          <option value="company">제작사명</option>
-        </select>
-        <div class="modal-search-input">
-          <i class="ti ti-search"></i>
-          <input id="content-modal-search" placeholder="검색어 입력" oninput="filterContentModal()" />
+        <i class="ti ti-search"></i>
+        <input id="content-modal-search" placeholder="콘텐츠명, 제작사 검색" oninput="filterContentModal()" />
+      </div>
+      <div class="result-table contract-content-result-table">
+        <div class="result-head" aria-hidden="true"><span></span><span>콘텐츠명</span><span>제작사</span></div>
+        <div class="result-list" id="content-result-list"></div>
+        <div class="modal-pagebar" id="content-modal-pagebar">
+          <button class="btn modal-page-btn" type="button" id="content-modal-prev" onclick="setContentModalPage(contentModalPage - 1)" aria-label="이전 페이지"><i class="ti ti-chevron-left"></i></button>
+          <div class="modal-page-numbers" id="content-modal-pages"></div>
+          <button class="btn modal-page-btn" type="button" id="content-modal-next" onclick="setContentModalPage(contentModalPage + 1)" aria-label="다음 페이지"><i class="ti ti-chevron-right"></i></button>
         </div>
       </div>
-      <table class="content-result-table">
-        <thead>
-          <tr>
-            <th>콘텐츠명</th>
-            <th>제작연도</th>
-            <th>제작사명</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="content-result-list"></tbody>
-      </table>
+    </div>
+    <div class="modal-actions">
+      <button class="btn modal-cancel-btn" type="button" onclick="closeContentModal()">취소</button>
+      <button class="btn btn-primary modal-confirm-btn" id="content-modal-confirm" type="button" onclick="confirmContentSelection()" disabled>확인</button>
     </div>
   </div>
 </div>
 
 <div class="modal-backdrop" id="company-modal" onclick="closeCompanyModal(event)">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="company-modal-title">
-    <div class="modal-head">
-      <div class="modal-title" id="company-modal-title">플랫폼 회사 선택</div>
-      <button class="btn-close-panel" type="button" onclick="closeCompanyModal()" aria-label="플랫폼 회사 선택 닫기"><i class="ti ti-x"></i></button>
-    </div>
+  <div class="modal contract-company-modal" role="dialog" aria-modal="true" aria-labelledby="company-modal-title">
+    <div class="modal-title" id="company-modal-title" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">플랫폼사 검색</div>
     <div class="modal-body">
-      <div class="modal-search" style="grid-template-columns:1fr">
-        <div class="modal-search-input">
-          <i class="ti ti-search"></i>
-          <input id="company-modal-search" placeholder="플랫폼 회사명 검색" oninput="filterCompanyModal()" />
+      <div class="modal-search">
+        <i class="ti ti-search"></i>
+        <input id="company-modal-search" placeholder="플랫폼사명 검색" oninput="filterCompanyModal()" />
+      </div>
+      <div class="result-table contract-company-result-table">
+        <div class="result-head" aria-hidden="true"><span></span><span>플랫폼사</span></div>
+        <div class="result-list" id="company-result-list"></div>
+        <div class="modal-pagebar" id="company-modal-pagebar">
+          <button class="btn modal-page-btn" type="button" id="company-modal-prev" onclick="setCompanyModalPage(companyModalPage - 1)" aria-label="이전 페이지"><i class="ti ti-chevron-left"></i></button>
+          <div class="modal-page-numbers" id="company-modal-pages"></div>
+          <button class="btn modal-page-btn" type="button" id="company-modal-next" onclick="setCompanyModalPage(companyModalPage + 1)" aria-label="다음 페이지"><i class="ti ti-chevron-right"></i></button>
         </div>
       </div>
-      <table class="content-result-table company-result-table">
-        <thead>
-          <tr>
-            <th>플랫폼 회사명</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="company-result-list"></tbody>
-      </table>
+    </div>
+    <div class="modal-actions">
+      <button class="btn modal-cancel-btn" type="button" onclick="closeCompanyModal()">취소</button>
+      <button class="btn btn-primary modal-confirm-btn" id="company-modal-confirm" type="button" onclick="confirmCompanySelection()" disabled>확인</button>
     </div>
   </div>
 </div>
 
 <script>
 const contents = [
-  { id: 'content-101', name: '대표님이 내 전남친입니다', year: '2026', company: 'NextWave Studios' },
-  { id: 'content-102', name: '재벌집 막내 비서', year: '2026', company: 'OneTake Media' },
-  { id: 'content-103', name: '죽었다가 회귀한 톱스타', year: '2025', company: 'PaperLens' },
-  { id: 'content-104', name: '우리 집에 킬러가 산다', year: '2025', company: 'BrightFrame' },
+  { id: 'content-101', name: '대표님이 내 전남친입니다', year: '2026', company: 'NextWave Studios', poster: '../images/대표님이내전남친입니다.png' },
+  { id: 'content-102', name: '재벌집 막내 비서', year: '2026', company: 'OneTake Media', poster: '../images/재벌집막내비서.png' },
+  { id: 'content-103', name: '죽었다가 회귀한 톱스타', year: '2025', company: 'PaperLens', poster: '../images/return-topstar-poster.png' },
+  { id: 'content-104', name: '우리 집에 킬러가 산다', year: '2025', company: 'BrightFrame', poster: '../images/killer-at-home.png' },
+  { id: 'content-105', name: '연애 계약서', year: '2026', company: 'BluePixel', poster: '../images/비밀사내결혼.png' },
+  { id: 'content-106', name: '악녀의 두 번째 엔딩', year: '2026', company: 'FrameWorks' },
+  { id: 'content-107', name: '오늘부터 재벌 며느리', year: '2025', company: 'Studio N' },
+  { id: 'content-108', name: '비밀 상속자', year: '2025', company: 'NextWave Studios', poster: '../images/내남편의비밀계정.png' },
+  { id: 'content-109', name: '나의 가짜 남편', year: '2026', company: 'OneTake Media' },
+  { id: 'content-110', name: '첫사랑 리벤지', year: '2024', company: 'PaperLens', poster: '../images/첫사랑은계약종료.png' },
+  { id: 'content-111', name: '위험한 이웃', year: '2025', company: 'BrightFrame', poster: '../images/나의위험한파트너.png' },
+  { id: 'content-112', name: '로열 룸메이트', year: '2026', company: 'FrameWorks', poster: '../images/우주택배기사님.png' },
+  { id: 'content-113', name: '알고리즘이 정한 사랑', year: '2026', company: 'Studio N', poster: '../images/ai-husband.png' },
+  { id: 'content-114', name: '자정의 결혼식', year: '2025', company: 'BluePixel', poster: '../images/황후의복수노트.png' },
+  { id: 'content-115', name: '일주일만 사랑해', year: '2024', company: 'OneTake Media', poster: '../images/그녀의두번째엔딩.png' },
 ];
 
 const companies = [
-  { id: 'company-201', name: 'ShortReel (US)' },
-  { id: 'company-202', name: 'Viki' },
-  { id: 'company-203', name: 'WeTV' },
-  { id: 'company-204', name: 'DramaBox' },
+  { id: 'company-201', name: 'ShortReel (US)', country: 'US' },
+  { id: 'company-202', name: 'Viki', country: 'US' },
+  { id: 'company-203', name: 'WeTV', country: 'CN' },
+  { id: 'company-204', name: 'DramaBox', country: 'SG' },
+  { id: 'company-205', name: 'GoodShort', country: 'US' },
+  { id: 'company-206', name: 'ReelShort', country: 'US' },
+  { id: 'company-207', name: 'Kalos TV', country: 'KR' },
+  { id: 'company-208', name: 'MoboReels', country: 'SG' },
+  { id: 'company-209', name: 'FlexTV', country: 'JP' },
+  { id: 'company-210', name: 'DreameShort', country: 'US' },
+  { id: 'company-211', name: 'ShortMax', country: 'US' },
+  { id: 'company-212', name: 'TopReels', country: 'TH' },
+  { id: 'company-213', name: 'MiniDrama', country: 'ID' },
+  { id: 'company-214', name: 'QuickDrama', country: 'VN' },
+  { id: 'company-215', name: 'Pocket FM', country: 'IN' },
 ];
 
 let contracts = [
   { id: 1, content: 'content-101', company: 'company-201', launchDate: '2026-05-01', expireDate: '2028-04-30', contractPeriodMonths: 24, exclusive: true, region: 'GLOBAL_EXCLUDING_CHINA', settlementType: 'MG_RS', rsRatio: 35, contractAmount: 30000, currency: 'USD' },
-  { id: 2, content: 'content-102', company: 'company-202', launchDate: '2025-08-01', expireDate: '2026-07-31', contractPeriodMonths: 12, exclusive: false, region: 'OTHER', settlementType: 'RS', rsRatio: 30, contractAmount: null, currency: 'USD' },
-  { id: 3, content: 'content-104', company: 'company-203', launchDate: '2026-06-01', expireDate: '2026-09-24', contractPeriodMonths: 4, exclusive: true, region: 'GLOBAL_EXCLUDING_CHINA_JAPAN', settlementType: 'FLAT_FEE', rsRatio: null, contractAmount: 18000, currency: 'USD' },
+  { id: 2, content: 'content-102', company: 'company-202', launchDate: '2025-08-01', expireDate: '2026-06-30', contractPeriodMonths: 12, exclusive: false, region: 'OTHER', settlementType: 'RS', rsRatio: 30, contractAmount: null, currency: 'USD' },
+  { id: 3, content: 'content-104', company: 'company-203', launchDate: '2026-08-15', expireDate: '2026-12-14', contractPeriodMonths: 4, exclusive: true, region: 'GLOBAL_EXCLUDING_CHINA_JAPAN', settlementType: 'FLAT_FEE', rsRatio: null, contractAmount: 18000, currency: 'USD' },
   { id: 4, content: 'content-103', company: 'company-204', launchDate: '2025-12-15', expireDate: '2026-08-30', contractPeriodMonths: 9, exclusive: false, region: 'OTHER', settlementType: 'MG_RS', rsRatio: 28, contractAmount: 12000, currency: 'USD' },
+  { id: 5, content: 'content-105', company: 'company-201', launchDate: '2026-01-20', expireDate: '2026-08-15', contractPeriodMonths: 7, exclusive: false, region: 'OTHER', settlementType: 'RS', rsRatio: 32, contractAmount: null, currency: 'USD' },
+  { id: 6, content: 'content-108', company: 'company-201', launchDate: '2026-04-01', expireDate: '2026-10-31', contractPeriodMonths: 7, exclusive: false, region: 'GLOBAL_EXCLUDING_CHINA', settlementType: 'MG_RS', rsRatio: 30, contractAmount: 15000, currency: 'USD' },
+  { id: 7, content: 'content-110', company: 'company-202', launchDate: '2026-03-15', expireDate: '2026-09-15', contractPeriodMonths: 6, exclusive: false, region: 'OTHER', settlementType: 'RS', rsRatio: 28, contractAmount: null, currency: 'USD' },
+  { id: 8, content: 'content-111', company: 'company-203', launchDate: '2026-05-10', expireDate: '2026-08-05', contractPeriodMonths: 3, exclusive: true, region: 'GLOBAL_EXCLUDING_CHINA', settlementType: 'FLAT_FEE', rsRatio: null, contractAmount: 9000, currency: 'USD' },
+  { id: 9, content: 'content-112', company: 'company-204', launchDate: '2026-07-01', expireDate: '2027-01-10', contractPeriodMonths: 6, exclusive: false, region: 'GLOBAL_EXCLUDING_CHINA', settlementType: 'MG_RS', rsRatio: 25, contractAmount: 11000, currency: 'USD' },
+  { id: 10, content: 'content-113', company: 'company-201', launchDate: '2026-06-01', expireDate: '2026-09-02', contractPeriodMonths: 3, exclusive: false, region: 'OTHER', settlementType: 'RS', rsRatio: 26, contractAmount: null, currency: 'USD' },
+  { id: 11, content: 'content-114', company: 'company-201', launchDate: '2026-07-15', expireDate: '2026-11-30', contractPeriodMonths: 4, exclusive: true, region: 'GLOBAL_EXCLUDING_CHINA_JAPAN', settlementType: 'FLAT_FEE', rsRatio: null, contractAmount: 14000, currency: 'USD' },
+  { id: 12, content: 'content-115', company: 'company-201', launchDate: '2026-02-10', expireDate: '2026-07-20', contractPeriodMonths: 5, exclusive: false, region: 'OTHER', settlementType: 'MG_RS', rsRatio: 24, contractAmount: 8000, currency: 'USD' },
+  { id: 13, content: 'content-103', company: 'company-201', launchDate: '2026-03-01', expireDate: '2027-03-01', contractPeriodMonths: 12, exclusive: false, region: 'GLOBAL_EXCLUDING_CHINA', settlementType: 'RS', rsRatio: 29, contractAmount: null, currency: 'USD' },
 ];
 
 let selectedId = null;
 let draftMode = false;
+let contractStatusFilter = '';
+let contractPlatformFilter = '';
+let contractExpiringFilter = false;
+let contractSortMode = 'created';
+let pendingContentSelection = '';
+let pendingCompanySelection = '';
+let contractPage = 1;
+const CONTRACT_PAGE_SIZE = 10;
+const CONTENT_MODAL_PAGE_SIZE = 10;
+let contentModalPage = 1;
+let contentModalQuery = '';
+const COMPANY_MODAL_PAGE_SIZE = 5;
+let companyModalPage = 1;
+let companyModalQuery = '';
 
 function byId(list, id) {
   return list.find((item) => item.id === id)?.name || '—';
+}
+
+function byRegion(value) {
+  return {
+    GLOBAL_EXCLUDING_CHINA: '중국 제외 글로벌',
+    GLOBAL_EXCLUDING_CHINA_THAILAND: '중국·태국 제외 글로벌',
+    GLOBAL_EXCLUDING_CHINA_JAPAN: '중국·일본 제외 글로벌',
+    OTHER: '기타',
+  }[value] || value || '—';
+}
+
+function contentById(id) {
+  return contents.find((item) => item.id === id);
+}
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function handlePickerKeydown(event, opener) {
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+  event.preventDefault();
+  opener();
 }
 
 function typeBadge(type) {
@@ -405,53 +1736,128 @@ function typeBadge(type) {
 }
 
 function fillOptions() {
-  document.getElementById('platform-filter').innerHTML = '<option value="">플랫폼사 전체</option>' + companies.map((item) => `<option value="${item.id}">${item.name}</option>`).join('');
+  const menu = document.getElementById('contract-platform-filter-menu');
+  const empty = menu?.querySelector('.contract-filter-empty');
+  if (!menu || !empty) return;
+  menu.querySelectorAll('.contract-filter-menu-item:not([data-value=""])').forEach((item) => item.remove());
+  companies.forEach((company) => {
+    const button = document.createElement('button');
+    button.className = 'contract-filter-menu-item';
+    button.type = 'button';
+    button.dataset.value = company.id;
+    button.textContent = company.name;
+    button.onclick = () => selectContractPlatformFilter(company.id, company.name);
+    menu.insertBefore(button, empty);
+  });
 }
 
 function renderContentResults() {
   document.getElementById('content-result-list').innerHTML = contents.map((item) => `
-    <tr class="result-item" data-id="${item.id}" data-title="${item.name}" data-company="${item.company}">
-      <td><div class="result-name">${item.name}</div></td>
-      <td><div class="result-meta">${item.year}</div></td>
-      <td><div class="result-meta">${item.company}</div></td>
-      <td><button class="btn btn-primary" type="button" onclick="pickContent('${item.id}')">선택하기</button></td>
-    </tr>
+    <div class="result-item" data-id="${item.id}" data-title="${item.name}" data-company="${item.company}" onclick="setPendingContentSelection('${item.id}')">
+      <label class="result-check-wrap"><input class="result-check" type="checkbox" aria-label="${item.name} 선택" onclick="event.stopPropagation()" onchange="setPendingContentSelection('${item.id}')" /></label>
+      <div class="result-name">${item.name}</div>
+      <div class="result-meta">${item.company}</div>
+    </div>
   `).join('');
 }
 
 function renderCompanyResults() {
   document.getElementById('company-result-list').innerHTML = companies.map((item) => `
-    <tr class="company-result-item" data-id="${item.id}" data-name="${item.name}">
-      <td><div class="result-name">${item.name}</div></td>
-      <td><button class="btn btn-primary" type="button" onclick="pickCompany('${item.id}')">선택하기</button></td>
-    </tr>
+    <div class="result-item company-result-item" data-id="${item.id}" data-name="${item.name}" onclick="setPendingCompanySelection('${item.id}')">
+      <label class="result-check-wrap"><input class="result-check" type="checkbox" aria-label="${item.name} 선택" onclick="event.stopPropagation()" onchange="setPendingCompanySelection('${item.id}')" /></label>
+      <div class="result-name">${item.name}</div>
+    </div>
   `).join('');
 }
 
 function renderContracts() {
   const query = document.getElementById('contract-search')?.value.trim().toLowerCase() || '';
-  const platform = document.getElementById('platform-filter')?.value || '';
-  const expireMonths = Number(document.getElementById('expire-filter')?.value) || 0;
+  const status = contractStatusFilter;
+  const platform = contractPlatformFilter;
   const tbody = document.getElementById('contract-list');
   const filtered = contracts.filter((contract) => {
     const title = byId(contents, contract.content).toLowerCase();
     const matchesQuery = !query || title.includes(query);
+    const matchesStatus = !status || contractStatus(contract) === status;
     const matchesPlatform = !platform || contract.company === platform;
-    const matchesExpire = !expireMonths || expiresWithinMonths(contract.expireDate, expireMonths);
-    return matchesQuery && matchesPlatform && matchesExpire;
+    const matchesExpiring = !contractExpiringFilter || isContractExpiringSoon(contract);
+    return matchesQuery && matchesStatus && matchesPlatform && matchesExpiring;
   });
-  tbody.innerHTML = filtered.map((contract) => `
+  const sorted = [...filtered].sort(compareContractsForList);
+  const totalPages = Math.max(1, Math.ceil(sorted.length / CONTRACT_PAGE_SIZE));
+  contractPage = Math.min(Math.max(contractPage, 1), totalPages);
+  const start = (contractPage - 1) * CONTRACT_PAGE_SIZE;
+  const pageContracts = sorted.slice(start, start + CONTRACT_PAGE_SIZE);
+  if (selectedId != null && !sorted.some((contract) => contract.id === selectedId)) {
+    selectedId = null;
+    draftMode = false;
+    setDetailVisible(false);
+  }
+  tbody.innerHTML = pageContracts.map((contract, index) => `
     <tr class="${contract.id === selectedId ? 'sel' : ''}" onclick="selectContract(${contract.id})">
-      <td><div class="tname">${byId(contents, contract.content)}</div></td>
+      <td><span class="contract-no">${sorted.length - start - index}</span></td>
+      <td>${renderContractContent(contentById(contract.content))}</td>
       <td><div class="tmeta">${byId(companies, contract.company)}</div></td>
-      <td><div class="tmeta">${formatDate(contract.launchDate)} ~ ${formatDate(contract.expireDate)}</div></td>
-      <td>${formatDDayBadge(contract.expireDate)}</td>
+      <td>${contractStatusBadge(contract)}</td>
+      <td><div class="tmeta">${formatContractListPeriod(contract)}</div></td>
+      <td>${contractDdayBadge(contract)}</td>
     </tr>
-  `).join('') || '<tr><td colspan="4" class="tmeta">계약 데이터가 없습니다.</td></tr>';
+  `).join('') || '<tr class="contract-list-empty"><td colspan="6">계약 데이터가 없습니다.</td></tr>';
+  renderContractPagination(totalPages);
+  updateContractFilterButtonState();
+}
+
+function renderContractPagination(totalPages) {
+  const pagebar = document.getElementById('contract-pagebar');
+  if (!pagebar) return;
+  pagebar.innerHTML = totalPages > 1
+    ? Array.from({ length: totalPages }).map((_, index) => {
+      const page = index + 1;
+      return `<button class="contract-list-page-btn ${page === contractPage ? 'active' : ''}" type="button" onclick="setContractPage(${page})">${page}</button>`;
+    }).join('')
+    : '<button class="contract-list-page-btn active" type="button" disabled>1</button>';
+}
+
+function setContractPage(page) {
+  contractPage = page;
+  renderContracts();
+}
+
+function resetContractPageAndRender() {
+  contractPage = 1;
+  renderContracts();
+}
+
+function handleContractSearchInput() {
+  resetContractPageAndRender();
+}
+
+function compareContractsForList(a, b) {
+  if (contractSortMode === 'created') return b.id - a.id;
+  return compareContractsByExpiring(a, b);
+}
+
+function compareContractsByExpiring(a, b) {
+  const aExpired = contractStatus(a) === 'ended' ? 1 : 0;
+  const bExpired = contractStatus(b) === 'ended' ? 1 : 0;
+  if (aExpired !== bExpired) return aExpired - bExpired;
+  const aDate = contractDateValue(a.expireDate);
+  const bDate = contractDateValue(b.expireDate);
+  if (aDate !== bDate) return aDate - bDate;
+  return b.id - a.id;
+}
+
+function contractDateValue(value) {
+  const time = new Date(`${value || ''}T00:00:00`).getTime();
+  return Number.isNaN(time) ? Number.MAX_SAFE_INTEGER : time;
 }
 
 function formatDate(value) {
   return value ? String(value).replaceAll('-', '.') : '—';
+}
+
+function formatContractListPeriod(contract) {
+  return `${formatDate(contract.launchDate)} ~ ${formatDate(contract.expireDate)}`;
 }
 
 function daysUntilDate(value) {
@@ -463,33 +1869,110 @@ function daysUntilDate(value) {
   return Math.ceil((target - today) / 86400000);
 }
 
-function formatDDay(value) {
-  const days = daysUntilDate(value);
-  if (days == null) return '—';
-  if (days === 0) return 'D-day';
-  return days > 0 ? `D-${days}` : `D+${Math.abs(days)}`;
+function isContractExpiringSoon(contract) {
+  const days = daysUntilDate(contract.expireDate);
+  return days != null && days >= 0 && days <= 90;
 }
 
-function formatDDayBadge(value) {
-  const days = daysUntilDate(value);
-  const label = formatDDay(value);
-  const tone = days == null ? '' : days < 0 ? ' expired' : days <= 30 ? ' urgent' : '';
-  return `<span class="dday-badge${tone}">${label}</span>`;
+function contractDdayBadge(contract) {
+  const days = daysUntilDate(contract.expireDate);
+  if (days == null) return '<span class="dday-badge">—</span>';
+  if (days < 0) return '<span class="dday-badge is-expired">종료</span>';
+  const label = days === 0 ? 'D-DAY' : `D-${days}`;
+  const urgent = days <= 90 ? ' is-urgent' : '';
+  return `<span class="dday-badge${urgent}">${label}</span>`;
 }
 
-function expiresWithinMonths(expireDate, months) {
-  if (!expireDate) return false;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const limit = new Date(today);
-  limit.setMonth(limit.getMonth() + months);
-  const target = new Date(`${expireDate}T00:00:00`);
-  return target >= today && target <= limit;
+function contractStatus(contract) {
+  const startDays = daysUntilDate(contract.launchDate);
+  const expireDays = daysUntilDate(contract.expireDate);
+  if (expireDays != null && expireDays < 0) return 'ended';
+  if (startDays != null && startDays > 0) return 'upcoming';
+  return 'active';
+}
+
+function contractStatusBadge(contract) {
+  const status = contractStatus(contract);
+  const meta = {
+    upcoming: { label: 'UPCOMING', cls: 'b-inquiry' },
+    active: { label: 'ACTIVE', cls: 'b-meta' },
+    ended: { label: 'EXPIRED', cls: 'b-closed' },
+  }[status] || { label: 'ACTIVE', cls: 'b-meta' };
+  return `<span class="bdg ${meta.cls}">${meta.label}</span>`;
+}
+
+function renderContractContent(content) {
+  const title = content?.name || '—';
+  const poster = content?.poster
+    ? `<div class="contract-poster"><img src="${content.poster}" alt="${title} 포스터"></div>`
+    : '<div class="contract-poster"></div>';
+  return `<div class="contract-content-cell">${poster}<div><div class="tname">${title}</div></div></div>`;
+}
+
+function formatDetailValue(value) {
+  return value == null || value === '' ? '—' : value;
+}
+
+function renderContractDetailHeader(contract) {
+  const content = contentById(contract.content);
+  const title = content?.name || '—';
+  const platform = byId(companies, contract.company);
+  const poster = document.getElementById('detail-poster');
+  document.getElementById('detail-title').textContent = title;
+  document.getElementById('detail-sub').textContent = platform;
+  document.getElementById('detail-status').innerHTML = contractStatusBadge(contract);
+  if (poster) {
+    poster.innerHTML = content?.poster ? `<img src="${escapeHtml(content.poster)}" alt="${escapeHtml(title)} 포스터">` : '';
+  }
+}
+
+function renderContractDetailInfo(contract) {
+  const targetRows = [
+    [['유통계약 ID', contract.id], ['콘텐츠명', byId(contents, contract.content)]],
+    [['플랫폼명', byId(companies, contract.company)]],
+  ];
+  const conditionRows = [
+    [['계약 시작일', formatDate(contract.launchDate)], ['계약 만료일', formatDate(contract.expireDate)], ['계약 기간', contract.contractPeriodMonths ? `${contract.contractPeriodMonths}개월` : '—']],
+    [['계약 지역', byRegion(contract.region)], ['독점 여부', contract.exclusive ? '독점' : '비독점']],
+    [['정산 방식', contract.settlementType || '—'], ['RS 비율', contract.rsRatio != null ? `${contract.rsRatio}%` : '—']],
+    [['통화', contract.currency || '—'], ['계약 금액', contract.contractAmount != null ? Number(contract.contractAmount).toLocaleString() : '—']],
+  ];
+  const rowHtml = (rows, pairCount) => rows.map((row) => `
+    <tr>
+      ${row.map(([label, value], index) => {
+        const isLast = index === row.length - 1;
+        const valueColspan = isLast && row.length < pairCount ? ((pairCount - index) * 2) - 1 : 1;
+        return `<th>${escapeHtml(label)}</th><td class="${value === '—' ? 'is-empty' : ''}"${valueColspan > 1 ? ` colspan="${valueColspan}"` : ''}>${escapeHtml(formatDetailValue(value))}</td>`;
+      }).join('')}
+    </tr>
+  `).join('');
+  document.getElementById('contract-detail-target-info').innerHTML = rowHtml(targetRows, 2);
+  document.getElementById('contract-detail-condition-info').innerHTML = rowHtml(conditionRows, 3);
 }
 
 function setDetailVisible(visible) {
+  const detail = document.getElementById('contract-detail');
   document.getElementById('empty-state').style.display = visible ? 'none' : '';
-  document.getElementById('contract-detail').classList.toggle('show', visible);
+  detail.classList.toggle('show', visible);
+  detail.classList.toggle('is-create', visible && draftMode);
+  const pane = document.getElementById('pane-contracts');
+  const main = document.querySelector('.main');
+  pane?.classList.toggle('has-detail', visible);
+  if (!visible) pane?.classList.remove('is-expanded');
+  main?.classList.toggle('contract-detail-open', visible);
+  if (!visible) main?.classList.remove('contract-detail-expanded');
+  if (!visible) setContractDetailExpanded(false);
+  syncContractSavebar();
+}
+
+function syncContractSavebar() {
+  const deleteButton = document.getElementById('contract-delete-button');
+  const saveButton = document.getElementById('contract-save-button');
+  if (deleteButton) {
+    deleteButton.textContent = '삭제';
+    deleteButton.style.display = draftMode ? 'none' : '';
+  }
+  if (saveButton) saveButton.textContent = draftMode ? '계약 생성' : '저장';
 }
 
 function fillForm(contract) {
@@ -497,6 +1980,7 @@ function fillForm(contract) {
   renderSelectedContent();
   document.getElementById('field-company').value = contract.company;
   renderSelectedCompany();
+  setLockedValue('selected-contract-id', contract.id ? String(contract.id) : '');
   document.getElementById('field-launchDate').value = contract.launchDate || '';
   document.getElementById('field-expireDate').value = contract.expireDate || '';
   document.getElementById('field-contractPeriodMonths').value = contract.contractPeriodMonths || '';
@@ -509,16 +1993,26 @@ function fillForm(contract) {
   syncSettlementFields();
 }
 
+function setLockedValue(id, value) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const text = value || '—';
+  el.textContent = text;
+  el.classList.toggle('is-empty', text === '—');
+}
+
 function renderSelectedContent() {
   const contentId = document.getElementById('field-content').value;
   const content = contents.find((item) => item.id === contentId);
   document.getElementById('selected-content-name').textContent = content?.name || '콘텐츠를 선택하세요';
+  setLockedValue('selected-content-edit-name', content?.name || '');
 }
 
 function renderSelectedCompany() {
   const companyId = document.getElementById('field-company').value;
   const company = companies.find((item) => item.id === companyId);
-  document.getElementById('selected-company-name').textContent = company?.name || '플랫폼 회사를 선택하세요';
+  document.getElementById('selected-company-name').textContent = company?.name || '플랫폼사를 선택하세요';
+  setLockedValue('selected-company-edit-name', company?.name || '');
 }
 
 function readForm() {
@@ -543,8 +2037,8 @@ function selectContract(id) {
   draftMode = false;
   const contract = contracts.find((item) => item.id === id);
   if (!contract) return;
-  document.getElementById('detail-title').textContent = `${byId(contents, contract.content)} · ${byId(companies, contract.company)}`;
-  document.getElementById('detail-sub').textContent = `ContentPlatformContract #${contract.id}`;
+  renderContractDetailHeader(contract);
+  renderContractDetailInfo(contract);
   fillForm(contract);
   setDetailVisible(true);
   renderContracts();
@@ -554,18 +2048,22 @@ function newContract() {
   selectedId = null;
   draftMode = true;
   const today = new Date().toISOString().slice(0, 10);
-  document.getElementById('detail-title').textContent = '새 플랫폼 계약';
-  document.getElementById('detail-sub').textContent = 'ContentPlatformContract 생성';
+  document.getElementById('detail-title').textContent = '유통 계약 추가';
+  document.getElementById('detail-sub').textContent = '';
+  document.getElementById('detail-status').innerHTML = '';
+  document.getElementById('detail-poster').innerHTML = '';
   fillForm({ content: '', company: '', launchDate: today, expireDate: '', contractPeriodMonths: 12, exclusive: false, region: 'GLOBAL_EXCLUDING_CHINA', settlementType: 'RS', rsRatio: null, contractAmount: null, currency: 'USD' });
   setDetailVisible(true);
   renderContracts();
 }
 
 function openContentModal() {
+  if (!draftMode) return;
   const search = document.getElementById('content-modal-search');
   if (search) search.value = '';
-  filterContentModal();
-  syncContentModalButtons();
+  pendingContentSelection = document.getElementById('field-content')?.value || '';
+  filterContentModal('');
+  syncContentModalSelection();
   document.getElementById('content-modal')?.classList.add('show');
   setTimeout(() => search?.focus(), 0);
 }
@@ -575,39 +2073,78 @@ function closeContentModal(event) {
   document.getElementById('content-modal')?.classList.remove('show');
 }
 
-function syncContentModalButtons() {
-  const selected = document.getElementById('field-content').value;
+function syncContentModalSelection() {
   document.querySelectorAll('#content-modal .result-item').forEach((item) => {
-    const button = item.querySelector('button');
-    const added = item.dataset.id === selected;
-    button.textContent = added ? '현재 선택' : '선택하기';
-    button.className = added ? 'btn btn-added' : 'btn btn-primary';
-    button.disabled = added;
+    const checked = item.dataset.id === pendingContentSelection;
+    item.querySelector('.result-check').checked = checked;
+    item.classList.toggle('sel', checked);
+  });
+  const confirmButton = document.getElementById('content-modal-confirm');
+  if (confirmButton) confirmButton.disabled = !pendingContentSelection;
+}
+
+function setPendingContentSelection(contentId) {
+  pendingContentSelection = contentId;
+  syncContentModalSelection();
+}
+
+function contentModalMatchedItems() {
+  const keyword = contentModalQuery.trim().toLowerCase();
+  return Array.from(document.querySelectorAll('#content-modal .result-item')).filter((item) => {
+    const haystack = `${item.dataset.title} ${item.dataset.company}`.toLowerCase();
+    return !keyword || haystack.includes(keyword);
   });
 }
 
-function filterContentModal() {
-  const query = document.getElementById('content-modal-search')?.value || '';
-  const type = document.getElementById('content-search-type')?.value || 'title';
-  const keyword = String(query).trim().toLowerCase();
+function renderContentModalPage() {
+  const matched = contentModalMatchedItems();
+  const totalPages = Math.max(1, Math.ceil(matched.length / CONTENT_MODAL_PAGE_SIZE));
+  contentModalPage = Math.min(Math.max(1, contentModalPage), totalPages);
+  const start = (contentModalPage - 1) * CONTENT_MODAL_PAGE_SIZE;
+  const visible = new Set(matched.slice(start, start + CONTENT_MODAL_PAGE_SIZE));
   document.querySelectorAll('#content-modal .result-item').forEach((item) => {
-    const haystack = type === 'company' ? item.dataset.company : item.dataset.title;
-    item.style.display = !keyword || haystack.includes(keyword) ? '' : 'none';
+    item.style.display = visible.has(item) ? '' : 'none';
   });
+  const pagebar = document.getElementById('content-modal-pagebar');
+  const pages = document.getElementById('content-modal-pages');
+  const prev = document.getElementById('content-modal-prev');
+  const next = document.getElementById('content-modal-next');
+  if (pagebar) pagebar.style.display = totalPages > 1 ? '' : 'none';
+  if (pages) {
+    pages.innerHTML = Array.from({ length: totalPages }, (_, index) => {
+      const page = index + 1;
+      return `<button class="btn modal-page-number ${page === contentModalPage ? 'active' : ''}" type="button" onclick="setContentModalPage(${page})">${page}</button>`;
+    }).join('');
+  }
+  if (prev) prev.disabled = contentModalPage <= 1;
+  if (next) next.disabled = contentModalPage >= totalPages;
 }
 
-function pickContent(contentId) {
-  document.getElementById('field-content').value = contentId;
+function setContentModalPage(page) {
+  contentModalPage = page;
+  renderContentModalPage();
+}
+
+function filterContentModal(query = document.getElementById('content-modal-search')?.value || '') {
+  contentModalQuery = String(query || '');
+  contentModalPage = 1;
+  renderContentModalPage();
+}
+
+function confirmContentSelection() {
+  if (!pendingContentSelection) return;
+  document.getElementById('field-content').value = pendingContentSelection;
   renderSelectedContent();
-  syncContentModalButtons();
   document.getElementById('content-modal')?.classList.remove('show');
 }
 
 function openCompanyModal() {
+  if (!draftMode) return;
   const search = document.getElementById('company-modal-search');
   if (search) search.value = '';
-  filterCompanyModal();
-  syncCompanyModalButtons();
+  pendingCompanySelection = document.getElementById('field-company')?.value || '';
+  filterCompanyModal('');
+  syncCompanyModalSelection();
   document.getElementById('company-modal')?.classList.add('show');
   setTimeout(() => search?.focus(), 0);
 }
@@ -617,28 +2154,68 @@ function closeCompanyModal(event) {
   document.getElementById('company-modal')?.classList.remove('show');
 }
 
-function syncCompanyModalButtons() {
-  const selected = document.getElementById('field-company').value;
+function syncCompanyModalSelection() {
   document.querySelectorAll('#company-modal .company-result-item').forEach((item) => {
-    const button = item.querySelector('button');
-    const added = item.dataset.id === selected;
-    button.textContent = added ? '현재 선택' : '선택하기';
-    button.className = added ? 'btn btn-added' : 'btn btn-primary';
-    button.disabled = added;
+    const checked = item.dataset.id === pendingCompanySelection;
+    item.querySelector('.result-check').checked = checked;
+    item.classList.toggle('sel', checked);
+  });
+  const confirmButton = document.getElementById('company-modal-confirm');
+  if (confirmButton) confirmButton.disabled = !pendingCompanySelection;
+}
+
+function setPendingCompanySelection(companyId) {
+  pendingCompanySelection = companyId;
+  syncCompanyModalSelection();
+}
+
+function companyModalMatchedItems() {
+  const keyword = companyModalQuery.trim().toLowerCase();
+  return Array.from(document.querySelectorAll('#company-modal .company-result-item')).filter((item) => {
+    const haystack = item.dataset.name.toLowerCase();
+    return !keyword || haystack.includes(keyword);
   });
 }
 
-function filterCompanyModal() {
-  const keyword = String(document.getElementById('company-modal-search')?.value || '').trim().toLowerCase();
+function renderCompanyModalPage() {
+  const matched = companyModalMatchedItems();
+  const totalPages = Math.max(1, Math.ceil(matched.length / COMPANY_MODAL_PAGE_SIZE));
+  companyModalPage = Math.min(Math.max(1, companyModalPage), totalPages);
+  const start = (companyModalPage - 1) * COMPANY_MODAL_PAGE_SIZE;
+  const visible = new Set(matched.slice(start, start + COMPANY_MODAL_PAGE_SIZE));
   document.querySelectorAll('#company-modal .company-result-item').forEach((item) => {
-    item.style.display = !keyword || item.dataset.name.toLowerCase().includes(keyword) ? '' : 'none';
+    item.style.display = visible.has(item) ? '' : 'none';
   });
+  const pagebar = document.getElementById('company-modal-pagebar');
+  const pages = document.getElementById('company-modal-pages');
+  const prev = document.getElementById('company-modal-prev');
+  const next = document.getElementById('company-modal-next');
+  if (pagebar) pagebar.style.display = totalPages > 1 ? '' : 'none';
+  if (pages) {
+    pages.innerHTML = Array.from({ length: totalPages }, (_, index) => {
+      const page = index + 1;
+      return `<button class="btn modal-page-number ${page === companyModalPage ? 'active' : ''}" type="button" onclick="setCompanyModalPage(${page})">${page}</button>`;
+    }).join('');
+  }
+  if (prev) prev.disabled = companyModalPage <= 1;
+  if (next) next.disabled = companyModalPage >= totalPages;
 }
 
-function pickCompany(companyId) {
-  document.getElementById('field-company').value = companyId;
+function setCompanyModalPage(page) {
+  companyModalPage = page;
+  renderCompanyModalPage();
+}
+
+function filterCompanyModal(query = document.getElementById('company-modal-search')?.value || '') {
+  companyModalQuery = String(query || '');
+  companyModalPage = 1;
+  renderCompanyModalPage();
+}
+
+function confirmCompanySelection() {
+  if (!pendingCompanySelection) return;
+  document.getElementById('field-company').value = pendingCompanySelection;
   renderSelectedCompany();
-  syncCompanyModalButtons();
   document.getElementById('company-modal')?.classList.remove('show');
 }
 
@@ -646,10 +2223,12 @@ function syncSettlementFields() {
   const type = document.getElementById('field-settlementType').value;
   const rsRatio = document.getElementById('field-rsRatio');
   const contractAmount = document.getElementById('field-contractAmount');
-  const hasRs = type === 'RS' || type === 'MG_RS';
+  const hasRs = type.includes('RS');
   const hasAmount = type === 'FLAT_FEE' || type === 'MG_RS';
   rsRatio.disabled = !hasRs;
   contractAmount.disabled = !hasAmount;
+  rsRatio.closest('.contract-field-value')?.classList.toggle('is-disabled', !hasRs);
+  contractAmount.closest('.contract-field-value')?.classList.toggle('is-disabled', !hasAmount);
   if (!hasRs) rsRatio.value = '';
   if (!hasAmount) contractAmount.value = '';
 }
@@ -657,12 +2236,13 @@ function syncSettlementFields() {
 function saveContract() {
   const payload = readForm();
   if (!payload.content || !payload.company || !payload.launchDate || !payload.expireDate || !payload.contractPeriodMonths) {
-    alert('콘텐츠, 플랫폼 회사, 계약 시작일, 계약 만료일, 계약 기간은 필수입니다.');
+    alert('콘텐츠, 플랫폼사, 계약 시작일, 계약 만료일, 계약 기간은 필수입니다.');
     return;
   }
   if (draftMode) {
     const nextId = Math.max(0, ...contracts.map((item) => item.id)) + 1;
     contracts.unshift({ id: nextId, ...payload });
+    contractPage = 1;
     selectContract(nextId);
     return;
   }
@@ -692,10 +2272,184 @@ function cancelEdit() {
   renderContracts();
 }
 
+function toggleContractFilterPanel() {
+  const panel = document.getElementById('contract-filter-panel');
+  const toggle = document.getElementById('contract-filter-toggle');
+  if (!panel || !toggle) return;
+  closeContractSortMenu();
+  const isOpen = panel.classList.toggle('show');
+  toggle.classList.toggle('open', isOpen);
+  toggle.setAttribute('aria-expanded', String(isOpen));
+  if (!isOpen) closeContractFilterDropdowns();
+}
+
+function toggleContractSortMenu() {
+  const dropdown = document.getElementById('contract-sort-dropdown');
+  const toggle = document.getElementById('contract-sort-toggle');
+  if (!dropdown || !toggle) return;
+  const isOpen = dropdown.classList.toggle('open');
+  toggle.classList.toggle('open', isOpen || contractSortMode !== 'created');
+  toggle.setAttribute('aria-expanded', String(isOpen));
+  closeContractFilterDropdowns();
+}
+
+function closeContractSortMenu() {
+  const dropdown = document.getElementById('contract-sort-dropdown');
+  const toggle = document.getElementById('contract-sort-toggle');
+  dropdown?.classList.remove('open');
+  if (toggle) {
+    toggle.classList.toggle('open', contractSortMode !== 'created');
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+}
+
+function selectContractSortMode(mode) {
+  contractSortMode = mode;
+  document.querySelectorAll('.contract-sort-menu-item').forEach((item) => {
+    item.classList.toggle('active', item.dataset.value === mode);
+  });
+  closeContractSortMenu();
+  resetContractPageAndRender();
+}
+
+function closeContractFilterDropdowns() {
+  document.querySelectorAll('.contract-filter-dropdown.open').forEach((dropdown) => {
+    dropdown.classList.remove('open');
+    dropdown.querySelector('.contract-filter-control')?.setAttribute('aria-expanded', 'false');
+  });
+}
+
+function resetContractDropdownSearch(dropdown) {
+  const search = dropdown?.querySelector('.contract-filter-search');
+  if (!search) return;
+  search.value = '';
+  filterContractDropdownOptions(search);
+}
+
+function toggleContractFilterDropdown(id) {
+  const dropdown = document.getElementById(id);
+  if (!dropdown) return;
+  const wasOpen = dropdown.classList.contains('open');
+  closeContractSortMenu();
+  closeContractFilterDropdowns();
+  dropdown.classList.toggle('open', !wasOpen);
+  dropdown.querySelector('.contract-filter-control')?.setAttribute('aria-expanded', String(!wasOpen));
+  if (!wasOpen) {
+    resetContractDropdownSearch(dropdown);
+    setTimeout(() => dropdown.querySelector('.contract-filter-search')?.focus(), 0);
+  }
+}
+
+function filterContractDropdownOptions(input) {
+  const menu = input.closest('.contract-filter-menu');
+  const query = input.value.trim().toLowerCase();
+  let visibleCount = 0;
+  menu?.querySelectorAll('.contract-filter-menu-item').forEach((item) => {
+    const text = (item.dataset.value || item.textContent || '').toLowerCase();
+    const isVisible = !query || text.includes(query);
+    item.style.display = isVisible ? '' : 'none';
+    if (isVisible) visibleCount += 1;
+  });
+  menu?.querySelector('.contract-filter-empty')?.classList.toggle('show', visibleCount === 0);
+}
+
+function selectContractPlatformFilter(value, label) {
+  contractPlatformFilter = value;
+  const button = document.getElementById('contract-platform-filter-button');
+  if (button) {
+    button.textContent = label;
+    button.classList.toggle('active', Boolean(value));
+  }
+  const dropdown = document.getElementById('contract-platform-filter-dropdown');
+  dropdown?.querySelectorAll('.contract-filter-menu-item').forEach((item) => {
+    item.classList.toggle('active', item.dataset.value === value);
+  });
+  resetContractDropdownSearch(dropdown);
+  closeContractFilterDropdowns();
+  resetContractPageAndRender();
+}
+
+function selectContractStatusFilter(value, label) {
+  contractStatusFilter = value;
+  const button = document.getElementById('contract-status-filter-button');
+  if (button) {
+    button.textContent = label;
+    button.classList.toggle('active', Boolean(value));
+  }
+  const dropdown = document.getElementById('contract-status-filter-dropdown');
+  dropdown?.querySelectorAll('.contract-filter-menu-item').forEach((item) => {
+    item.classList.toggle('active', item.dataset.value === value);
+  });
+  closeContractFilterDropdowns();
+  resetContractPageAndRender();
+}
+
+function toggleContractExpiringFilter(checked) {
+  contractExpiringFilter = Boolean(checked);
+  updateContractFilterButtonState();
+  resetContractPageAndRender();
+}
+
+function updateContractFilterButtonState() {
+  const status = contractStatusFilter;
+  const platform = contractPlatformFilter;
+  const expiring = contractExpiringFilter;
+  const toggle = document.getElementById('contract-filter-toggle');
+  toggle?.classList.toggle('open', Boolean(status || platform || expiring) || document.getElementById('contract-filter-panel')?.classList.contains('show'));
+  document.getElementById('contract-status-filter-button')?.classList.toggle('active', Boolean(status));
+  document.getElementById('contract-platform-filter-button')?.classList.toggle('active', Boolean(platform));
+  const expiringCheckbox = document.getElementById('contract-expiring-filter');
+  const expiringLabel = document.getElementById('contract-expiring-filter-label');
+  if (expiringCheckbox) expiringCheckbox.checked = expiring;
+  expiringLabel?.classList.toggle('active', expiring);
+  document.getElementById('contract-sort-toggle')?.classList.toggle('open', contractSortMode !== 'created' || document.getElementById('contract-sort-dropdown')?.classList.contains('open'));
+}
+
+document.addEventListener('click', (event) => {
+  if (!event.target.closest('.contract-filter-dropdown')) {
+    closeContractFilterDropdowns();
+  }
+  if (!event.target.closest('.contract-sort-dropdown')) {
+    closeContractSortMenu();
+  }
+});
+
+function setContractDetailExpanded(isExpanded) {
+  const pane = document.getElementById('pane-contracts');
+  const main = document.querySelector('.main');
+  pane?.classList.toggle('is-expanded', isExpanded);
+  main?.classList.toggle('contract-detail-expanded', isExpanded);
+  const toggle = document.getElementById('contract-expand-toggle');
+  if (toggle) {
+    toggle.setAttribute('aria-pressed', String(isExpanded));
+    toggle.setAttribute('aria-label', isExpanded ? '상세 축소' : '상세 확장');
+    toggle.innerHTML = `<i class="ti ${isExpanded ? 'ti-arrows-minimize' : 'ti-arrows-maximize'}"></i>`;
+  }
+}
+
+function toggleContractDetailExpanded() {
+  const pane = document.getElementById('pane-contracts');
+  setContractDetailExpanded(!pane?.classList.contains('is-expanded'));
+}
+
+function closeContractDetailPane() {
+  selectedId = null;
+  draftMode = false;
+  setDetailVisible(false);
+  renderContracts();
+}
+
+function openInitialContractFromQuery() {
+  const contractId = Number(new URLSearchParams(window.location.search).get('contractId'));
+  if (!Number.isFinite(contractId)) return;
+  if (contracts.some((contract) => contract.id === contractId)) selectContract(contractId);
+}
+
 fillOptions();
 renderContentResults();
 renderCompanyResults();
 renderContracts();
+openInitialContractFromQuery();
 </script>
 </body>
 </html>

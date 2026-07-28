@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>메일 발송 — Shortflow Admin</title>
+<title>메일 발송 - Shortflow Admin</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
 <link rel="stylesheet" href="admin-common.css?v=logo-left-20260715" />
-<script src="admin-common.js?v=nav-trade-20260716"></script>
+<script src="admin-common.js?v=nav-trade-order-20260727"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb(242, 242, 242); display: flex; height: 100vh; overflow: hidden; font-size: 13px; color: #1a1a18; }
+body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #fff; display: flex; height: 100vh; overflow: hidden; font-size: 13px; color: #1a1a18; }
 
 /* SIDEBAR */
 .sb { width: 210px; min-width: 210px; background: #13130f; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
@@ -22,8 +22,6 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
 .ni:hover { color: rgba(255,255,255,0.7); }
 .ni.active { color: #fff; border-left-color: #fff; background: rgba(255,255,255,0.04); }
 .ni i { font-size: 13px; flex-shrink: 0; }
-.ni-badge { margin-left: auto; font-size: 10px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); padding: 1px 6px; border-radius: 10px; }
-.ni-badge.hot { background: #fff; color: #13130f; }
 .sub .ni { padding-left: 36px; font-size: 12px; color: rgba(255,255,255,0.32); }
 .sub .ni:hover { color: rgba(255,255,255,0.6); }
 .sub .ni.active { color: #fff; }
@@ -33,108 +31,206 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
 .uemail { font-size: 10px; color: rgba(255,255,255,0.28); margin-top: 1px; }
 
 /* MAIN */
-.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
-.topbar { height: 46px; background: #fff; border-bottom: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; padding: 0 18px; flex-shrink: 0; }
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; background: #fff; }
+.topbar { height: 46px; background: #fff; border-bottom: 0; display: flex; align-items: center; padding: 0 18px; flex-shrink: 0; }
 .topbar-title { font-size: 14px; font-weight: 600; }
+.body { --history-pane-width: 440px; flex: 1; min-height: 0; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) var(--history-pane-width); background: #fff; position: relative; }
+.body::before { content: ""; position: absolute; top: 0; right: 0; left: 0; height: 1px; background: #e5e5e5; pointer-events: none; z-index: 3; }
+.body::after { content: ""; position: absolute; top: 0; right: var(--history-pane-width); bottom: 0; width: 1px; background: #e5e5e5; pointer-events: none; z-index: 4; }
+.compose-pane,
+.history-pane { min-width: 0; height: 100%; overflow-y: auto; }
+.compose-pane { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 0; align-items: start; padding: 18px 18px 24px 6px; background: #fff; }
+.history-pane { padding: 18px 18px 24px 40px; background: #fff; }
+.page-head { min-height: 52px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.page-title { color: #1a1a18; font-size: 17px; font-weight: 600; }
+.page-sub { margin-top: 4px; color: #999; font-size: 11.5px; line-height: 1.45; }
+.page-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.btn-large { height: 40px; min-width: 148px; padding: 0 18px; border-radius: 9px; font-size: 12.5px; }
 
-/* BODY */
-.body { flex: 1; overflow-y: auto; padding: 20px 24px; display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 16px; align-items: start; }
-.mail-compose { min-width: 0; }
-.mail-history { min-width: 0; max-height: calc(100vh - 86px); display: flex; flex-direction: column; }
-.mail-history .card-head { flex-shrink: 0; }
+/* COMMON */
+.section { margin-bottom: 24px; }
+.section-title { display: flex; align-items: center; gap: 7px; margin-bottom: 12px; color: #4f5965; font-size: 12px; font-weight: 600; }
+.section-title::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #e85d2c; flex: 0 0 6px; }
+.section-title .muted { margin-left: 2px; color: #aaa; font-size: 11px; font-weight: 400; }
+.panel { border: 0.5px solid rgb(242, 242, 242); border-radius: 12px; background: #fff; overflow: hidden; }
+.panel-body { padding: 14px; }
+.muted-copy { color: #999; font-size: 11.5px; line-height: 1.5; }
+.search-wrap { position: relative; min-width: 0; }
+.search-wrap i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #b8b8b8; font-size: 14px; pointer-events: none; }
+.search-input { width: 100%; height: 34px; padding: 0 12px 0 32px; border: 0.5px solid #e5e5e5; border-radius: 8px; background: #fff; color: #1a1a18; outline: none; font-family: inherit; font-size: 12.5px; }
+.search-input:focus { border-color: #aaa; }
+.btn { height: 31px; padding: 0 12px; border: 0.5px solid #dedede; border-radius: 7px; background: #fff; color: #444; font-family: inherit; font-size: 11.5px; font-weight: 400; display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; white-space: nowrap; }
+.btn:hover { background: #fafafa; border-color: #cfcfcf; }
+.btn-primary { background: #1a1a18; border-color: #1a1a18; color: #fff; }
+.btn-primary:hover { background: #000; border-color: #000; }
+.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-ghost { border-color: transparent; background: transparent; color: #777; }
+.btn-ghost:hover { background: #f7f7f7; border-color: transparent; color: #333; }
 
-/* CARD */
-.card { background: #fff; border: 0.5px solid rgb(242, 242, 242); border-radius: 10px; overflow: hidden; }
-.card-head { padding: 14px 18px; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; justify-content: space-between; }
-.card-title { font-size: 13px; font-weight: 600; color: #1a1a18; display: flex; align-items: center; gap: 7px; }
-.card-title i { font-size: 15px; color: #aaa; }
-.card-body { padding: 16px 18px; }
+/* MAIL STEPS */
+.compose-step-tabs { display: grid; grid-template-columns: 1fr; align-content: start; align-self: start; border: 0.5px solid #e3e3e3; border-radius: 4px 0 0 4px; overflow: hidden; background: #fff; }
+.compose-step-head { width: 100%; min-height: 64px; padding: 12px 12px; border: 0; border-bottom: 0.5px solid #eeeeee; background: #fff; font-family: inherit; display: flex; align-items: center; gap: 9px; cursor: pointer; text-align: left; }
+.compose-step-head:last-child { border-bottom: 0; }
+.compose-step-head:hover { background: #fafafa; }
+.compose-step-head.active { background: #f3f3f3; }
+.compose-step-head.locked { cursor: not-allowed; opacity: 0.42; }
+.step-no { width: 20px; color: #aaa; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; line-height: 1.2; flex: 0 0 20px; }
+.compose-step-head.done .step-no { color: #639922; }
+.compose-step-head.active .step-no { color: #1a1a18; font-weight: 500; }
+.step-label { min-width: 0; flex: 1; transform: translateY(4px); }
+.step-name { display: block; color: #333; font-size: 13px; font-weight: 500; line-height: 1.25; }
+.step-desc { display: block; margin-top: 3px; color: #aaa; font-size: 11.5px; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.compose-step-toggle { display: none; }
+.compose-step-panel { display: none; grid-column: 2; grid-row: 1; align-self: start; min-height: 256px; margin: 0; border: 0.5px solid rgb(242, 242, 242); border-radius: 0 4px 4px 0; background: #fff; overflow: hidden; }
+.compose-step-panel.active { display: block; }
+.compose-step-body { padding: 14px; }
+.compose-nav { display: none; }
+.compose-nav-copy { color: #999; font-size: 11.5px; }
+.compose-nav-actions { display: flex; align-items: center; gap: 8px; }
 
-/* STEP BADGE */
-.step { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: #1a1a18; color: #fff; font-size: 10.5px; font-weight: 600; flex-shrink: 0; }
-.step.done { background: #639922; }
-.step.inactive { background: rgb(242, 242, 242); color: #aaa; }
+/* MAIL TYPE */
+.mail-type-step-body { min-height: 254px; display: flex; flex-direction: column; }
+.type-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.type-btn { width: 100%; min-height: 58px; padding: 10px 12px; border: 0.5px solid #e5e5e5; border-radius: 6px; background: #fff; color: #666; font-family: inherit; cursor: pointer; display: flex; align-items: center; gap: 10px; text-align: left; }
+.type-btn:hover { background: #fafafa; border-color: #d7d7d7; }
+.type-btn.active { background: #f8f8f8; border-color: #1a1a18; color: #1a1a18; }
+.type-check { width: 17px; height: 17px; border: 1.4px solid #d5d4ce; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 17px; }
+.type-btn.active .type-check { background: #1a1a18; border-color: #1a1a18; color: #fff; }
+.type-check i { display: none; font-size: 11px; }
+.type-btn.active .type-check i { display: block; }
+.type-name { color: #1a1a18; font-size: 13px; font-weight: 550; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.step-panel-actions { margin-top: auto; padding-top: 14px; display: flex; justify-content: flex-end; }
 
-/* CONTENT SEARCH */
-.content-search-wrap { position: relative; margin-bottom: 12px; }
-.content-search-wrap i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #bbb; pointer-events: none; }
-.content-search { width: 100%; font-size: 12.5px; padding: 9px 12px 9px 32px; border: 0.5px solid rgb(242, 242, 242); border-radius: 8px; background: rgb(242, 242, 242); color: #1a1a18; outline: none; font-family: inherit; }
-.content-search:focus { border-color: #aaa; background: #fff; }
+/* SOURCE LIST */
+.source-tools,
+.platform-tools { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.source-list { max-height: 252px; overflow: auto; border: 0.5px solid rgb(242, 242, 242); border-radius: 10px; background: #fff; }
+.compose-step-panel.active[data-compose-step="2"] .source-list.content-source-list { height: auto; max-height: none; overflow: visible; }
+.source-table-head { display: grid; align-items: center; min-height: 34px; border-bottom: 0.5px solid rgb(242, 242, 242); color: #aaa; font-size: 10.5px; }
+.source-head-cell { min-width: 0; padding: 8px 12px; border-right: 0.5px solid rgb(242, 242, 242); white-space: nowrap; }
+.source-head-cell:last-child { border-right: 0; }
+.source-row { display: grid; grid-template-columns: 58px minmax(0, 1fr) 92px 112px; align-items: center; min-height: 66px; border-bottom: 0.5px solid rgb(242, 242, 242); cursor: pointer; }
+.source-row:last-child { border-bottom: 0; }
+.source-row:hover { background: #fcfcfc; }
+.source-row.selected { background: #fafafa; box-shadow: inset 0 0 0 1px #1a1a18; }
+.source-list.content-source-list .source-table-head,
+.source-list.content-source-list .source-row { grid-template-columns: minmax(230px, 1.25fr) minmax(130px, 0.85fr) 88px 108px; min-width: 650px; }
+.source-list.content-source-list .source-row { min-height: 64px; }
+.source-cell { min-width: 0; min-height: 100%; padding: 9px 12px; border-right: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; }
+.source-cell:last-child { border-right: 0; }
+.source-content-cell { gap: 10px; }
+.source-poster { width: 44px; height: 44px; border-radius: 7px; background: linear-gradient(145deg, #f1f1f1, #dadada); color: rgba(255,255,255,0.92); font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06); overflow: hidden; }
+.source-poster.p1 { background: linear-gradient(150deg, #30343f 0%, #6d8a93 52%, #e6c7a9 100%); }
+.source-poster.p2 { background: linear-gradient(150deg, #503148 0%, #ba7280 54%, #f0cfc5 100%); }
+.source-poster.p3 { background: linear-gradient(150deg, #181b24 0%, #405f7d 48%, #d95e38 100%); }
+.source-poster.p4 { background: linear-gradient(150deg, #36543c 0%, #8aad7c 55%, #efe3bf 100%); }
+.source-poster.p5 { background: linear-gradient(150deg, #413b5f 0%, #8978b7 55%, #f2c9d1 100%); }
+.source-poster.p6 { background: linear-gradient(150deg, #24394f 0%, #4f97a3 52%, #eadb9d 100%); }
+.source-poster.p7 { background: linear-gradient(150deg, #46312a 0%, #946a4d 52%, #ebc66d 100%); }
+.source-poster.p8 { background: linear-gradient(150deg, #25272f 0%, #4f6f5f 50%, #d7dfcc 100%); }
+.source-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.source-mark { width: 30px; height: 30px; border-radius: 6px; background: #f2f2f2; color: #999; font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.source-title { color: #1a1a18; font-size: 12.5px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.source-sub { margin-top: 2px; color: #aaa; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.source-meta { color: #777; font-size: 11.5px; white-space: nowrap; }
+.source-status { width: fit-content; min-height: 22px; padding: 0 8px; border-radius: 999px; background: #f7f7f7; border: 0.5px solid #e5e5e5; color: #666; display: inline-flex; align-items: center; font-size: 10.5px; white-space: nowrap; }
+.source-pagination { min-height: 38px; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; }
+.source-pagination .page-btn { border-color: transparent; background: transparent; }
+.source-pagination .page-btn:hover { background: #f7f7f7; border-color: transparent; }
+.source-pagination .page-btn.active { border-color: transparent; background: #1a1a18; color: #fff; }
 
-/* CONTENT LIST */
-.content-list { display: flex; flex-direction: column; gap: 4px; max-height: 220px; overflow-y: auto; }
-.content-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 0.5px solid #e8e6e0; border-radius: 7px; cursor: pointer; transition: border-color 0.1s; }
-.content-item:hover { border-color: #bbb; background: rgb(242, 242, 242); }
-.content-item.selected { border-color: #1a1a18; background: rgb(242, 242, 242); }
-.ci-thumb { width: 36px; height: 36px; border-radius: 5px; background: rgb(242, 242, 242); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.ci-thumb i { font-size: 16px; color: #ccc; }
-.ci-name { font-size: 12.5px; font-weight: 500; color: #1a1a18; }
-.ci-company { font-size: 11px; color: #aaa; margin-top: 1px; }
-.ci-check { margin-left: auto; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #e0dfd9; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-.content-item.selected .ci-check { background: #1a1a18; border-color: #1a1a18; }
-.content-item.selected .ci-check::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #fff; }
+/* PLATFORM TABLE */
+.platform-summary { display: flex; align-items: center; gap: 8px; margin-left: auto; color: #888; font-size: 11.5px; }
+.platform-table { border: 0.5px solid rgb(242, 242, 242); border-radius: 12px; overflow: hidden; background: #fff; }
+.platform-table-scroll { width: 100%; overflow-x: auto; }
+.platform-head,
+.platform-row { display: grid; grid-template-columns: 42px minmax(200px, 1fr) 110px 120px; align-items: center; min-width: 520px; border-bottom: 0.5px solid rgb(242, 242, 242); }
+.platform-head { min-height: 36px; color: #a1a1a1; font-size: 10.5px; font-weight: 400; }
+.platform-row { min-height: 48px; cursor: pointer; }
+.platform-row:last-child { border-bottom: 0; }
+.platform-row:hover { background: #fcfcfc; }
+.platform-row.checked { background: #fafafa; }
+.platform-cell { min-width: 0; min-height: 100%; padding: 9px 12px; border-right: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; }
+.platform-cell:last-child { border-right: 0; }
+.platform-check { width: 17px; height: 17px; border: 1.4px solid #d5d4ce; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+.platform-row.checked .platform-check { background: #1a1a18; border-color: #1a1a18; }
+.platform-check i { display: none; color: #fff; font-size: 11px; }
+.platform-row.checked .platform-check i { display: block; }
+.platform-name { color: #1a1a18; font-size: 12px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.plain-text { color: #555; font-size: 11.5px; white-space: nowrap; }
+.sent-text { color: #5f8a34; font-size: 11px; white-space: nowrap; }
+.empty-state { padding: 28px 12px; color: #bbb; font-size: 12px; text-align: center; }
 
-/* SELECTED CONTENT PREVIEW */
-.selected-preview { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: rgb(242, 242, 242); border-radius: 8px; border: 0.5px solid rgb(242, 242, 242); }
-.sp-thumb { width: 40px; height: 40px; border-radius: 6px; background: rgb(242, 242, 242); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.sp-thumb i { font-size: 18px; color: #aaa; }
-.sp-name { font-size: 13px; font-weight: 500; }
-.sp-company { font-size: 11px; color: #aaa; margin-top: 2px; }
-.sp-change { margin-left: auto; font-size: 11.5px; color: #888; cursor: pointer; text-decoration: underline; }
+/* PREVIEW */
+.preview-grid { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 14px; }
+.mail-preview { min-height: 248px; border: 0.5px solid rgb(242, 242, 242); border-radius: 12px; overflow: hidden; background: #fff; }
+.preview-head { min-height: 42px; padding: 0 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 0.5px solid rgb(242, 242, 242); background: #fafafa; }
+.preview-subject { color: #1a1a18; font-size: 12.5px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.preview-type { color: #999; font-size: 11px; }
+.preview-body { padding: 15px 16px; color: #333; font-size: 12.5px; line-height: 1.7; white-space: pre-line; }
+.send-review { border: 0.5px solid rgb(242, 242, 242); border-radius: 12px; background: #fff; overflow: hidden; }
+.review-row { min-height: 38px; padding: 9px 12px; border-bottom: 0.5px solid rgb(242, 242, 242); display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.review-row:last-child { border-bottom: 0; }
+.review-key { color: #aaa; font-size: 11px; flex-shrink: 0; }
+.review-val { color: #333; font-size: 12px; text-align: right; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.send-bar { margin-top: 12px; min-height: 48px; padding: 8px 0; display: flex; align-items: center; gap: 12px; }
+.send-count { color: #777; font-size: 12px; }
+.send-count strong { color: #1a1a18; }
+.send-success { display: none; margin-top: 10px; padding: 12px 14px; border-radius: 9px; background: #EAF3DE; color: #3B6D11; font-size: 12px; }
+.send-success.show { display: block; }
 
-/* PLATFORM CHECKBOXES */
-.platform-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-.select-all-platforms { margin-left: auto; height: 26px; padding: 0 10px; border: 0.5px solid rgb(242, 242, 242); border-radius: 6px; background: #fff; color: #555; font-family: inherit; font-size: 11.5px; font-weight: 500; cursor: pointer; }
-.select-all-platforms:hover { border-color: #aaa; background: rgb(242, 242, 242); color: #1a1a18; }
-.platform-item { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 0.5px solid #e8e6e0; border-radius: 8px; cursor: pointer; user-select: none; }
-.platform-item:hover { border-color: #bbb; }
-.platform-item.checked { border: 1.5px solid #aaa79f; background: rgb(242, 242, 242); }
-.platform-item.checked .pi-box { background: #77746d; border-color: #77746d; }
-.platform-item.checked .pi-box i { display: flex; }
-.pi-box { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid #d5d4ce; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-.pi-box i { font-size: 11px; color: #fff; display: none; }
-.pi-name { font-size: 12px; font-weight: 500; color: #333; }
-.pi-type { font-size: 10px; color: #bbb; margin-top: 1px; }
-.pi-sent { font-size: 9.5px; background: #EAF3DE; color: #3B6D11; padding: 1px 5px; border-radius: 4px; margin-left: auto; white-space: nowrap; }
+/* HISTORY */
+.history-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.history-title { display: flex; align-items: center; gap: 7px; color: #4f5965; font-size: 12px; font-weight: 600; }
+.history-title::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #e85d2c; flex: 0 0 6px; }
+.history-table { border: 0.5px solid rgb(242, 242, 242); border-radius: 12px; overflow: hidden; background: #fff; }
+.history-row { min-height: 72px; padding: 11px 12px; border-bottom: 0.5px solid rgb(242, 242, 242); cursor: pointer; display: grid; grid-template-columns: minmax(0, 1fr) 22px; gap: 10px; align-items: center; }
+.history-row:hover { background: #fcfcfc; }
+.history-row.open { background: #fafafa; }
+.history-date { color: #555; font-size: 11px; line-height: 1.35; }
+.history-main { min-width: 0; display: block; }
+.history-target { color: #1a1a18; font-size: 12px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.history-sub { margin-top: 2px; color: #aaa; font-size: 10.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.history-meta { margin-top: 7px; display: flex; align-items: center; justify-content: space-between; gap: 8px; color: #999; font-size: 10.5px; }
+.history-recipient { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.result-ok { color: #3B6D11; font-size: 11px; }
+.history-toggle { margin-left: auto; color: #aaa; font-size: 16px; transition: transform 0.18s ease, color 0.18s ease; }
+.history-row.open .history-toggle { color: #333; transform: rotate(180deg); }
+.history-inline-detail { border-bottom: 0.5px solid rgb(242, 242, 242); background: #fafafa; padding: 11px 12px 12px; }
+.history-inline-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.detail-head { min-height: 42px; padding: 0 12px; border-bottom: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; justify-content: space-between; background: #fafafa; }
+.detail-title { color: #1a1a18; font-size: 12.5px; font-weight: 600; }
+.detail-body { border: 0.5px solid rgb(242, 242, 242); border-radius: 10px; background: #fff; overflow: hidden; }
+.detail-platform-box { padding: 12px; }
+.detail-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.detail-platform { min-height: 30px; padding: 7px 9px; border: 0.5px solid #eeeeea; border-radius: 7px; display: flex; align-items: center; justify-content: space-between; gap: 10px; color: #333; font-size: 11.5px; }
+.detail-platform span:last-child { color: #639922; }
+.history-pane .review-row { align-items: flex-start; justify-content: flex-start; }
+.history-pane .review-key { width: 58px; }
+.history-pane .review-val { white-space: normal; text-align: left; line-height: 1.4; }
+.pagination { min-height: 44px; margin-top: 12px; display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+.page-info { margin-right: 6px; color: #999; font-size: 11.5px; }
+.page-btn { min-width: 31px; height: 31px; padding: 0 9px; border: 0.5px solid #dedede; border-radius: 7px; background: #fff; color: #555; font-family: inherit; font-size: 11.5px; cursor: pointer; }
+.page-btn:hover { background: #fafafa; border-color: #cfcfcf; }
+.page-btn.active { background: #1a1a18; border-color: #1a1a18; color: #fff; }
+.page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
-/* SEND BUTTON AREA */
-.send-area { display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: #fff; border-top: 0.5px solid rgb(242, 242, 242); }
-.selected-count { font-size: 12px; color: #888; }
-.selected-count strong { color: #1a1a18; }
-.btn-send { font-size: 12.5px; padding: 8px 18px; border-radius: 7px; border: none; background: #1a1a18; color: #fff; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; font-weight: 500; margin-left: auto; }
-.btn-send:hover { opacity: 0.85; }
-.btn-send:disabled { opacity: 0.4; cursor: not-allowed; }
-
-/* SEND SUCCESS */
-.send-success { display: none; align-items: center; gap: 10px; padding: 12px 16px; background: #EAF3DE; border: 0.5px solid #C0DD97; border-radius: 8px; }
-.send-success.show { display: flex; }
-.send-success i { font-size: 18px; color: #3B6D11; flex-shrink: 0; }
-.send-success-text { font-size: 12px; color: #3B6D11; font-weight: 500; }
-.send-success-sub { font-size: 11px; color: #639922; margin-top: 2px; }
-
-.hist-list { padding: 8px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-.hist-card { border: 0.5px solid rgb(242, 242, 242); border-radius: 8px; padding: 10px; background: #fff; }
-.hist-card:hover { background: rgb(242, 242, 242); }
-.hist-top { display: flex; gap: 10px; align-items: flex-start; }
-.hist-main { min-width: 0; flex: 1; }
-.hist-content { font-size: 12.5px; font-weight: 500; color: #1a1a18; }
-.hist-company { font-size: 11px; color: #aaa; margin-top: 1px; }
-.hist-platforms { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
-.hist-ptag { font-size: 10.5px; background: rgb(242, 242, 242); color: #666; padding: 2px 7px; border-radius: 5px; }
-.hist-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; padding-top: 8px; border-top: 0.5px solid rgb(242, 242, 242); }
-.hist-date { font-size: 11.5px; color: #aaa; white-space: nowrap; }
-
-@media (max-width: 1120px) {
-  .body { grid-template-columns: 1fr; }
-  .mail-history { max-height: none; }
+@media (max-width: 1180px) {
+  .body { grid-template-columns: 1fr; overflow-y: auto; }
+  .body::after { display: none; }
+  .compose-pane,
+  .history-pane { height: auto; overflow: visible; }
+  .compose-pane { grid-template-columns: 1fr; border-right: 0; }
+  .history-pane { border-left: 0; border-top: 0.5px solid rgb(242, 242, 242); }
+  .compose-step-panel { grid-column: auto; grid-row: auto; }
+  .compose-step-panel.active[data-compose-step="2"] .source-list.content-source-list { height: auto; }
+  .preview-grid { grid-template-columns: 1fr; }
+  .history-inline-grid { grid-template-columns: 1fr; }
 }
 
-/* scrollbar */
-::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
-.note { font-size: 11px; color: #bbb; margin-top: 6px; }
-.divider { height: 1px; background: rgb(242, 242, 242); margin: 14px 0; }
 </style>
 </head>
 <body>
@@ -168,8 +264,9 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
       <a class="ni" href="workflow-admin.html#bundle">묶음 거래</a>
       <a class="ni" href="workflow-admin.html#turnkey">턴키 거래</a>
     </div>
-    <a class="ni" href="turnkey-intent-admin.html"><i class="ti ti-inbox"></i> 문의함</a>
     <a class="ni" href="platform-contract-admin.html"><i class="ti ti-file-dollar"></i> 유통 계약 관리</a>
+    <a class="ni" href="turnkey-intent-admin.html"><i class="ti ti-inbox"></i> 문의함</a>
+
     <div class="nav-label">운영</div>
     <a class="ni" href="settlement-admin.html"><i class="ti ti-receipt"></i> 정산</a>
     <div class="sub">
@@ -189,289 +286,729 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
   </div>
 </div>
 
-<!-- MAIN -->
 <div class="main">
   <div class="topbar">
     <span class="topbar-title">메일 발송</span>
   </div>
 
   <div class="body">
+    <main class="compose-pane" id="compose-view">
+      <div class="compose-step-tabs">
+        <button class="compose-step-head" type="button" data-compose-step="1" onclick="setMailStep(1)">
+          <span class="step-no">1</span>
+          <span class="step-label">
+            <span class="step-name">메일 유형 선택</span>
+            <span class="step-desc" id="mail-type-summary">콘텐츠 제안</span>
+          </span>
+          <i class="ti ti-chevron-right compose-step-toggle"></i>
+        </button>
 
-    <!-- STEP 1+2: 콘텐츠 선택 + 플랫폼 선택 (하나의 카드로) -->
-    <div class="card mail-compose">
-      <div class="card-head">
-        <div class="card-title">
-          <i class="ti ti-send"></i>
-          콘텐츠 제안 메일 발송
-        </div>
-      </div>
+        <button class="compose-step-head" type="button" data-compose-step="2" onclick="setMailStep(2)">
+          <span class="step-no">2</span>
+          <span class="step-label">
+            <span class="step-name" id="source-section-title">자료 선택</span>
+            <span class="step-desc" id="source-summary">검색 후 선택</span>
+          </span>
+          <i class="ti ti-chevron-right compose-step-toggle"></i>
+        </button>
 
-      <!-- 콘텐츠 선택 섹션 -->
-      <div class="card-body" style="border-bottom: 0.5px solid rgb(242, 242, 242)">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-          <div class="step" id="step1-badge">1</div>
-          <span style="font-size:12px;font-weight:500;color:#333">콘텐츠 선택</span>
-        </div>
+        <button class="compose-step-head" type="button" data-compose-step="3" onclick="setMailStep(3)">
+          <span class="step-no">3</span>
+          <span class="step-label">
+            <span class="step-name">발송할 플랫폼사 선택</span>
+            <span class="step-desc" id="platform-summary">복수 선택 가능</span>
+          </span>
+          <i class="ti ti-chevron-right compose-step-toggle"></i>
+        </button>
 
-        <!-- 선택 전: 검색 + 목록 -->
-        <div id="content-select-area">
-          <div class="content-search-wrap">
-            <i class="ti ti-search"></i>
-            <input class="content-search" placeholder="콘텐츠명 또는 제작사명으로 검색" oninput="filterContents(this.value)" />
-          </div>
-          <div class="content-list" id="content-list"></div>
-        </div>
-
-        <!-- 선택 후: 선택된 콘텐츠 프리뷰 -->
-        <div id="content-selected-area" style="display:none">
-          <div class="selected-preview">
-            <div class="sp-thumb"><i class="ti ti-movie"></i></div>
-            <div>
-              <div class="sp-name" id="sp-name"></div>
-              <div class="sp-company" id="sp-company"></div>
-            </div>
-            <span class="sp-change" onclick="changeContent()">변경</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 플랫폼 선택 섹션 -->
-      <div class="card-body" id="platform-section" style="border-bottom:0.5px solid rgb(242, 242, 242);opacity:0.4;pointer-events:none">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-          <div class="step inactive" id="step2-badge">2</div>
-          <span style="font-size:12px;font-weight:500;color:#333">발송할 플랫폼사 선택</span>
-          <span style="font-size:11px;color:#bbb;margin-left:4px">복수 선택 가능</span>
-          <button class="select-all-platforms" type="button" onclick="selectAllPlatforms()">전체선택</button>
-        </div>
-        <div class="platform-grid" id="platform-grid"></div>
-        <p class="note" style="margin-top:10px">이미 발송된 플랫폼사는 <span style="background:#EAF3DE;color:#3B6D11;font-size:9.5px;padding:1px 5px;border-radius:4px">발송 완료</span> 표시됩니다. 재발송도 가능합니다.</p>
-      </div>
-
-      <!-- 발송 버튼 -->
-      <div class="send-area">
-        <div class="selected-count" id="selected-count" style="display:none">
-          <strong id="count-num">0</strong>개 플랫폼사 선택됨
-        </div>
-        <button class="btn-send" id="send-btn" disabled onclick="sendMail()">
-          <i class="ti ti-send"></i> 메일 발송
+        <button class="compose-step-head" type="button" data-compose-step="4" onclick="setMailStep(4)">
+          <span class="step-no">4</span>
+          <span class="step-label">
+            <span class="step-name">메일 미리보기</span>
+            <span class="step-desc" id="preview-summary">대기</span>
+          </span>
+          <i class="ti ti-chevron-right compose-step-toggle"></i>
         </button>
       </div>
 
-      <!-- 발송 완료 -->
-      <div class="send-success" id="send-success" style="margin:0 18px 16px">
-        <i class="ti ti-circle-check-filled"></i>
-        <div>
-          <div class="send-success-text" id="send-success-text"></div>
-          <div class="send-success-sub" id="send-success-sub"></div>
+      <section class="section compose-step-panel" data-compose-step="1">
+        <div class="compose-step-body mail-type-step-body">
+          <div class="type-group" id="mail-type-group"></div>
+          <div class="step-panel-actions">
+            <button class="btn btn-primary" type="button" onclick="handleMailStepNext()">다음</button>
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
 
-    <!-- 발송 이력 -->
-    <div class="card mail-history">
-      <div class="card-head">
-        <div class="card-title">
-          <i class="ti ti-history"></i>
-          최근 발송 이력
+      <section class="section compose-step-panel" data-compose-step="2">
+        <div class="compose-step-body">
+          <div class="source-tools">
+            <div class="search-wrap" style="flex:1">
+              <i class="ti ti-search"></i>
+              <input class="search-input" id="source-search" placeholder="검색" oninput="filterSources(this.value)" />
+            </div>
+          </div>
+          <div class="source-list" id="source-list"></div>
+          <div class="source-pagination" id="source-pagination"></div>
+          <div class="step-panel-actions">
+            <button class="btn btn-primary" id="source-next-btn" type="button" onclick="handleMailStepNext()" disabled>다음</button>
+          </div>
         </div>
-      </div>
-      <div class="hist-list" id="history-list"></div>
-    </div>
+      </section>
 
+      <section class="section compose-step-panel" data-compose-step="3">
+        <div class="compose-step-body">
+          <div class="platform-tools">
+            <div class="search-wrap" style="flex:1">
+              <i class="ti ti-search"></i>
+              <input class="search-input" id="platform-search" placeholder="플랫폼사명, 지역 검색" oninput="filterPlatforms(this.value)" />
+            </div>
+            <button class="btn" type="button" onclick="toggleHideSent()" id="hide-sent-btn">발송 완료 제외</button>
+            <button class="btn" type="button" onclick="selectAllPlatforms()">전체 선택</button>
+          </div>
+          <div class="platform-table" id="platform-table"></div>
+          <div class="step-panel-actions">
+            <button class="btn btn-primary" id="platform-next-btn" type="button" onclick="handleMailStepNext()" disabled>다음</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section compose-step-panel" data-compose-step="4">
+        <div class="compose-step-body">
+          <div class="preview-grid">
+            <div class="mail-preview">
+              <div class="preview-head">
+                <div class="preview-subject" id="preview-subject">자료를 선택하면 메일 제목이 표시됩니다</div>
+                <div class="preview-type" id="preview-type"></div>
+              </div>
+              <div class="preview-body" id="preview-body">메일 유형과 발송 대상을 선택하면 템플릿 미리보기를 확인할 수 있습니다.</div>
+            </div>
+            <div>
+              <div class="send-review" id="send-review"></div>
+              <div class="send-bar">
+                <div class="send-count" id="send-count">플랫폼사를 선택해주세요</div>
+                <button class="btn btn-primary" id="send-btn" type="button" onclick="sendMail()" disabled>메일 발송</button>
+              </div>
+              <div class="send-success" id="send-success"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="compose-nav" id="compose-nav"></div>
+    </main>
+
+    <aside class="history-pane" id="history-view">
+      <div class="history-head">
+        <div class="history-title">메일 발송 이력</div>
+      </div>
+      <div class="history-table" id="history-table"></div>
+      <div class="pagination" id="history-pagination"></div>
+    </aside>
   </div>
 </div>
 
 <script>
-const contents = [
-  { id:1, title:'The Last Letter', company:'NextWave Studios', poster:'poster-p1', mark:'TL' },
-  { id:2, title:'Reverse Cinderella', company:'OneTake Media', poster:'poster-p2', mark:'RC' },
-  { id:3, title:'Midnight Tokyo Drift', company:'ShortReel (US)', poster:'poster-p3', mark:'MT' },
-  { id:4, title:'Echo of Spring', company:'NextWave Studios', poster:'poster-p6', mark:'ES' },
-  { id:5, title:'Bloom Again', company:'PaperLens', poster:'poster-p4', mark:'BA' },
-  { id:6, title:'Seven Suns', company:'BrightFrame', poster:'poster-p5', mark:'SS' },
-];
+const mailTypes = {
+  content: {
+    label: '콘텐츠 제안',
+    sourceLabel: '콘텐츠 검색',
+    searchPlaceholder: '콘텐츠명, 제작사명, 제작연도 검색',
+    subject: source => `[Shortflow] ${source.title} 콘텐츠 제안`,
+    body: (source, count) => `안녕하세요.\n\nShortflow에서 ${source.company}의 "${source.title}" 콘텐츠를 제안드립니다.\n장르: ${source.genre}\n회차: ${source.episodes}화\n\n검토 가능한 메타데이터와 자료 링크를 함께 전달드립니다.\n수신 플랫폼사 ${count}곳에 동일 템플릿으로 발송됩니다.`,
+  },
+  collaboration: {
+    label: '제작협업 기획안',
+    sourceLabel: '제작협업 기획안 검색',
+    searchPlaceholder: '기획안명, 제작사명, 상태 검색',
+    subject: source => `[Shortflow] ${source.title} 제작협업 기획안 제안`,
+    body: (source, count) => `안녕하세요.\n\nShortflow 제작협업 기획안 "${source.title}"을 공유드립니다.\n제작사: ${source.company}\n예상 포맷: ${source.format}\n상태: ${source.status}\n\n협업 검토를 위해 기획안과 요약 정보를 함께 전달드립니다.\n수신 플랫폼사 ${count}곳에 동일 템플릿으로 발송됩니다.`,
+  },
+};
+
+const sourceData = {
+  content: [
+    { id: 1, title: 'The Last Letter', company: 'NextWave Studios', genre: '드라마, 로맨스', episodes: 16, status: '승인 대기', mark: 'TL', year: 2026, uploadedAt: '2026.07.18', poster: 'p1', image: '../images/대표님이내전남친입니다.png' },
+    { id: 2, title: 'Reverse Cinderella', company: 'OneTake Media', genre: '로맨스', episodes: 20, status: '승인 대기', mark: 'RC', year: 2025, uploadedAt: '2026.07.15', poster: 'p2', image: '../images/재벌집막내비서.png' },
+    { id: 3, title: 'Midnight Tokyo Drift', company: 'ShortReel (US)', genre: '액션', episodes: 12, status: '승인 완료', mark: 'MT', year: 2026, uploadedAt: '2026.07.08', poster: 'p3', image: '../images/return-topstar-poster.png' },
+    { id: 4, title: 'Echo of Spring', company: 'NextWave Studios', genre: '멜로', episodes: 18, status: '승인 완료', mark: 'ES', year: 2024, uploadedAt: '2026.06.30', poster: 'p4', image: '../images/killer-at-home.png' },
+    { id: 5, title: 'Bloom Again', company: 'PaperLens', genre: '드라마', episodes: 10, status: '반려', mark: 'BA', year: 2025, uploadedAt: '2026.06.22', poster: 'p5', image: '../images/villainess-agent.png' },
+    { id: 6, title: 'Seven Suns', company: 'BrightFrame', genre: 'SF', episodes: 8, status: '초안', mark: 'SS', year: 2026, uploadedAt: '2026.06.11', poster: 'p6', image: '../images/ai-husband.png' },
+    { id: 7, title: 'Office Wife', company: 'OneTake Media', genre: '스릴러', episodes: 24, status: '승인 대기', mark: 'OW', year: 2024, uploadedAt: '2026.05.29', poster: 'p2', image: '../images/resigned-emperor.png' },
+    { id: 8, title: 'Love Algorithm', company: 'PaperLens', genre: '로맨스, 코미디', episodes: 15, status: '승인 완료', mark: 'LA', year: 2025, uploadedAt: '2026.05.16', poster: 'p4', image: '../images/murderer-roommate.png' },
+    { id: 9, title: 'City of Glass', company: 'BlueHour Pictures', genre: '미스터리', episodes: 14, status: '승인 완료', mark: 'CG', year: 2026, uploadedAt: '2026.05.02', poster: 'p7', image: '../images/chaebol-secretary.png' },
+    { id: 10, title: 'My Secret Boss', company: 'OneTake Media', genre: '오피스 로맨스', episodes: 18, status: '승인 대기', mark: 'SB', year: 2025, uploadedAt: '2026.04.24', poster: 'p8', image: '../images/첫사랑은계약종료.png' },
+    { id: 11, title: 'Summer Contract', company: 'PaperLens', genre: '로맨스', episodes: 12, status: '승인 완료', mark: 'SC', year: 2024, uploadedAt: '2026.04.12', poster: 'p5', image: '../images/내매니저는구미호.png' },
+    { id: 12, title: 'Neon Family', company: 'BrightFrame', genre: '코미디', episodes: 16, status: '초안', mark: 'NF', year: 2026, uploadedAt: '2026.03.30', poster: 'p6', image: '../images/달빛아래편의점.png' },
+    { id: 13, title: 'Runaway Bride', company: 'NextWave Studios', genre: '로맨스, 코미디', episodes: 20, status: '승인 대기', mark: 'RB', year: 2025, uploadedAt: '2026.03.18', poster: 'p2', image: '../images/황후의복수노트.png' },
+    { id: 14, title: 'Silent Heir', company: 'BlueHour Pictures', genre: '스릴러', episodes: 10, status: '승인 완료', mark: 'SH', year: 2024, uploadedAt: '2026.03.05', poster: 'p3', image: '../images/나의위험한파트너.png' },
+    { id: 15, title: 'Golden Hour Cafe', company: 'PaperLens', genre: '힐링 드라마', episodes: 8, status: '승인 완료', mark: 'GH', year: 2026, uploadedAt: '2026.02.21', poster: 'p7', image: '../images/왕자님의퇴근길.png' },
+  ],
+  collaboration: [
+    { id: 101, title: '글로벌 숏폼 로맨스 패키지', company: 'NextWave Studios', format: '20부작 숏드라마', status: '검토 가능', mark: 'GR' },
+    { id: 102, title: 'AI 애니메이션 공동 제작안', company: 'BrightFrame', format: '8부작 애니메이션', status: '초안 보강', mark: 'AA' },
+    { id: 103, title: '동남아 현지화 로맨스 프로젝트', company: 'PaperLens', format: '12부작 리메이크', status: '검토 가능', mark: 'SR' },
+    { id: 104, title: '액션 숏폼 시즌제 기획안', company: 'ShortReel (US)', format: '시즌제 액션', status: '파트너 모집', mark: 'AS' },
+  ],
+};
 
 const platforms = [
-  { id:1, name:'ShortReel (US)', type:'PLATFORM' },
-  { id:2, name:'Viki', type:'PLATFORM' },
-  { id:3, name:'WeTV', type:'PLATFORM' },
-  { id:4, name:'iQIYI', type:'PLATFORM' },
-  { id:5, name:'Rakuten Viki', type:'PLATFORM' },
-  { id:6, name:'드라마박스', type:'PLATFORM' },
+  { id: 1, name: 'ShortReel (US)', region: 'US', manager: 'Mia Chen', type: 'OTT' },
+  { id: 2, name: 'Viki', region: 'Global', manager: 'Hana Lee', type: 'OTT' },
+  { id: 3, name: 'WeTV', region: 'SEA', manager: 'Ryan Tan', type: 'OTT' },
+  { id: 4, name: 'iQIYI', region: 'CN/SEA', manager: 'Lin Zhou', type: 'OTT' },
+  { id: 5, name: 'Rakuten Viki', region: 'Global', manager: 'Alex Kim', type: 'OTT' },
+  { id: 6, name: '드라마박스', region: 'KR', manager: '박지윤', type: 'Platform' },
+  { id: 7, name: 'MoboReels', region: 'US', manager: 'Chris Park', type: 'Shortform' },
+  { id: 8, name: 'GoodShort', region: 'US', manager: 'Emily Stone', type: 'Shortform' },
+  { id: 9, name: 'FlexTV', region: 'LATAM', manager: 'Sofia Ruiz', type: 'Platform' },
+  { id: 10, name: 'MiniDrama', region: 'JP', manager: 'Yuto Sato', type: 'Shortform' },
+  { id: 11, name: 'ShortMax', region: 'EU', manager: 'Noah Meyer', type: 'Shortform' },
+  { id: 12, name: 'DramaWave', region: 'SEA', manager: 'Nora Lim', type: 'Platform' },
 ];
 
-// 콘텐츠별 이미 발송된 플랫폼
 const sentHistory = {
-  1: [1, 2], // The Last Letter → ShortReel, Viki
-  3: [3],    // Midnight Tokyo Drift → WeTV
+  content: {
+    1: [1, 2],
+    3: [3],
+  },
+  collaboration: {
+    101: [2, 5],
+  },
 };
 
 const history = [
-  { content:'The Last Letter', company:'NextWave Studios', platforms:['ShortReel (US)','Viki'], date:'2026.05.08 15:20', sender:'Lee Admin' },
-  { content:'Midnight Tokyo Drift', company:'ShortReel (US)', platforms:['WeTV'], date:'2026.05.07 11:00', sender:'Lee Admin' },
-  { content:'Echo of Spring', company:'NextWave Studios', platforms:['Viki','iQIYI','Rakuten Viki'], date:'2026.05.02 09:30', sender:'Lee Admin' },
-  { content:'Reverse Cinderella', company:'OneTake Media', platforms:['ShortReel (US)'], date:'2026.04.28 14:10', sender:'Lee Admin' },
+  { id: 1, date: '2026.07.20 15:20', sender: '김관리자', type: 'content', target: 'The Last Letter', company: 'NextWave Studios', platforms: ['ShortReel (US)', 'Viki'], success: 2, failed: 0, subject: '[Shortflow] The Last Letter 콘텐츠 제안' },
+  { id: 2, date: '2026.07.18 11:00', sender: 'Lee Admin', type: 'collaboration', target: '글로벌 숏폼 로맨스 패키지', company: 'NextWave Studios', platforms: ['Viki', 'Rakuten Viki'], success: 2, failed: 0, subject: '[Shortflow] 글로벌 숏폼 로맨스 패키지 제작협업 기획안 제안' },
+  { id: 3, date: '2026.07.15 09:30', sender: 'Lee Admin', type: 'content', target: 'Midnight Tokyo Drift', company: 'ShortReel (US)', platforms: ['WeTV'], success: 1, failed: 0, subject: '[Shortflow] Midnight Tokyo Drift 콘텐츠 제안' },
+  { id: 4, date: '2026.07.14 17:45', sender: '김관리자', type: 'content', target: 'Reverse Cinderella', company: 'OneTake Media', platforms: ['iQIYI', 'WeTV', 'DramaWave'], success: 3, failed: 0, subject: '[Shortflow] Reverse Cinderella 콘텐츠 제안' },
+  { id: 5, date: '2026.07.12 10:15', sender: 'Park Admin', type: 'content', target: 'Echo of Spring', company: 'NextWave Studios', platforms: ['MiniDrama', 'ShortMax'], success: 2, failed: 0, subject: '[Shortflow] Echo of Spring 콘텐츠 제안' },
+  { id: 6, date: '2026.07.10 16:05', sender: '김관리자', type: 'collaboration', target: '동남아 현지화 로맨스 프로젝트', company: 'PaperLens', platforms: ['WeTV', 'DramaWave', 'FlexTV'], success: 3, failed: 0, subject: '[Shortflow] 동남아 현지화 로맨스 프로젝트 제작협업 기획안 제안' },
+  { id: 7, date: '2026.07.08 13:20', sender: 'Lee Admin', type: 'content', target: 'Love Algorithm', company: 'PaperLens', platforms: ['GoodShort', 'MoboReels'], success: 2, failed: 0, subject: '[Shortflow] Love Algorithm 콘텐츠 제안' },
+  { id: 8, date: '2026.07.06 09:50', sender: 'Kim Ops', type: 'collaboration', target: 'AI 애니메이션 공동 제작안', company: 'BrightFrame', platforms: ['Rakuten Viki'], success: 1, failed: 0, subject: '[Shortflow] AI 애니메이션 공동 제작안 제작협업 기획안 제안' },
+  { id: 9, date: '2026.07.03 18:10', sender: '김관리자', type: 'content', target: 'Seven Suns', company: 'BrightFrame', platforms: ['ShortMax', 'MiniDrama', 'FlexTV'], success: 3, failed: 0, subject: '[Shortflow] Seven Suns 콘텐츠 제안' },
+  { id: 10, date: '2026.07.01 14:35', sender: 'Park Admin', type: 'content', target: 'Office Wife', company: 'OneTake Media', platforms: ['드라마박스', 'GoodShort'], success: 2, failed: 0, subject: '[Shortflow] Office Wife 콘텐츠 제안' },
+  { id: 11, date: '2026.06.28 11:40', sender: 'Lee Admin', type: 'collaboration', target: '액션 숏폼 시즌제 기획안', company: 'ShortReel (US)', platforms: ['ShortReel (US)', 'MoboReels'], success: 2, failed: 0, subject: '[Shortflow] 액션 숏폼 시즌제 기획안 제작협업 기획안 제안' },
+  { id: 12, date: '2026.06.25 15:05', sender: '김관리자', type: 'content', target: 'Bloom Again', company: 'PaperLens', platforms: ['Viki'], success: 1, failed: 0, subject: '[Shortflow] Bloom Again 콘텐츠 제안' },
+  { id: 13, date: '2026.06.22 12:25', sender: 'Kim Ops', type: 'content', target: 'The Last Letter', company: 'NextWave Studios', platforms: ['iQIYI', 'Rakuten Viki', 'MiniDrama'], success: 3, failed: 0, subject: '[Shortflow] The Last Letter 콘텐츠 제안' },
+  { id: 14, date: '2026.06.19 10:00', sender: 'Park Admin', type: 'collaboration', target: '글로벌 숏폼 로맨스 패키지', company: 'NextWave Studios', platforms: ['ShortMax', 'FlexTV'], success: 2, failed: 0, subject: '[Shortflow] 글로벌 숏폼 로맨스 패키지 제작협업 기획안 제안' },
+  { id: 15, date: '2026.06.16 16:30', sender: '김관리자', type: 'content', target: 'Midnight Tokyo Drift', company: 'ShortReel (US)', platforms: ['DramaWave', 'WeTV'], success: 2, failed: 0, subject: '[Shortflow] Midnight Tokyo Drift 콘텐츠 제안' },
 ];
 
-let selectedContentId = null;
+let selectedMailType = 'content';
+let selectedSourceId = null;
 let checkedPlatforms = new Set();
-let searchQuery = '';
+let sourceQuery = '';
+let platformQuery = '';
+let hideSent = false;
+let selectedHistoryId = null;
+let currentView = 'history';
+let historyPage = 1;
+let currentMailStep = 1;
+let sourcePage = 1;
+const historyPageSize = 10;
+const sourcePageSize = 10;
 
-function renderContents() {
-  const list = document.getElementById('content-list');
-  const filtered = contents.filter(c =>
-    !searchQuery || c.title.includes(searchQuery) || c.company.includes(searchQuery)
-  );
-  list.innerHTML = filtered.map(c => `
-    <div class="content-item ${selectedContentId === c.id ? 'selected' : ''}" onclick="selectContent(${c.id})">
-      <div class="poster poster-sm ${c.poster}" data-mark="${c.mark}"></div>
-      <div>
-        <div class="ci-name">${c.title}</div>
-        <div class="ci-company">${c.company}</div>
-      </div>
-      <div class="ci-check"></div>
-    </div>`).join('');
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }[char]));
 }
 
-function filterContents(val) {
-  searchQuery = val;
-  renderContents();
+function currentSources() {
+  return sourceData[selectedMailType];
 }
 
-function selectContent(id) {
-  selectedContentId = id;
+function currentSource() {
+  return currentSources().find(item => item.id === selectedSourceId);
+}
+
+function getSentPlatformIds() {
+  return selectedSourceId ? (sentHistory[selectedMailType]?.[selectedSourceId] || []) : [];
+}
+
+function renderView() {
+  document.getElementById('history-view').classList.add('active');
+  document.getElementById('compose-view').classList.add('active');
+}
+
+function openComposeView() {
+  currentView = 'compose';
+  currentMailStep = 1;
+  selectedHistoryId = null;
+  document.getElementById('send-success').classList.remove('show');
+  renderView();
+  renderHistory();
+  renderComposeStep();
+}
+
+function openHistoryView() {
+  currentView = 'history';
+  renderView();
+  renderHistory();
+}
+
+function setMailType(type) {
+  selectedMailType = type;
+  selectedSourceId = null;
   checkedPlatforms.clear();
-  const c = contents.find(x => x.id === id);
+  sourceQuery = '';
+  platformQuery = '';
+  hideSent = false;
+  currentMailStep = 1;
+  sourcePage = 1;
+  document.getElementById('source-search').value = '';
+  document.getElementById('platform-search').value = '';
+  renderAll();
+}
 
-  // 콘텐츠 선택 영역 토글
-  document.getElementById('content-select-area').style.display = 'none';
-  document.getElementById('content-selected-area').style.display = 'block';
-  document.getElementById('sp-name').textContent = c.title;
-  document.getElementById('sp-company').textContent = c.company;
-  document.querySelector('.selected-preview .sp-thumb').outerHTML = `<div class="sp-thumb poster ${c.poster}" data-mark="${c.mark}"></div>`;
-  document.getElementById('step1-badge').classList.add('done');
+function filterSources(value) {
+  sourceQuery = value.trim().toLowerCase();
+  sourcePage = 1;
+  renderSources();
+  renderStepper();
+  renderPreview();
+}
 
-  // 플랫폼 섹션 활성화
-  const ps = document.getElementById('platform-section');
-  ps.style.opacity = '1';
-  ps.style.pointerEvents = '';
-  document.getElementById('step2-badge').className = 'step';
-
+function filterPlatforms(value) {
+  platformQuery = value.trim().toLowerCase();
   renderPlatforms();
-  updateSendBtn();
 }
 
-function changeContent() {
-  document.getElementById('content-select-area').style.display = 'block';
-  document.getElementById('content-selected-area').style.display = 'none';
-  document.getElementById('step1-badge').classList.remove('done');
-  const ps = document.getElementById('platform-section');
-  ps.style.opacity = '0.4';
-  ps.style.pointerEvents = 'none';
-  document.getElementById('step2-badge').className = 'step inactive';
-  selectedContentId = null;
-  const thumb = document.querySelector('.selected-preview .sp-thumb');
-  if (thumb) thumb.outerHTML = '<div class="sp-thumb"><i class="ti ti-movie"></i></div>';
+function selectSource(id) {
+  selectedSourceId = id;
   checkedPlatforms.clear();
-  updateSendBtn();
-  renderContents();
+  platformQuery = '';
+  currentMailStep = 2;
+  document.getElementById('platform-search').value = '';
+  renderAll();
 }
 
-function renderPlatforms() {
-  const sent = sentHistory[selectedContentId] || [];
-  const grid = document.getElementById('platform-grid');
-  grid.innerHTML = platforms.map(p => {
-    const isSent = sent.includes(p.id);
-    const isChecked = checkedPlatforms.has(p.id);
-    return `
-      <div class="platform-item ${isChecked ? 'checked' : ''}" onclick="togglePlatform(${p.id})">
-        <div class="pi-box"><i class="ti ti-check"></i></div>
-        <div>
-          <div class="pi-name">${p.name}</div>
-          <div class="pi-type">${p.type}</div>
-        </div>
-        ${isSent ? '<span class="pi-sent">발송 완료</span>' : ''}
-      </div>`;
-  }).join('');
+function clearSourceSelection() {
+  selectedSourceId = null;
+  checkedPlatforms.clear();
+  currentMailStep = 2;
+  renderAll();
+}
+
+function toggleHideSent() {
+  hideSent = !hideSent;
+  renderPlatforms();
+}
+
+function visiblePlatforms() {
+  const sent = getSentPlatformIds();
+  return platforms.filter(platform => {
+    const keyword = `${platform.name} ${platform.region}`.toLowerCase();
+    return (!platformQuery || keyword.includes(platformQuery)) &&
+      (!hideSent || !sent.includes(platform.id));
+  });
 }
 
 function togglePlatform(id) {
+  if (!selectedSourceId) return;
   if (checkedPlatforms.has(id)) checkedPlatforms.delete(id);
   else checkedPlatforms.add(id);
+  currentMailStep = 3;
   renderPlatforms();
-  updateSendBtn();
+  renderPreview();
 }
 
 function selectAllPlatforms() {
-  platforms.forEach(platform => checkedPlatforms.add(platform.id));
+  if (!selectedSourceId) return;
+  const sent = getSentPlatformIds();
+  platforms
+    .filter(platform => !hideSent || !sent.includes(platform.id))
+    .forEach(platform => checkedPlatforms.add(platform.id));
+  currentMailStep = 3;
   renderPlatforms();
-  updateSendBtn();
+  renderPreview();
 }
 
-function updateSendBtn() {
-  const btn = document.getElementById('send-btn');
-  const cnt = document.getElementById('selected-count');
-  const num = document.getElementById('count-num');
-  const n = checkedPlatforms.size;
-  btn.disabled = n === 0;
-  cnt.style.display = n > 0 ? '' : 'none';
-  num.textContent = n;
+function renderTypeButtons() {
+  const group = document.getElementById('mail-type-group');
+  group.innerHTML = Object.entries(mailTypes).map(([key, type]) => `
+    <button class="type-btn ${selectedMailType === key ? 'active' : ''}" type="button" onclick="setMailType('${key}')">
+      <span class="type-check"><i class="ti ti-check"></i></span>
+      <span class="type-name">${type.label}</span>
+    </button>
+  `).join('');
+}
+
+function renderStepper() {
+  renderComposeStep();
+}
+
+function getMaxMailStep() {
+  if (!selectedSourceId) return 2;
+  if (!checkedPlatforms.size) return 3;
+  return 4;
+}
+
+function normalizeMailStep() {
+  currentMailStep = Math.min(Math.max(1, currentMailStep), getMaxMailStep());
+}
+
+function canEnterMailStep(step) {
+  if (step <= 2) return true;
+  if (step === 3) return Boolean(selectedSourceId);
+  return Boolean(selectedSourceId && checkedPlatforms.size > 0);
+}
+
+function getMailStepNotice() {
+  if (currentMailStep === 1) return '메일 유형을 선택한 뒤 다음으로 이동합니다.';
+  if (currentMailStep === 2) return selectedSourceId ? '선택한 자료로 다음 단계 진행 가능' : '발송할 자료를 선택해주세요.';
+  if (currentMailStep === 3) return checkedPlatforms.size ? `${checkedPlatforms.size}개 플랫폼사 선택됨` : '발송할 플랫폼사를 하나 이상 선택해주세요.';
+  return '미리보기 확인 후 메일을 발송합니다.';
+}
+
+function renderComposeStep() {
+  normalizeMailStep();
+  const source = currentSource();
+  document.getElementById('mail-type-summary').textContent = mailTypes[selectedMailType].label;
+  document.getElementById('source-summary').textContent = source ? source.title : '검색 후 선택';
+  document.getElementById('platform-summary').textContent = checkedPlatforms.size ? `${checkedPlatforms.size}개 선택` : '복수 선택 가능';
+  document.getElementById('preview-summary').textContent = checkedPlatforms.size ? '발송 가능' : '대기';
+  const sourceNextBtn = document.getElementById('source-next-btn');
+  if (sourceNextBtn) sourceNextBtn.disabled = !selectedSourceId;
+  const platformNextBtn = document.getElementById('platform-next-btn');
+  if (platformNextBtn) platformNextBtn.disabled = !checkedPlatforms.size;
+  document.querySelectorAll('.compose-step-head').forEach(button => {
+    const step = Number(button.dataset.composeStep);
+    button.classList.toggle('active', step === currentMailStep);
+    button.classList.toggle('done', isMailStepDone(step));
+    button.classList.toggle('locked', !canEnterMailStep(step));
+  });
+  document.querySelectorAll('.compose-step-panel').forEach(panel => {
+    const step = Number(panel.dataset.composeStep);
+    panel.classList.toggle('active', step === currentMailStep);
+  });
+  document.getElementById('compose-nav').innerHTML = '';
+}
+
+function isMailStepDone(step) {
+  if (step === 1) return true;
+  if (step === 2) return Boolean(selectedSourceId);
+  if (step === 3) return checkedPlatforms.size > 0;
+  return checkedPlatforms.size > 0;
+}
+
+function setMailStep(step) {
+  if (!canEnterMailStep(step)) return;
+  currentMailStep = step;
+  renderStepper();
+  renderComposeStep();
+  renderPreview();
+}
+
+function handleMailStepBack() {
+  if (currentMailStep === 1) {
+    openHistoryView();
+    return;
+  }
+  setMailStep(currentMailStep - 1);
+}
+
+function handleMailStepNext() {
+  if (!canEnterMailStep(currentMailStep + 1)) return;
+  setMailStep(currentMailStep + 1);
+}
+
+function renderSources() {
+  const type = mailTypes[selectedMailType];
+  document.getElementById('source-section-title').textContent = type.sourceLabel;
+  document.getElementById('source-search').placeholder = type.searchPlaceholder;
+  const list = document.getElementById('source-list');
+  const pagination = document.getElementById('source-pagination');
+  list.classList.toggle('content-source-list', selectedMailType === 'content');
+  const filtered = currentSources().filter(item => {
+    const text = selectedMailType === 'content'
+      ? `${item.title} ${item.company}`.toLowerCase()
+      : `${item.title} ${item.company} ${item.format || ''} ${item.status || ''}`.toLowerCase();
+    return !sourceQuery || text.includes(sourceQuery);
+  });
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty-state">조건에 맞는 자료가 없습니다</div>';
+    pagination.innerHTML = '';
+    return;
+  }
+  if (selectedMailType === 'content') {
+    const totalPages = Math.max(1, Math.ceil(filtered.length / sourcePageSize));
+    sourcePage = Math.min(Math.max(1, sourcePage), totalPages);
+    const start = (sourcePage - 1) * sourcePageSize;
+    const pageRows = filtered.slice(start, start + sourcePageSize);
+    list.innerHTML = `
+      <div class="source-table-head">
+        <div class="source-head-cell">콘텐츠</div>
+        <div class="source-head-cell">제작사명</div>
+        <div class="source-head-cell">제작연도</div>
+        <div class="source-head-cell">업로드일</div>
+      </div>
+      ${pageRows.map(item => `
+        <div class="source-row ${selectedSourceId === item.id ? 'selected' : ''}" onclick="selectSource(${item.id})">
+          <div class="source-cell source-content-cell">${sourcePosterHtml(item)}<div class="source-title">${escapeHtml(item.title)}</div></div>
+          <div class="source-cell"><span class="source-meta">${escapeHtml(item.company)}</span></div>
+          <div class="source-cell"><span class="source-meta">${escapeHtml(item.year)}</span></div>
+          <div class="source-cell"><span class="source-meta">${escapeHtml(item.uploadedAt)}</span></div>
+        </div>
+      `).join('')}
+    `;
+    renderSourcePagination(filtered.length, totalPages);
+    return;
+  }
+  pagination.innerHTML = '';
+  list.innerHTML = filtered.map(item => `
+    <div class="source-row ${selectedSourceId === item.id ? 'selected' : ''}" onclick="selectSource(${item.id})">
+      <div class="source-cell"><div class="source-mark">${escapeHtml(item.mark)}</div></div>
+      <div class="source-cell">
+        <div class="source-title">${escapeHtml(item.title)}</div>
+        <div class="source-sub">${escapeHtml(item.company)}</div>
+      </div>
+      <div class="source-cell"><span class="source-meta">${escapeHtml(item.format)}</span></div>
+      <div class="source-cell"><span class="source-meta">${escapeHtml(item.status)}</span></div>
+    </div>
+  `).join('');
+}
+
+function sourcePosterHtml(item) {
+  const fallback = escapeHtml(item.mark);
+  const image = item.image
+    ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)} 포스터">`
+    : fallback;
+  return `<div class="source-poster ${escapeHtml(item.poster || 'p1')}">${image}</div>`;
+}
+
+function renderSourcePagination(total, totalPages) {
+  const pagination = document.getElementById('source-pagination');
+  pagination.innerHTML = `
+    <button class="page-btn" type="button" onclick="setSourcePage(${sourcePage - 1})" ${sourcePage === 1 ? 'disabled' : ''}><i class="ti ti-chevron-left"></i></button>
+    ${Array.from({ length: totalPages }, (_, index) => {
+      const page = index + 1;
+      return `<button class="page-btn ${sourcePage === page ? 'active' : ''}" type="button" onclick="setSourcePage(${page})">${page}</button>`;
+    }).join('')}
+    <button class="page-btn" type="button" onclick="setSourcePage(${sourcePage + 1})" ${sourcePage === totalPages ? 'disabled' : ''}><i class="ti ti-chevron-right"></i></button>
+  `;
+}
+
+function setSourcePage(page) {
+  const total = currentSources().filter(item => {
+    const text = selectedMailType === 'content'
+      ? `${item.title} ${item.company}`.toLowerCase()
+      : `${item.title} ${item.company} ${item.format || ''} ${item.status || ''}`.toLowerCase();
+    return !sourceQuery || text.includes(sourceQuery);
+  }).length;
+  const totalPages = Math.max(1, Math.ceil(total / sourcePageSize));
+  sourcePage = Math.min(Math.max(1, page), totalPages);
+  renderSources();
+}
+
+function renderPlatforms() {
+  const table = document.getElementById('platform-table');
+  const sent = getSentPlatformIds();
+  document.getElementById('hide-sent-btn').classList.toggle('btn-primary', hideSent);
+  if (!selectedSourceId) {
+    table.innerHTML = '<div class="empty-state">먼저 발송할 자료를 선택해주세요</div>';
+    return;
+  }
+  const rows = visiblePlatforms();
+  table.innerHTML = `
+    <div class="platform-table-scroll">
+      <div class="platform-head">
+        <div class="platform-cell"></div>
+        <div class="platform-cell">플랫폼사명</div>
+        <div class="platform-cell">지역</div>
+        <div class="platform-cell">발송 내역</div>
+      </div>
+      ${rows.length ? rows.map(platform => {
+        const isChecked = checkedPlatforms.has(platform.id);
+        const sentDate = getPlatformSentDate(platform);
+        return `
+          <div class="platform-row ${isChecked ? 'checked' : ''}" onclick="togglePlatform(${platform.id})">
+            <div class="platform-cell"><div class="platform-check"><i class="ti ti-check"></i></div></div>
+            <div class="platform-cell"><div class="platform-name">${escapeHtml(platform.name)}</div></div>
+            <div class="platform-cell"><span class="plain-text">${escapeHtml(platform.region)}</span></div>
+            <div class="platform-cell">${sentDate ? `<span class="sent-text">${escapeHtml(sentDate)}</span>` : '<span class="plain-text">-</span>'}</div>
+          </div>
+        `;
+      }).join('') : '<div class="empty-state">조건에 맞는 플랫폼사가 없습니다</div>'}
+    </div>
+  `;
+}
+
+function getPlatformSentDate(platform) {
+  const source = currentSource();
+  if (!source) return '';
+  const item = history.find(row =>
+    row.type === selectedMailType &&
+    row.target === source.title &&
+    row.platforms.includes(platform.name)
+  );
+  return item ? item.date.split(' ')[0] : '';
+}
+
+function renderPreview() {
+  const source = currentSource();
+  const type = mailTypes[selectedMailType];
+  const selectedPlatformNames = [...checkedPlatforms]
+    .map(id => platforms.find(platform => platform.id === id)?.name)
+    .filter(Boolean);
+  const canSend = Boolean(source && selectedPlatformNames.length);
+  document.getElementById('preview-type').textContent = type.label;
+  document.getElementById('preview-subject').textContent = source ? type.subject(source) : '자료를 선택하면 메일 제목이 표시됩니다';
+  document.getElementById('preview-body').textContent = source
+    ? type.body(source, selectedPlatformNames.length || 0)
+    : '메일 유형과 발송 대상을 선택하면 템플릿 미리보기를 확인할 수 있습니다.';
+  document.getElementById('send-review').innerHTML = `
+    <div class="review-row"><span class="review-key">메일 유형</span><span class="review-val">${type.label}</span></div>
+    <div class="review-row"><span class="review-key">발송 대상</span><span class="review-val">${source ? escapeHtml(source.title) : '-'}</span></div>
+    <div class="review-row"><span class="review-key">플랫폼사</span><span class="review-val">${selectedPlatformNames.length ? `${selectedPlatformNames[0]}${selectedPlatformNames.length > 1 ? ` 외 ${selectedPlatformNames.length - 1}개` : ''}` : '-'}</span></div>
+    <div class="review-row"><span class="review-key">발송자</span><span class="review-val">김관리자</span></div>
+  `;
+  document.getElementById('send-count').innerHTML = selectedPlatformNames.length
+    ? `<strong>${selectedPlatformNames.length}</strong>개 플랫폼사 선택됨`
+    : '플랫폼사를 선택해주세요';
+  document.getElementById('send-btn').disabled = !canSend;
+  renderStepper();
+  renderComposeStep();
 }
 
 function sendMail() {
-  const c = contents.find(x => x.id === selectedContentId);
-  const names = [...checkedPlatforms].map(id => platforms.find(p => p.id === id).name);
-
-  const successEl = document.getElementById('send-success');
-  document.getElementById('send-success-text').textContent = `"${c.title}" 제안 메일을 ${names.length}개 플랫폼사에 발송했습니다`;
-  document.getElementById('send-success-sub').textContent = names.join(', ');
-  successEl.classList.add('show');
-
-  // 이력에 추가
+  const source = currentSource();
+  if (!source || !checkedPlatforms.size) return;
+  const type = mailTypes[selectedMailType];
+  const selected = [...checkedPlatforms]
+    .map(id => platforms.find(platform => platform.id === id))
+    .filter(Boolean);
   const now = new Date();
-  const pad = n => String(n).padStart(2,'0');
-  const dateStr = `${now.getFullYear()}.${pad(now.getMonth()+1)}.${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
-  history.unshift({ content: c.title, company: c.company, platforms: names, date: dateStr, sender: 'Lee Admin' });
-  renderHistory();
-
-  // 발송 완료 처리
-  if (!sentHistory[selectedContentId]) sentHistory[selectedContentId] = [];
-  checkedPlatforms.forEach(id => {
-    if (!sentHistory[selectedContentId].includes(id)) sentHistory[selectedContentId].push(id);
+  const pad = value => String(value).padStart(2, '0');
+  const date = `${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  const newHistoryId = Date.now();
+  history.unshift({
+    id: newHistoryId,
+    date,
+    sender: '김관리자',
+    type: selectedMailType,
+    target: source.title,
+    company: source.company,
+    platforms: selected.map(platform => platform.name),
+    success: selected.length,
+    failed: 0,
+    subject: type.subject(source),
+  });
+  if (!sentHistory[selectedMailType][selectedSourceId]) sentHistory[selectedMailType][selectedSourceId] = [];
+  selected.forEach(platform => {
+    if (!sentHistory[selectedMailType][selectedSourceId].includes(platform.id)) {
+      sentHistory[selectedMailType][selectedSourceId].push(platform.id);
+    }
   });
   checkedPlatforms.clear();
-  renderPlatforms();
-  updateSendBtn();
+  selectedHistoryId = newHistoryId;
+  historyPage = 1;
+  document.getElementById('send-success').textContent = `${selected.length}개 플랫폼사에 메일을 발송했습니다.`;
+  document.getElementById('send-success').classList.add('show');
+  renderAll();
 }
 
 function renderHistory() {
-  const list = document.getElementById('history-list');
-  list.innerHTML = history.map(h => {
-    const c = contents.find(x => x.title === h.content) || {};
-    return `
-    <div class="hist-card">
-      <div class="hist-top">
-        <div>
-          <div class="poster poster-sm ${c.poster || 'poster-p1'}" data-mark="${c.mark || h.content.slice(0, 2).toUpperCase()}"></div>
+  const table = document.getElementById('history-table');
+  const totalPages = Math.max(1, Math.ceil(history.length / historyPageSize));
+  historyPage = Math.min(Math.max(1, historyPage), totalPages);
+  const start = (historyPage - 1) * historyPageSize;
+  const pageRows = history.slice(start, start + historyPageSize);
+  table.innerHTML = `
+    ${pageRows.map(item => {
+      const isOpen = selectedHistoryId === item.id;
+      const recipientText = `${escapeHtml(item.platforms[0])}${item.platforms.length > 1 ? ` 외 ${item.platforms.length - 1}개` : ''}`;
+      return `
+      <div class="history-row ${isOpen ? 'open' : ''}" onclick="showHistoryDetail(${item.id})">
+        <div class="history-main">
+          <div class="history-date">${escapeHtml(item.date)} · ${escapeHtml(item.sender)}</div>
+          <div class="history-target">${escapeHtml(item.target)}</div>
+          <div class="history-sub">${mailTypes[item.type].label} · ${escapeHtml(item.company)}</div>
+          <div class="history-meta">
+            <span class="history-recipient">${recipientText}</span>
+            <span class="result-ok">성공 ${item.success}</span>
+          </div>
         </div>
-        <div class="hist-main">
-          <div class="hist-content">${h.content}</div>
-          <div class="hist-company">${h.company}</div>
-          <div class="hist-platforms">
-            ${h.platforms.map(p => `<span class="hist-ptag">${p}</span>`).join('')}
+        <i class="ti ti-chevron-down history-toggle"></i>
+      </div>
+      ${isOpen ? renderHistoryInlineDetail(item) : ''}
+    `;
+    }).join('')}
+  `;
+  renderHistoryPagination(totalPages);
+}
+
+function renderHistoryPagination(totalPages) {
+  const pagination = document.getElementById('history-pagination');
+  const start = history.length ? (historyPage - 1) * historyPageSize + 1 : 0;
+  const end = Math.min(historyPage * historyPageSize, history.length);
+  pagination.innerHTML = `
+    <span class="page-info">${start}-${end} / ${history.length}</span>
+    <button class="page-btn" type="button" onclick="setHistoryPage(${historyPage - 1})" ${historyPage === 1 ? 'disabled' : ''}><i class="ti ti-chevron-left"></i></button>
+    ${Array.from({ length: totalPages }, (_, index) => {
+      const page = index + 1;
+      return `<button class="page-btn ${historyPage === page ? 'active' : ''}" type="button" onclick="setHistoryPage(${page})">${page}</button>`;
+    }).join('')}
+    <button class="page-btn" type="button" onclick="setHistoryPage(${historyPage + 1})" ${historyPage === totalPages ? 'disabled' : ''}><i class="ti ti-chevron-right"></i></button>
+  `;
+}
+
+function setHistoryPage(page) {
+  const totalPages = Math.max(1, Math.ceil(history.length / historyPageSize));
+  historyPage = Math.min(Math.max(1, page), totalPages);
+  selectedHistoryId = null;
+  renderHistory();
+}
+
+function renderHistoryInlineDetail(item) {
+  return `
+    <div class="history-inline-detail">
+      <div class="history-inline-grid">
+        <div class="detail-body">
+          <div class="review-row"><span class="review-key">메일 제목</span><span class="review-val">${escapeHtml(item.subject)}</span></div>
+          <div class="review-row"><span class="review-key">발송 대상</span><span class="review-val">${escapeHtml(item.target)}</span></div>
+          <div class="review-row"><span class="review-key">제작사</span><span class="review-val">${escapeHtml(item.company)}</span></div>
+          <div class="review-row"><span class="review-key">메일 유형</span><span class="review-val">${mailTypes[item.type].label}</span></div>
+          <div class="review-row"><span class="review-key">발송자</span><span class="review-val">${escapeHtml(item.sender)}</span></div>
+          <div class="review-row"><span class="review-key">발송일시</span><span class="review-val">${escapeHtml(item.date)}</span></div>
+        </div>
+        <div class="detail-body detail-platform-box">
+          <div class="detail-title">수신 플랫폼사</div>
+          <div class="detail-list">
+            ${item.platforms.map(name => `<div class="detail-platform"><span>${escapeHtml(name)}</span><span>성공</span></div>`).join('')}
           </div>
         </div>
       </div>
-      <div class="hist-meta">
-        <span class="hist-date">${h.date}</span>
-        <span class="hist-date">${h.sender}</span>
-      </div>
-    </div>`;
-  }).join('');
+    </div>
+  `;
 }
 
-renderContents();
-renderHistory();
+function showHistoryDetail(id) {
+  selectedHistoryId = selectedHistoryId === id ? null : id;
+  renderHistory();
+}
+
+function hideHistoryDetail() {
+  selectedHistoryId = null;
+  renderHistory();
+}
+
+function renderAll() {
+  renderView();
+  renderTypeButtons();
+  renderStepper();
+  renderComposeStep();
+  renderSources();
+  renderPlatforms();
+  renderPreview();
+  renderHistory();
+}
+
+renderAll();
 </script>
 </body>
 </html>
