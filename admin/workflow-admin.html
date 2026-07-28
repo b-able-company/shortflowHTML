@@ -571,6 +571,81 @@ td { padding: 9px 12px; vertical-align: middle; }
   background: #1a1a18;
   color: #fff;
 }
+.admin-confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 420;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.08);
+}
+.admin-confirm-backdrop.show {
+  display: flex;
+}
+.admin-confirm-dialog {
+  width: min(312px, 100%);
+  overflow: hidden;
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: none;
+  text-align: center;
+}
+.admin-confirm-body {
+  padding: 24px 22px 20px;
+}
+.admin-confirm-icon {
+  width: 65px;
+  height: 65px;
+  margin: 0 auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.admin-confirm-icon img {
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
+  display: block;
+}
+.admin-confirm-title {
+  color: #1a1a18;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.admin-confirm-copy {
+  margin-top: 8px;
+  color: #777d86;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.admin-confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 0.5px solid #e7e7e7;
+}
+.admin-confirm-btn {
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: #4f5660;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.admin-confirm-btn + .admin-confirm-btn {
+  border-left: 0.5px solid #e7e7e7;
+}
+.admin-confirm-btn:hover {
+  background: rgba(0, 0, 0, 0.035);
+}
+.admin-confirm-btn.primary {
+  color: #007aff;
+  font-weight: 600;
+}
 .modal-search { position:relative; margin-bottom:12px; }
 .modal-search i { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:#bbb; font-size:13px; }
 .modal-search input { width:100%; height:40px; font-size:12px; padding:0 10px 0 30px; border:0.5px solid #dedede; border-radius:8px; outline:none; background:#fff; font-family:inherit; }
@@ -793,6 +868,7 @@ td { padding: 9px 12px; vertical-align: middle; }
   font-size: 16px;
 }
 .workflow-type-tabs {
+  width: 172px;
   height: 28px;
   padding: 0;
   border: 0;
@@ -809,9 +885,10 @@ td { padding: 9px 12px; vertical-align: middle; }
   margin-left: auto;
 }
 .workflow-type-tab {
-  min-width: 64px;
+  min-width: 0;
+  flex: 1 1 0;
   height: 28px;
-  padding: 0 11px;
+  padding: 0;
   border: 0;
   border-radius: 7px;
   background: transparent;
@@ -833,7 +910,11 @@ td { padding: 9px 12px; vertical-align: middle; }
   background: #fff;
   color: #111;
   font-weight: 500;
-  box-shadow: inset 0 0 0 0.5px #d4d4d4;
+  box-shadow: none;
+}
+.workflow-type-tab:focus,
+.workflow-type-tab:focus-visible {
+  outline: none;
 }
 .workflow-list-toolbar .chip {
   min-height: 28px;
@@ -1235,6 +1316,8 @@ td { padding: 9px 12px; vertical-align: middle; }
   overflow: hidden !important;
 }
 .main .workflow-split.has-detail {
+  padding: 20px 30px 30px !important;
+  gap: 22px !important;
   overflow: visible !important;
 }
 .main .workflow-split > .lp,
@@ -1326,6 +1409,120 @@ td { padding: 9px 12px; vertical-align: middle; }
 }
 .main .workflow-list-table tbody tr.sel {
   background: rgb(242, 242, 242) !important;
+}
+
+/* FINAL: mirror content-admin list geometry after workflow overrides. */
+.main .workflow-split:not(.has-detail) {
+  padding: 20px 30px 30px !important;
+  gap: 22px !important;
+  background: #fff !important;
+}
+.main .workflow-split > .workflow-list-pane {
+  width: 100% !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  padding: 0 !important;
+  background: #fff !important;
+  overflow: hidden !important;
+}
+.main .workflow-list-toolbar {
+  height: 46px !important;
+  min-height: 46px !important;
+  max-height: 46px !important;
+  margin: 10px 0 8px !important;
+  padding: 6px 7px !important;
+  background: rgb(242, 242, 242) !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: nowrap !important;
+  position: relative !important;
+  overflow: visible !important;
+  z-index: 35 !important;
+}
+.main .workflow-list-toolbar .list-icon-btn,
+.main .workflow-list-toolbar .workflow-type-tabs,
+.main .workflow-list-toolbar .workflow-type-tab {
+  height: 30px !important;
+  min-height: 30px !important;
+}
+.main .workflow-list-table {
+  overflow: auto !important;
+  flex: 0 1 auto !important;
+}
+.main .workflow-list-table table {
+  min-width: 740px !important;
+  table-layout: fixed !important;
+}
+.main .workflow-list-table thead th {
+  height: 40px !important;
+  padding: 0 14px !important;
+  background: #fff !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  color: #9aa0a9 !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+}
+.main .workflow-list-table tbody tr {
+  height: 60px !important;
+  border-bottom: 1px solid #eef0f3 !important;
+  background: #fff !important;
+}
+.main .workflow-list-table td {
+  padding: 0 14px !important;
+  color: #14171c !important;
+  font-size: 12px !important;
+  white-space: nowrap !important;
+}
+.main .workflow-split.has-detail > .workflow-list-pane {
+  width: 50% !important;
+  min-width: 420px !important;
+  flex: 0 0 50% !important;
+  padding: 0 !important;
+  background: #fff !important;
+  overflow: hidden !important;
+}
+.main .workflow-split.has-detail .workflow-list-toolbar {
+  height: 46px !important;
+  min-height: 46px !important;
+  max-height: 46px !important;
+  margin: 10px 0 8px !important;
+  padding: 6px 7px !important;
+  background: rgb(242, 242, 242) !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+.main .workflow-split.has-detail .workflow-list-table {
+  flex: 0 1 auto !important;
+  overflow: auto !important;
+  background: #fff !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.main .workflow-split.has-detail .workflow-list-table thead th {
+  height: 40px !important;
+  padding: 0 14px !important;
+  background: #fff !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  color: #9aa0a9 !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+}
+.main .workflow-split.has-detail .workflow-list-table tbody tr {
+  height: 60px !important;
+  border-bottom: 1px solid #eef0f3 !important;
+  background: #fff !important;
+}
+.main .workflow-split.has-detail .workflow-list-table td {
+  padding: 0 14px !important;
+  color: #14171c !important;
+  font-size: 12px !important;
+  white-space: nowrap !important;
 }
 .main.workflow-detail-open .view.active {
   overflow: visible !important;
@@ -1839,6 +2036,17 @@ td { padding: 9px 12px; vertical-align: middle; }
 	.platform-flow .contract-list {
 	  margin-bottom: 0;
 	}
+	.main .workflow-split:not(.has-detail) > .workflow-list-pane > .workflow-list-toolbar {
+	  height: 46px !important;
+	  min-height: 46px !important;
+	  max-height: 46px !important;
+	  padding-top: 6px !important;
+	  padding-bottom: 6px !important;
+	  box-sizing: border-box !important;
+	  display: flex !important;
+	  align-items: center !important;
+	  flex-wrap: nowrap !important;
+	}
 	@media (max-width: 1180px) {
 	  .platform-flow-action {
 	    align-items: flex-start;
@@ -1917,7 +2125,7 @@ td { padding: 9px 12px; vertical-align: middle; }
     <div class="split workflow-split">
       <!-- LIST -->
       <div class="lp workflow-list-pane">
-        <div class="toolbar workflow-list-toolbar">
+        <div class="workflow-list-toolbar">
           <button class="list-icon-btn" id="platform-filter-toggle" type="button" aria-label="필터" aria-expanded="false" onclick="toggleWorkflowFilterPanel('platform')"><i class="ti ti-filter"></i></button>
           <div class="workflow-type-tabs" aria-label="거래 유형">
             <button class="workflow-type-tab active" type="button" data-tab="platform" onclick="switchMainTab('platform')">단일</button>
@@ -2357,7 +2565,7 @@ td { padding: 9px 12px; vertical-align: middle; }
     </div>
     <div class="split workflow-split">
       <div class="lp workflow-list-pane">
-        <div class="toolbar workflow-list-toolbar">
+        <div class="workflow-list-toolbar">
           <button class="list-icon-btn" id="bundle-filter-toggle" type="button" aria-label="필터" aria-expanded="false" onclick="toggleWorkflowFilterPanel('bundle')"><i class="ti ti-filter"></i></button>
           <div class="workflow-type-tabs" aria-label="거래 유형">
             <button class="workflow-type-tab" type="button" data-tab="platform" onclick="switchMainTab('platform')">단일</button>
@@ -2796,7 +3004,7 @@ td { padding: 9px 12px; vertical-align: middle; }
     </div>
     <div class="split workflow-split">
       <div class="lp workflow-list-pane">
-        <div class="toolbar workflow-list-toolbar">
+        <div class="workflow-list-toolbar">
           <button class="list-icon-btn" id="turnkey-filter-toggle" type="button" aria-label="필터" aria-expanded="false" onclick="toggleWorkflowFilterPanel('turnkey')"><i class="ti ti-filter"></i></button>
           <div class="workflow-type-tabs" aria-label="거래 유형">
             <button class="workflow-type-tab" type="button" data-tab="platform" onclick="switchMainTab('platform')">단일</button>
@@ -3136,11 +3344,86 @@ td { padding: 9px 12px; vertical-align: middle; }
     </div>
   </div>
 
+  <div class="admin-confirm-backdrop" id="admin-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="admin-confirm-title" onclick="closeAdminConfirm(event)">
+    <div class="admin-confirm-dialog" onclick="event.stopPropagation()">
+      <div class="admin-confirm-body">
+        <div class="admin-confirm-icon" aria-hidden="true"><img src="../images/icon/image.png" alt=""></div>
+        <div class="admin-confirm-title" id="admin-confirm-title">컨펌 메시지를 발송할까요?</div>
+        <div class="admin-confirm-copy" id="admin-confirm-message">발송 후 플랫폼사에 컨펌 메시지가 전달됩니다.</div>
+      </div>
+      <div class="admin-confirm-actions">
+        <button class="admin-confirm-btn" type="button" onclick="closeAdminConfirm()">취소</button>
+        <button class="admin-confirm-btn primary" type="button" onclick="submitAdminConfirm()">확인</button>
+      </div>
+    </div>
+  </div>
+
 </div><!-- /main -->
 
 <script>
+let adminConfirmHandler = null;
+
+function updateWorkflowAdminBreadcrumb(tab = 'platform') {
+  const topbar = document.querySelector('.main > .topbar');
+  if (!topbar) return;
+  const labels = {
+    platform: '단일 거래',
+    bundle: '묶음 거래',
+    turnkey: '턴키 거래',
+  };
+  const currentLabel = labels[tab] || labels.platform;
+  topbar.dataset.breadcrumbKey = `워크플로우/${currentLabel}`;
+  topbar.innerHTML = `
+    <div class="admin-breadcrumb">
+      <span>워크플로우</span>
+      <span class="admin-breadcrumb-separator">/</span>
+      <span class="admin-breadcrumb-current">${currentLabel}</span>
+    </div>
+  `;
+}
+
+function openAdminConfirm({ title, message, onConfirm }) {
+  document.getElementById('admin-confirm-title').textContent = title || '처리할까요?';
+  document.getElementById('admin-confirm-message').textContent = message || '';
+  adminConfirmHandler = typeof onConfirm === 'function' ? onConfirm : null;
+  document.getElementById('admin-confirm-modal')?.classList.add('show');
+}
+
+function closeAdminConfirm(event) {
+  event?.stopPropagation?.();
+  adminConfirmHandler = null;
+  document.getElementById('admin-confirm-modal')?.classList.remove('show');
+}
+
+function submitAdminConfirm() {
+  if (typeof adminConfirmHandler === 'function') {
+    adminConfirmHandler();
+    return;
+  }
+  closeAdminConfirm();
+}
+
+function openWorkflowConfirmSendConfirm(event) {
+  event?.preventDefault?.();
+  event?.stopPropagation?.();
+  openAdminConfirm({
+    title: '컨펌 메시지를 발송할까요?',
+    message: '발송 후 플랫폼사에 컨펌 메시지가 전달됩니다.',
+    onConfirm: () => {
+      closeAdminConfirm();
+    },
+  });
+}
+
+document.addEventListener('click', (event) => {
+  const sendButton = event.target.closest('.workflow-confirm-send-btn');
+  if (!sendButton) return;
+  openWorkflowConfirmSendConfirm(event);
+});
+
 function switchMainTab(tab) {
   const next = ['platform', 'bundle', 'turnkey'].includes(tab) ? tab : 'platform';
+  updateWorkflowAdminBreadcrumb(next);
   document.querySelectorAll('.view').forEach(view => {
     view.classList.toggle('active', view.id === `view-${next}`);
   });
@@ -3626,10 +3909,19 @@ function closeWorkflow() {
     alert('거래 종료 사유를 입력해주세요.');
     return;
   }
+  openAdminConfirm({
+    title: '거래 종료를 확정할까요?',
+    message: '확정 후 워크플로우 상태가 거래 종료로 변경됩니다.',
+    onConfirm: () => confirmCloseWorkflow(reason),
+  });
+}
+
+function confirmCloseWorkflow(reason) {
   const st = document.getElementById('p-status');
   st.className = 'bdg b-closed';
   st.textContent = '거래 종료';
   renderClosedState('pt-close', reason, '워크플로우');
+  closeAdminConfirm();
 }
 
 function closeBundleWorkflow() {
@@ -3638,10 +3930,19 @@ function closeBundleWorkflow() {
     alert('거래 종료 사유를 입력해주세요.');
     return;
   }
+  openAdminConfirm({
+    title: '거래 종료를 확정할까요?',
+    message: '확정 후 묶음 거래 워크플로우 상태가 거래 종료로 변경됩니다.',
+    onConfirm: () => confirmCloseBundleWorkflow(reason),
+  });
+}
+
+function confirmCloseBundleWorkflow(reason) {
   const st = document.getElementById('tk-status');
   st.className = 'bdg b-closed';
   st.textContent = '거래 종료';
   renderClosedState('tk-close', reason, '묶음 거래 워크플로우');
+  closeAdminConfirm();
 }
 
 function closeRealTurnkeyWorkflow() {
@@ -3650,10 +3951,19 @@ function closeRealTurnkeyWorkflow() {
     alert('거래 종료 사유를 입력해주세요.');
     return;
   }
+  openAdminConfirm({
+    title: '거래 종료를 확정할까요?',
+    message: '확정 후 턴키 거래 워크플로우 상태가 거래 종료로 변경됩니다.',
+    onConfirm: () => confirmCloseRealTurnkeyWorkflow(reason),
+  });
+}
+
+function confirmCloseRealTurnkeyWorkflow(reason) {
   const st = document.getElementById('ty-status');
   st.className = 'bdg b-closed';
   st.textContent = '거래 종료';
   renderClosedState('ty-close', reason, '턴키 거래 워크플로우');
+  closeAdminConfirm();
 }
 
 function goTurnkeyClose() {
@@ -4615,6 +4925,14 @@ function renderConfirmCardHtml(item, latest = true) {
 }
 
 function grantPlatformFlowMeta(context = currentPlatformFlowContext) {
+  openAdminConfirm({
+    title: '메타데이터 권한을 부여할까요?',
+    message: '부여 후 플랫폼사가 메타데이터를 다운로드할 수 있습니다.',
+    onConfirm: () => confirmGrantPlatformFlowMeta(context),
+  });
+}
+
+function confirmGrantPlatformFlowMeta(context = currentPlatformFlowContext) {
   currentPlatformFlowContext = context;
   const item = currentPlatformFlowItem;
   if (!item) return;
@@ -4628,6 +4946,7 @@ function grantPlatformFlowMeta(context = currentPlatformFlowContext) {
   syncSelectedWorkflowRowStatus('meta', context);
   renderPlatformFlow(item, context);
   openPlatformFlowPanel('meta', 0, null, context);
+  closeAdminConfirm();
 }
 
 function syncSelectedWorkflowRowStatus(status, context = currentPlatformFlowContext) {
@@ -4644,6 +4963,15 @@ function closePlatformFlowWorkflow(context = currentPlatformFlowContext) {
     alert('거래 종료 사유를 입력해주세요.');
     return;
   }
+  openAdminConfirm({
+    title: '거래 종료를 확정할까요?',
+    message: '확정 후 워크플로우 상태가 거래 종료로 변경됩니다.',
+    onConfirm: () => confirmClosePlatformFlowWorkflow(context, reason),
+  });
+}
+
+function confirmClosePlatformFlowWorkflow(context = currentPlatformFlowContext, reason = '') {
+  currentPlatformFlowContext = context;
   const item = currentPlatformFlowItem;
   if (item) item.status = 'closed';
   setWorkflowStatus(document.getElementById(getPlatformFlowConfig(context).statusId), 'closed');
@@ -4663,6 +4991,7 @@ function closePlatformFlowWorkflow(context = currentPlatformFlowContext) {
         </div>
       </div>`;
   }
+  closeAdminConfirm();
 }
 
 function resetWorkflowDetailTabs(detailId) {
@@ -4829,6 +5158,14 @@ function selectRealTurnkey(tr) {
 }
 
 function grantMeta() {
+  openAdminConfirm({
+    title: '메타데이터 권한을 부여할까요?',
+    message: '부여 후 플랫폼사가 메타데이터를 다운로드할 수 있습니다.',
+    onConfirm: confirmGrantMeta,
+  });
+}
+
+function confirmGrantMeta() {
   const now = new Date();
   const pad = n => String(n).padStart(2, '0');
   const label = (now.getMonth()+1) + '월 ' + now.getDate() + '일 · ' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ' · Lee Admin';
@@ -4837,6 +5174,7 @@ function grantMeta() {
   document.getElementById('meta-is-granted').style.display = 'block';
   const st = document.getElementById('p-status');
   if (st) { st.className = 'bdg b-meta'; st.textContent = '메타데이터 부여'; }
+  closeAdminConfirm();
 }
 let contentModalTarget = 'turnkey';
 const CONTENT_MODAL_PAGE_SIZE = 10;
@@ -4961,6 +5299,8 @@ document.querySelectorAll('.workflow-split').forEach(split => {
 
 if (['platform', 'bundle', 'turnkey'].includes(location.hash.slice(1))) {
   switchMainTab(location.hash.slice(1));
+} else {
+  updateWorkflowAdminBreadcrumb('platform');
 }
 </script>
 </body>

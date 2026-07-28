@@ -234,7 +234,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
 }
 .content-list-search input {
   width: 100%;
-  height: 28px;
+  height: 30px;
   padding: 0 10px 0 27px;
   border: 0;
   border-radius: 8px;
@@ -810,6 +810,118 @@ td { padding: 9px 12px; vertical-align: middle; }
 .btn-del     { background: #fff; color: #ccc; }
 .btn-icon    { width: 28px; height: 28px; padding: 0; justify-content: center; color: #888; background: #fff; }
 .btn-close   { background: transparent; border: none; color: #bbb; cursor: pointer; font-size: 15px; padding: 2px 5px; }
+.admin-confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 420;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.08);
+}
+.admin-confirm-backdrop.show {
+  display: flex;
+}
+.admin-confirm-dialog {
+  width: min(312px, 100%);
+  overflow: hidden;
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: none;
+  text-align: center;
+}
+.admin-confirm-body {
+  padding: 24px 22px 20px;
+}
+.admin-confirm-icon {
+  width: 65px;
+  height: 65px;
+  margin: 0 auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.admin-confirm-icon img {
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
+  display: block;
+}
+.admin-confirm-title {
+  color: #1a1a18;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.admin-confirm-copy {
+  margin-top: 8px;
+  color: #777d86;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.admin-confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 0.5px solid #e7e7e7;
+}
+.admin-confirm-btn {
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: #4f5660;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.admin-confirm-btn + .admin-confirm-btn {
+  border-left: 0.5px solid #e7e7e7;
+}
+.admin-confirm-btn:hover {
+  background: rgba(0, 0, 0, 0.035);
+}
+.admin-confirm-btn.primary {
+  color: #007aff;
+  font-weight: 600;
+}
+.revision-reject-dialog {
+  width: min(340px, 100%);
+}
+.revision-reject-body {
+  padding: 24px 22px 18px;
+  text-align: left;
+}
+.revision-reject-body .admin-confirm-title {
+  text-align: center;
+}
+.revision-reject-textarea {
+  width: 100%;
+  height: 92px;
+  margin-top: 16px;
+  padding: 10px 11px;
+  border: 0;
+  border-radius: 10px;
+  outline: none;
+  background: rgb(242, 242, 242);
+  color: #1a1a18;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.55;
+  resize: none;
+}
+.revision-reject-textarea:focus {
+  background: #f7f7f7;
+}
+.revision-reject-error {
+  display: none;
+  margin-top: 8px;
+  color: #ff3b30;
+  font-size: 11px;
+}
+.revision-reject-error.show {
+  display: block;
+}
 .content-split #dp-detail .btn-close,
 .content-split #rev-detail .btn-close {
   width: 30px;
@@ -2151,6 +2263,7 @@ td { padding: 9px 12px; vertical-align: middle; }
   font-size: 14px;
 }
 .content-split #dp-detail .dh-acts,
+.content-split #plan-detail .dh-acts,
 .content-split #rev-detail .dh-acts {
   position: absolute;
   right: 20px;
@@ -2165,6 +2278,7 @@ td { padding: 9px 12px; vertical-align: middle; }
   bottom: 18px;
 }
 .content-split #dp-detail .dh-acts .btn,
+.content-split #plan-detail .dh-acts .btn,
 .content-split #rev-detail .dh-acts .btn {
   min-height: 34px;
   min-width: 116px;
@@ -3488,6 +3602,7 @@ td { padding: 9px 12px; vertical-align: middle; }
                 <button class="btn-close" onclick="closePlanDetail()"><i class="ti ti-x"></i></button>
               </div>
             </div>
+            <div class="dh-acts" id="plan-detail-actions"></div>
           </div>
           <div class="dtabbar">
             <div class="dtab active" onclick="switchPlanDTab(this,'plan-detail-info')">기본 정보</div>
@@ -3610,15 +3725,6 @@ td { padding: 9px 12px; vertical-align: middle; }
               </div>
             </div>
             <div class="dh-acts" id="d-acts"></div>
-            <!-- reject reason box -->
-            <div class="rr-box" id="rr-box">
-              <label>거절 사유를 입력해주세요</label>
-              <textarea placeholder="제작사에게 전달될 거절 사유입니다"></textarea>
-              <div class="rr-acts">
-                <button class="btn btn-cancel" onclick="hideReject()">취소</button>
-                <button class="btn btn-reject">거절 확정</button>
-              </div>
-            </div>
           </div>
 
           <!-- INNER TABS -->
@@ -4138,16 +4244,8 @@ td { padding: 9px 12px; vertical-align: middle; }
               </div>
             </div>
             <div class="dh-acts" id="rev-actions">
-              <button class="btn btn-approve"><i class="ti ti-check"></i> 승인</button>
-              <button class="btn btn-reject" onclick="toggleRRBox('rev-rr')"><i class="ti ti-x"></i> 거절</button>
-            </div>
-            <div class="rr-box" id="rev-rr">
-              <label>거절 사유를 입력해주세요</label>
-              <textarea placeholder="제작사에게 전달될 거절 사유입니다"></textarea>
-              <div class="rr-acts">
-                <button class="btn btn-cancel" onclick="toggleRRBox('rev-rr')">취소</button>
-                <button class="btn btn-reject">거절 확정</button>
-              </div>
+              <button class="btn btn-approve" onclick="approveRevisionRequest()"><i class="ti ti-check"></i> 승인</button>
+              <button class="btn btn-reject" onclick="openRevisionRejectReasonModal()"><i class="ti ti-x"></i> 거절</button>
             </div>
           </div>
           <div class="dbody">
@@ -4194,7 +4292,100 @@ td { padding: 9px 12px; vertical-align: middle; }
   </div>
 </div>
 
+<div class="admin-confirm-backdrop" id="admin-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="admin-confirm-title" onclick="closeAdminConfirm(event)">
+  <div class="admin-confirm-dialog" onclick="event.stopPropagation()">
+    <div class="admin-confirm-body">
+      <div class="admin-confirm-icon" aria-hidden="true"><img src="../images/icon/image.png" alt=""></div>
+      <div class="admin-confirm-title" id="admin-confirm-title">수정요청을 승인할까요?</div>
+      <div class="admin-confirm-copy" id="admin-confirm-message">승인 후 수정요청 상태가 APPROVED로 변경됩니다.</div>
+    </div>
+    <div class="admin-confirm-actions">
+      <button class="admin-confirm-btn" type="button" onclick="closeAdminConfirm()">취소</button>
+      <button class="admin-confirm-btn primary" type="button" onclick="submitAdminConfirm()">확인</button>
+    </div>
+  </div>
+</div>
+
+<div class="admin-confirm-backdrop" id="revision-reject-modal" role="dialog" aria-modal="true" aria-labelledby="revision-reject-title" onclick="closeRevisionRejectReasonModal(event)">
+  <div class="admin-confirm-dialog revision-reject-dialog" onclick="event.stopPropagation()">
+    <div class="admin-confirm-body revision-reject-body">
+      <div class="admin-confirm-title" id="revision-reject-title">거절 사유를 입력해주세요</div>
+      <textarea class="revision-reject-textarea" id="revision-reject-reason-input"></textarea>
+      <div class="revision-reject-error" id="revision-reject-error">거절 사유를 입력해주세요.</div>
+    </div>
+    <div class="admin-confirm-actions">
+      <button class="admin-confirm-btn" type="button" onclick="closeRevisionRejectReasonModal()">취소</button>
+      <button class="admin-confirm-btn primary" type="button" onclick="submitRevisionRejectReason()">확인</button>
+    </div>
+  </div>
+</div>
+
 <script>
+let adminConfirmHandler = null;
+let pendingRevisionRejectId = null;
+let rejectReasonHandler = null;
+
+function openAdminConfirm({ title, message, onConfirm }) {
+  document.getElementById('admin-confirm-title').textContent = title || '처리할까요?';
+  document.getElementById('admin-confirm-message').textContent = message || '';
+  adminConfirmHandler = typeof onConfirm === 'function' ? onConfirm : null;
+  document.getElementById('admin-confirm-modal')?.classList.add('show');
+}
+
+function closeAdminConfirm(event) {
+  event?.stopPropagation?.();
+  adminConfirmHandler = null;
+  document.getElementById('admin-confirm-modal')?.classList.remove('show');
+}
+
+function submitAdminConfirm() {
+  if (typeof adminConfirmHandler === 'function') {
+    adminConfirmHandler();
+    return;
+  }
+  closeAdminConfirm();
+}
+
+function openRevisionRejectReasonModal() {
+  const revision = getSelectedRevisionRequest();
+  if (!revision || revision.status !== 'PENDING') return;
+  pendingRevisionRejectId = revision.id;
+  rejectReasonHandler = reason => {
+    openAdminConfirm({
+      title: '수정요청을 거절할까요?',
+      message: '거절 후 수정요청 상태가 REJECTED로 변경됩니다.',
+      onConfirm: () => confirmRevisionRequestStatus(revision.id, 'REJECTED', reason),
+    });
+  };
+  const modal = document.getElementById('revision-reject-modal');
+  const input = document.getElementById('revision-reject-reason-input');
+  const error = document.getElementById('revision-reject-error');
+  if (input) input.value = '';
+  error?.classList.remove('show');
+  modal?.classList.add('show');
+  window.setTimeout(() => input?.focus(), 0);
+}
+
+function closeRevisionRejectReasonModal(event) {
+  event?.stopPropagation?.();
+  pendingRevisionRejectId = null;
+  rejectReasonHandler = null;
+  document.getElementById('revision-reject-error')?.classList.remove('show');
+  document.getElementById('revision-reject-modal')?.classList.remove('show');
+}
+
+function submitRevisionRejectReason() {
+  const reason = document.getElementById('revision-reject-reason-input')?.value.trim() || '';
+  if (!reason) {
+    document.getElementById('revision-reject-error')?.classList.add('show');
+    document.getElementById('revision-reject-reason-input')?.focus();
+    return;
+  }
+  const handler = rejectReasonHandler;
+  closeRevisionRejectReasonModal();
+  if (typeof handler === 'function') handler(reason);
+}
+
 const contents = [
   { id:1, title:'The Last Letter', origTitle:'마지막 편지', company:'NextWave Studios', genre:'드라마, 로맨스', year:'2024', status:'PENDING', date:'2026.05.08',
     poster:'poster-p1',
@@ -5204,16 +5395,29 @@ function toggleContentOperation(key) {
     : Boolean(c.bableOnly);
   const next = !current;
   const nextLabel = next ? config.on : config.off;
-  if (!confirm(`${c.title} 콘텐츠의 ${config.label}를 ${nextLabel}(으)로 변경할까요?`)) return;
+  openAdminConfirm({
+    title: `${config.label}를 변경할까요?`,
+    message: `${nextLabel} 상태로 변경됩니다.`,
+    onConfirm: () => confirmContentOperation(c.id, key, next, config.label, nextLabel),
+  });
+}
 
+function confirmContentOperation(contentId, key, next, label, nextLabel) {
+  const c = contents.find(item => item.id === Number(contentId));
+  if (!c) {
+    closeAdminConfirm();
+    return;
+  }
   c[key] = next;
   c.timeline.unshift({
     dot: next ? 'green' : 'gray',
-    text: `관리자가 ${config.label}를 ${nextLabel}(으)로 변경함`,
+    text: `관리자가 ${label}를 ${nextLabel}(으)로 변경함`,
     time: formatContentAdminDate(),
   });
+  renderContentOperations(c);
   renderExtraInfo(c);
   renderTable();
+  closeAdminConfirm();
 }
 
 function formatContentAdminDate(date = new Date()) {
@@ -5612,6 +5816,7 @@ function selectPlan(id) {
   const status = document.getElementById('pd-status');
   status.className = `bdg ${sc[plan.status] || 'b-draft'}`;
   status.textContent = plan.status;
+  renderPlanDetailActions(plan);
 
   document.getElementById('pd-id').value = plan.id;
   document.getElementById('pd-company').value = plan.company;
@@ -5631,10 +5836,72 @@ function selectPlan(id) {
 
 function closePlanDetail() {
   selectedPlanId = null;
+  closeRevisionRejectReasonModal();
   closeContentDetailPane();
   renderTable();
   document.getElementById('dp-empty').style.display = '';
   document.getElementById('plan-detail').style.display = 'none';
+}
+
+function renderPlanDetailActions(plan = planItems.find(item => item.id === selectedPlanId)) {
+  const actions = document.getElementById('plan-detail-actions');
+  if (!actions) return;
+  actions.innerHTML = plan?.status === 'PENDING'
+    ? `<button class="btn btn-approve" onclick="approvePlanRequest()"><i class="ti ti-check"></i> 승인</button>
+       <button class="btn btn-reject" onclick="openPlanRejectReasonModal()"><i class="ti ti-x"></i> 거절</button>`
+    : '';
+}
+
+function approvePlanRequest() {
+  const plan = planItems.find(item => item.id === selectedPlanId);
+  if (!plan || plan.status !== 'PENDING') return;
+  openAdminConfirm({
+    title: '기획안을 승인할까요?',
+    message: '승인 후 기획안 상태가 APPROVED로 변경됩니다.',
+    onConfirm: () => confirmPlanRequestStatus(plan.id, 'APPROVED'),
+  });
+}
+
+function openPlanRejectReasonModal() {
+  const plan = planItems.find(item => item.id === selectedPlanId);
+  if (!plan || plan.status !== 'PENDING') return;
+  rejectReasonHandler = reason => {
+    openAdminConfirm({
+      title: '기획안을 거절할까요?',
+      message: '거절 후 기획안 상태가 REJECTED로 변경됩니다.',
+      onConfirm: () => confirmPlanRequestStatus(plan.id, 'REJECTED', reason),
+    });
+  };
+  const modal = document.getElementById('revision-reject-modal');
+  const input = document.getElementById('revision-reject-reason-input');
+  const error = document.getElementById('revision-reject-error');
+  if (input) input.value = '';
+  error?.classList.remove('show');
+  modal?.classList.add('show');
+  window.setTimeout(() => input?.focus(), 0);
+}
+
+function confirmPlanRequestStatus(planId, nextStatus, rejectReason = '') {
+  const plan = planItems.find(item => item.id === Number(planId));
+  if (!plan) {
+    closeAdminConfirm();
+    return;
+  }
+  plan.status = nextStatus;
+  if (nextStatus === 'REJECTED') {
+    plan.rejectReason = rejectReason;
+    plan.platformVisible = false;
+  }
+  if (nextStatus === 'APPROVED') plan.platformVisible = true;
+  const status = document.getElementById('pd-status');
+  if (status) {
+    status.className = `bdg ${sc[plan.status] || 'b-draft'}`;
+    status.textContent = plan.status;
+  }
+  renderPlanDetailActions(plan);
+  renderPlanOperations(plan);
+  renderTable();
+  closeAdminConfirm();
 }
 
 function resetPlanDetailTabs() {
@@ -5798,10 +6065,23 @@ function togglePlanOperation(key) {
   if (!plan || key !== 'platformVisible') return;
   const next = !plan.platformVisible;
   const nextLabel = next ? '공개' : '비공개';
-  if (!confirm(`${plan.title} 기획안의 플랫폼 공개 여부를 ${nextLabel}(으)로 변경할까요?`)) return;
+  openAdminConfirm({
+    title: '플랫폼 공개 여부를 변경할까요?',
+    message: `${nextLabel} 상태로 변경됩니다.`,
+    onConfirm: () => confirmPlanOperation(plan.id, next),
+  });
+}
+
+function confirmPlanOperation(planId, next) {
+  const plan = planItems.find(item => item.id === Number(planId));
+  if (!plan) {
+    closeAdminConfirm();
+    return;
+  }
   plan.platformVisible = next;
   renderPlanOperations(plan);
   renderTable();
+  closeAdminConfirm();
 }
 
 function renderContentPagination(totalPages) {
@@ -6588,8 +6868,8 @@ function selectContent(id) {
 
   const isPending = c.status === 'PENDING';
   document.getElementById('d-acts').innerHTML = `
-    ${isPending ? `<button class="btn btn-approve"><i class="ti ti-check"></i> 승인</button>` : ''}
-    ${isPending ? `<button class="btn btn-reject" onclick="showReject()"><i class="ti ti-x"></i> 거절</button>` : ''}`;
+    ${isPending ? `<button class="btn btn-approve" onclick="approveContentRequest()"><i class="ti ti-check"></i> 승인</button>` : ''}
+    ${isPending ? `<button class="btn btn-reject" onclick="openContentRejectReasonModal()"><i class="ti ti-x"></i> 거절</button>` : ''}`;
 
   // basic
   document.getElementById('b-content-id').value = c.id;
@@ -6634,12 +6914,13 @@ function selectContent(id) {
   document.querySelectorAll('#dp-detail .dtab').forEach((t,i)=>t.classList.toggle('active',i===0));
   document.querySelectorAll('#dp-detail .dpanel').forEach((p,i)=>p.classList.toggle('active',i===0));
   syncContentSavebar('tab-basic');
-  document.getElementById('rr-box').classList.remove('show');
+  document.getElementById('rr-box')?.classList.remove('show');
 }
 
 function closeDetail() {
   selId = null;
   selectedPlanId = null;
+  closeRevisionRejectReasonModal();
   closeContentDetailPane();
   renderTable();
   document.getElementById('dp-empty').style.display = '';
@@ -6653,21 +6934,104 @@ function deleteContent() {
   if (!selId) return;
   const c = contents.find(x => x.id === selId);
   if (!c) return;
-  if (!confirm(`${c.title} 콘텐츠를 삭제할까요?`)) return;
-  const index = contents.findIndex(x => x.id === selId);
+  openAdminConfirm({
+    title: '콘텐츠를 삭제할까요?',
+    message: '삭제한 콘텐츠 정보는 목록에서 제거됩니다.',
+    onConfirm: () => confirmDeleteContent(c.id),
+  });
+}
+
+function confirmDeleteContent(contentId) {
+  const targetId = Number(contentId);
+  if (!targetId) {
+    closeAdminConfirm();
+    return;
+  }
+  const index = contents.findIndex(x => x.id === targetId);
   if (index >= 0) contents.splice(index, 1);
-  delete releaseHistories[selId];
+  delete releaseHistories[targetId];
   closeDetail();
+  closeAdminConfirm();
+}
+
+function approveContentRequest() {
+  const content = contents.find(item => item.id === selId);
+  if (!content || content.status !== 'PENDING') return;
+  openAdminConfirm({
+    title: '콘텐츠를 승인할까요?',
+    message: '승인 후 콘텐츠 상태가 APPROVED로 변경됩니다.',
+    onConfirm: () => confirmContentRequestStatus(content.id, 'APPROVED'),
+  });
+}
+
+function rejectContentRequest() {
+  openContentRejectReasonModal();
+}
+
+function openContentRejectReasonModal() {
+  const content = contents.find(item => item.id === selId);
+  if (!content || content.status !== 'PENDING') return;
+  rejectReasonHandler = reason => {
+    openAdminConfirm({
+      title: '콘텐츠를 거절할까요?',
+      message: '거절 후 콘텐츠 상태가 REJECTED로 변경됩니다.',
+      onConfirm: () => confirmContentRequestStatus(content.id, 'REJECTED', reason),
+    });
+  };
+  const modal = document.getElementById('revision-reject-modal');
+  const input = document.getElementById('revision-reject-reason-input');
+  const error = document.getElementById('revision-reject-error');
+  if (input) input.value = '';
+  error?.classList.remove('show');
+  modal?.classList.add('show');
+  window.setTimeout(() => input?.focus(), 0);
+}
+
+function confirmContentRequestStatus(contentId, nextStatus, rejectReason = '') {
+  const content = contents.find(item => item.id === Number(contentId));
+  if (!content) {
+    closeAdminConfirm();
+    return;
+  }
+  content.status = nextStatus;
+  if (nextStatus === 'REJECTED') content.rejectReason = rejectReason;
+  if (nextStatus === 'APPROVED') content.rejectReason = '';
+  const status = document.getElementById('d-status');
+  if (status) {
+    status.className = `bdg ${sc[content.status] || ''}`;
+    status.textContent = content.status;
+  }
+  const actions = document.getElementById('d-acts');
+  if (actions) actions.innerHTML = '';
+  document.getElementById('b-reject').value = content.rejectReason || '';
+  document.getElementById('approval-section').style.display = content.rejectReason ? '' : 'none';
+  hideReject();
+  renderTable();
+  closeAdminConfirm();
 }
 
 function deletePlan() {
   if (!selectedPlanId) return;
   const plan = planItems.find(item => item.id === selectedPlanId);
   if (!plan) return;
-  if (!confirm(`${plan.title} 기획안을 삭제할까요?`)) return;
-  const index = planItems.findIndex(item => item.id === selectedPlanId);
+  openAdminConfirm({
+    title: '기획안을 삭제할까요?',
+    message: '삭제한 기획안 정보는 목록에서 제거됩니다.',
+    onConfirm: () => confirmDeletePlan(plan.id),
+  });
+}
+
+function confirmDeletePlan(planId) {
+  const targetId = Number(planId);
+  if (!targetId) {
+    closeAdminConfirm();
+    return;
+  }
+  const index = planItems.findIndex(item => item.id === targetId);
   if (index >= 0) planItems.splice(index, 1);
   closePlanDetail();
+  renderTable();
+  closeAdminConfirm();
 }
 
 function setContentEditMode(isEditing) {
@@ -6816,7 +7180,17 @@ function transferContentOwnership() {
     alert('현재 소유 제작사와 다른 제작사를 선택해주세요.');
     return;
   }
-  if (!confirm(`${c.title} 콘텐츠의 소유 제작사를 ${previousCompany}에서 ${nextCompany}(으)로 변경할까요?`)) {
+  openAdminConfirm({
+    title: '소유 제작사를 변경할까요?',
+    message: `${previousCompany}에서 ${nextCompany}(으)로 변경됩니다.`,
+    onConfirm: () => confirmTransferContentOwnership(c.id, previousCompany, nextCompany),
+  });
+}
+
+function confirmTransferContentOwnership(contentId, previousCompany, nextCompany) {
+  const c = contents.find(x => x.id === Number(contentId));
+  if (!c) {
+    closeAdminConfirm();
     return;
   }
   c.company = nextCompany;
@@ -6830,7 +7204,7 @@ function transferContentOwnership() {
   renderTable();
   renderExtraInfo(c);
   populateOwnershipTransfer(c);
-  alert('소유 제작사가 변경되었습니다.');
+  closeAdminConfirm();
 }
 
 function openDriveFolder() {
@@ -7342,8 +7716,8 @@ function deleteReleaseHistory(id) {
   renderReleaseHistory();
 }
 
-function showReject() { document.getElementById('rr-box').classList.add('show'); }
-function hideReject() { document.getElementById('rr-box').classList.remove('show'); }
+function showReject() { openContentRejectReasonModal(); }
+function hideReject() { document.getElementById('rr-box')?.classList.remove('show'); }
 function toggleRRBox(id) { document.getElementById(id).classList.toggle('show'); }
 
 function setChip(el, val) {
@@ -7576,23 +7950,60 @@ function showRevDetail(tr, revisionId) {
   status.className = `bdg ${sc[revision.status] || ''}`;
   status.textContent = revision.status;
   document.getElementById('rev-actions').innerHTML = revision.status === 'PENDING'
-    ? `<button class="btn btn-approve"><i class="ti ti-check"></i> 승인</button>
-       <button class="btn btn-reject" onclick="toggleRRBox('rev-rr')"><i class="ti ti-x"></i> 거절</button>`
+    ? `<button class="btn btn-approve" onclick="approveRevisionRequest()"><i class="ti ti-check"></i> 승인</button>
+       <button class="btn btn-reject" onclick="openRevisionRejectReasonModal()"><i class="ti ti-x"></i> 거절</button>`
     : '';
-  document.getElementById('rev-rr')?.classList.remove('show');
   renderRevisionChanges(revision);
   document.getElementById('pane-revisions')?.classList.add('has-detail');
   document.querySelector('.main')?.classList.add('content-detail-open');
   document.getElementById('rev-empty').style.display = 'none';
   document.getElementById('rev-detail').style.display = 'flex';
 }
+
+function getSelectedRevisionRequest() {
+  return revisionRequests.find(item => item.id === selectedRevisionId) || null;
+}
+
+function approveRevisionRequest() {
+  const revision = getSelectedRevisionRequest();
+  if (!revision || revision.status !== 'PENDING') return;
+  openAdminConfirm({
+    title: '수정요청을 승인할까요?',
+    message: '승인 후 수정요청 상태가 APPROVED로 변경됩니다.',
+    onConfirm: () => confirmRevisionRequestStatus(revision.id, 'APPROVED'),
+  });
+}
+
+function rejectRevisionRequest() {
+  openRevisionRejectReasonModal();
+}
+
+function confirmRevisionRequestStatus(revisionId, nextStatus, rejectReason = '') {
+  const revision = revisionRequests.find(item => item.id === Number(revisionId));
+  if (!revision) {
+    closeAdminConfirm();
+    return;
+  }
+  revision.status = nextStatus;
+  if (nextStatus === 'REJECTED') revision.rejectReason = rejectReason;
+  const status = document.getElementById('rev-status');
+  if (status) {
+    status.className = `bdg ${sc[revision.status] || ''}`;
+    status.textContent = revision.status;
+  }
+  const actions = document.getElementById('rev-actions');
+  if (actions) actions.innerHTML = '';
+  renderRevisionTable();
+  closeAdminConfirm();
+}
+
 function closeRevDetail() {
   setContentDetailExpanded(false);
   document.getElementById('pane-revisions')?.classList.remove('has-detail', 'is-expanded');
   document.querySelector('.main')?.classList.remove('content-detail-open', 'content-detail-expanded');
   document.querySelectorAll('#pane-revisions tbody tr').forEach(r=>r.classList.remove('sel'));
   selectedRevisionId = null;
-  document.getElementById('rev-rr')?.classList.remove('show');
+  closeRevisionRejectReasonModal();
   document.getElementById('rev-empty').style.display = '';
   document.getElementById('rev-detail').style.display = 'none';
 }

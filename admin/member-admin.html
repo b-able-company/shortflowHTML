@@ -1325,6 +1325,81 @@ td { padding: 9px 12px; vertical-align: middle; }
 .btn-reject  { background: #FCEBEB; color: #A32D2D; border-color: #F7C1C1; }
 .btn-primary { background: #1a1a18; color: #fff; border-color: #1a1a18; }
 .btn-close-panel { background: transparent; border: none; color: #bbb; cursor: pointer; font-size: 15px; padding: 2px 5px; }
+.admin-confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 420;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.08);
+}
+.admin-confirm-backdrop.show {
+  display: flex;
+}
+.admin-confirm-dialog {
+  width: min(312px, 100%);
+  overflow: hidden;
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: none;
+  text-align: center;
+}
+.admin-confirm-body {
+  padding: 24px 22px 20px;
+}
+.admin-confirm-icon {
+  width: 65px;
+  height: 65px;
+  margin: 0 auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.admin-confirm-icon img {
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
+  display: block;
+}
+.admin-confirm-title {
+  color: #1a1a18;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.admin-confirm-copy {
+  margin-top: 8px;
+  color: #777d86;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.admin-confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 0.5px solid #e7e7e7;
+}
+.admin-confirm-btn {
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: #4f5660;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.admin-confirm-btn + .admin-confirm-btn {
+  border-left: 0.5px solid #e7e7e7;
+}
+.admin-confirm-btn:hover {
+  background: rgba(0, 0, 0, 0.035);
+}
+.admin-confirm-btn.primary {
+  color: #007aff;
+  font-weight: 600;
+}
 
 /* REJECT BOX */
 .rr-box { background: #FCEBEB; border: 0.5px solid #F7C1C1; border-radius: 8px; padding: 12px 14px; display: none; margin-top: 10px; }
@@ -1783,7 +1858,7 @@ td { padding: 9px 12px; vertical-align: middle; }
               <textarea placeholder="유저에게 전달될 거절 사유입니다"></textarea>
               <div class="rr-acts">
                 <button class="btn" onclick="document.getElementById('user-rr-box').classList.remove('show')">취소</button>
-                <button class="btn btn-reject">거절 확정</button>
+                <button class="btn btn-reject" onclick="rejectUser()">거절 확정</button>
               </div>
             </div>
           </div>
@@ -2121,7 +2196,44 @@ td { padding: 9px 12px; vertical-align: middle; }
 
 </div>
 
+<div class="admin-confirm-backdrop" id="admin-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="admin-confirm-title" onclick="closeAdminConfirm(event)">
+  <div class="admin-confirm-dialog" onclick="event.stopPropagation()">
+    <div class="admin-confirm-body">
+      <div class="admin-confirm-icon" aria-hidden="true"><img src="../images/icon/image.png" alt=""></div>
+      <div class="admin-confirm-title" id="admin-confirm-title">처리할까요?</div>
+      <div class="admin-confirm-copy" id="admin-confirm-message"></div>
+    </div>
+    <div class="admin-confirm-actions">
+      <button class="admin-confirm-btn" type="button" onclick="closeAdminConfirm()">취소</button>
+      <button class="admin-confirm-btn primary" type="button" onclick="submitAdminConfirm()">확인</button>
+    </div>
+  </div>
+</div>
+
 <script>
+let adminConfirmHandler = null;
+
+function openAdminConfirm({ title, message, onConfirm }) {
+  document.getElementById('admin-confirm-title').textContent = title || '처리할까요?';
+  document.getElementById('admin-confirm-message').textContent = message || '';
+  adminConfirmHandler = typeof onConfirm === 'function' ? onConfirm : null;
+  document.getElementById('admin-confirm-modal')?.classList.add('show');
+}
+
+function closeAdminConfirm(event) {
+  event?.stopPropagation?.();
+  adminConfirmHandler = null;
+  document.getElementById('admin-confirm-modal')?.classList.remove('show');
+}
+
+function submitAdminConfirm() {
+  if (typeof adminConfirmHandler === 'function') {
+    adminConfirmHandler();
+    return;
+  }
+  closeAdminConfirm();
+}
+
 const users = [
   { id:1, name:'김은진', email:'eunji@nextwave.io', phone:'010-1234-5678', company:'NextWave Studios', companyId:1, role:'PRODUCTION', perm:'OWNER', status:'PENDING', date:'2026.05.08', rejectReason:'' },
   { id:2, name:'이준혁', email:'junhyeok@nextwave.io', phone:'010-2345-6789', company:'NextWave Studios', companyId:1, role:'PRODUCTION', perm:'READ', status:'SETUP_REQUIRED', date:'2026.05.08', rejectReason:'' },
@@ -2617,6 +2729,8 @@ function selectUser(id) {
     : '';
 
   document.getElementById('user-rr-box').classList.remove('show');
+  const rejectInput = document.querySelector('#user-rr-box textarea');
+  if (rejectInput) rejectInput.value = '';
   loginHistoryPage = 1;
   renderUserLoginHistory(id);
   renderUserOperations(u);
@@ -2645,9 +2759,20 @@ function toggleUserSetupRequirement() {
   if (!u) return;
   const isSetupRequired = u.status === 'SETUP_REQUIRED';
   const nextStatus = isSetupRequired ? (u.previousStatus || 'APPROVED') : 'SETUP_REQUIRED';
-  if (!confirm(`${u.name} 유저를 ${nextStatus} 상태로 변경할까요?`)) return;
+  openAdminConfirm({
+    title: '온보딩 설정을 변경할까요?',
+    message: `${userStatusLabel[nextStatus] || nextStatus} 상태로 변경됩니다.`,
+    onConfirm: () => confirmUserSetupRequirement(u.id, nextStatus, isSetupRequired),
+  });
+}
 
-  if (isSetupRequired) {
+function confirmUserSetupRequirement(userId, nextStatus, wasSetupRequired) {
+  const u = users.find(x => x.id === Number(userId));
+  if (!u) {
+    closeAdminConfirm();
+    return;
+  }
+  if (wasSetupRequired) {
     u.status = nextStatus;
     delete u.previousStatus;
   } else {
@@ -2662,6 +2787,7 @@ function toggleUserSetupRequirement() {
        <button class="btn btn-reject" onclick="document.getElementById('user-rr-box').classList.add('show')"><i class="ti ti-x"></i> 거절</button>`
     : '';
   renderUserOperations(u);
+  closeAdminConfirm();
 }
 
 function renderUserLoginHistory(userId) {
@@ -2749,9 +2875,53 @@ function syncUserSavebar(panelId) {
 
 function approveUser(id) {
   const u = users.find(x => x.id === id);
+  if (!u || u.status !== 'PENDING') return;
+  openAdminConfirm({
+    title: '유저를 승인할까요?',
+    message: '승인 후 유저 상태가 APPROVED로 변경됩니다.',
+    onConfirm: () => confirmApproveUser(id),
+  });
+}
+
+function confirmApproveUser(id) {
+  const u = users.find(x => x.id === Number(id));
+  if (!u) {
+    closeAdminConfirm();
+    return;
+  }
   u.status = 'APPROVED';
+  u.rejectReason = '';
   renderUsers();
   selectUser(id);
+  closeAdminConfirm();
+}
+
+function rejectUser() {
+  const u = users.find(x => x.id === selectedUserId);
+  if (!u || u.status !== 'PENDING') return;
+  const reason = document.querySelector('#user-rr-box textarea')?.value.trim() || '';
+  if (!reason) {
+    alert('거절 사유를 입력해주세요.');
+    return;
+  }
+  openAdminConfirm({
+    title: '유저를 거절할까요?',
+    message: '거절 후 유저 상태가 REJECTED로 변경됩니다.',
+    onConfirm: () => confirmRejectUser(u.id, reason),
+  });
+}
+
+function confirmRejectUser(id, reason) {
+  const u = users.find(x => x.id === Number(id));
+  if (!u) {
+    closeAdminConfirm();
+    return;
+  }
+  u.status = 'REJECTED';
+  u.rejectReason = reason;
+  renderUsers();
+  selectUser(id);
+  closeAdminConfirm();
 }
 
 function closeUserDetail() {

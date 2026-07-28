@@ -194,6 +194,81 @@ td { padding: 9px 12px; vertical-align: middle; }
   color: #999;
   cursor: not-allowed;
 }
+.admin-confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 420;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.08);
+}
+.admin-confirm-backdrop.show {
+  display: flex;
+}
+.admin-confirm-dialog {
+  width: min(312px, 100%);
+  overflow: hidden;
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: none;
+  text-align: center;
+}
+.admin-confirm-body {
+  padding: 24px 22px 20px;
+}
+.admin-confirm-icon {
+  width: 65px;
+  height: 65px;
+  margin: 0 auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.admin-confirm-icon img {
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
+  display: block;
+}
+.admin-confirm-title {
+  color: #1a1a18;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.admin-confirm-copy {
+  margin-top: 8px;
+  color: #777d86;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.admin-confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 0.5px solid #e7e7e7;
+}
+.admin-confirm-btn {
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: #4f5660;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.admin-confirm-btn + .admin-confirm-btn {
+  border-left: 0.5px solid #e7e7e7;
+}
+.admin-confirm-btn:hover {
+  background: rgba(0, 0, 0, 0.035);
+}
+.admin-confirm-btn.primary {
+  color: #007aff;
+  font-weight: 600;
+}
 .content-result-table th:nth-child(2),
 .content-result-table td:nth-child(2) { width: 78px; }
 .content-result-table th:nth-child(4),
@@ -242,6 +317,13 @@ body { background: #fff !important; }
 .contract-split .table-wrap {
   min-height: 0;
 }
+.main .contract-split > .lp,
+.main .contract-split > .dp,
+.main .contract-split > .contract-list-pane {
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
 .contract-split {
   width: 100% !important;
   padding: 0 !important;
@@ -257,10 +339,17 @@ body { background: #fff !important; }
   flex: 1 1 auto !important;
   border-right: 0 !important;
 }
+.contract-split:not(.has-detail) {
+  padding: 20px 30px 30px !important;
+  gap: 22px !important;
+  background: #fff !important;
+}
 .contract-split:not(.has-detail) .dp {
   display: none !important;
 }
 .contract-split.has-detail {
+  padding: 20px 30px 30px !important;
+  gap: 22px !important;
   overflow: visible !important;
 }
 .contract-split.has-detail .contract-list-pane {
@@ -316,23 +405,32 @@ body { background: #fff !important; }
   display: none !important;
 }
 .contract-list-pane {
-  padding: 0 18px !important;
+  padding: 0 !important;
   background: #fff !important;
   overflow: hidden !important;
 }
 .contract-list-toolbar {
-  min-height: 38px !important;
+  height: 46px !important;
+  min-height: 46px !important;
+  max-height: 46px !important;
   margin: 10px 0 8px !important;
-  padding: 5px 7px !important;
+  padding: 6px 7px !important;
   background: rgb(242, 242, 242) !important;
   border: 0 !important;
   border-radius: 8px !important;
+  box-sizing: border-box !important;
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
+  flex-wrap: nowrap !important;
   position: relative !important;
   overflow: visible !important;
   z-index: 35 !important;
+}
+.contract-list-toolbar .list-icon-btn,
+.contract-list-toolbar .contract-list-search input {
+  height: 30px !important;
+  min-height: 30px !important;
 }
 .list-icon-btn {
   width: 28px;
@@ -595,6 +693,9 @@ body { background: #fff !important; }
   overflow: auto;
   flex: 0 1 auto;
   background: #fff !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 .contract-list-table table {
   min-width: 760px;
@@ -622,6 +723,53 @@ body { background: #fff !important; }
   color: #14171c;
   font-size: 12px;
   white-space: nowrap;
+}
+.contract-split.has-detail .contract-list-pane {
+  width: 50% !important;
+  min-width: 420px !important;
+  flex: 0 0 50% !important;
+  padding: 0 !important;
+  background: #fff !important;
+  overflow: hidden !important;
+}
+.contract-split.has-detail .contract-list-toolbar {
+  height: 46px !important;
+  min-height: 46px !important;
+  max-height: 46px !important;
+  margin: 10px 0 8px !important;
+  padding: 6px 7px !important;
+  background: rgb(242, 242, 242) !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+.contract-split.has-detail .contract-list-table {
+  flex: 0 1 auto !important;
+  overflow: auto !important;
+  background: #fff !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.contract-split.has-detail .contract-list-table thead th {
+  height: 40px !important;
+  padding: 0 14px !important;
+  background: #fff !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  color: #9aa0a9 !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+}
+.contract-split.has-detail .contract-list-table tbody tr {
+  height: 60px !important;
+  border-bottom: 1px solid #eef0f3 !important;
+  background: #fff !important;
+}
+.contract-split.has-detail .contract-list-table td {
+  padding: 0 14px !important;
+  color: #14171c !important;
+  font-size: 12px !important;
+  white-space: nowrap !important;
 }
 .contract-list-table th:nth-last-child(-n+3),
 .contract-list-table td:nth-last-child(-n+3) {
@@ -1351,7 +1499,7 @@ body { background: #fff !important; }
   </div>
   <div class="split contract-split" id="pane-contracts">
     <section class="lp contract-list-pane">
-      <div class="toolbar contract-list-toolbar">
+      <div class="contract-list-toolbar">
         <button class="list-icon-btn" type="button" aria-label="새 계약 추가" onclick="newContract()"><i class="ti ti-plus"></i></button>
         <button class="list-icon-btn" id="contract-filter-toggle" type="button" aria-label="필터" aria-expanded="false" onclick="toggleContractFilterPanel()"><i class="ti ti-filter"></i></button>
         <div class="contract-sort-dropdown" id="contract-sort-dropdown">
@@ -1628,6 +1776,20 @@ body { background: #fff !important; }
   </div>
 </div>
 
+<div class="admin-confirm-backdrop" id="admin-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="admin-confirm-title" onclick="closeAdminConfirm(event)">
+  <div class="admin-confirm-dialog" onclick="event.stopPropagation()">
+    <div class="admin-confirm-body">
+      <div class="admin-confirm-icon" aria-hidden="true"><img src="../images/icon/image.png" alt=""></div>
+      <div class="admin-confirm-title" id="admin-confirm-title">계약을 삭제할까요?</div>
+      <div class="admin-confirm-copy" id="admin-confirm-message">삭제한 계약 정보는 목록에서 제거됩니다.</div>
+    </div>
+    <div class="admin-confirm-actions">
+      <button class="admin-confirm-btn" type="button" onclick="closeAdminConfirm()">취소</button>
+      <button class="admin-confirm-btn primary" type="button" onclick="submitAdminConfirm()">확인</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const contents = [
   { id: 'content-101', name: '대표님이 내 전남친입니다', year: '2026', company: 'NextWave Studios', poster: '../images/대표님이내전남친입니다.png' },
@@ -1683,6 +1845,7 @@ let contracts = [
 
 let selectedId = null;
 let draftMode = false;
+let adminConfirmHandler = null;
 let contractStatusFilter = '';
 let contractPlatformFilter = '';
 let contractExpiringFilter = false;
@@ -2258,9 +2421,44 @@ function deleteContract() {
     cancelEdit();
     return;
   }
+  openAdminConfirm({
+    title: '계약을 삭제할까요?',
+    message: '삭제한 계약 정보는 목록에서 제거됩니다.',
+    onConfirm: confirmDeleteContract,
+  });
+}
+
+function openAdminConfirm({ title, message, onConfirm }) {
+  document.getElementById('admin-confirm-title').textContent = title || '처리할까요?';
+  document.getElementById('admin-confirm-message').textContent = message || '';
+  adminConfirmHandler = typeof onConfirm === 'function' ? onConfirm : null;
+  document.getElementById('admin-confirm-modal')?.classList.add('show');
+}
+
+function closeAdminConfirm(event) {
+  event?.stopPropagation?.();
+  adminConfirmHandler = null;
+  document.getElementById('admin-confirm-modal')?.classList.remove('show');
+}
+
+function submitAdminConfirm() {
+  if (typeof adminConfirmHandler === 'function') {
+    adminConfirmHandler();
+    return;
+  }
+  closeAdminConfirm();
+}
+
+function confirmDeleteContract() {
+  if (selectedId == null) {
+    closeAdminConfirm();
+    return;
+  }
   contracts = contracts.filter((item) => item.id !== selectedId);
   selectedId = null;
   draftMode = false;
+  adminConfirmHandler = null;
+  document.getElementById('admin-confirm-modal')?.classList.remove('show');
   setDetailVisible(false);
   renderContracts();
 }

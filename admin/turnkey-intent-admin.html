@@ -106,23 +106,116 @@ td { padding: 10px 12px; vertical-align: middle; }
 .btn-primary { background: #1a1a18; color: #fff; border-color: #1a1a18; }
 .comment-box { min-height: 0; flex: 1 1 auto; background: transparent; border: 0; border-radius: 0; overflow: visible; display: flex; flex-direction: column; }
 .comment-list { min-height: 0; display: flex; flex: 1 1 auto; flex-direction: column; gap: 18px; padding: 2px 0 18px; border-bottom: 0; overflow-y: auto; }
-.comment-item { display: grid; grid-template-columns: 32px minmax(0, auto); column-gap: 10px; align-items: end; max-width: min(560px, 92%); }
+.comment-item { display: flex; align-items: flex-start; max-width: min(560px, 92%); }
 .comment-item.sender-admin { grid-template-columns: minmax(0, 1fr); margin-left: auto; text-align: right; }
 .comment-avatar { width: 32px; height: 32px; border-radius: 50%; background: #f2f2f2 center / cover no-repeat; box-shadow: inset 0 0 0 0.5px #e6e6e6; }
 .comment-main { min-width: 0; max-width: 100%; }
 .comment-time { margin-top: 9px; padding-left: 10px; color: #6f747c; font-size: 12px; line-height: 1.2; text-align: left; }
-.comment-item:not(.sender-admin) .comment-review-row { grid-column: 2; }
+.comment-item.sender-user .comment-time { margin-left: 42px; padding-left: 0; }
 .comment-item.sender-admin .comment-time { padding-left: 0; padding-right: 10px; text-align: right; }
 .comment-review-row { margin-top: 9px; display: flex; align-items: center; gap: 8px; }
 .comment-review-row .comment-time { margin-top: 0; padding-left: 10px; }
-.message-review-check { width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; background: #f1f1f1; color: #777; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background .14s ease, color .14s ease, transform .14s ease; }
-.message-review-check i { font-size: 14px; }
-.message-review-check:hover { background: #eaf3de; color: #3b6d11; transform: translateY(-1px); }
-.message-review-check.reviewed { background: #eaf3de; color: #3b6d11; cursor: default; transform: none; }
+.comment-bubble-line { display: flex; align-items: flex-end; gap: 10px; }
+.comment-bubble-line .comment-avatar { flex: 0 0 32px; }
+.message-review-check {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  padding: 0;
+  margin-bottom: 0;
+  border: 1px solid #cfd3da;
+  border-radius: 50%;
+  background: #fff;
+  color: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  cursor: pointer;
+  transition: background .14s ease, border-color .14s ease, color .14s ease, transform .14s ease;
+}
+.message-review-check i { font-size: 13px; stroke-width: 2; transform: translateX(-0.5px); }
+.message-review-check:hover { border-color: #8f949c; background: #f7f7f7; color: #8f949c; transform: translateY(-1px); }
+.message-review-check.reviewed { border-color: #1a1a18; background: #1a1a18; color: #fff; cursor: default; transform: none; }
+.review-confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.08);
+}
+.review-confirm-backdrop.show {
+  display: flex;
+}
+.review-confirm-dialog {
+  width: min(312px, 100%);
+  overflow: hidden;
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: none;
+  text-align: center;
+}
+.review-confirm-body {
+  padding: 24px 22px 20px;
+}
+.admin-confirm-icon {
+  width: 65px;
+  height: 65px;
+  margin: 0 auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.admin-confirm-icon img {
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
+  display: block;
+}
+.review-confirm-title {
+  color: #1a1a18;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.review-confirm-copy {
+  margin-top: 8px;
+  color: #777d86;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.review-confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 0.5px solid #e7e7e7;
+}
+.review-confirm-btn {
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: #4f5660;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.review-confirm-btn + .review-confirm-btn {
+  border-left: 0.5px solid #e7e7e7;
+}
+.review-confirm-btn:hover {
+  background: rgba(0, 0, 0, 0.035);
+}
+.review-confirm-btn.primary {
+  color: #007aff;
+  font-weight: 600;
+}
 .comment-text { max-width: 100%; font-size: 12.5px; line-height: 1.65; color: #333; white-space: pre-wrap; word-break: break-word; background: #f6f6f6; border: 0; border-radius: 12px; padding: 14px 16px; }
 .comment-item.sender-admin .comment-text { background: #f6f6f6; border: 0; color: #1a1a18; }
 .comment-item.production-user-message .comment-main { display: flex; flex-direction: column; gap: 12px; }
-.production-chat-summary { width: min(340px, 76%); margin-right: auto; padding: 14px 18px; border-radius: 16px; background: #f1f1f1; display: grid; grid-template-columns: 72px minmax(0, 1fr); column-gap: 18px; row-gap: 10px; color: #1a1a18; font-size: 12.5px; line-height: 1.45; }
+.production-chat-summary { width: min(340px, 76%); margin-left: 42px; margin-right: auto; padding: 14px 18px; border-radius: 16px 16px 16px 5px; background: #f1f1f1; display: grid; grid-template-columns: 72px minmax(0, 1fr); column-gap: 18px; row-gap: 10px; color: #1a1a18; font-size: 12.5px; line-height: 1.45; }
 .production-chat-label { color: #1a1a18; font-weight: 500; }
 .production-chat-value { min-width: 0; color: #1a1a18; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .comment-item.production-user-message .comment-text { border-radius: 18px; padding: 16px 18px; background: #f1f1f1; }
@@ -161,6 +254,13 @@ body { background: #fff !important; }
 .intent-split .tscroll {
   min-height: 0;
 }
+.main .intent-split > .lp,
+.main .intent-split > .dp,
+.main .intent-split > .intent-list-pane {
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
 .intent-split {
   width: 100% !important;
   padding: 0 !important;
@@ -175,10 +275,17 @@ body { background: #fff !important; }
   min-width: 0 !important;
   flex: 1 1 auto !important;
 }
+.intent-split:not(.has-detail) {
+  padding: 20px 30px 30px !important;
+  gap: 22px !important;
+  background: #fff !important;
+}
 .intent-split:not(.has-detail) .dp {
   display: none !important;
 }
 .intent-split.has-detail {
+  padding: 20px 30px 30px !important;
+  gap: 22px !important;
   overflow: visible !important;
 }
 .intent-split.has-detail .lp {
@@ -233,7 +340,7 @@ body { background: #fff !important; }
   display: none !important;
 }
 .intent-list-pane {
-  padding: 0 18px !important;
+  padding: 0 !important;
   background: #fff !important;
   border-right: 0 !important;
 }
@@ -241,18 +348,26 @@ body { background: #fff !important; }
   padding: 0 0 0 18px !important;
 }
 .intent-list-toolbar {
-  min-height: 38px;
+  height: 46px !important;
+  min-height: 46px !important;
+  max-height: 46px !important;
   margin: 10px 0 8px;
-  padding: 5px 7px;
+  padding: 6px 7px;
   background: rgb(242, 242, 242);
   border: 0;
   border-radius: 8px;
+  box-sizing: border-box !important;
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: nowrap;
   position: relative;
   overflow: visible;
   z-index: 35;
+}
+.intent-list-toolbar .list-icon-btn {
+  height: 30px !important;
+  min-height: 30px !important;
 }
 .list-icon-btn {
   width: 28px;
@@ -400,6 +515,9 @@ body { background: #fff !important; }
   flex: 0 1 auto;
   overflow: auto;
   background: #fff !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 .intent-list-table table {
   min-width: 740px;
@@ -416,7 +534,7 @@ body { background: #fff !important; }
   font-weight: 400;
 }
 .intent-list-table tbody tr {
-  height: 48px;
+  height: 54px;
   border-bottom: 1px solid #eef0f3;
   background: #fff;
 }
@@ -431,6 +549,53 @@ body { background: #fff !important; }
   color: #14171c;
   font-size: 12px;
   white-space: nowrap;
+}
+.intent-split.has-detail .intent-list-pane {
+  width: 50% !important;
+  min-width: 420px !important;
+  flex: 0 0 50% !important;
+  padding: 0 !important;
+  background: #fff !important;
+  overflow: hidden !important;
+}
+.intent-split.has-detail .intent-list-toolbar {
+  height: 46px !important;
+  min-height: 46px !important;
+  max-height: 46px !important;
+  margin: 10px 0 8px !important;
+  padding: 6px 7px !important;
+  background: rgb(242, 242, 242) !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+.intent-split.has-detail .intent-list-table {
+  flex: 0 1 auto !important;
+  overflow: auto !important;
+  background: #fff !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.intent-split.has-detail .intent-list-table thead th {
+  height: 40px !important;
+  padding: 0 14px !important;
+  background: #fff !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  color: #9aa0a9 !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+}
+.intent-split.has-detail .intent-list-table tbody tr {
+  height: 54px !important;
+  border-bottom: 1px solid #eef0f3 !important;
+  background: #fff !important;
+}
+.intent-split.has-detail .intent-list-table td {
+  padding: 0 14px !important;
+  color: #14171c !important;
+  font-size: 12px !important;
+  white-space: nowrap !important;
 }
 .intent-list-table .bdg,
 .intent-split #intent-detail .bdg {
@@ -576,7 +741,7 @@ body { background: #fff !important; }
 }
 .intent-split #intent-detail .dh-actions #intent-status {
   position: absolute;
-  top: 10px;
+  top: 12px;
   right: 48px;
 }
 .intent-split #intent-detail .dh-actions .dh-review {
@@ -675,17 +840,18 @@ body { background: #fff !important; }
   border: 0;
   background: #f6f6f6;
   color: #333;
-  border-radius: 12px;
+  border-radius: 12px 12px 12px 5px;
   padding: 14px 16px;
 }
 .intent-split #intent-detail .comment-item.sender-admin .comment-text {
   border: 0;
   background: #f6f6f6;
   color: #1a1a18;
+  border-radius: 12px 12px 5px 12px;
 }
 .intent-split #intent-detail .comment-item.production-user-message .comment-text {
   background: #f1f1f1;
-  border-radius: 18px;
+  border-radius: 18px 18px 18px 5px;
   padding: 16px 18px;
 }
 .intent-split #intent-detail .comment-write {
@@ -789,7 +955,7 @@ body { background: #fff !important; }
   <div class="topbar"><span class="topbar-title">문의함</span></div>
   <div class="split intent-split" id="pane-intents">
     <div class="lp intent-list-pane">
-      <div class="toolbar intent-list-toolbar">
+      <div class="intent-list-toolbar">
         <button class="list-icon-btn" id="intent-filter-toggle" type="button" aria-label="필터" aria-expanded="false" onclick="toggleIntentFilterPanel()"><i class="ti ti-filter"></i></button>
       </div>
       <div class="intent-filter-panel" id="intent-filter-panel">
@@ -875,6 +1041,20 @@ body { background: #fff !important; }
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="review-confirm-backdrop admin-confirm-backdrop" id="review-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="review-confirm-title" onclick="closeAdminConfirm(event)">
+  <div class="review-confirm-dialog admin-confirm-dialog" onclick="event.stopPropagation()">
+    <div class="review-confirm-body admin-confirm-body">
+      <div class="admin-confirm-icon" aria-hidden="true"><img src="../images/icon/image.png" alt=""></div>
+      <div class="review-confirm-title admin-confirm-title" id="review-confirm-title">검토 완료 처리할까요?</div>
+      <div class="review-confirm-copy admin-confirm-copy" id="admin-confirm-message">이 메시지가 확인 완료 상태로 변경됩니다.</div>
+    </div>
+    <div class="review-confirm-actions admin-confirm-actions">
+      <button class="review-confirm-btn admin-confirm-btn" type="button" onclick="closeAdminConfirm()">취소</button>
+      <button class="review-confirm-btn admin-confirm-btn primary" type="button" onclick="submitAdminConfirm()">확인</button>
     </div>
   </div>
 </div>
@@ -1011,6 +1191,8 @@ const commentsByIntent = {
   ],
 };
 let selectedInquiryId = '';
+let pendingReviewInquiryId = '';
+let adminConfirmHandler = null;
 
 function setTypeFilter(el) {
   activeTypeFilter = el.value || '전체';
@@ -1258,10 +1440,55 @@ function completeReview(event) {
   event?.stopPropagation?.();
   const item = selectedInquiry();
   if (!item) return;
+  pendingReviewInquiryId = item.id;
+  openAdminConfirm({
+    title: '검토 완료 처리할까요?',
+    message: '이 메시지가 확인 완료 상태로 변경됩니다.',
+    onConfirm: confirmReviewComplete,
+  });
+}
+
+function openAdminConfirm({ title, message, onConfirm }) {
+  document.getElementById('review-confirm-title').textContent = title || '처리할까요?';
+  document.getElementById('admin-confirm-message').textContent = message || '';
+  adminConfirmHandler = typeof onConfirm === 'function' ? onConfirm : null;
+  document.getElementById('review-confirm-modal')?.classList.add('show');
+}
+
+function closeAdminConfirm(event) {
+  event?.stopPropagation?.();
+  pendingReviewInquiryId = '';
+  adminConfirmHandler = null;
+  document.getElementById('review-confirm-modal')?.classList.remove('show');
+}
+
+function closeReviewConfirm(event) {
+  closeAdminConfirm(event);
+}
+
+function submitAdminConfirm() {
+  if (typeof adminConfirmHandler === 'function') {
+    adminConfirmHandler();
+    return;
+  }
+  closeAdminConfirm();
+}
+
+function confirmReviewComplete() {
+  const item = inquiryItems.find(inquiry => inquiry.id === pendingReviewInquiryId) || selectedInquiry();
+  if (!item) {
+    closeAdminConfirm();
+    return;
+  }
   item.status = 'reviewed';
   const badge = document.getElementById('intent-status');
-  badge.textContent = 'REVIEWED';
-  badge.className = 'bdg b-done';
+  if (badge && item.id === selectedInquiryId) {
+    badge.textContent = 'REVIEWED';
+    badge.className = 'bdg b-done';
+  }
+  pendingReviewInquiryId = '';
+  adminConfirmHandler = null;
+  document.getElementById('review-confirm-modal')?.classList.remove('show');
   renderInquiryList();
 }
 
@@ -1292,9 +1519,9 @@ function chatTimeLabel(value) {
 
 function reviewCheckControl(item) {
   if (normalizeIntentStatus(item.status) === 'reviewed') {
-    return '<span class="message-review-check reviewed" aria-label="검토 완료"><i class="ti ti-check"></i></span>';
+    return '<span class="message-review-check reviewed" aria-label="확인 완료"><i class="ti ti-check"></i></span>';
   }
-  return '<button class="message-review-check" type="button" aria-label="검토 완료로 변경" onclick="completeReview(event)"><i class="ti ti-check"></i></button>';
+  return '<button class="message-review-check" type="button" aria-label="메시지 확인" onclick="completeReview(event)"><i class="ti ti-check"></i></button>';
 }
 
 function renderComments() {
@@ -1309,7 +1536,6 @@ function renderComments() {
   const isProductionInquiry = item.type === '제작협업';
   const userMessage = isProductionInquiry ? `
     <div class="comment-item sender-user production-user-message">
-      <div class="comment-avatar" style="background-image:url('../images/icon/플랫폼프로필.png')" aria-hidden="true"></div>
       <div class="comment-main">
         <div class="production-chat-summary">
           <div class="production-chat-label">콘텐츠명</div>
@@ -1317,22 +1543,23 @@ function renderComments() {
           <div class="production-chat-label">제작사명</div>
           <div class="production-chat-value">${escapeHtml(item.producerName || '-')}</div>
         </div>
-        <div class="comment-text">${escapeHtml(item.message)}</div>
-      </div>
-      <div class="comment-review-row">
+        <div class="comment-bubble-line">
+          <div class="comment-avatar" style="background-image:url('../images/icon/플랫폼프로필.png')" aria-hidden="true"></div>
+          <div class="comment-text">${escapeHtml(item.message)}</div>
+          ${reviewCheckControl(item)}
+        </div>
         <div class="comment-time production-chat-time">${escapeHtml(chatTimeLabel(item.date))}</div>
-        ${reviewCheckControl(item)}
       </div>
     </div>
   ` : `
     <div class="comment-item sender-user">
-      <div class="comment-avatar" style="background-image:url('../images/icon/플랫폼프로필.png')" aria-hidden="true"></div>
       <div class="comment-main">
-        <div class="comment-text">${escapeHtml(item.message)}</div>
-      </div>
-      <div class="comment-review-row">
+        <div class="comment-bubble-line">
+          <div class="comment-avatar" style="background-image:url('../images/icon/플랫폼프로필.png')" aria-hidden="true"></div>
+          <div class="comment-text">${escapeHtml(item.message)}</div>
+          ${reviewCheckControl(item)}
+        </div>
         <div class="comment-time">${escapeHtml(chatTimeLabel(item.date))}</div>
-        ${reviewCheckControl(item)}
       </div>
     </div>
   `;
