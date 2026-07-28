@@ -1316,8 +1316,8 @@ td { padding: 9px 12px; vertical-align: middle; }
   overflow: hidden !important;
 }
 .main .workflow-split.has-detail {
-  padding: 20px 30px 30px !important;
-  gap: 22px !important;
+  padding: 0 !important;
+  gap: 0 !important;
   overflow: visible !important;
 }
 .main .workflow-split > .lp,
@@ -1341,9 +1341,10 @@ td { padding: 9px 12px; vertical-align: middle; }
   display: none !important;
 }
 .main .workflow-split.has-detail > .workflow-list-pane {
-  width: 50% !important;
+  width: calc(50% - 30px) !important;
   min-width: 420px !important;
-  flex: 0 0 50% !important;
+  flex: 0 0 calc(50% - 30px) !important;
+  margin: 20px 0 30px 30px !important;
 }
 .main .workflow-split.has-detail > .dp {
   display: flex !important;
@@ -1478,9 +1479,10 @@ td { padding: 9px 12px; vertical-align: middle; }
   white-space: nowrap !important;
 }
 .main .workflow-split.has-detail > .workflow-list-pane {
-  width: 50% !important;
+  width: calc(50% - 30px) !important;
   min-width: 420px !important;
-  flex: 0 0 50% !important;
+  flex: 0 0 calc(50% - 30px) !important;
+  margin: 20px 0 30px 30px !important;
   padding: 0 !important;
   background: #fff !important;
   overflow: hidden !important;

@@ -348,15 +348,16 @@ body { background: #fff !important; }
   display: none !important;
 }
 .contract-split.has-detail {
-  padding: 20px 30px 30px !important;
-  gap: 22px !important;
+  padding: 0 !important;
+  gap: 0 !important;
   overflow: visible !important;
 }
 .contract-split.has-detail .contract-list-pane {
-  width: 50% !important;
+  width: calc(50% - 30px) !important;
   min-width: 420px !important;
-  flex: 0 0 50% !important;
-  padding: 0 0 0 18px !important;
+  flex: 0 0 calc(50% - 30px) !important;
+  margin: 20px 0 30px 30px !important;
+  padding: 0 !important;
   border-right: 0 !important;
 }
 .contract-split.has-detail .dp {
@@ -725,9 +726,10 @@ body { background: #fff !important; }
   white-space: nowrap;
 }
 .contract-split.has-detail .contract-list-pane {
-  width: 50% !important;
+  width: calc(50% - 30px) !important;
   min-width: 420px !important;
-  flex: 0 0 50% !important;
+  flex: 0 0 calc(50% - 30px) !important;
+  margin: 20px 0 30px 30px !important;
   padding: 0 !important;
   background: #fff !important;
   overflow: hidden !important;
