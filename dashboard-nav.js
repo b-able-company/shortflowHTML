@@ -403,6 +403,13 @@
     signupButton.textContent = '회원가입 뷰';
     remote.appendChild(signupButton);
 
+    const videoViewButton = document.createElement('a');
+    videoViewButton.className = 'utility-toggle video-view-toggle';
+    videoViewButton.href = 'video-view.html';
+    videoViewButton.setAttribute('aria-label', '영상 조회 페이지');
+    videoViewButton.textContent = '영상 조회 페이지';
+    remote.appendChild(videoViewButton);
+
     document.body.appendChild(remote);
     window.ShortflowUtilityRemote?.init(remote);
   }

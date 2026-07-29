@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>영상 조회 페이지</title>
+  <link rel="stylesheet" href="dashboard-common.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Finlandica+Headline:ital,wght@0,100..900;1,100..900&family=Noto+Sans+KR:wght@100..900&family=Noto+Sans+SC:wght@100..900&display=swap" rel="stylesheet">
+  <script src="utility-remote.js" defer></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --ink: rgb(238, 238, 238);
+      --muted: #b8b8b4;
+      --line: rgb(61, 58, 57);
+      --soft: rgba(255, 255, 255, 0.08);
+      --surface: #fff;
+      --accent: rgb(237, 100, 43);
+    }
+
+    body {
+      min-height: 100vh;
+      background: rgb(24, 24, 24);
+      color: var(--ink);
+      font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif !important;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button {
+      border: 0;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .video-page {
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    .watch-layout {
+      width: 100%;
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 356px;
+      gap: 0;
+      align-items: center;
+    }
+
+    .watch-main {
+      min-width: 0;
+      min-height: 100vh;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      background: rgb(24, 24, 24);
+    }
+
+    .viewer {
+      width: 100%;
+      border-radius: 12px;
+      background: transparent;
+    }
+
+    .viewer-stage {
+      position: relative;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: transparent;
+    }
+
+    .viewer.is-landscape {
+      overflow: hidden;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .viewer-media {
+      position: relative;
+      overflow: hidden;
+      background: #050505;
+    }
+
+    .viewer.is-portrait .viewer-media {
+      height: min(90vh, 900px);
+      aspect-ratio: 9 / 16;
+      border-radius: 32px;
+    }
+
+    .viewer.is-landscape .viewer-media {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+    }
+
+    .viewer-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0.9;
+    }
+
+    .viewer.is-portrait .viewer-media img {
+      opacity: 0.96;
+    }
+
+    .viewer-play {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      overflow: hidden;
+      background: rgba(253, 244, 227, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow:
+        4px 4px 20px 0 rgba(120, 53, 15, 0.1),
+        inset 0 0 150px rgba(245, 158, 11, 0.05),
+        inset 0 0 4px 2px rgba(255, 255, 255, 0.15);
+      display: grid;
+      place-items: center;
+      backdrop-filter: blur(8px) saturate(100%);
+      -webkit-backdrop-filter: blur(8px) saturate(100%);
+      cursor: pointer;
+    }
+
+    .viewer-play::before {
+      content: "";
+      position: relative;
+      z-index: 2;
+      width: 0;
+      height: 0;
+      margin-left: 4px;
+      border-top: 15px solid transparent;
+      border-bottom: 15px solid transparent;
+      border-left: 22px solid rgba(255, 255, 255, 0.94);
+    }
+
+    .viewer-play::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background:
+        linear-gradient(to left top, rgba(255, 255, 255, 0.075) 0%, rgba(255, 255, 255, 0) 50%),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0) 100%);
+      z-index: 1;
+    }
+
+    .watch-aside {
+      height: calc(100vh - 32px);
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      background: rgb(28, 28, 28);
+      border-radius: 18px 0 0 18px;
+      padding: 16px 24px 24px;
+      overflow: hidden;
+    }
+
+    .content-summary {
+      display: flex;
+      gap: 14px;
+      padding: 10px 0 22px;
+    }
+
+    .content-poster {
+      width: 86px;
+      aspect-ratio: 3 / 4;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #272727;
+      flex: 0 0 auto;
+    }
+
+    .content-poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .content-info {
+      padding-top: 7px;
+    }
+
+    .content-kicker {
+      margin: 2px 0 7px;
+      color: var(--accent);
+      font-family: "Finlandica Headline", sans-serif;
+      font-optical-sizing: auto;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .content-title {
+      margin-bottom: 7px;
+      font-family: "Noto Sans KR", sans-serif;
+      font-optical-sizing: auto;
+      font-size: 19px;
+      line-height: 1.28;
+      font-weight: 600;
+      font-style: normal;
+      letter-spacing: 0;
+    }
+
+    .text-zh,
+    :lang(zh),
+    :lang(zh-CN) {
+      font-family: "Noto Sans SC", sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    .playlist-tabs {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      gap: 2px;
+      flex: 0 0 46px;
+      height: 46px;
+      min-height: 46px;
+      max-height: 46px;
+      margin-top: -2px;
+      padding: 3px;
+      border-radius: 999px;
+      overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012)),
+        rgba(253, 244, 227, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow:
+        inset 0 0 18px rgba(245, 158, 11, 0.018),
+        inset 0 0 2px rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(14px) saturate(130%);
+      -webkit-backdrop-filter: blur(14px) saturate(130%);
+    }
+
+    .playlist-indicator {
+      position: absolute;
+      z-index: 0;
+      left: 3px;
+      top: 3px;
+      bottom: 3px;
+      width: calc((100% - 8px) / 2);
+      border-radius: 999px;
+      overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.13), rgba(253, 244, 227, 0.035)),
+        rgba(255, 255, 255, 0.055);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow:
+        inset 0 0 22px rgba(245, 158, 11, 0.04),
+        inset 0 0 3px rgba(255, 255, 255, 0.09);
+      transition:
+        transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+        background 260ms ease,
+        box-shadow 260ms ease;
+    }
+
+    .playlist-indicator::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background:
+        linear-gradient(to left top, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0) 52%),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0));
+    }
+
+    .playlist-tabs.is-trailer .playlist-indicator {
+      transform: translateX(calc(100% + 2px));
+    }
+
+    .playlist-tab {
+      appearance: none;
+      -webkit-appearance: none;
+      position: relative;
+      z-index: 1;
+      flex: 1 1 0;
+      width: 50%;
+      height: 100%;
+      max-height: 100%;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: rgba(238, 238, 238, 0.64);
+      font-family: "Finlandica Headline", sans-serif;
+      font-optical-sizing: auto;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: 0;
+      transition: color 260ms ease;
+    }
+
+    .playlist-tab.is-active {
+      color: rgb(238, 238, 238);
+    }
+
+    .playlist {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      scrollbar-gutter: stable;
+      margin-top: 14px;
+      padding: 0 2px 0 0;
+      scrollbar-color: rgba(238, 238, 238, 0.48) transparent;
+      scrollbar-width: thin;
+    }
+
+    .playlist::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .playlist::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .playlist::-webkit-scrollbar-thumb {
+      border: 2px solid transparent;
+      border-radius: 999px;
+      background: rgba(238, 238, 238, 0.5);
+      background-clip: padding-box;
+    }
+
+    .video-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .episode-row {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 98px minmax(0, 1fr) 54px;
+      gap: 12px;
+      align-items: center;
+      margin: 0;
+      padding: 8px 16px;
+      border-radius: 7px;
+      background: transparent;
+      background-clip: padding-box;
+      text-align: left;
+    }
+
+    .episode-row:hover,
+    .episode-row.is-active {
+      background: var(--soft);
+    }
+
+    .episode-row.is-active {
+      background: rgb(24, 24, 24);
+    }
+
+    .episode-thumb {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      border-radius: 7px;
+      overflow: hidden;
+      background: #282828;
+    }
+
+    .episode-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .episode-thumb::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(253, 244, 227, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow:
+        2px 2px 10px 0 rgba(120, 53, 15, 0.08),
+        inset 0 0 48px rgba(245, 158, 11, 0.05),
+        inset 0 0 3px 1px rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(8px) saturate(100%);
+      -webkit-backdrop-filter: blur(8px) saturate(100%);
+    }
+
+    .episode-thumb::before {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      left: 50%;
+      top: 50%;
+      width: 0;
+      height: 0;
+      margin-left: 1px;
+      transform: translate(-45%, -50%);
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 8px solid rgba(255, 255, 255, 0.95);
+    }
+
+    .episode-label {
+      display: block;
+      overflow: hidden;
+      color: var(--ink);
+      font-family: "Finlandica Headline", sans-serif;
+      font-optical-sizing: auto;
+      font-size: 13px;
+      font-weight: 580;
+      letter-spacing: 0;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .episode-status {
+      width: 28px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5px;
+      justify-self: end;
+      margin-right: 6px;
+      opacity: 0;
+    }
+
+    .episode-row.is-active .episode-status {
+      opacity: 1;
+    }
+
+    .episode-status span {
+      width: 1.5px;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--accent);
+      transform-origin: center center;
+      animation: playing-bar 720ms ease-in-out infinite;
+    }
+
+    .episode-status span:nth-child(2) {
+      animation-delay: 120ms;
+    }
+
+    .episode-status span:nth-child(3) {
+      animation-delay: 240ms;
+    }
+
+    .episode-status span:nth-child(4) {
+      animation-delay: 360ms;
+    }
+
+    @keyframes playing-bar {
+      0%,
+      100% {
+        transform: scaleY(0.42);
+      }
+
+      50% {
+        transform: scaleY(1);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .playlist-indicator,
+      .playlist-tab,
+      .episode-status span {
+        transition: none;
+        animation: none;
+      }
+    }
+
+    @media (max-width: 1040px) {
+      .watch-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .watch-aside {
+        height: auto;
+        min-height: 0;
+        border-radius: 0;
+        padding: 18px 16px 22px;
+      }
+
+      .playlist {
+        overflow: visible;
+      }
+
+      .video-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .video-page {
+        padding: 0;
+      }
+
+      .watch-layout {
+        gap: 18px;
+      }
+
+      .viewer-stage {
+        min-height: 220px;
+      }
+
+      .viewer.is-landscape .viewer-stage {
+        min-height: 480px;
+      }
+
+      .viewer.is-portrait .viewer-stage {
+        min-height: 480px;
+      }
+
+      .viewer.is-portrait .viewer-media {
+        height: 560px;
+        border-radius: 26px;
+      }
+
+      .content-summary {
+        padding-top: 2px;
+      }
+
+      .video-list {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="video-page">
+    <div class="watch-layout">
+      <section class="watch-main" aria-label="영상 플레이어">
+        <div class="viewer is-portrait" id="viewer">
+          <div class="viewer-stage">
+            <div class="viewer-media">
+              <img id="viewer-image" src="images/비밀사내결혼무료1.png" alt="">
+            </div>
+            <span class="viewer-play" aria-hidden="true"></span>
+          </div>
+        </div>
+      </section>
+
+      <aside class="watch-aside" aria-label="콘텐츠 정보 및 영상 목록">
+        <section class="content-summary">
+          <div class="content-poster">
+            <img src="images/비밀사내결혼.png" alt="비밀사내결혼">
+          </div>
+          <div class="content-info">
+            <div class="content-kicker">Shortflow Preview</div>
+            <h1 class="content-title">비밀사내결혼</h1>
+          </div>
+        </section>
+
+        <div class="playlist-tabs" id="playlist-tabs" role="tablist" aria-label="영상 유형">
+          <span class="playlist-indicator" aria-hidden="true"></span>
+          <button class="playlist-tab is-active" id="free-tab" type="button" role="tab" aria-selected="true" aria-controls="playlist-video-list" data-tab="free">Free Episodes</button>
+          <button class="playlist-tab" id="trailer-tab" type="button" role="tab" aria-selected="false" aria-controls="playlist-video-list" data-tab="trailer">Trailers</button>
+        </div>
+
+        <div class="playlist">
+          <div class="video-list" id="playlist-video-list" role="tabpanel" aria-labelledby="free-tab"></div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <div class="utility-remote">
+    <div class="utility-remote-title">VIEW SWITCH</div>
+    <a class="utility-toggle platform-view-toggle" href="content-list.html">플랫폼 입장 뷰</a>
+    <a class="utility-toggle producer-view-toggle" href="contentlist-prod.html">제작사 입장 뷰</a>
+    <a class="utility-toggle investor-view-toggle" href="investor-collaboration.html">투자자 입장 뷰</a>
+    <a class="utility-toggle admin-toggle" href="admin/index.html">관리자 입장 뷰</a>
+    <a class="utility-toggle first-login-toggle" href="first-login-setup.html">첫로그인</a>
+    <a class="utility-toggle login-view-toggle" href="login/login.html">로그인 뷰</a>
+    <a class="utility-toggle signup-view-toggle" href="login/index.html">회원가입 뷰</a>
+    <a class="utility-toggle video-view-toggle active" href="video-view.html">영상 조회 페이지</a>
+  </div>
+
+  <script>
+    const thumbnailPool = [
+      'images/비밀사내결혼무료1.png',
+      'images/비밀사내결혼무료2.png',
+      'images/비밀사내결혼무료3.png',
+      'images/비밀사내결혼무료4.png',
+      'images/비밀사내결혼무료5.png',
+      'images/비밀사내결혼무료6.png',
+      'images/비밀사내결혼무료7.png',
+      'images/비밀사내결혼스틸컷1.png',
+      'images/비밀사내결혼스틸컷2.png',
+      'images/비밀사내예고편.png'
+    ];
+
+    const videos = [
+      ...Array.from({ length: 10 }, (_, index) => ({
+        id: `free-${index + 1}`,
+        group: 'free',
+        orientation: 'portrait',
+        label: `Free Episode ${index + 1}`,
+        image: thumbnailPool[index % thumbnailPool.length]
+      })),
+      { id: 'trailer-1', group: 'trailer', orientation: 'landscape', label: 'Trailer 1', image: 'images/비밀사내결혼가로1.png' },
+      { id: 'trailer-2', group: 'trailer', orientation: 'landscape', label: 'Trailer 2', image: 'images/비밀사내결혼가로2.png' }
+    ];
+
+    let currentVideoId = videos[0].id;
+    let activeTab = 'free';
+
+    function escapeAttr(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char]));
+    }
+
+    function createVideoRow(item) {
+      const button = document.createElement('button');
+      button.className = `episode-row is-${item.orientation}${item.id === currentVideoId ? ' is-active' : ''}`;
+      button.type = 'button';
+      button.dataset.videoId = item.id;
+      button.setAttribute('aria-label', `${item.label} 선택`);
+      button.innerHTML = `
+        <span class="episode-thumb">
+          <img src="${escapeAttr(item.image)}" alt="">
+        </span>
+        <span class="episode-label">${escapeAttr(item.label)}</span>
+        <span class="episode-status" aria-label="${item.id === currentVideoId ? '재생 중' : ''}" aria-hidden="${item.id === currentVideoId ? 'false' : 'true'}">
+          <span></span><span></span><span></span><span></span>
+        </span>
+      `;
+      button.addEventListener('click', () => selectVideo(item.id));
+      return button;
+    }
+
+    function renderVideoList() {
+      const list = document.getElementById('playlist-video-list');
+      if (!list) return;
+      list.replaceChildren(...videos.filter((item) => item.group === activeTab).map(createVideoRow));
+      list.setAttribute('aria-labelledby', activeTab === 'free' ? 'free-tab' : 'trailer-tab');
+    }
+
+    function selectVideo(id) {
+      const item = videos.find((video) => video.id === id);
+      if (!item) return;
+      currentVideoId = id;
+      const viewer = document.getElementById('viewer');
+      viewer.classList.toggle('is-portrait', item.orientation === 'portrait');
+      viewer.classList.toggle('is-landscape', item.orientation === 'landscape');
+      document.getElementById('viewer-image').src = item.image;
+      renderAllLists();
+    }
+
+    function selectTab(group) {
+      activeTab = group;
+      document.getElementById('playlist-tabs')?.classList.toggle('is-trailer', group === 'trailer');
+      document.querySelectorAll('.playlist-tab').forEach((tab) => {
+        const isActive = tab.dataset.tab === group;
+        tab.classList.toggle('is-active', isActive);
+        tab.setAttribute('aria-selected', String(isActive));
+      });
+      const firstVideo = videos.find((video) => video.group === group);
+      if (firstVideo) selectVideo(firstVideo.id);
+      renderAllLists();
+    }
+
+    function renderAllLists() {
+      renderVideoList();
+    }
+
+    document.querySelectorAll('.playlist-tab').forEach((tab) => {
+      tab.addEventListener('click', () => selectTab(tab.dataset.tab));
+    });
+
+    renderAllLists();
+  </script>
+</body>
+</html>

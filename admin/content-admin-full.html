@@ -1095,6 +1095,19 @@ td { padding: 9px 12px; vertical-align: middle; }
   background: #eeeeee;
   border-color: #c9c9c9;
 }
+.btn-material-text {
+  width: auto;
+  min-width: 88px;
+  padding: 0 14px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 28px;
+  align-items: flex-start;
+}
+.content-preview-field input[readonly] {
+  background: transparent;
+  color: #555;
+}
 .planning-upload-box {
   min-height: 118px;
   border: 1px dashed #d5d4ce;
@@ -1670,6 +1683,10 @@ td { padding: 9px 12px; vertical-align: middle; }
 .operation-setting-copy { min-width: 0; }
 .operation-setting-name { font-size: 12px; font-weight: 600; color: #2b2b28; }
 .operation-setting-desc { margin-top: 4px; font-size: 11px; line-height: 1.45; color: #99978f; }
+.operation-link-field {
+  width: 100%;
+  min-height: 40px;
+}
 .operation-switch { appearance: none; -webkit-appearance: none; position: relative; align-self: center; width: 40px; min-width: 40px; max-width: 40px; height: 22px; min-height: 22px; max-height: 22px; flex: 0 0 40px; margin: 0; padding: 0; border: 0; border-radius: 999px; background: #d8d7d2; line-height: 0; cursor: pointer; transition: background 140ms ease; }
 .operation-switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: transform 140ms ease; }
 .operation-switch.is-on { background: #e85d2c; }
@@ -4138,6 +4155,13 @@ td { padding: 9px 12px; vertical-align: middle; }
                       </div>
                       <button class="operation-switch" id="bable-only-toggle" type="button" role="switch" onclick="toggleContentOperation('bableOnly')" aria-label="Bable Only"></button>
                     </div>
+                  </div>
+                </div>
+                <div class="sec">
+                  <div class="sec-title operation-section-title">영상 조회 전용 링크</div>
+                  <div class="operation-link-field material-folder-field content-preview-field">
+                    <input id="b-preview-url" readonly placeholder="조회 링크가 생성되지 않았습니다" />
+                    <button class="btn btn-material btn-material-text" type="button" onclick="reissueContentPreviewLink()">재발급</button>
                   </div>
                 </div>
                 <div class="sec">
@@ -6882,6 +6906,7 @@ function selectContent(id) {
   document.getElementById('b-total-runtime').value = c.totalRuntime || '';
   document.getElementById('b-start-point').value = c.startPoint || '';
   document.getElementById('b-drive-url').value = c.driveFolderUrl || '';
+  updateContentPreviewLinkField(c);
   setSelectByText('b-lang', c.lang);
   document.getElementById('b-license-type').value = normalizeLicenseType(c.licenseType || (c.exclusive ? '독점' : '비독점'));
   setLicenseRegionValue(c.licenseRegion);
@@ -7204,6 +7229,51 @@ function confirmTransferContentOwnership(contentId, previousCompany, nextCompany
   renderTable();
   renderExtraInfo(c);
   populateOwnershipTransfer(c);
+  closeAdminConfirm();
+}
+
+function createContentPreviewToken(contentId) {
+  return `sfv-${String(contentId).padStart(3, '0')}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function ensureContentPreviewToken(content) {
+  if (!content.previewToken) {
+    content.previewToken = `sfv-${String(content.id).padStart(3, '0')}-preview`;
+  }
+  return content.previewToken;
+}
+
+function buildContentPreviewUrl(content) {
+  const url = new URL('../video-view.html', window.location.href);
+  url.searchParams.set('contentId', content.id);
+  url.searchParams.set('token', ensureContentPreviewToken(content));
+  return url.href;
+}
+
+function updateContentPreviewLinkField(content) {
+  const field = document.getElementById('b-preview-url');
+  if (!field || !content) return;
+  field.value = buildContentPreviewUrl(content);
+}
+
+function reissueContentPreviewLink() {
+  const c = contents.find(x => x.id === selId);
+  if (!c) return;
+  openAdminConfirm({
+    title: '조회 링크를 재발급할까요?',
+    message: '기존 영상 조회 링크는 더 이상 사용할 수 없게 됩니다.',
+    onConfirm: () => confirmReissueContentPreviewLink(c.id),
+  });
+}
+
+function confirmReissueContentPreviewLink(contentId) {
+  const c = contents.find(x => x.id === Number(contentId));
+  if (!c) {
+    closeAdminConfirm();
+    return;
+  }
+  c.previewToken = createContentPreviewToken(c.id);
+  updateContentPreviewLinkField(c);
   closeAdminConfirm();
 }
 

@@ -222,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <a class="utility-toggle first-login-toggle" href="../first-login-setup.html">첫로그인</a>
       <a class="utility-toggle login-view-toggle" href="../login/login.html">로그인 뷰</a>
       <a class="utility-toggle signup-view-toggle" href="../login/index.html">회원가입 뷰</a>
+      <a class="utility-toggle video-view-toggle" href="../video-view.html">영상 조회 페이지</a>
     `;
     document.body.appendChild(remote);
     window.ShortflowUtilityRemote?.init(remote);
