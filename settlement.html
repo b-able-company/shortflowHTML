@@ -1991,6 +1991,21 @@ function RSTrendPanel({ p, selectedYear, setSelectedYear, years, t }) {
   }, [amountByMonth, months, selectedYear]);
   const formatRSAmount = (amount) =>
     amount == null ? '-' : `$${Math.round(amount).toLocaleString('en-US')}`;
+  const yearlyTotal = (year) => {
+    const total = months.reduce((sum, month) => {
+      const key = `${year}-${month.key}`;
+      const amount = amountByMonth.has(key) ? amountByMonth.get(key) : null;
+      return amount == null ? sum : sum + amount;
+    }, 0);
+    return total > 0 ? total : null;
+  };
+  const grandTotal = React.useMemo(() => {
+    const total = years.reduce((sum, year) => {
+      const amount = yearlyTotal(year);
+      return amount == null ? sum : sum + amount;
+    }, 0);
+    return total > 0 ? total : null;
+  }, [amountByMonth, months, years]);
 
   React.useEffect(() => {
     if (years.length && !years.includes(selectedYear)) {
@@ -2140,7 +2155,7 @@ function RSTrendPanel({ p, selectedYear, setSelectedYear, years, t }) {
       }}>
         <table style={{
           width: '100%',
-          minWidth: 860,
+          minWidth: 940,
           borderCollapse: 'collapse',
           tableLayout: 'fixed',
           fontFamily: t.sans
@@ -2172,6 +2187,17 @@ function RSTrendPanel({ p, selectedYear, setSelectedYear, years, t }) {
                   {month.label}
                 </th>
               )}
+              <th style={{
+                padding: '9px 12px',
+                borderBottom: `0.5px solid ${t.line}`,
+                background: '#fff',
+                color: t.inkMute,
+                fontSize: 12,
+                fontWeight: 700,
+                textAlign: 'center'
+              }}>
+                총액
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -2221,9 +2247,60 @@ function RSTrendPanel({ p, selectedYear, setSelectedYear, years, t }) {
                     </td>
                   );
                 })}
+                {(() => {
+                  const total = yearlyTotal(year);
+                  return (
+                    <td style={{
+                      padding: '9px 12px',
+                      borderTop: `0.5px solid ${t.line}`,
+                      color: total == null ? '#c7c3ba' : t.ink,
+                      fontFamily: t.mono,
+                      fontSize: 12,
+                      fontWeight: total == null ? 400 : 700,
+                      fontVariantNumeric: 'tabular-nums',
+                      textAlign: 'center',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      {formatRSAmount(total)}
+                    </td>
+                  );
+                })()}
               </tr>
             )}
           </tbody>
+          <tfoot>
+            <tr style={{ background: '#fafafa' }}>
+              <th style={{
+                padding: '10px 14px',
+                borderTop: `0.5px solid ${t.line}`,
+                color: t.ink,
+                fontSize: 12,
+                fontWeight: 600,
+                textAlign: 'left'
+              }}>
+                총액
+              </th>
+              {months.map((month) =>
+                <td key={`total-${month.key}`} style={{
+                  padding: '10px 12px',
+                  borderTop: `0.5px solid ${t.line}`
+                }} />
+              )}
+              <td style={{
+                padding: '10px 12px',
+                borderTop: `0.5px solid ${t.line}`,
+                color: grandTotal == null ? '#c7c3ba' : t.ink,
+                fontFamily: t.mono,
+                fontSize: 11.5,
+                fontWeight: grandTotal == null ? 400 : 700,
+                fontVariantNumeric: 'tabular-nums',
+                textAlign: 'center',
+                whiteSpace: 'nowrap'
+              }}>
+                {formatRSAmount(grandTotal)}
+              </td>
+            </tr>
+          </tfoot>
         </table>
       </div>
     </div>

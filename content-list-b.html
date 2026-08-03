@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>콘텐츠 리스트 조회 B안</title>
+  <link rel="stylesheet" href="dashboard-common.css">
+  <script src="dashboard-data.js"></script>
+  <script src="dashboard-common.js"></script>
+  <script src="dashboard-nav.js"></script>
+  <script src="workflow-view.js"></script>
+  <script src="messages-view.js"></script>
+  <script src="contract-status-view.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --orange: #e85d2c;
+      --ink: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --surface: #ffffff;
+      --soft: #f8f9fb;
+    }
+    body {
+      margin: 0;
+      background: #fff;
+      color: var(--ink);
+      font-family: "Geist", "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+	    a { color: inherit; text-decoration: none; }
+	    button, input { font: inherit; }
+	    .utility-remote,
+	    .utility-remote-collapse { display: none !important; }
+	    .account-head { min-height: 54px; background: #fff; border-radius: 12px 12px 0 0; }
+	    .account-head strong { font-weight: 600; }
+	    .account-head span { font-weight: 400; }
+	    .account-menu-item { position: relative; min-height: 43px; margin: 0 5px; font-weight: 500; }
+	    .account-menu-item .nav-icon,
+	    .account-menu-item .account-menu-icon {
+	      position: absolute;
+	      left: 22px;
+	      top: 50%;
+	      transform: translateY(-50%);
+	      opacity: 0;
+	      visibility: hidden;
+	      transition: opacity 0.14s ease, visibility 0.14s ease;
+	    }
+	    .account-menu-item:hover .nav-icon,
+	    .account-menu-item:hover .account-menu-icon,
+	    .account-menu-item.is-current .nav-icon,
+	    .account-menu-item.is-current .account-menu-icon,
+	    .account-menu-item[aria-current="page"] .nav-icon,
+	    .account-menu-item[aria-current="page"] .account-menu-icon {
+	      opacity: 1;
+	      visibility: visible;
+	    }
+	    .account-menu-item.is-current,
+	    .account-menu-item[aria-current="page"] {
+	      background: #f3f4f6;
+	      color: #1d1c1c;
+	    }
+	    .account-menu { width: 160px; padding: 0 0 5px; overflow: hidden; }
+	    .variant-switcher {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+	      z-index: 10080;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid #e5e7eb;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+    }
+    .variant-switcher a {
+      min-width: 42px;
+      height: 30px;
+      padding: 0 12px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .variant-switcher a.active {
+      background: #111827;
+      color: #fff;
+      pointer-events: none;
+    }
+    .content-list-main {
+      padding: 24px 0 32px;
+    }
+    .filter-panel {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      overflow: hidden;
+    }
+    .search-row {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 16px 0 28px;
+      border-bottom: 1px solid #edf0f3;
+    }
+    .search {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: #798192;
+    }
+    .search input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      color: var(--ink);
+      font-size: 14px;
+    }
+    .search input::placeholder { color: #7c8495; }
+    .divider { width: 1px; height: 22px; background: #d9dde4; }
+	    .tool-btn {
+	      width: 108px;
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 12px;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .tool-btn.is-active {
+      color: var(--orange);
+      border-color: #ffb49a;
+      background: #fff8f5;
+    }
+    .filter-body {
+      padding: 16px 16px 16px 28px;
+    }
+    .filter-panel.is-collapsed .search-row {
+      border-bottom-color: transparent;
+    }
+    .filter-panel.is-collapsed .filter-body {
+      display: none;
+    }
+    .filter-line {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 16px;
+      align-items: start;
+      margin-bottom: 14.5px;
+    }
+    .filter-line:last-child { margin-bottom: 0; }
+    .filter-label {
+      padding-top: 6px;
+      font-size: 14px;
+      font-weight: 400;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 8px;
+    }
+    .chip {
+      height: 35px;
+      padding: 0 15px;
+      border: 1px solid #dfe3e8;
+      border-radius: 10px;
+      background: #fff;
+      color: #111827;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .chip.active {
+      border-color: var(--orange);
+      background: var(--orange);
+      color: #fff;
+    }
+    .list-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 30px 4px 12px;
+    }
+    .count {
+      color: #5f6673;
+      font-size: 14px;
+      font-weight: 400;
+    }
+    .sort {
+      display: flex;
+      gap: 22px;
+      color: #7d8391;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .sort button {
+      border: 0;
+      background: transparent;
+      padding: 0;
+      color: inherit;
+      cursor: pointer;
+      font-weight: inherit;
+    }
+    .sort button.active { color: var(--orange); }
+	    .grid {
+	      display: grid;
+	      grid-template-columns: repeat(5, minmax(0, 225px));
+	      justify-content: space-between;
+	      gap: 30px 4px;
+	    }
+		    .dashboard-copy {
+		      margin-top: 56px;
+		      padding-bottom: 56px;
+		    }
+		    .dashboard-copy-main {
+		      padding-top: 36px;
+		    }
+		    .dashboard-copy-main.is-favorites {
+		      padding-top: 5px;
+		    }
+		    .favorite-dashboard {
+		      display: grid;
+		      gap: 0;
+		    }
+		    .favorite-dashboard-head {
+		      display: flex;
+		      align-items: center;
+		      justify-content: flex-end;
+		      gap: 18px;
+		      margin-bottom: 5px;
+		    }
+		    .favorite-dashboard-actions {
+		      display: flex;
+		      align-items: center;
+		      justify-content: flex-end;
+		      gap: 8px;
+		      flex-wrap: wrap;
+		    }
+		    .favorite-select-toggle {
+		      width: auto;
+		      height: 30px;
+		      border: 0;
+		      background: transparent;
+		      color: #4b5563;
+		      padding: 0 2px;
+		      font-size: 13.5px;
+		      font-weight: 500;
+		      cursor: pointer;
+		    }
+		    .favorite-dashboard.is-selecting .favorite-select-toggle {
+		      color: var(--orange);
+		    }
+		    .favorite-select-toggle:hover {
+		      color: #111827;
+		    }
+		    .favorite-dashboard-select-actions {
+		      display: flex;
+		      align-items: center;
+		      justify-content: flex-end;
+		      gap: 8px;
+		      flex-wrap: nowrap;
+		      max-height: 0;
+		      margin: 0;
+		      opacity: 0;
+		      overflow: hidden;
+		      transform: translateY(-8px);
+		      transition: max-height 260ms cubic-bezier(0.22, 1, 0.36, 1), margin 260ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease, transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+		    }
+		    .favorite-selected-tools {
+		      display: flex;
+		      align-items: center;
+		      justify-content: flex-end;
+		      gap: 8px;
+		      flex-wrap: wrap;
+		    }
+		    .favorite-dashboard.is-selecting .favorite-dashboard-select-actions {
+		      max-height: 52px;
+		      margin: 0 0 14px;
+		      opacity: 1;
+		      transform: translateY(0);
+		      animation: favorite-actions-open 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+		    }
+		    .favorite-dashboard.is-selecting .favorite-dashboard-grid {
+		      animation: favorite-grid-push 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+		    }
+		    @keyframes favorite-actions-open {
+		      from {
+		        opacity: 0;
+		        transform: translateY(-8px);
+		      }
+		      to {
+		        opacity: 1;
+		        transform: translateY(0);
+		      }
+		    }
+		    @keyframes favorite-grid-push {
+		      from {
+		        transform: translateY(-18px);
+		      }
+		      to {
+		        transform: translateY(0);
+		      }
+		    }
+		    .favorite-dashboard-action,
+		    .favorite-dashboard-secondary,
+		    .favorite-dashboard-danger {
+		      height: 34px;
+		      border-radius: 10px;
+		      padding: 0 16px;
+		      font-size: 13px;
+		      font-weight: 600;
+		      cursor: pointer;
+		    }
+		    .favorite-dashboard-action {
+		      border: 0;
+		      background: var(--orange);
+		      color: #fff;
+		    }
+		    .favorite-dashboard-secondary {
+		      border: 1px solid #e1e5eb;
+		      background: #fff;
+		      color: #374151;
+		    }
+		    .favorite-dashboard-danger {
+		      border: 1px solid #f1d4cc;
+		      background: #fff;
+		      color: #b0442b;
+		    }
+		    .favorite-dashboard-action:disabled,
+		    .favorite-dashboard-secondary:disabled,
+		    .favorite-dashboard-danger:disabled {
+		      background: #f1f3f5;
+		      border-color: #e5e7eb;
+		      color: #a1a8b3;
+		      cursor: default;
+		    }
+		    .favorite-dashboard-grid {
+		      display: grid;
+		      grid-template-columns: repeat(5, minmax(0, 246px));
+		      justify-content: space-between;
+		      gap: 22px 18px;
+		    }
+		    .favorite-dashboard-card {
+		      display: block;
+		      min-width: 0;
+		      border: 0;
+		      background: transparent;
+		      color: inherit;
+		      cursor: pointer;
+		      text-align: left;
+		    }
+		    .favorite-dashboard-poster {
+		      position: relative;
+		      display: block;
+		      width: 100%;
+		      aspect-ratio: 1 / 1;
+		      border: 1px solid rgba(17, 24, 39, 0.08);
+		      border-radius: 22px;
+		      overflow: hidden;
+		      background: #f3f4f6;
+		      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.10);
+		    }
+		    .favorite-dashboard-poster img {
+		      display: block;
+		      width: 100%;
+		      height: 100%;
+		      object-fit: cover;
+		    }
+		    .favorite-dashboard-card.is-selected .favorite-dashboard-poster {
+		      border-color: var(--orange);
+		      border-width: 2px;
+		    }
+		    .favorite-dashboard-card.is-selected .favorite-dashboard-check {
+		      background: var(--orange);
+		      border-color: var(--orange);
+		    }
+		    .favorite-dashboard-check {
+		      position: absolute;
+		      top: 10px;
+		      right: 10px;
+		      width: 30px;
+		      height: 30px;
+		      border-radius: 50%;
+		      background: rgba(255, 255, 255, 0.94);
+		      border: 1px solid rgba(255, 255, 255, 0.86);
+		      display: inline-flex;
+		      align-items: center;
+		      justify-content: center;
+		      opacity: 0;
+		      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.16);
+		    }
+		    .favorite-dashboard.is-selecting .favorite-dashboard-check {
+		      opacity: 1;
+		    }
+		    .favorite-dashboard-check svg {
+		      width: 22px;
+		      height: 22px;
+		      display: block;
+		      opacity: 0;
+		    }
+		    .favorite-dashboard-check path {
+		      fill: none;
+		      stroke: var(--orange);
+		      stroke-width: 3;
+		      stroke-linecap: round;
+		      stroke-linejoin: round;
+		    }
+		    .favorite-dashboard-card.is-selected .favorite-dashboard-check svg {
+		      opacity: 1;
+		    }
+		    .favorite-dashboard-card.is-selected .favorite-dashboard-check path {
+		      stroke: #fff;
+		    }
+		    .favorite-dashboard-copy {
+		      display: block;
+		      margin-top: 5px;
+		      min-width: 0;
+		      padding-left: 3px;
+		    }
+		    .favorite-dashboard-copy strong {
+		      display: block;
+		      overflow: hidden;
+		      color: #111827;
+		      font-size: 13.3px;
+		      font-weight: 450;
+		      line-height: 1.35;
+		      text-align: left;
+		      text-overflow: ellipsis;
+		      white-space: nowrap;
+		    }
+		    .favorite-dashboard-more-wrap {
+		      display: flex;
+		      align-items: center;
+		      justify-content: center;
+		      margin-top: 74px;
+		    }
+		    .favorite-more-btn {
+		      width: 54px;
+		      height: 54px;
+		      border: 1px solid #dfe3e8;
+		      border-radius: 50%;
+		      background: #fff;
+		      color: #111827;
+		      display: inline-flex;
+		      align-items: center;
+		      justify-content: center;
+		      font-size: 24px;
+		      font-weight: 300;
+		      line-height: 1;
+		      cursor: pointer;
+		      font-family: inherit;
+		      box-shadow: none;
+		    }
+		    .favorite-more-btn:hover {
+		      border-color: #cfd5dd;
+		      background: #f8f9fb;
+		      color: var(--ink);
+		    }
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      min-height: 34px;
+      margin-top: 96px;
+      margin-bottom: 72px;
+    }
+    .page-btn {
+      min-width: 28px;
+      height: 28px;
+      padding: 0 8px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .page-btn:hover:not(:disabled) {
+      background: #f1f0ec;
+      color: var(--ink);
+    }
+    .page-btn.active {
+      background: rgba(26, 26, 24, 0.09);
+      color: var(--ink);
+    }
+    .page-btn:disabled {
+      color: #b8bec8;
+      cursor: default;
+    }
+    .card { min-width: 0; position: relative; }
+    .poster {
+      position: relative;
+      width: 96%;
+      margin: 0 auto;
+      height: auto;
+      aspect-ratio: 2 / 3;
+      flex: none;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #d1d5db;
+      box-shadow: 0 1px 2px rgba(17,24,39,0.08);
+    }
+    .poster::before, .poster::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .poster::after {
+      background: linear-gradient(180deg, rgba(0,0,0,0.02) 35%, rgba(0,0,0,0.62) 100%);
+    }
+    .poster.has-image::before,
+    .poster.has-image::after {
+      display: none;
+    }
+    .poster-image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .poster > a {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .new-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 2;
+      padding: 6px 9px;
+      border-radius: 4px;
+      background: var(--orange);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0.4px;
+    }
+    .poster-actions {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 2;
+      display: flex;
+      gap: 8px;
+      opacity: 0;
+      transform: translateY(-4px);
+      pointer-events: none;
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+    .poster:hover .poster-actions,
+    .poster:focus-within .poster-actions {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .poster-action {
+      width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 18px;
+      background: rgba(17,24,39,0.82);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .poster-action:hover {
+      background: rgba(17,24,39,0.96);
+    }
+    .fav.active svg { fill: #ff3f4d; stroke: #ff3f4d; }
+    .cart-add svg {
+      width: 19px;
+      height: 19px;
+      display: block;
+    }
+    .cart-add.active {
+      background: var(--orange);
+    }
+    @media (hover: none) {
+      .poster-actions {
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+      }
+    }
+    .poster-title {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 22px;
+      z-index: 1;
+      color: #fff;
+      font-size: 27px;
+      font-weight: 400;
+      line-height: 1.04;
+      letter-spacing: -0.8px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+      word-break: keep-all;
+    }
+    .poster-sub {
+      position: absolute;
+      left: 16px;
+      top: 18px;
+      z-index: 1;
+      color: rgba(255,255,255,0.78);
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 1.3px;
+    }
+    .title {
+      width: 96%;
+      margin: 10px auto 0;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .genres {
+      width: 96%;
+      margin: 3px auto 0;
+      color: #6b7280;
+      font-size: 13px;
+      font-weight: 400;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .p1 { background: radial-gradient(circle at 60% 18%, #f5d0d3 0 16%, transparent 17%), linear-gradient(145deg, #1d2435 0%, #624553 46%, #d7aaa2 100%); }
+    .p1::before { background: linear-gradient(90deg, rgba(255,255,255,0.14) 0 1px, transparent 1px 36px), radial-gradient(circle at 36% 36%, rgba(255,255,255,0.22), transparent 20%); }
+    .p2 { background: radial-gradient(circle at 40% 18%, #f9c6a5 0 14%, transparent 15%), linear-gradient(150deg, #121827 0%, #2a2030 42%, #86533d 100%); }
+    .p3 { background: radial-gradient(circle at 62% 24%, #d7ecff 0 20%, transparent 21%), linear-gradient(150deg, #f8efe7 0%, #bcd8f4 50%, #fff7d6 100%); }
+    .p4 { background: radial-gradient(circle at 55% 8%, #d8e7ff 0 8%, transparent 9%), linear-gradient(180deg, #0c1322 0%, #20364a 48%, #b38b5a 100%); }
+    .p5 { background: linear-gradient(135deg, #fff1a9 0%, #ffd4e2 45%, #8ed5ff 100%); }
+    .p6 { background: linear-gradient(160deg, #101820 0%, #27384a 44%, #c09a75 100%); }
+    .p7 { background: radial-gradient(circle at 40% 36%, #fff8db 0 16%, transparent 17%), linear-gradient(145deg, #3a261f 0%, #a76848 52%, #f2d3ac 100%); }
+    .p8 { background: linear-gradient(180deg, #c7d2dc 0%, #353f36 58%, #111827 100%); }
+    .p9 { background: linear-gradient(135deg, #331b2c 0%, #753a52 54%, #e0a4a4 100%); }
+    .p10 { background: linear-gradient(150deg, #101827 0%, #314a5e 48%, #e4c8b4 100%); }
+    .p11 { background: linear-gradient(160deg, #eef2ff 0%, #b8c6e6 42%, #745f8d 100%); }
+    .p12 { background: linear-gradient(150deg, #151a24 0%, #44384a 45%, #d99976 100%); }
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: repeat(3, minmax(0, 222px)); }
+    }
+    @media (max-width: 720px) {
+	      .filter-line { grid-template-columns: 1fr; gap: 8px; }
+	      .favorite-dashboard-head { align-items: stretch; flex-direction: column; }
+	      .favorite-dashboard-actions { justify-content: flex-start; }
+	      .favorite-dashboard-select-actions { align-items: flex-start; flex-direction: column; }
+	      .favorite-selected-tools { justify-content: flex-start; }
+	      .favorite-dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; }
+      .pagination { margin-top: 80px; margin-bottom: 56px; gap: 4px; }
+      .content-list-main { padding-bottom: 24px; }
+      .poster-title { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div data-shortflow-nav="content"></div>
+
+  <main class="main content-list-main">
+    <section class="filter-panel">
+      <div class="search-row">
+        <label class="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+          <input id="search" type="search" placeholder="콘텐츠 검색">
+        </label>
+        <div class="divider"></div>
+	        <button class="tool-btn is-active" type="button" id="filterToggle" aria-expanded="true" aria-controls="filters">
+	          필터
+	        </button>
+	      </div>
+      <div class="filter-body" id="filters">
+        <div class="filter-line" data-filter="section">
+          <div class="filter-label">섹션</div>
+          <div class="chips">
+            <button class="chip active" data-value="전체">전체</button>
+            <button class="chip" data-value="숏드라마">숏드라마</button>
+            <button class="chip" data-value="숏애니">숏애니</button>
+            <button class="chip" data-value="AI">AI</button>
+          </div>
+        </div>
+        <div class="filter-line" data-filter="releaseType">
+          <div class="filter-label">릴리즈 유형</div>
+          <div class="chips">
+            <button class="chip active" data-value="전체">전체</button>
+            <button class="chip" data-value="신작(미공개)">신작(미공개)</button>
+            <button class="chip" data-value="기공개작">기공개작</button>
+          </div>
+        </div>
+        <div class="filter-line" data-filter="productionStage">
+          <div class="filter-label">제작단계</div>
+          <div class="chips">
+            <button class="chip active" data-value="전체">전체</button>
+            <button class="chip" data-value="기획중">기획중</button>
+            <button class="chip" data-value="제작중">제작중</button>
+            <button class="chip" data-value="심의중">심의중</button>
+            <button class="chip" data-value="제작완료">제작완료</button>
+          </div>
+        </div>
+        <div class="filter-line" data-filter="genre">
+          <div class="filter-label">장르</div>
+          <div class="chips">
+            <button class="chip active" data-value="전체">전체</button>
+            <button class="chip" data-value="로맨스">로맨스</button>
+            <button class="chip" data-value="치정">치정</button>
+            <button class="chip" data-value="복수">복수</button>
+            <button class="chip" data-value="청춘">청춘</button>
+            <button class="chip" data-value="가족">가족</button>
+            <button class="chip" data-value="사극">사극</button>
+            <button class="chip" data-value="코미디">코미디</button>
+            <button class="chip" data-value="학원물">학원물</button>
+            <button class="chip" data-value="액션">액션</button>
+            <button class="chip" data-value="시간 여행">시간 여행</button>
+            <button class="chip" data-value="SF">SF</button>
+            <button class="chip" data-value="동성애">동성애</button>
+            <button class="chip" data-value="스릴러">스릴러</button>
+            <button class="chip" data-value="공포">공포</button>
+            <button class="chip" data-value="여성향">여성향</button>
+            <button class="chip" data-value="남성향">남성향</button>
+            <button class="chip" data-value="판타지">판타지</button>
+            <button class="chip" data-value="순정">순정</button>
+            <button class="chip" data-value="멜로">멜로</button>
+            <button class="chip" data-value="미스터리">미스터리</button>
+          </div>
+        </div>
+        <div class="filter-line" data-filter="year">
+          <div class="filter-label">연도</div>
+          <div class="chips">
+            <button class="chip active" data-value="전체">전체</button>
+            <button class="chip" data-value="2026">2026</button>
+            <button class="chip" data-value="2025">2025</button>
+            <button class="chip" data-value="2024">2024</button>
+            <button class="chip" data-value="2023">2023</button>
+            <button class="chip" data-value="2022">2022</button>
+          </div>
+        </div>
+        <div class="filter-line" data-filter="language">
+          <div class="filter-label">언어</div>
+          <div class="chips">
+            <button class="chip active" data-value="전체">전체</button>
+            <button class="chip" data-value="한국어">한국어</button>
+            <button class="chip" data-value="영어">영어</button>
+            <button class="chip" data-value="중국어">중국어</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="list-meta">
+      <div class="count" id="count">총 16개</div>
+      <div class="sort">
+        <button class="active" type="button" data-sort="popular">등록순</button>
+        <button type="button" data-sort="latest">최신순</button>
+      </div>
+    </div>
+
+		    <section class="grid" id="grid" aria-label="콘텐츠 목록"></section>
+		    <nav class="pagination" id="pagination" aria-label="콘텐츠 페이지"></nav>
+		  </main>
+
+	  <section class="dashboard-copy" id="platformDashboardCopy" aria-label="플랫폼 대시보드 기능">
+	    <div id="dashboardCopyTopNav"></div>
+	    <div id="dashboardCopySubNav"></div>
+	    <div class="main dashboard-copy-main">
+	      <div id="dashboardCopyPanel"></div>
+	    </div>
+	  </section>
+
+	  <script>
+    const contents = [
+      { title: '대표님이 내 전남친입니다', genres: ['로맨스', '멜로'], year: '2026', language: '한국어', type: '숏드라마', favorite: true, isNew: true, poster: 'p1', image: 'images/대표님이내전남친입니다.png', href: 'content-detail.html', posterTitle: '계약 연애는 처음이라서요' },
+      { title: '재벌집 막내 비서', genres: ['로맨스', '여성향'], year: '2026', language: '한국어', type: '숏드라마', favorite: true, poster: 'p2', image: 'images/재벌집막내비서.png', href: 'content-detail.html', posterTitle: '재벌 막내아들이 집착한다' },
+      { title: '죽었다가 회귀한 톱스타', genres: ['시간 여행', '액션', '판타지'], year: '2025', language: '한국어', type: '숏드라마', favorite: true, poster: 'p3', image: 'images/죽었다가회귀한.png', href: 'content-detail.html', posterTitle: '남편이 돌아왔다' },
+      { title: '우리 집에 킬러가 산다', genres: ['스릴러', '로맨스', '코미디'], year: '2025', language: '영어', type: '숏드라마', favorite: true, poster: 'p4', image: 'images/우리집에킬러가.png', href: 'content-detail.html', posterTitle: '귀신님 잘 부탁드립니다' },
+      { title: '오늘부터 악녀 대행합니다', genres: ['복수', '코미디'], year: '2024', language: '한국어', type: '숏드라마', favorite: true, poster: 'p5', image: 'images/오늘부터악녀대행.png', href: 'content-detail.html', posterTitle: '오늘부터 악녀 대행합니다' },
+      { title: '남편이 AI입니다', genres: ['로맨스', 'SF'], year: '2024', language: '한국어', type: 'AI', favorite: true, poster: 'p6', image: 'images/남편이AI.png', href: 'content-detail.html', posterTitle: '남편이 AI입니다' },
+      { title: '퇴사했더니 황제가 됐다', genres: ['판타지', '시간 여행'], year: '2023', language: '한국어', type: '숏애니', favorite: true, poster: 'p7', image: 'images/퇴사했더니황제.png', href: 'content-detail.html', posterTitle: '퇴사했더니 황제가 됐다' },
+      { title: '살인범과 룸메이트가 되었다', genres: ['스릴러', '미스터리'], year: '2026', language: '한국어', type: '숏드라마', favorite: true, poster: 'p8', image: 'images/살인범과룸메이트.png', href: 'content-detail.html', posterTitle: '살인범과 룸메이트가 되었다' },
+      { title: '내 남편의 비밀 계정', genres: ['미스터리', '로맨스', '치정'], year: '2025', language: '한국어', type: '숏드라마', favorite: true, poster: 'p9', image: 'images/내남편의비밀계정.png', href: 'content-detail.html', posterTitle: '비밀 계정' },
+      { title: '첫사랑은 계약 종료', genres: ['로맨스', '멜로'], year: '2023', language: '한국어', type: '숏드라마', favorite: true, poster: 'p10', image: 'images/첫사랑은계약종료.png', href: 'content-detail.html', posterTitle: '계약 종료' },
+      { title: '달빛 아래 편의점', genres: ['청춘', '로맨스'], year: '2022', language: '한국어', type: '숏애니', favorite: true, poster: 'p11', image: 'images/달빛아래편의점.png', href: 'content-detail.html', posterTitle: '달빛 편의점' },
+      { title: '그녀의 두 번째 엔딩', genres: ['시간 여행', '로맨스'], year: '2026', language: '중국어', type: '숏드라마', favorite: true, poster: 'p12', image: 'images/그녀의두번째엔딩.png', href: 'content-detail.html', posterTitle: '두 번째 엔딩' },
+      { title: '재벌가 입주 과외', genres: ['로맨스', '가족'], year: '2024', language: '한국어', type: '숏애니', favorite: true, poster: 'p1', image: 'images/재벌가입주과외.png', href: 'content-detail.html', posterTitle: '입주 과외' },
+      { title: '나의 위험한 파트너', genres: ['스릴러', '로맨스', '액션'], year: '2025', language: '영어', type: '숏드라마', favorite: true, poster: 'p2', image: 'images/나의위험한파트너.png', href: 'content-detail.html', posterTitle: '위험한 파트너' },
+      { title: '황후의 복수 노트', genres: ['사극', '복수', '로맨스'], year: '2026', language: '중국어', type: '숏애니', favorite: true, poster: 'p7', image: 'images/황후의복수노트.png', href: 'content-detail.html', posterTitle: '복수 노트' },
+      { title: '우주 택배 기사님', genres: ['SF', '가족'], year: '2022', language: '한국어', type: '숏애니', favorite: true, poster: 'p11', image: 'images/우주택배기사님.png', href: 'content-detail.html', posterTitle: '우주 택배' },
+      { title: '사라진 약혼자의 밤', genres: ['미스터리', '멜로'], year: '2026', language: '한국어', type: '숏드라마', favorite: true, poster: 'p4', image: 'images/우리집에킬러가.png', href: 'content-detail.html', posterTitle: '사라진 밤' }
+    ];
+
+			    const state = {
+	      section: [],
+	      releaseType: [],
+	      productionStage: [],
+	      genre: [],
+	      year: [],
+	      language: [],
+			      favoriteOnly: false,
+	      sort: 'popular',
+	      query: '',
+	      page: 1,
+	      pageSize: 15
+    };
+
+    const grid = document.getElementById('grid');
+    const count = document.getElementById('count');
+    const search = document.getElementById('search');
+	    const pagination = document.getElementById('pagination');
+	    const filterPanel = document.querySelector('.filter-panel');
+	    const filterToggle = document.getElementById('filterToggle');
+	    const dashboardCopyTopNav = document.getElementById('dashboardCopyTopNav');
+	    const dashboardCopySubNav = document.getElementById('dashboardCopySubNav');
+	    const dashboardCopyPanel = document.getElementById('dashboardCopyPanel');
+	    const productionStages = ['기획중', '제작중', '심의중', '제작완료'];
+	    let favoriteSelectionMode = false;
+	    let favoriteExpanded = false;
+	    const favoriteInitialSize = 15;
+	    const selectedFavoriteTitles = new Set();
+    contents.forEach((item, index) => {
+      item.section = item.type;
+      item.releaseType = index % 4 === 0 ? '신작(미공개)' : '기공개작';
+      item.productionStage = productionStages[index % productionStages.length];
+    });
+
+    function iconHeart(filled) {
+      return `<svg width="19" height="19" viewBox="0 0 24 24" fill="${filled ? '#ff3f4d' : 'none'}" stroke="${filled ? '#ff3f4d' : '#fff'}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>`;
+    }
+
+    function iconCart() {
+      return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>`;
+    }
+
+    function render() {
+      let items = contents.filter((item) => {
+        if (state.section.length && !state.section.includes(item.section)) return false;
+        if (state.releaseType.length && !state.releaseType.includes(item.releaseType)) return false;
+        if (state.productionStage.length && !state.productionStage.includes(item.productionStage)) return false;
+        if (state.genre.length && !state.genre.some((genre) => item.genres.includes(genre))) return false;
+        if (state.year.length && !state.year.includes(item.year)) return false;
+        if (state.language.length && !state.language.includes(item.language)) return false;
+        if (state.favoriteOnly && !item.favorite) return false;
+        if (state.query && !item.title.toLowerCase().includes(state.query.toLowerCase())) return false;
+        return true;
+      });
+      if (state.sort === 'latest') items = items.slice().sort((a, b) => Number(b.year) - Number(a.year));
+      const totalPages = Math.max(1, Math.ceil(items.length / state.pageSize));
+      state.page = Math.min(state.page, totalPages);
+      const start = (state.page - 1) * state.pageSize;
+      const pageItems = items.slice(start, start + state.pageSize);
+      count.textContent = `총 ${items.length}개`;
+      grid.innerHTML = pageItems.map((item, index) => `
+        <article class="card">
+          <div class="poster ${item.poster} ${item.image ? 'has-image' : ''}">
+            <a href="${item.href}">
+              ${item.image
+                ? `<img class="poster-image" src="${item.image}" alt="${item.title} 포스터">`
+                : `<div class="poster-sub">SHORTFLOW ORIGINAL</div>
+                   <div class="poster-title">${item.posterTitle}</div>`}
+            </a>
+            ${item.isNew ? '<span class="new-badge">NEW</span>' : ''}
+            <div class="poster-actions">
+              <button class="poster-action fav ${item.favorite ? 'active' : ''}" type="button" data-title="${item.title}" aria-label="${item.title} 즐겨찾기">
+                ${iconHeart(item.favorite)}
+              </button>
+              <button class="poster-action cart-add ${item.inCart ? 'active' : ''}" type="button" data-title="${item.title}" aria-label="${item.title} 장바구니 ${item.inCart ? '빼기' : '담기'}" aria-pressed="${Boolean(item.inCart)}">
+                ${iconCart()}
+              </button>
+            </div>
+          </div>
+          <a href="${item.href}">
+            <div class="title">${item.title}</div>
+            <div class="genres">${item.genres.join(', ')}</div>
+          </a>
+        </article>
+      `).join('');
+      renderPagination(totalPages);
+    }
+
+    function renderPagination(totalPages) {
+      if (totalPages <= 1) {
+        pagination.innerHTML = '';
+        return;
+      }
+      const pages = Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => `
+        <button class="page-btn ${page === state.page ? 'active' : ''}" type="button" data-page="${page}" aria-label="${page}페이지" ${page === state.page ? 'aria-current="page"' : ''}>${page}</button>
+      `).join('');
+      pagination.innerHTML = `
+        <button class="page-btn" type="button" data-page="${state.page - 1}" aria-label="이전 페이지" ${state.page === 1 ? 'disabled' : ''}>‹</button>
+        ${pages}
+        <button class="page-btn" type="button" data-page="${state.page + 1}" aria-label="다음 페이지" ${state.page === totalPages ? 'disabled' : ''}>›</button>
+      `;
+    }
+
+	    function resetPage() {
+	      state.page = 1;
+	    }
+
+	    const dashboardState = window.ShortflowCommon.appState;
+	    dashboardState.tab = 'workflow';
+
+	    function renderDashboardCopy() {
+	      const activeTab = dashboardState.tab;
+	      dashboardCopyTopNav.innerHTML = window.ShortflowNav.renderTopNav('platform-dashboard');
+	      dashboardCopySubNav.innerHTML = window.ShortflowNav.renderDashboardSubNav(activeTab, 'platform');
+
+	      if (activeTab === 'messages') {
+	        dashboardCopyPanel.innerHTML = window.ShortflowMessages.renderMessagesView(dashboardState);
+	      } else if (activeTab === 'contracts') {
+	        dashboardCopyPanel.innerHTML = window.ShortflowContracts.renderContractsView(dashboardState);
+	      } else {
+	        dashboardCopyPanel.innerHTML = window.ShortflowWorkflow.renderWorkflowView(dashboardState, { dashboardKind: 'platform' });
+	      }
+	      applyVariantNavLinks();
+	      applyVariantAccountName();
+	    }
+
+	    function renderFavoriteDashboardView() {
+	      syncFavoriteSelection();
+	      const favoriteItems = contents.filter((item) => item.favorite);
+	      const visibleFavoriteItems = favoriteExpanded
+	        ? favoriteItems
+	        : favoriteItems.slice(0, favoriteInitialSize);
+	      const selectedCount = selectedFavoriteTitles.size;
+	      return `
+			        <section class="favorite-dashboard ${favoriteSelectionMode ? 'is-selecting' : ''}">
+			          <div class="favorite-dashboard-head">
+			            <div class="favorite-dashboard-actions">
+				              <button class="favorite-select-toggle" type="button" data-favorite-select-toggle>${favoriteSelectionMode ? '선택 닫기' : '선택'}</button>
+			            </div>
+			          </div>
+			          <div class="favorite-dashboard-select-actions" aria-hidden="${!favoriteSelectionMode}">
+			            <span class="favorite-selected-tools">
+			              <button class="favorite-dashboard-secondary" type="button" data-favorite-select-all ${!favoriteSelectionMode ? 'tabindex="-1"' : ''}>${favoriteItems.length === selectedCount ? '전체해제' : '전체선택'}</button>
+			              <button class="favorite-dashboard-danger" type="button" data-favorite-delete ${selectedCount === 0 ? 'disabled' : ''} ${!favoriteSelectionMode ? 'tabindex="-1"' : ''}>삭제</button>
+			              <button class="favorite-dashboard-action" type="button" data-favorite-download ${selectedCount === 0 ? 'disabled' : ''} ${!favoriteSelectionMode ? 'tabindex="-1"' : ''}>엑셀 다운로드</button>
+			            </span>
+			          </div>
+		          <div class="favorite-dashboard-grid">
+	            ${visibleFavoriteItems.map((item) => `
+	              <button class="favorite-dashboard-card ${selectedFavoriteTitles.has(item.title) ? 'is-selected' : ''}" type="button" data-favorite-title="${item.title}" aria-pressed="${selectedFavoriteTitles.has(item.title)}">
+	                <span class="favorite-dashboard-poster">
+	                  ${item.image ? `<img src="${item.image}" alt="${item.title} 포스터">` : ''}
+	                  <span class="favorite-dashboard-check" aria-hidden="true">
+	                    <svg viewBox="0 0 24 24" focusable="false">
+	                      <path d="M6.5 12.2l3.5 3.5 7.5-7.6"></path>
+	                    </svg>
+	                  </span>
+	                </span>
+	                <span class="favorite-dashboard-copy">
+	                  <strong>${item.title}</strong>
+	                </span>
+	              </button>
+	            `).join('')}
+	          </div>
+	          ${!favoriteExpanded && favoriteItems.length > favoriteInitialSize ? `
+	            <div class="favorite-dashboard-more-wrap">
+	              <button class="favorite-more-btn" type="button" data-favorite-more aria-label="즐겨찾기 더보기">+</button>
+	            </div>
+	          ` : ''}
+	        </section>
+	      `;
+	    }
+
+	    function syncFavoriteSelection() {
+	      const favoriteTitles = new Set(contents.filter((item) => item.favorite).map((item) => item.title));
+	      selectedFavoriteTitles.forEach((title) => {
+	        if (!favoriteTitles.has(title)) selectedFavoriteTitles.delete(title);
+	      });
+	    }
+
+	    function formatCsvValue(value) {
+	      return `"${String(value ?? '').replace(/"/g, '""')}"`;
+	    }
+
+	    function downloadSelectedFavorites() {
+	      const selectedItems = contents.filter((item) => selectedFavoriteTitles.has(item.title));
+	      if (!selectedItems.length) return;
+	      const headers = ['콘텐츠명', '섹션', '장르', '연도', '언어', '제작단계', '릴리즈 유형'];
+	      const rows = selectedItems.map((item) => [
+	        item.title,
+	        item.section,
+	        item.genres.join(', '),
+	        item.year,
+	        item.language,
+	        item.productionStage,
+	        item.releaseType
+	      ]);
+	      const csv = [headers, ...rows]
+	        .map((row) => row.map(formatCsvValue).join(','))
+	        .join('\n');
+	      const blob = new Blob([`\ufeff${csv}`], { type: 'text/csv;charset=utf-8;' });
+	      const url = URL.createObjectURL(blob);
+	      const link = document.createElement('a');
+	      link.href = url;
+	      link.download = 'favorite-content-basic-info.csv';
+	      document.body.appendChild(link);
+	      link.click();
+	      link.remove();
+	      URL.revokeObjectURL(url);
+	    }
+
+    document.getElementById('filters').addEventListener('click', (event) => {
+      const chip = event.target.closest('.chip');
+      if (!chip) return;
+      const group = chip.closest('.filter-line');
+      const filterKey = group.dataset.filter;
+      const value = chip.dataset.value;
+
+      if (value === '전체') {
+        state[filterKey] = [];
+      } else {
+        const selected = state[filterKey];
+        state[filterKey] = selected.includes(value)
+          ? selected.filter((item) => item !== value)
+          : [...selected, value];
+      }
+
+      const activeValues = state[filterKey];
+      group.querySelectorAll('.chip').forEach((item) => {
+        const active = item.dataset.value === '전체'
+          ? activeValues.length === 0
+          : activeValues.includes(item.dataset.value);
+        item.classList.toggle('active', active);
+        item.setAttribute('aria-pressed', String(active));
+      });
+      resetPage();
+      render();
+    });
+
+    filterToggle.addEventListener('click', () => {
+      const isCollapsed = filterPanel.classList.toggle('is-collapsed');
+      filterToggle.setAttribute('aria-expanded', String(!isCollapsed));
+      filterToggle.classList.toggle('is-active', !isCollapsed);
+    });
+
+    document.querySelector('.sort').addEventListener('click', (event) => {
+      const btn = event.target.closest('button[data-sort]');
+      if (!btn) return;
+      state.sort = btn.dataset.sort;
+      document.querySelectorAll('.sort button').forEach((item) => item.classList.toggle('active', item === btn));
+      resetPage();
+      render();
+    });
+
+	    search.addEventListener('input', (event) => {
+	      state.query = event.target.value.trim();
+	      resetPage();
+	      render();
+    });
+
+	    pagination.addEventListener('click', (event) => {
+	      const btn = event.target.closest('button[data-page]');
+	      if (!btn || btn.disabled) return;
+	      state.page = Number(btn.dataset.page);
+	      render();
+	      document.querySelector('.list-meta').scrollIntoView({ behavior: 'smooth', block: 'start' });
+	    });
+
+	    dashboardCopySubNav.addEventListener('click', (event) => {
+	      const tabLink = event.target.closest('[data-tab]');
+	      if (!tabLink) return;
+	      event.preventDefault();
+	      dashboardState.tab = tabLink.dataset.tab;
+	      renderDashboardCopy();
+	    });
+
+	    dashboardCopyPanel.addEventListener('click', (event) => {
+	      const favoriteToggleButton = event.target.closest('[data-favorite-select-toggle]');
+	      if (favoriteToggleButton) {
+	        favoriteSelectionMode = !favoriteSelectionMode;
+	        if (!favoriteSelectionMode) selectedFavoriteTitles.clear();
+	        renderDashboardCopy();
+	        return;
+	      }
+
+	      const favoriteSelectAllButton = event.target.closest('[data-favorite-select-all]');
+	      if (favoriteSelectAllButton) {
+	        const favoriteItems = contents.filter((item) => item.favorite);
+	        if (selectedFavoriteTitles.size === favoriteItems.length) {
+	          selectedFavoriteTitles.clear();
+	        } else {
+	          favoriteItems.forEach((item) => selectedFavoriteTitles.add(item.title));
+	        }
+	        renderDashboardCopy();
+	        return;
+	      }
+
+	      const favoriteMoreButton = event.target.closest('[data-favorite-more]');
+	      if (favoriteMoreButton) {
+	        favoriteExpanded = true;
+	        renderDashboardCopy();
+	        return;
+	      }
+
+	      const favoriteDeleteButton = event.target.closest('[data-favorite-delete]');
+	      if (favoriteDeleteButton && !favoriteDeleteButton.disabled) {
+	        contents.forEach((item) => {
+	          if (selectedFavoriteTitles.has(item.title)) item.favorite = false;
+	        });
+	        selectedFavoriteTitles.clear();
+	        render();
+	        renderDashboardCopy();
+	        return;
+	      }
+
+	      const favoriteDownloadButton = event.target.closest('[data-favorite-download]');
+	      if (favoriteDownloadButton && !favoriteDownloadButton.disabled) {
+	        downloadSelectedFavorites();
+	        return;
+	      }
+
+	      const favoriteCard = event.target.closest('[data-favorite-title]');
+	      if (favoriteCard) {
+	        const title = favoriteCard.dataset.favoriteTitle;
+	        const item = contents.find((content) => content.title === title);
+	        if (!item) return;
+	        if (!favoriteSelectionMode) {
+	          window.location.href = item.href;
+	          return;
+	        }
+	        if (selectedFavoriteTitles.has(title)) {
+	          selectedFavoriteTitles.delete(title);
+	        } else {
+	          selectedFavoriteTitles.add(title);
+	        }
+	        renderDashboardCopy();
+	        return;
+	      }
+
+	      const workflowButton = event.target.closest('[data-workflow-id]');
+	      if (workflowButton) {
+	        dashboardState.selectedWorkflowId = workflowButton.dataset.workflowId;
+	        renderDashboardCopy();
+	        return;
+	      }
+
+	      const messageButton = event.target.closest('[data-message-id]');
+	      if (messageButton) {
+	        dashboardState.selectedMessageId = messageButton.dataset.messageId;
+	        renderDashboardCopy();
+	        return;
+	      }
+
+	      const contractFilterButton = event.target.closest('[data-contract-filter]');
+	      if (contractFilterButton) {
+	        dashboardState.contractFilter = contractFilterButton.dataset.contractFilter;
+	        dashboardState.contractPage = 1;
+	        renderDashboardCopy();
+	        return;
+	      }
+
+	      const contractPageButton = event.target.closest('[data-contract-page]');
+	      if (contractPageButton && !contractPageButton.disabled) {
+	        dashboardState.contractPage = Number(contractPageButton.dataset.contractPage) || 1;
+	        renderDashboardCopy();
+	      }
+	    });
+
+	    dashboardCopyPanel.addEventListener('input', (event) => {
+	      if (event.target.matches('.content-search')) {
+	        dashboardState.workflowSearch = event.target.value;
+	        renderDashboardCopy();
+	        const nextInput = dashboardCopyPanel.querySelector('.content-search');
+	        if (nextInput) {
+	          nextInput.focus();
+	          nextInput.setSelectionRange(nextInput.value.length, nextInput.value.length);
+	        }
+	      }
+
+	      if (event.target.matches('.contract-search')) {
+	        dashboardState.contractSearch = event.target.value;
+	        dashboardState.contractPage = 1;
+	        renderDashboardCopy();
+	        const nextInput = dashboardCopyPanel.querySelector('.contract-search');
+	        if (nextInput) {
+	          nextInput.focus();
+	          nextInput.setSelectionRange(nextInput.value.length, nextInput.value.length);
+	        }
+	      }
+	    });
+
+	    dashboardCopyPanel.addEventListener('change', (event) => {
+	      if (event.target.matches('.message-type-filter')) {
+	        dashboardState.messageTypeFilter = event.target.value;
+	        const messageItems = window.ShortflowData.messageItems;
+	        const firstMatch = messageItems.find((message) => (
+	          dashboardState.messageTypeFilter === 'all'
+	          || (message.inquiryType || '컨시어지판매') === dashboardState.messageTypeFilter
+	        ));
+	        if (firstMatch) dashboardState.selectedMessageId = firstMatch.id;
+	        renderDashboardCopy();
+	      }
+	    });
+
+    grid.addEventListener('click', (event) => {
+      const btn = event.target.closest('.poster-action');
+      if (!btn) return;
+      event.preventDefault();
+	      const item = contents.find((content) => content.title === btn.dataset.title);
+	      if (!item) return;
+	      if (btn.classList.contains('fav')) item.favorite = !item.favorite;
+	      if (btn.classList.contains('cart-add')) item.inCart = !item.inCart;
+	      render();
+	      if (dashboardState.tab === 'favorites') renderDashboardCopy();
+	    });
+
+	    render();
+	    renderDashboardCopy();
+
+	    function accountFavoriteIcon() {
+	      return `<svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>`;
+	    }
+
+	    function applyVariantNavLinks() {
+	      document.querySelectorAll('.primary-nav a[href="shortflow-dashboard.html"], .primary-nav a[href="#platformDashboardCopy"]').forEach((dashboardLink) => {
+	        dashboardLink.href = '#platformDashboardCopy';
+	        if (dashboardLink.dataset.variantDashboardBound === 'true') return;
+	        dashboardLink.dataset.variantDashboardBound = 'true';
+	        dashboardLink.addEventListener('click', (event) => {
+	          event.preventDefault();
+	          document.getElementById('platformDashboardCopy')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+	        });
+	      });
+
+	      document.querySelectorAll('.primary-nav a[href="content-list.html"]').forEach((contentLink) => {
+	        contentLink.href = 'content-list-b.html';
+	      });
+	    }
+
+	    function applyVariantAccountName() {
+	      document.querySelectorAll('.account-head strong').forEach((node) => {
+	        if (/^Reel(?:io|oo)$/.test(node.textContent.trim())) {
+	          node.textContent = 'star pictures';
+	        }
+	      });
+	      document.querySelectorAll('.account-head').forEach((head) => {
+	        head.href = 'owner-b.html';
+	      });
+	      document.querySelectorAll('.account-menu-item[href="cart.html"], .account-menu-item[href="cart-b.html"]').forEach((cartItem) => {
+	        cartItem.href = 'cart-b.html';
+	        const menu = cartItem.closest('.account-menu');
+	        if (!menu || menu.querySelector('.account-favorite-link')) return;
+	        cartItem.insertAdjacentHTML('afterend', `
+	          <a class="account-menu-item account-favorite-link" href="content-favorites-b.html" role="menuitem">
+	            ${accountFavoriteIcon()}
+	            <span>즐겨찾기</span>
+	          </a>
+	        `);
+	      });
+	    }
+	    applyVariantNavLinks();
+	    applyVariantAccountName();
+	    document.addEventListener('DOMContentLoaded', applyVariantNavLinks);
+	    document.addEventListener('DOMContentLoaded', applyVariantAccountName);
+
+	  </script>
+  <div class="variant-switcher" aria-label="시안 전환">
+    <a href="content-list-a.html">A안</a>
+    <a class="active" href="content-list-b.html" aria-current="page">B안</a>
+  </div>
+</body>
+</html>

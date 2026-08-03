@@ -81,7 +81,6 @@ const GENRES = [
   { c: 'PURE_ROMANCE',label: '순정' },
   { c: 'MELO',        label: '멜로' },
   { c: 'MYSTERY',     label: '미스터리' },
-  { c: 'OTHER',       label: '기타' },
 ];
 
 // 기선공개 플랫폼 추천 (태그 입력 자동완성용)

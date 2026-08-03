@@ -6,7 +6,7 @@
 <title>콘텐츠 관리 — Shortflow Admin</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
 <link rel="stylesheet" href="admin-common.css?v=logo-left-20260715" />
-<script src="admin-common.js?v=nav-trade-order-20260727"></script>
+<script src="admin-common.js?v=settlement-nav-unified-20260731"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb(242, 242, 242); display: flex; height: 100vh; overflow: hidden; font-size: 13px; color: #1a1a18; }
@@ -3130,8 +3130,7 @@ td { padding: 9px 12px; vertical-align: middle; }
     <a class="ni" href="settlement-admin.html"><i class="ti ti-receipt"></i> 정산</a>
     <div class="sub">
       <a class="ni" href="settlement-admin.html#contracts">계약관리</a>
-      <a class="ni" href="settlement-admin.html#settlement">정산처리</a>
-      <a class="ni" href="settlement-admin.html#completed">정산완료</a>
+      <a class="ni" href="settlement-admin.html#settlement">정산 진행 관리</a>
     </div>
     <a class="ni" href="mail-admin.html"><i class="ti ti-mail"></i> 메일 발송</a>
     <a class="ni" href="audit-log.html"><i class="ti ti-shield-check"></i> 관리 이력</a>
@@ -3164,7 +3163,7 @@ td { padding: 9px 12px; vertical-align: middle; }
     <div class="split content-split" id="pane-contents">
       <div class="lp content-list-pane">
         <div class="toolbar content-list-toolbar">
-          <button class="list-icon-btn" type="button" aria-label="콘텐츠 생성" onclick="showNewContent()"><i class="ti ti-plus"></i></button>
+          <button class="list-icon-btn" id="content-create-toggle" type="button" aria-label="콘텐츠 생성" aria-pressed="false" onclick="showNewContent()"><i class="ti ti-plus"></i></button>
           <button class="list-icon-btn" id="content-filter-toggle" type="button" aria-label="필터" aria-expanded="false" onclick="toggleContentFilterPanel()"><i class="ti ti-filter"></i></button>
           <div class="content-list-search">
             <i class="ti ti-search"></i>
@@ -3312,7 +3311,6 @@ td { padding: 9px 12px; vertical-align: middle; }
                             <button type="button" class="genre-chip" data-genre="순정" onclick="toggleGenreChip(this)">순정</button>
                             <button type="button" class="genre-chip" data-genre="멜로" onclick="toggleGenreChip(this)">멜로</button>
                             <button type="button" class="genre-chip" data-genre="미스터리" onclick="toggleGenreChip(this)">미스터리</button>
-                            <button type="button" class="genre-chip" data-genre="기타" onclick="toggleGenreChip(this)">기타</button>
                           </div>
                         </td>
                       </tr>
@@ -3536,7 +3534,6 @@ td { padding: 9px 12px; vertical-align: middle; }
                             <button type="button" class="genre-chip" data-genre="스릴러" onclick="toggleGenreChip(this)">스릴러</button>
                             <button type="button" class="genre-chip" data-genre="판타지" onclick="toggleGenreChip(this)">판타지</button>
                             <button type="button" class="genre-chip" data-genre="미스터리" onclick="toggleGenreChip(this)">미스터리</button>
-                            <button type="button" class="genre-chip" data-genre="기타" onclick="toggleGenreChip(this)">기타</button>
                           </div>
                         </td>
                       </tr>
@@ -3668,7 +3665,6 @@ td { padding: 9px 12px; vertical-align: middle; }
                       <button type="button" class="genre-chip" data-genre="순정" onclick="toggleGenreChip(this)">순정</button>
                       <button type="button" class="genre-chip" data-genre="멜로" onclick="toggleGenreChip(this)">멜로</button>
                       <button type="button" class="genre-chip" data-genre="미스터리" onclick="toggleGenreChip(this)">미스터리</button>
-                      <button type="button" class="genre-chip" data-genre="기타" onclick="toggleGenreChip(this)">기타</button>
                     </div>
                   </div>
                 </div>
@@ -3792,7 +3788,6 @@ td { padding: 9px 12px; vertical-align: middle; }
                         <button type="button" class="genre-chip" data-genre="순정" onclick="toggleGenreChip(this)">순정</button>
                         <button type="button" class="genre-chip" data-genre="멜로" onclick="toggleGenreChip(this)">멜로</button>
                         <button type="button" class="genre-chip" data-genre="미스터리" onclick="toggleGenreChip(this)">미스터리</button>
-                        <button type="button" class="genre-chip" data-genre="기타" onclick="toggleGenreChip(this)">기타</button>
                       </div>
                     </div>
                   </div>
@@ -5472,7 +5467,7 @@ function syncContentListToolbarForTab() {
   const filterToggle = document.getElementById('content-filter-toggle');
   const filterPanel = document.getElementById('content-filter-panel');
   const searchInput = document.querySelector('.content-list-search input');
-  const createButton = document.querySelector('.content-list-toolbar .list-icon-btn[onclick="showNewContent()"]');
+  const createButton = document.getElementById('content-create-toggle');
 
   if (filterToggle) filterToggle.style.display = '';
   if (searchInput) {
@@ -5480,6 +5475,16 @@ function syncContentListToolbarForTab() {
     searchInput.setAttribute('aria-label', isPlans ? '기획안명 검색' : '콘텐츠명 검색');
   }
   if (createButton) createButton.setAttribute('aria-label', isPlans ? '기획안 생성' : '콘텐츠 생성');
+}
+
+function updateContentCreateToggle() {
+  const toggle = document.getElementById('content-create-toggle');
+  if (!toggle) return;
+  const contentOpen = document.getElementById('content-new')?.style.display === 'flex';
+  const planOpen = document.getElementById('plan-new')?.style.display === 'flex';
+  const isOpen = contentOpen || planOpen;
+  toggle.classList.toggle('open', isOpen);
+  toggle.setAttribute('aria-pressed', String(isOpen));
 }
 
 function syncContentListTableHeader() {
@@ -5831,6 +5836,7 @@ function selectPlan(id) {
   document.getElementById('dp-empty').style.display = 'none';
   document.getElementById('content-new').style.display = 'none';
   document.getElementById('plan-new').style.display = 'none';
+  updateContentCreateToggle();
   document.getElementById('plan-detail').style.display = 'none';
   document.getElementById('dp-detail').style.display = 'none';
 
@@ -6169,6 +6175,7 @@ function showNewContent() {
   document.getElementById('plan-detail').style.display = 'none';
   resetNewContentForm();
   document.getElementById('content-new').style.display = 'flex';
+  updateContentCreateToggle();
   document.getElementById('new-content-title').focus();
 }
 
@@ -6178,6 +6185,7 @@ function closeNewContent() {
   document.getElementById('plan-new').style.display = 'none';
   document.getElementById('plan-detail').style.display = 'none';
   document.getElementById('dp-empty').style.display = '';
+  updateContentCreateToggle();
 }
 
 function showPlanCreate() {
@@ -6190,6 +6198,7 @@ function showPlanCreate() {
   document.getElementById('content-new').style.display = 'none';
   document.getElementById('plan-detail').style.display = 'none';
   document.getElementById('plan-new').style.display = 'flex';
+  updateContentCreateToggle();
   resetPlanCompanyPicker();
   document.getElementById('plan-title')?.focus();
 }
@@ -6199,6 +6208,7 @@ function closePlanCreate() {
   document.getElementById('plan-new').style.display = 'none';
   document.getElementById('plan-detail').style.display = 'none';
   document.getElementById('dp-empty').style.display = '';
+  updateContentCreateToggle();
 }
 
 function togglePlanDropdown(dropdownId) {
@@ -6883,6 +6893,7 @@ function selectContent(id) {
 
   document.getElementById('content-new').style.display = 'none';
   document.getElementById('plan-new').style.display = 'none';
+  updateContentCreateToggle();
   document.getElementById('d-poster').innerHTML = posterHtml(c, 'lg');
   document.getElementById('d-title').textContent = c.title;
   document.getElementById('d-sub').textContent = c.company;
@@ -6953,6 +6964,7 @@ function closeDetail() {
   document.getElementById('plan-new').style.display = 'none';
   document.getElementById('plan-detail').style.display = 'none';
   document.getElementById('dp-detail').style.display = 'none';
+  updateContentCreateToggle();
 }
 
 function deleteContent() {
@@ -7842,6 +7854,7 @@ function switchMainTab(tab) {
     document.getElementById('dp-detail').style.display = 'none';
     document.getElementById('dp-empty').style.display = '';
   }
+  updateContentCreateToggle();
   if (isListPane) renderTable();
   if (activeTab === 'revisions') renderRevisionTable();
 }
@@ -8117,6 +8130,7 @@ document.getElementById('plan-detail')?.addEventListener('change', event => {
 
 renderTable();
 renderRevisionTable();
+updateContentCreateToggle();
 initMediaSubtitleSorting();
 initMediaVideoSorting();
 initRelatedImageSorting();

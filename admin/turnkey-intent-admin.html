@@ -6,7 +6,7 @@
 <title>문의함 — Shortflow Admin</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
 <link rel="stylesheet" href="admin-common.css?v=logo-left-20260715" />
-<script src="admin-common.js?v=nav-trade-order-20260727"></script>
+<script src="admin-common.js?v=settlement-nav-unified-20260731"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb(242, 242, 242); display: flex; height: 100vh; overflow: hidden; font-size: 13px; color: #1a1a18; }
@@ -61,16 +61,23 @@ tbody tr:hover { background: rgb(242, 242, 242); }
 tbody tr.sel { background: rgb(242, 242, 242); }
 td { padding: 10px 12px; vertical-align: middle; }
 .col-no { width: 46px; }
-.col-type { width: 150px; }
-.col-company { width: auto; }
-.col-status { width: 112px; }
-.col-comments { width: 88px; }
-.col-date { width: 128px; }
+.col-type { width: 90px; }
+.col-company { width: 146px; }
+.col-status { width: 136px; }
+.col-comments { width: 112px; }
+.col-date { width: 154px; }
 .th-company, .td-company { text-align: left; }
 .th-type, .td-type,
 .th-status, .td-status,
 .th-count, .tcount,
 .th-date, .tmeta { text-align: center; }
+.intent-list-table .th-type,
+.intent-list-table .td-type,
+.intent-list-table .th-company,
+.intent-list-table .td-company {
+  padding-left: 8px;
+  padding-right: 8px;
+}
 .intent-no {
   color: #9aa0a9;
   font-size: 12px;
@@ -521,13 +528,13 @@ body { background: #fff !important; }
   box-shadow: none !important;
 }
 .intent-list-table table {
-  min-width: 740px;
+  min-width: 820px;
   table-layout: fixed;
   background: #fff !important;
 }
 .intent-list-table thead th {
-  height: 40px;
-  padding: 0 14px;
+  height: 36px;
+  padding: 0 12px;
   background: #fff !important;
   border-bottom: 1px solid #e5e7eb;
   color: #9aa0a9;
@@ -535,7 +542,7 @@ body { background: #fff !important; }
   font-weight: 400;
 }
 .intent-list-table tbody tr {
-  height: 54px;
+  height: 44px;
   border-bottom: 1px solid #eef0f3;
   background: #fff;
 }
@@ -546,7 +553,7 @@ body { background: #fff !important; }
   background: rgb(242, 242, 242);
 }
 .intent-list-table td {
-  padding: 0 14px;
+  padding: 0 12px;
   color: #14171c;
   font-size: 12px;
   white-space: nowrap;
@@ -580,8 +587,8 @@ body { background: #fff !important; }
   box-shadow: none !important;
 }
 .intent-split.has-detail .intent-list-table thead th {
-  height: 40px !important;
-  padding: 0 14px !important;
+  height: 36px !important;
+  padding: 0 12px !important;
   background: #fff !important;
   border-bottom: 1px solid #e5e7eb !important;
   color: #9aa0a9 !important;
@@ -589,12 +596,12 @@ body { background: #fff !important; }
   font-weight: 400 !important;
 }
 .intent-split.has-detail .intent-list-table tbody tr {
-  height: 54px !important;
+  height: 44px !important;
   border-bottom: 1px solid #eef0f3 !important;
   background: #fff !important;
 }
 .intent-split.has-detail .intent-list-table td {
-  padding: 0 14px !important;
+  padding: 0 12px !important;
   color: #14171c !important;
   font-size: 12px !important;
   white-space: nowrap !important;
@@ -938,8 +945,7 @@ body { background: #fff !important; }
     <a class="ni" href="settlement-admin.html"><i class="ti ti-receipt"></i> 정산</a>
     <div class="sub">
       <a class="ni" href="settlement-admin.html#contracts">계약관리</a>
-      <a class="ni" href="settlement-admin.html#settlement">정산처리</a>
-      <a class="ni" href="settlement-admin.html#completed">정산완료</a>
+      <a class="ni" href="settlement-admin.html#settlement">정산 진행 관리</a>
     </div>
     <a class="ni" href="mail-admin.html"><i class="ti ti-mail"></i> 메일 발송</a>
     <a class="ni" href="audit-log.html"><i class="ti ti-shield-check"></i> 관리 이력</a>

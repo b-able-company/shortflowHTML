@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>마이페이지 | shortflow</title>
+  <link rel="stylesheet" href="dashboard-common.css">
+  <link rel="stylesheet" href="b-account-shell.css">
+  <script src="dashboard-nav.js"></script>
+  <script src="b-account-shell.js" data-b-account-page="mypage"></script>
+  <style>
+    :root {
+      --owner-orange: #e85d2c;
+      --owner-orange-soft: #fff1ec;
+      --owner-ink: #0f1115;
+      --owner-muted: #5c6068;
+      --owner-faint: #9ca0a6;
+      --owner-line: #e7e5df;
+      --owner-line-strong: #d4d2cb;
+      --owner-soft: #fafaf7;
+    }
+
+    .owner-main {
+      min-height: 560px;
+      padding: 0;
+    }
+
+    .owner-layout {
+      display: grid;
+      grid-template-columns: 236px minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .company-profile,
+    .owner-panel,
+    .owner-nav-card,
+    .notice-card {
+      background: #fff;
+      border: 1px solid var(--owner-line);
+      border-radius: 10px;
+    }
+
+    .owner-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .company-profile {
+      min-height: 96px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+    }
+
+    .company-mark {
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      background: #f04b1f;
+      color: #fff7ee;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .profile-summary {
+      min-width: 0;
+      flex: 1;
+      padding-top: 4px;
+    }
+
+    .company-profile strong {
+      display: block;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .company-profile span {
+      margin-top: 6px;
+      color: var(--owner-muted);
+      font-size: 12px;
+    }
+
+    .profile-affiliation {
+      display: block;
+      margin-top: 4px;
+      color: var(--owner-muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .owner-nav-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .owner-nav-card {
+      width: 100%;
+      min-height: 42px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff;
+      border: 1px solid var(--owner-line);
+      border-radius: 7px;
+      color: var(--owner-ink);
+      text-align: left;
+      text-decoration: none;
+      transition: border-color 0.16s, background 0.16s, color 0.16s, box-shadow 0.16s;
+    }
+
+    .owner-nav-card:hover {
+      border-color: var(--owner-line-strong);
+      background: var(--owner-soft);
+    }
+
+    .owner-nav-card.active {
+      border-color: var(--owner-orange);
+      background: #fff8f4;
+      color: var(--owner-orange);
+      box-shadow: inset 0 0 0 1px rgba(232, 93, 44, 0.08);
+    }
+
+    .owner-nav-card svg {
+      width: 15px;
+      height: 15px;
+      flex: 0 0 auto;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.8;
+    }
+
+    .owner-nav-card span {
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+
+    .owner-badge {
+      margin-left: auto;
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: var(--owner-soft);
+      color: var(--owner-faint);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .owner-nav-card.active .owner-badge {
+      background: #ffe1d2;
+      color: var(--owner-orange);
+    }
+
+    .owner-withdraw {
+      align-self: center;
+      margin: 4px 0 0;
+      border: 0;
+      background: transparent;
+      color: var(--owner-faint);
+      font: inherit;
+      font-size: 11.5px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .owner-withdraw:hover {
+      color: var(--owner-muted);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .owner-content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .owner-panel {
+      overflow: hidden;
+    }
+
+    .panel-head {
+      min-height: 62px;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--line-soft);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--owner-orange);
+      flex: 0 0 auto;
+    }
+
+    .panel-title {
+      font-size: 13.5px;
+      font-weight: 700;
+    }
+
+    .panel-meta {
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: var(--owner-soft);
+      color: var(--owner-muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .primary-action,
+    .secondary-action {
+      height: 30px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .primary-action {
+      margin-left: auto;
+      background: var(--owner-orange);
+      color: #fff;
+    }
+
+    .secondary-action {
+      border: 1px solid #d7d9de;
+      background: #fff;
+      color: var(--owner-ink);
+    }
+
+    .primary-action svg,
+    .secondary-action svg {
+      width: 13px;
+      height: 13px;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 2;
+    }
+
+    .field-grid {
+      padding: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .account-field-grid {
+      grid-template-columns: minmax(160px, 0.72fr) minmax(0, 1.28fr);
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+      color: var(--owner-muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+    }
+
+    .field-value {
+      min-height: 40px;
+      padding: 8px 12px;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      background: var(--owner-soft);
+      color: var(--owner-ink);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .field-input {
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--owner-ink);
+      font: inherit;
+    }
+
+    .field-input::placeholder {
+      color: var(--owner-faint);
+    }
+
+    .field-with-action {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      padding: 0;
+      background: transparent;
+      border: 0;
+    }
+
+    .field-with-action .field-input-wrap {
+      min-height: 40px;
+      padding: 8px 12px;
+      border: 1px solid var(--owner-line);
+      border-radius: 7px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+    }
+
+    .field-action {
+      min-height: 40px;
+      min-width: 92px;
+      border: 1px solid #d7d9de;
+      border-radius: 7px;
+      background: #fff;
+      color: var(--owner-ink);
+      padding: 0 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .field-action:hover {
+      border-color: var(--owner-line-strong);
+      background: var(--owner-soft);
+    }
+
+    .field-action.is-pressed {
+      border-color: var(--owner-line-strong);
+      background: #eef0f2;
+      color: var(--owner-muted);
+    }
+
+    .field-action:disabled {
+      border-color: var(--owner-line);
+      background: var(--owner-soft);
+      color: var(--owner-faint);
+      cursor: default;
+    }
+
+    .verification-field {
+      margin-top: 8px;
+    }
+
+    .email-complete {
+      margin-top: 8px;
+      color: var(--owner-orange);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .phone-control {
+      padding: 0;
+      overflow: hidden;
+      gap: 0;
+    }
+
+    .country-code {
+      width: 124px;
+      align-self: stretch;
+      border: 0;
+      border-right: 1px solid var(--owner-line);
+      outline: 0;
+      background: var(--owner-soft);
+      color: var(--owner-ink);
+      padding: 0 10px;
+      font: inherit;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .phone-control .field-input {
+      padding: 8px 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .field.editable .field-value {
+      border-color: var(--owner-line);
+      background: #fff;
+    }
+
+    .field.disabled .field-value {
+      border-color: transparent;
+      background: var(--owner-soft);
+      color: var(--owner-muted);
+    }
+
+    .field.disabled .field-input {
+      color: var(--owner-muted);
+      cursor: not-allowed;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .invite-body {
+      padding: 24px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 24px;
+    }
+
+    .invite-code-box {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border: 1px solid var(--owner-line);
+      border-radius: 7px;
+      background: var(--owner-soft);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .invite-code {
+      color: var(--owner-ink);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+    }
+
+    .invite-code-box .copy-code {
+      margin-left: auto;
+      flex: 0 0 auto;
+    }
+
+    .reissue {
+      border-left: 1px solid var(--owner-line);
+      padding-left: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .reissue strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+
+    .reissue p {
+      margin: 0;
+      color: var(--owner-muted);
+      font-size: 11.5px;
+      line-height: 1.55;
+    }
+
+    .permission-legend {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 14px;
+      flex-wrap: wrap;
+      color: var(--owner-muted);
+      font-size: 11.5px;
+    }
+
+    .permission-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
+    }
+
+    .members-head,
+    .member-row {
+      display: grid;
+      grid-template-columns:
+        minmax(82px, 0.9fr)
+        minmax(190px, 1.8fr)
+        minmax(64px, 0.7fr)
+        minmax(82px, 0.8fr)
+        minmax(124px, 1fr);
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .members-head .access-col,
+    .member-row .access-col {
+      transform: translateX(10px);
+    }
+
+    .members-head .role-col,
+    .member-row .role-col {
+      transform: translateX(-8px);
+    }
+
+    .members-head {
+      padding: 11px 24px;
+      border-bottom: 1px solid var(--owner-line);
+      background: var(--owner-soft);
+      color: var(--owner-faint);
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .member-row {
+      min-height: 54px;
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--line-soft);
+      font-size: 12px;
+    }
+
+    .member-row:last-child {
+      border-bottom: 0;
+    }
+
+    .member-name {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .name-text {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      flex-wrap: wrap;
+    }
+
+    .name-text strong {
+      font-size: 13.5px;
+    }
+
+    .member-email {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .small-chip,
+    .role-pill,
+    .permission-pill,
+    .toggle-option {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .small-chip {
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: var(--owner-orange-soft);
+      color: var(--owner-orange);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .small-chip.muted {
+      border: 1px dashed var(--owner-line-strong);
+      background: var(--owner-soft);
+      color: var(--owner-muted);
+    }
+
+    .role-pill,
+    .permission-pill {
+      width: fit-content;
+      border-radius: 6px;
+      font-size: 10.5px;
+      font-weight: 700;
+    }
+
+    .role-pill {
+      padding: 3px 7px;
+      border: 1px solid var(--owner-line);
+      color: var(--owner-muted);
+    }
+
+    .role-pill.owner {
+      border-color: var(--owner-orange);
+      background: #fff7f2;
+      color: var(--owner-orange);
+    }
+
+    .permission-pill {
+      padding: 3px 8px 3px 7px;
+      background: var(--owner-soft);
+      color: var(--owner-muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: 0.3px;
+    }
+
+    .permission-pill.write {
+      background: var(--owner-orange-soft);
+      color: var(--owner-orange);
+    }
+
+    .permission-pill::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 999px;
+      background: currentColor;
+    }
+
+    .permission-toggle {
+      width: fit-content;
+      padding: 2px;
+      border: 1px solid var(--owner-line);
+      border-radius: 8px;
+      background: var(--owner-soft);
+      display: inline-flex;
+    }
+
+    .toggle-option {
+      padding: 4px 10px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      color: var(--owner-faint);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .toggle-option.active {
+      border-color: var(--owner-line);
+      background: #fff;
+      color: var(--owner-ink);
+    }
+
+    .toggle-option.write.active {
+      color: var(--owner-orange);
+    }
+
+    .muted {
+      color: var(--owner-muted);
+    }
+
+    .joined {
+      text-align: left;
+      color: var(--owner-muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11.5px;
+    }
+
+    .credit-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .credit-summary {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.8fr) minmax(0, 1fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .credit-balance-card,
+    .credit-note {
+      min-height: 96px;
+      border: 1px solid var(--owner-line);
+      border-radius: 8px;
+      background: var(--owner-soft);
+      padding: 16px;
+    }
+
+    .credit-balance-card span,
+    .credit-note span {
+      display: block;
+      color: var(--owner-muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .credit-balance-card strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--owner-ink);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .credit-balance-card small,
+    .credit-note p {
+      display: block;
+      margin: 8px 0 0;
+      color: var(--owner-muted);
+      font-size: 11.5px;
+      line-height: 1.55;
+    }
+
+    .credit-ledger {
+      border: 1px solid var(--owner-line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .credit-ledger-head,
+    .credit-ledger-row {
+      display: grid;
+      grid-template-columns: minmax(132px, 0.9fr) minmax(64px, 0.45fr) minmax(180px, 1.6fr) minmax(74px, 0.45fr);
+      gap: 14px;
+      align-items: center;
+    }
+
+    .credit-ledger-head {
+      padding: 11px 16px;
+      background: var(--owner-soft);
+      color: var(--owner-faint);
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .credit-ledger-row {
+      min-height: 36px;
+      padding: 6px 16px;
+      border-top: 1px solid var(--line-soft);
+      font-size: 12px;
+    }
+
+    .credit-ledger-head span:last-child {
+      text-align: right;
+    }
+
+    .credit-date,
+    .credit-delta {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11.5px;
+    }
+
+    .credit-date {
+      color: var(--owner-muted);
+    }
+
+    .credit-type {
+      width: fit-content;
+      padding: 3px 7px;
+      border-radius: 6px;
+      background: var(--owner-soft);
+      color: var(--owner-muted);
+      font-size: 10.5px;
+      font-weight: 700;
+    }
+
+    .credit-type.use {
+      background: #f5f5f1;
+      color: #61646b;
+    }
+
+    .credit-type.charge {
+      background: #edf7f0;
+      color: #2e7a47;
+    }
+
+    .credit-type.refund {
+      background: var(--owner-orange-soft);
+      color: var(--owner-orange);
+    }
+
+    .credit-reason {
+      color: var(--owner-ink);
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .credit-delta {
+      text-align: right;
+      font-weight: 700;
+    }
+
+    .credit-delta.plus {
+      color: #2e7a47;
+    }
+
+    .credit-delta.minus {
+      color: var(--owner-orange);
+    }
+
+    @media (max-width: 900px) {
+      .owner-main {
+        min-height: 520px;
+      }
+
+      .owner-layout,
+      .invite-body,
+      .credit-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .field-grid,
+      .account-field-grid,
+      .field-with-action {
+        grid-template-columns: 1fr;
+      }
+
+      .reissue {
+        border-left: 0;
+        border-top: 1px solid var(--owner-line);
+        padding: 20px 0 0;
+      }
+
+      .members-head {
+        display: none;
+      }
+
+      .member-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .joined {
+        text-align: left;
+      }
+
+      .credit-ledger-head {
+        display: none;
+      }
+
+      .credit-ledger-row {
+        grid-template-columns: 1fr;
+        gap: 7px;
+      }
+
+      .credit-delta {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script>
+    const companyInfo = {
+      name: 'star pictures',
+      type: '플랫폼',
+      inviteCode: 'RLO-7K2X-94QM',
+    };
+
+    const companyProfile = {
+      name: 'star pictures',
+      email: 'contact@reelio.co',
+      country: '대한민국',
+      description: '숏폼 IP 매칭·유통 플랫폼. 창작자와 글로벌 유통사를 연결합니다.',
+      phone: '+82 2-1234-5678',
+      website: 'https://reelio.co',
+      appUrl: 'https://app.reelio.co',
+      appDescription: '글로벌 숏폼 콘텐츠를 탐색하고 라이선스를 검토할 수 있는 플랫폼 앱입니다.',
+      address: '서울특별시 강남구 테헤란로 142, 6층',
+    };
+
+    const userProfile = {
+      email: 'daon.kim@reelio.co',
+      name: '김다온',
+      role: 'OWNER',
+      countryCode: '+82',
+      phone: '10-1234-5678',
+    };
+
+    const emailVerification = {
+      draftEmail: userProfile.email,
+      code: '123456',
+      sentTo: '',
+      verifiedEmail: '',
+      status: 'idle',
+      message: '',
+    };
+
+    const companyMembers = [
+      { id: 'u1', name: '김다온', email: 'daon.kim@reelio.co', role: 'OWNER', permission: 'WRITE', joined: '2025-11-02', you: true },
+      { id: 'u2', name: '이서준', email: 'sj.lee@reelio.co', role: 'MEMBER', permission: 'WRITE', joined: '2025-12-18' },
+      { id: 'u3', name: '박하린', email: 'harin.p@reelio.co', role: 'MEMBER', permission: 'WRITE', joined: '2026-01-09' },
+      { id: 'u4', name: '최윤재', email: 'yj.choi@reelio.co', role: 'MEMBER', permission: 'READ', joined: '2026-02-21' },
+      { id: 'u5', name: '정민아', email: 'mina.j@reelio.co', role: 'MEMBER', permission: 'READ', joined: '2026-03-04' },
+      { id: 'u6', name: '한지호', email: 'jiho.han@reelio.co', role: 'MEMBER', permission: 'WRITE', joined: '2026-03-28' },
+      { id: 'u7', name: '오세훈', email: 'sehun.oh@reelio.co', role: 'MEMBER', permission: 'READ', joined: '2026-05-10', pending: true },
+    ];
+
+    const creditInfo = {
+      balance: 18,
+      updatedAt: '2026-05-26 09:20',
+      history: [
+        { id: 'cr1', date: '2026-05-26 09:20', type: '사용', reason: '대본분석 사용', delta: -1 },
+        { id: 'cr2', date: '2026-05-25 17:42', type: '환불', reason: '대본분석 실패 환불', delta: 1 },
+        { id: 'cr3', date: '2026-05-25 17:40', type: '사용', reason: '대본분석 사용', delta: -1 },
+        { id: 'cr4', date: '2026-05-24 10:15', type: '충전', reason: '관리자 충전', delta: 5 },
+        { id: 'cr5', date: '2026-05-23 14:08', type: '사용', reason: '대본분석 사용', delta: -1 },
+      ],
+    };
+
+    const tabs = [
+      { id: 'account', label: '회원정보', icon: 'user', ownerOnly: false },
+      { id: 'password', label: '비밀번호 변경', icon: 'lock', ownerOnly: false },
+      { id: 'info', label: '회사 정보', icon: 'building', ownerOnly: false },
+      { id: 'members', label: '멤버 권한', icon: 'users', ownerOnly: true },
+      { id: 'invite', label: '초대 코드', icon: 'key', ownerOnly: true },
+    ];
+
+    const root = document.getElementById('app');
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function currentTab() {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get('tab') || 'account';
+      return tabs.some(item => item.id === tab) ? tab : 'account';
+    }
+
+    function icon(kind) {
+      const icons = {
+        user: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+        lock: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+        building: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h2M9 13h2M9 17h2M13 13h2M13 17h2"/></svg>',
+        credit: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/></svg>',
+        users: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+        key: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 2l-2 2m-7.6 7.6a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>',
+      };
+      return icons[kind] || '';
+    }
+
+    function renderSidebar(activeTab) {
+      return `
+        <aside class="owner-sidebar">
+          <section class="company-profile">
+            <div class="company-mark">${escapeHtml(userProfile.name[0])}</div>
+            <div class="profile-summary">
+              <strong>${escapeHtml(userProfile.name)}</strong>
+              <span class="profile-affiliation">${escapeHtml(companyInfo.name)} · ${escapeHtml(companyInfo.type)}</span>
+            </div>
+          </section>
+          <nav class="owner-nav-list" aria-label="회사 관리">
+            ${tabs.map(tab => `
+              <a class="owner-nav-card ${tab.id === activeTab ? 'active' : ''}" href="owner-b.html?tab=${tab.id}" ${tab.id === activeTab ? 'aria-current="page"' : ''}>
+                ${icon(tab.icon)}
+                <span>${tab.label}</span>
+                ${tab.ownerOnly ? '<b class="owner-badge">OWNER ONLY</b>' : ''}
+              </a>
+            `).join('')}
+          </nav>
+          <button class="owner-withdraw" type="button">회원탈퇴</button>
+        </aside>
+      `;
+    }
+
+    function inputField(label, value, options = {}) {
+      const isMono = ['EMAIL', 'PHONE'].includes(label);
+      const disabled = options.disabled;
+      return `
+        <div class="field ${options.full ? 'full' : ''} ${disabled ? 'disabled' : 'editable'}">
+          <label>${label}</label>
+          <div class="field-value ${isMono ? 'mono' : ''}">
+            <input class="field-input" type="${options.type || 'text'}" value="${escapeHtml(value)}" autocomplete="${options.autocomplete || 'off'}" ${disabled ? 'disabled' : ''}>
+          </div>
+        </div>
+      `;
+    }
+
+    function emailField() {
+      const isVerified = emailVerification.status === 'verified';
+      const showCodeField = emailVerification.status === 'sent' || emailVerification.status === 'error';
+      const isAuthPressed = emailVerification.status !== 'idle';
+
+      return `
+        <div class="field full editable">
+          <label>EMAIL</label>
+          <div class="field-value field-with-action mono">
+            <div class="field-input-wrap">
+              <input id="account-email" class="field-input" type="email" value="${escapeHtml(emailVerification.draftEmail)}" autocomplete="email" inputmode="email">
+            </div>
+            <button class="field-action ${isAuthPressed ? 'is-pressed' : ''}" type="button" data-action="send-email-code">
+              인증하기
+            </button>
+          </div>
+          ${showCodeField ? `
+            <div class="field-value field-with-action mono verification-field">
+              <div class="field-input-wrap">
+                <input id="email-code" class="field-input" type="text" inputmode="numeric" maxlength="6" placeholder="인증코드">
+              </div>
+              <button class="field-action" type="button" data-action="confirm-email-code">확인하기</button>
+            </div>
+          ` : isVerified ? `
+            <div class="email-complete">✓ 인증 완료</div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    function passwordField(label, autocomplete) {
+      return `
+        <div class="field full editable">
+          <label>${label}</label>
+          <div class="field-value">
+            <input class="field-input" type="password" placeholder="${label}" autocomplete="${autocomplete}">
+          </div>
+        </div>
+      `;
+    }
+
+    function phoneField() {
+      const countryCodes = [
+        { code: '+82', label: 'KR +82' },
+        { code: '+1', label: 'US +1' },
+        { code: '+81', label: 'JP +81' },
+        { code: '+86', label: 'CN +86' },
+      ];
+
+      return `
+        <div class="field editable">
+          <label>PHONE</label>
+          <div class="field-value phone-control">
+            <select class="country-code" aria-label="국가코드">
+              ${countryCodes.map(item => `
+                <option value="${item.code}" ${item.code === userProfile.countryCode ? 'selected' : ''}>${item.label}</option>
+              `).join('')}
+            </select>
+            <input class="field-input" type="tel" value="${escapeHtml(userProfile.phone)}" autocomplete="tel-national" inputmode="tel" aria-label="전화번호">
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAccountPanel() {
+      return `
+        <section class="owner-panel">
+          <header class="panel-head">
+            <span class="panel-dot"></span>
+            <strong class="panel-title">회원정보</strong>
+            <button class="primary-action" type="button" data-action="save-account">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+              변경 사항 저장
+            </button>
+          </header>
+          <div class="field-grid account-field-grid">
+            ${emailField()}
+            ${inputField('이름', userProfile.name)}
+            ${phoneField()}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderPasswordPanel() {
+      return `
+        <section class="owner-panel">
+          <header class="panel-head">
+            <span class="panel-dot"></span>
+            <strong class="panel-title">비밀번호 변경</strong>
+            <button class="primary-action" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+              비밀번호 변경
+            </button>
+          </header>
+          <div class="field-grid">
+            ${passwordField('현재 비밀번호', 'current-password')}
+            ${passwordField('새 비밀번호', 'new-password')}
+            ${passwordField('새 비밀번호 확인', 'new-password')}
+          </div>
+        </section>
+      `;
+    }
+
+    function field(label, value, options = {}) {
+      const isMono = ['EMAIL', 'WEBSITE', 'PHONE', '앱 URL'].includes(label);
+      const locked = options.locked;
+      return `
+        <div class="field ${options.full ? 'full' : ''} ${locked ? '' : 'editable'}">
+          <label>${label}</label>
+          <div class="field-value ${isMono ? 'mono' : ''}">
+            <span>${escapeHtml(value)}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderInfoPanel() {
+      return `
+        <section class="owner-panel">
+          <header class="panel-head">
+            <span class="panel-dot"></span>
+            <strong class="panel-title">회사 정보</strong>
+            <button class="primary-action" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+              변경 사항 저장
+            </button>
+          </header>
+          <div class="field-grid">
+            ${field('회사명', companyProfile.name, { locked: true })}
+            ${field('EMAIL', companyProfile.email)}
+            ${field('국가', companyProfile.country)}
+            ${field('PHONE', companyProfile.phone)}
+            ${field('WEBSITE', companyProfile.website)}
+            ${field('앱 URL', companyProfile.appUrl, { full: true })}
+            ${field('앱 소개', companyProfile.appDescription, { full: true })}
+            ${field('주소', companyProfile.address, { full: true })}
+            ${field('회사 소개', companyProfile.description, { full: true })}
+          </div>
+        </section>
+      `;
+    }
+
+    function creditTypeClass(type) {
+      return {
+        '사용': 'use',
+        '충전': 'charge',
+        '환불': 'refund',
+      }[type] || '';
+    }
+
+    function formatCreditDelta(delta) {
+      return `${delta > 0 ? '+' : ''}${delta}`;
+    }
+
+    function renderCreditRow(item) {
+      const deltaClass = item.delta > 0 ? 'plus' : 'minus';
+      return `
+        <div class="credit-ledger-row">
+          <span class="credit-date">${escapeHtml(item.date)}</span>
+          <span class="credit-type ${creditTypeClass(item.type)}">${escapeHtml(item.type)}</span>
+          <span class="credit-reason">${escapeHtml(item.reason)}</span>
+          <span class="credit-delta ${deltaClass}">${formatCreditDelta(item.delta)}</span>
+        </div>
+      `;
+    }
+
+    function renderCreditsPanel() {
+      return `
+        <section class="owner-panel">
+          <header class="panel-head">
+            <span class="panel-dot"></span>
+            <strong class="panel-title">크레딧</strong>
+          </header>
+          <div class="credit-body">
+            <div class="credit-summary">
+              <div class="credit-balance-card">
+                <span>남은 크레딧</span>
+                <strong>${creditInfo.balance}</strong>
+                <small>마지막 업데이트 ${escapeHtml(creditInfo.updatedAt)}</small>
+              </div>
+              <div class="credit-note">
+                <span>사용 기준</span>
+                <p>대본분석 1회 실행 시 크레딧 1개가 차감됩니다.<br>실패한 분석은 자동 환불되며, 충전과 조정은 관리자 처리 후 내역에 반영됩니다.</p>
+              </div>
+            </div>
+            <div class="credit-ledger" aria-label="크레딧 사용내역">
+              <div class="credit-ledger-head">
+                <span>일시</span>
+                <span>유형</span>
+                <span>사유</span>
+                <span>변동</span>
+              </div>
+              ${creditInfo.history.map(renderCreditRow).join('')}
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function permissionPill(value) {
+      return `<span class="permission-pill ${value === 'WRITE' ? 'write' : ''}">${value}</span>`;
+    }
+
+    function rolePill(value) {
+      return `<span class="role-pill ${value === 'OWNER' ? 'owner' : ''}">${value === 'OWNER' ? 'Owner' : 'Member'}</span>`;
+    }
+
+    function permissionToggle(value) {
+      return `
+        <span class="permission-toggle">
+          <span class="toggle-option ${value === 'READ' ? 'active' : ''}">READ</span>
+          <span class="toggle-option write ${value === 'WRITE' ? 'active' : ''}">WRITE</span>
+        </span>
+      `;
+    }
+
+    function renderMember(member) {
+      return `
+        <div class="member-row">
+          <div class="member-name">
+            <span class="name-text">
+              <strong>${escapeHtml(member.name)}</strong>
+              ${member.you ? '<span class="small-chip">나</span>' : ''}
+            </span>
+          </div>
+          <div class="member-email mono muted">${escapeHtml(member.email)}</div>
+          <div class="role-col">${rolePill(member.role)}</div>
+          <div class="joined">${escapeHtml(member.joined)}</div>
+          <div class="access-col">${member.role === 'OWNER' ? '' : permissionToggle(member.permission)}</div>
+        </div>
+      `;
+    }
+
+    function renderMembersPanel() {
+      return `
+        <section class="owner-panel">
+          <header class="panel-head">
+            <span class="panel-dot"></span>
+            <strong class="panel-title">멤버 권한</strong>
+            <span class="panel-meta">${companyMembers.length}명</span>
+            <div class="permission-legend">
+              <span>${permissionPill('WRITE')} 전체 조회 + 결제·제안 가능</span>
+              <span>${permissionPill('READ')} 조회만 가능</span>
+            </div>
+          </header>
+          <div class="members-head">
+            <span>멤버</span>
+            <span>이메일</span>
+            <span class="role-col">직책</span>
+            <span>가입일</span>
+            <span class="access-col">권한</span>
+          </div>
+          ${companyMembers.map(renderMember).join('')}
+        </section>
+      `;
+    }
+
+    function renderInvitePanel() {
+      return `
+        <section class="owner-panel">
+          <header class="panel-head">
+            <span class="panel-dot"></span>
+            <strong class="panel-title">회사 초대 코드</strong>
+          </header>
+          <div class="invite-body">
+            <div>
+              <div class="invite-code-box">
+                <strong class="invite-code">${escapeHtml(companyInfo.inviteCode)}</strong>
+                <button class="secondary-action copy-code" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  복사
+                </button>
+              </div>
+            </div>
+            <div class="reissue">
+              <div>
+                <strong>코드 재발급</strong>
+                <p>새 코드를 발급하면 기존 코드는 즉시 무효화됩니다.</p>
+              </div>
+              <button class="secondary-action" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></svg>
+                새 코드 재발급
+              </button>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+	    function renderOwnerContent(activeTab) {
+	      const panels = {
+        account: renderAccountPanel,
+        password: renderPasswordPanel,
+        info: renderInfoPanel,
+        credits: renderCreditsPanel,
+        members: renderMembersPanel,
+        invite: renderInvitePanel,
+      };
+
+	      return `
+	        <div class="b-account-shell">
+	          <aside class="b-account-stack" aria-label="계정 메뉴">
+	            <a class="b-stack-link is-active" href="owner-b.html" aria-current="page">마이페이지</a>
+	            <a class="b-stack-link" href="cart-b.html">장바구니</a>
+	            <a class="b-stack-link" href="content-favorites-b.html">즐겨찾기</a>
+	            <a class="b-stack-link danger" href="login/login.html">로그아웃</a>
+	          </aside>
+	          <div class="b-account-panel owner-main">
+	            <div class="owner-layout">
+	              ${renderSidebar(activeTab)}
+	              <section class="owner-content">
+	                ${panels[activeTab]()}
+	              </section>
+	            </div>
+	          </div>
+	        </div>
+	      `;
+	    }
+
+    function isValidEmail(value) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    }
+
+    function syncEmailDraft() {
+      const input = document.getElementById('account-email');
+      if (input) {
+        emailVerification.draftEmail = input.value.trim();
+      }
+      return emailVerification.draftEmail;
+    }
+
+    function resetEmailVerification(message = '') {
+      emailVerification.sentTo = '';
+      emailVerification.verifiedEmail = '';
+      emailVerification.status = 'idle';
+      emailVerification.message = message;
+    }
+
+    function sendEmailCode() {
+      const email = syncEmailDraft();
+
+      if (!isValidEmail(email)) {
+        resetEmailVerification('올바른 이메일 형식으로 입력해주세요.');
+        alert('올바른 이메일 형식으로 입력해주세요.');
+        render();
+        return;
+      }
+
+      emailVerification.sentTo = email;
+      emailVerification.verifiedEmail = '';
+      emailVerification.status = 'sent';
+      emailVerification.message = '';
+      render();
+      setTimeout(() => document.getElementById('email-code')?.focus(), 0);
+    }
+
+    function confirmEmailCode() {
+      const email = syncEmailDraft();
+      const codeInput = document.getElementById('email-code');
+      const code = codeInput ? codeInput.value.trim() : '';
+
+      if (email !== emailVerification.sentTo) {
+        emailVerification.status = 'error';
+        emailVerification.message = '';
+        alert('이메일을 다시 전송해주세요.');
+        render();
+        return;
+      }
+
+      if (code === emailVerification.code) {
+        emailVerification.verifiedEmail = emailVerification.sentTo;
+        emailVerification.status = 'verified';
+        emailVerification.message = '';
+      } else {
+        emailVerification.status = 'error';
+        emailVerification.message = '';
+        alert('인증코드가 일치하지 않습니다.');
+      }
+
+      render();
+    }
+
+    function saveAccount() {
+      const email = syncEmailDraft();
+      const emailChanged = email !== userProfile.email;
+
+      if (!isValidEmail(email)) {
+        resetEmailVerification('올바른 이메일 형식으로 입력해주세요.');
+        alert('올바른 이메일 형식으로 입력해주세요.');
+        render();
+        return;
+      }
+
+      if (emailChanged && emailVerification.verifiedEmail !== email) {
+        emailVerification.status = emailVerification.sentTo === email ? 'error' : 'idle';
+        emailVerification.message = '';
+        alert('이메일 인증 후 저장해주세요.');
+        render();
+        return;
+      }
+
+      userProfile.email = email;
+      const currentMember = companyMembers.find(member => member.you);
+      if (currentMember) {
+        currentMember.email = email;
+      }
+
+      emailVerification.draftEmail = email;
+      emailVerification.sentTo = '';
+      emailVerification.verifiedEmail = emailChanged ? email : '';
+      emailVerification.status = emailChanged ? 'verified' : 'idle';
+      emailVerification.message = '';
+      render();
+    }
+
+    function render() {
+      try {
+        localStorage.setItem('shortflow-view-role', 'platform');
+      } catch (error) {
+        // Local storage can be unavailable in restricted preview contexts.
+      }
+      const activeTab = currentTab();
+	      root.innerHTML = window.ShortflowNav.renderShell(renderOwnerContent(activeTab), {
+	        activePage: 'mypage',
+	        showDashboardSubNav: false,
+	      });
+	      window.ShortflowBAccountShell?.patchTopNav('mypage');
+	    }
+
+    root.addEventListener('click', event => {
+      const actionButton = event.target.closest('[data-action]');
+      if (actionButton?.dataset.action === 'send-email-code') {
+        sendEmailCode();
+        return;
+      }
+      if (actionButton?.dataset.action === 'confirm-email-code') {
+        confirmEmailCode();
+        return;
+      }
+      if (actionButton?.dataset.action === 'save-account') {
+        saveAccount();
+        return;
+      }
+
+      const copyButton = event.target.closest('.copy-code');
+      if (!copyButton) return;
+      navigator.clipboard?.writeText(companyInfo.inviteCode);
+      copyButton.textContent = '복사됨';
+      setTimeout(() => {
+        copyButton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>복사';
+      }, 1200);
+    });
+
+    root.addEventListener('input', event => {
+      if (event.target.id !== 'account-email') return;
+
+      const email = event.target.value.trim();
+      emailVerification.draftEmail = email;
+
+      const verifiedEmailChanged = emailVerification.status === 'verified' && email !== emailVerification.verifiedEmail;
+      const sentEmailChanged = ['sent', 'error'].includes(emailVerification.status) && email !== emailVerification.sentTo;
+      if (verifiedEmailChanged || sentEmailChanged) {
+        resetEmailVerification();
+        render();
+        setTimeout(() => {
+          const input = document.getElementById('account-email');
+          if (!input) return;
+          input.focus();
+          input.setSelectionRange(input.value.length, input.value.length);
+        }, 0);
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>

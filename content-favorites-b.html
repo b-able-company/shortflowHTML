@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>즐겨찾기 B안</title>
+  <link rel="stylesheet" href="dashboard-common.css">
+  <link rel="stylesheet" href="b-account-shell.css">
+  <script src="dashboard-nav.js"></script>
+  <script src="b-account-shell.js" data-b-account-page="favorites"></script>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --ink: #111827;
+      --line: #e5e7eb;
+    }
+    body {
+      margin: 0;
+      background: #fff;
+      color: var(--ink);
+      font-family: "Geist", "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    .utility-remote,
+    .utility-remote-collapse { display: none !important; }
+    .account-head { min-height: 54px; background: #fff; border-radius: 12px 12px 0 0; }
+    .account-head strong { font-weight: 600; }
+    .account-head span { font-weight: 400; }
+    .account-menu-item { position: relative; min-height: 43px; margin: 0 5px; font-weight: 500; }
+    .account-menu-item .nav-icon,
+    .account-menu-item .account-menu-icon {
+      position: absolute;
+      left: 22px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.14s ease, visibility 0.14s ease;
+    }
+    .account-menu-item:hover .nav-icon,
+    .account-menu-item:hover .account-menu-icon,
+    .account-menu-item.is-current .nav-icon,
+    .account-menu-item.is-current .account-menu-icon,
+    .account-menu-item[aria-current="page"] .nav-icon,
+    .account-menu-item[aria-current="page"] .account-menu-icon {
+      opacity: 1;
+      visibility: visible;
+    }
+    .account-menu-item.is-current,
+    .account-menu-item[aria-current="page"] {
+      background: #f3f4f6;
+      color: #1d1c1c;
+    }
+    .account-menu { width: 160px; padding: 0 0 5px; overflow: hidden; }
+    .favorites-main {
+      padding: 0;
+      min-height: calc(100vh - 360px);
+    }
+    .favorites-toolbar {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 0 0 7px;
+      margin-bottom: 0;
+      border-bottom: 1px solid #f0f2f5;
+    }
+    .favorites-title {
+      margin: 0;
+      color: #0f1115;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard", system-ui, sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .favorites-toolbar-controls {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .favorite-inline-actions {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 7px;
+      max-width: 0;
+      opacity: 0;
+      overflow: hidden;
+      pointer-events: none;
+      transform: translateX(8px);
+      transition: max-width 260ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+      white-space: nowrap;
+    }
+    .favorites-main.is-selecting .favorite-inline-actions {
+      max-width: 230px;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0);
+    }
+    .favorite-selection-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 7px;
+      max-height: 0;
+      margin-bottom: 28px;
+      padding: 0;
+      opacity: 0;
+      overflow: hidden;
+      pointer-events: none;
+      transform: translateY(-6px);
+      transition: max-height 360ms cubic-bezier(0.22, 1, 0.36, 1), margin-bottom 360ms cubic-bezier(0.22, 1, 0.36, 1), padding 360ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease, transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+      white-space: nowrap;
+    }
+    .favorites-main.is-selecting .favorite-selection-actions {
+      max-height: 54px;
+      margin-bottom: 4px;
+      padding: 6px 0 2px;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .favorite-select-button {
+      min-width: 88px;
+      height: 36px;
+      padding: 0 22px;
+      border: 0;
+      border-radius: 18px;
+      background: #f5f5f7;
+      color: #1d1d1f;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+    }
+    .favorite-select-button:hover {
+      background: #e8e8ed;
+      color: #1d1d1f;
+      transform: translateY(-1px);
+    }
+    .favorite-select-button.is-active {
+      background: #1d1d1f;
+      color: #fff;
+    }
+    .favorite-action-button {
+      height: 34px;
+      padding: 0 17px;
+      border: 1px solid #d9d9df;
+      border-radius: 17px;
+      background: #fff;
+      color: #1d1d1f;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0;
+      transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+    }
+    .favorite-action-button:hover {
+      border-color: #c7c7cf;
+      background: #f7f7f9;
+      color: #1d1d1f;
+      transform: translateY(-1px);
+    }
+    .favorite-action-button[data-action="download"] {
+      background: #fff;
+      color: #1d1d1f;
+    }
+    .favorite-action-button[data-action="download"]:hover {
+      background: #f7f7f9;
+      color: #1d1d1f;
+    }
+    .favorite-action-button.danger {
+      background: #fff;
+      color: #cc4b2b;
+    }
+    .favorite-action-button.danger:hover {
+      background: #fff8f6;
+      color: #b53a1d;
+    }
+    .favorite-select-all-button {
+      height: 34px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #2f3643;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+      font-weight: 500;
+    }
+    .favorite-select-all-button::before {
+      content: "";
+      width: 17px;
+      height: 17px;
+      border: 1px solid #cfd3da;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: inset 0 0 0 2px #fff;
+      transition: border-color 160ms ease, background 160ms ease;
+    }
+    .favorite-select-all-button:hover {
+      color: #111827;
+    }
+    .favorite-select-all-button:hover::before {
+      border-color: #9ca3af;
+    }
+    .favorites-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 28px 18px;
+    }
+    .favorite-card {
+      display: block;
+      min-width: 0;
+    }
+    .favorite-poster {
+      position: relative;
+      display: block;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #f3f4f6;
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
+      border: 0 solid transparent;
+      transition: border-color 160ms ease, box-shadow 160ms ease;
+    }
+    .favorite-card.is-selected .favorite-poster {
+      border: 3px solid #e85d2c;
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
+    }
+    .favorite-poster img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+    .favorite-check {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 31px;
+      height: 31px;
+      border: 1px solid rgba(255, 255, 255, 0.86);
+      border-radius: 50%;
+      background: rgba(17, 24, 39, 0.28);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.88);
+      transition: opacity 160ms ease, transform 160ms ease, background 160ms ease, border-color 160ms ease;
+    }
+    .favorites-main.is-selecting .favorite-check {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .favorite-card.is-selected .favorite-check {
+      border-color: #e85d2c;
+      background: #e85d2c;
+    }
+    .favorite-check svg {
+      width: 20px;
+      height: 20px;
+      display: block;
+      stroke: currentColor;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+    .favorite-title {
+      display: block;
+      margin-top: 7px;
+      padding-left: 2px;
+      color: #202633;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .favorite-more-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 86px 0 132px;
+    }
+    .favorite-more-btn {
+      width: 76px;
+      height: 76px;
+      border: 1px solid #d7dbe2;
+      border-radius: 50%;
+      background: #fff;
+      color: #2d3441;
+      cursor: pointer;
+      font-size: 38px;
+      font-weight: 300;
+      line-height: 1;
+      transition: border-color 160ms ease, background 160ms ease, color 160ms ease, transform 160ms ease;
+    }
+    .favorite-more-btn:hover {
+      border-color: #111827;
+      background: #111827;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .favorite-card.is-new {
+      animation: favoriteFadeIn 260ms ease both;
+    }
+    @keyframes favoriteFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 960px) {
+      .favorites-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 640px) {
+      .favorites-main {
+        padding-top: 22px;
+      }
+      .favorites-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px 14px;
+      }
+    }
+    .variant-switcher {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 10080;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+    }
+    .variant-switcher a {
+      min-width: 42px;
+      height: 30px;
+      padding: 0 12px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .variant-switcher a.active {
+      background: #111827;
+      color: #fff;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div data-shortflow-nav="content"></div>
+
+  <main class="main b-account-shell">
+    <aside class="b-account-stack" aria-label="계정 메뉴">
+      <a class="b-stack-link" href="owner-b.html">마이페이지</a>
+      <a class="b-stack-link" href="cart-b.html">장바구니</a>
+      <a class="b-stack-link is-active" href="content-favorites-b.html" aria-current="page">즐겨찾기</a>
+      <a class="b-stack-link danger" href="login/login.html">로그아웃</a>
+    </aside>
+    <section class="b-account-panel favorites-main" aria-label="즐겨찾기">
+      <div class="favorites-toolbar">
+        <h1 class="favorites-title">즐겨찾기</h1>
+        <div class="favorites-toolbar-controls">
+          <div class="favorite-inline-actions" id="favoriteInlineActions" aria-hidden="true">
+            <button class="favorite-action-button" type="button" data-action="download">엑셀 뽑기</button>
+            <button class="favorite-action-button danger" type="button">삭제</button>
+          </div>
+          <button class="favorite-select-button" type="button" id="favoriteSelectToggle" aria-expanded="false">선택</button>
+        </div>
+      </div>
+      <div class="favorite-selection-actions" id="favoriteSelectionActions" aria-hidden="true">
+        <button class="favorite-select-all-button" type="button">전체선택</button>
+      </div>
+      <div class="favorites-grid" id="favoritesGrid" aria-label="즐겨찾기 콘텐츠 목록"></div>
+      <div class="favorite-more-wrap" id="favoriteMoreWrap">
+        <button class="favorite-more-btn" type="button" id="favoriteMoreButton" aria-label="즐겨찾기 더보기">+</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const favoriteContents = [
+      { title: '비밀 사내 결혼', image: 'images/비밀사내결혼.png' },
+      { title: '새벽 배송 로맨스', image: 'images/새벽배송로맨스.png' },
+      { title: '왕자님의 퇴근길', image: 'images/왕자님의퇴근길.png' },
+      { title: '첫사랑 리셋 버튼', image: 'images/첫사랑리셋버튼.png' },
+      { title: '내 매니저는 구미호', image: 'images/내매니저는구미호.png' },
+      { title: '대표님이 내 전남친입니다', image: 'images/대표님이내전남친입니다.png' },
+      { title: '재벌집 막내 비서', image: 'images/재벌집막내비서.png' },
+      { title: '죽었다가 회귀한 톱스타', image: 'images/죽었다가회귀한.png' },
+      { title: '우리 집에 킬러가 산다', image: 'images/우리집에킬러가.png' },
+      { title: '오늘부터 악녀 대행합니다', image: 'images/오늘부터악녀대행.png' },
+      { title: '남편이 AI입니다', image: 'images/남편이AI.png' },
+      { title: '퇴사했더니 황제가 됐다', image: 'images/퇴사했더니황제.png' },
+      { title: '살인범과 룸메이트가 되었다', image: 'images/살인범과룸메이트.png' },
+      { title: '내 남편의 비밀 계정', image: 'images/내남편의비밀계정.png' },
+      { title: '첫사랑은 계약 종료', image: 'images/첫사랑은계약종료.png' },
+      { title: '달빛 아래 편의점', image: 'images/달빛아래편의점.png' },
+      { title: '그녀의 두 번째 엔딩', image: 'images/그녀의두번째엔딩.png' },
+      { title: '재벌가 입주 과외', image: 'images/재벌가입주과외.png' },
+      { title: '나의 위험한 파트너', image: 'images/나의위험한파트너.png' },
+      { title: '황후의 복수 노트', image: 'images/황후의복수노트.png' },
+      { title: '우주 택배 기사님', image: 'images/우주택배기사님.png' },
+      { title: '계약 종료 3일 전', image: 'images/계약종료3일전.png' },
+      { title: '우리 반 전학생은 아이돌', image: 'images/우리반전학생은아이돌.png' },
+      { title: '비밀 연애 리허설', image: 'images/비밀사내결혼무료1.png' },
+      { title: '밤 열두시의 고백', image: 'images/비밀사내결혼무료2.png' },
+      { title: '상사의 위험한 제안', image: 'images/비밀사내결혼무료3.png' },
+      { title: '너에게만 공개', image: 'images/비밀사내결혼무료4.png' },
+      { title: '퇴근 후 첫 장면', image: 'images/비밀사내결혼무료5.png' },
+      { title: '비밀 계정의 주인', image: 'images/비밀사내결혼무료6.png' },
+      { title: '사내 결혼 작전', image: 'images/비밀사내결혼무료7.png' },
+      { title: '아침 회의의 로맨스', image: 'images/비밀사내결혼스틸컷1.png' },
+      { title: '대표님의 마지막 메일', image: 'images/비밀사내결혼스틸컷2.png' }
+    ];
+    const favoritePageSize = 15;
+    let visibleFavoriteCount = favoritePageSize;
+    let favoriteSelectionMode = false;
+    const selectedFavoriteTitles = new Set();
+
+    function renderSelectionActions() {
+      const main = document.querySelector('.favorites-main');
+      const selectToggle = document.getElementById('favoriteSelectToggle');
+      const inlineActions = document.getElementById('favoriteInlineActions');
+      const selectionActions = document.getElementById('favoriteSelectionActions');
+      main.classList.toggle('is-selecting', favoriteSelectionMode);
+      selectToggle.classList.toggle('is-active', favoriteSelectionMode);
+      selectToggle.setAttribute('aria-expanded', String(favoriteSelectionMode));
+      inlineActions.setAttribute('aria-hidden', String(!favoriteSelectionMode));
+      selectionActions.setAttribute('aria-hidden', String(!favoriteSelectionMode));
+    }
+
+    function renderFavorites(previousVisibleCount = 0) {
+      const grid = document.getElementById('favoritesGrid');
+      const moreWrap = document.getElementById('favoriteMoreWrap');
+      const visibleItems = favoriteContents.slice(0, visibleFavoriteCount);
+      grid.innerHTML = visibleItems.map((item, index) => `
+        <a class="favorite-card ${index >= previousVisibleCount ? 'is-new' : ''} ${selectedFavoriteTitles.has(item.title) ? 'is-selected' : ''}" href="content-detail.html" data-favorite-title="${item.title}" aria-pressed="${selectedFavoriteTitles.has(item.title)}">
+          <span class="favorite-poster">
+            <img src="${item.image}" alt="${item.title}">
+            <span class="favorite-check" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M6 12.5 10.2 17 18.5 7"/></svg>
+            </span>
+          </span>
+          <span class="favorite-title">${item.title}</span>
+        </a>
+      `).join('');
+      moreWrap.hidden = visibleFavoriteCount >= favoriteContents.length;
+    }
+
+    document.getElementById('favoriteMoreButton').addEventListener('click', () => {
+      const previousVisibleCount = visibleFavoriteCount;
+      visibleFavoriteCount = Math.min(visibleFavoriteCount + favoritePageSize, favoriteContents.length);
+      renderFavorites(previousVisibleCount);
+    });
+
+    document.getElementById('favoriteSelectToggle').addEventListener('click', () => {
+      favoriteSelectionMode = !favoriteSelectionMode;
+      if (!favoriteSelectionMode) {
+        selectedFavoriteTitles.clear();
+        document.querySelectorAll('.favorite-card.is-selected').forEach((card) => {
+          card.classList.remove('is-selected');
+          card.setAttribute('aria-pressed', 'false');
+        });
+      }
+      renderSelectionActions();
+    });
+
+    document.getElementById('favoritesGrid').addEventListener('click', (event) => {
+      const card = event.target.closest('[data-favorite-title]');
+      if (!card || !favoriteSelectionMode) return;
+      event.preventDefault();
+      const title = card.dataset.favoriteTitle;
+      if (selectedFavoriteTitles.has(title)) {
+        selectedFavoriteTitles.delete(title);
+      } else {
+        selectedFavoriteTitles.add(title);
+      }
+      renderFavorites(visibleFavoriteCount);
+    });
+
+    function accountFavoriteIcon() {
+      return `<svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>`;
+    }
+
+    function applyVariantNavLinks() {
+      document.querySelectorAll('.primary-nav a[href="content-list.html"]').forEach((contentLink) => {
+        contentLink.href = 'content-list-b.html';
+        contentLink.classList.remove('active');
+        contentLink.removeAttribute('aria-current');
+      });
+      document.querySelectorAll('.primary-nav a[href="shortflow-dashboard.html"]').forEach((dashboardLink) => {
+        dashboardLink.href = 'content-list-b.html#platformDashboardCopy';
+      });
+    }
+
+    function applyVariantAccountMenu() {
+      document.querySelectorAll('.account-head strong').forEach((node) => {
+        if (/^Reel(?:io|oo)$/.test(node.textContent.trim())) {
+          node.textContent = 'star pictures';
+        }
+      });
+      document.querySelectorAll('.account-head').forEach((head) => {
+        head.href = 'owner-b.html';
+      });
+      document.querySelectorAll('.account-menu-item[href="cart.html"], .account-menu-item[href="cart-b.html"]').forEach((cartItem) => {
+        cartItem.href = 'cart-b.html';
+        const menu = cartItem.closest('.account-menu');
+        if (!menu || menu.querySelector('.account-favorite-link')) return;
+        cartItem.insertAdjacentHTML('afterend', `
+          <a class="account-menu-item account-favorite-link is-current" href="content-favorites-b.html" role="menuitem" aria-current="page">
+            ${accountFavoriteIcon()}
+            <span>즐겨찾기</span>
+          </a>
+        `);
+      });
+    }
+
+    function applyVariantChrome() {
+      applyVariantNavLinks();
+      applyVariantAccountMenu();
+    }
+
+    applyVariantChrome();
+    document.addEventListener('DOMContentLoaded', applyVariantChrome);
+    renderFavorites();
+    renderSelectionActions();
+  </script>
+
+  <div class="variant-switcher" aria-label="시안 전환">
+    <a href="content-list-a.html">A안</a>
+    <a class="active" href="content-list-b.html" aria-current="page">B안</a>
+  </div>
+</body>
+</html>

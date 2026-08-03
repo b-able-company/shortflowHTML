@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'platform-contract-admin.html': ['거래 관리', () => '유통 계약 관리'],
     'settlement-admin.html': ['정산', () => {
       const activeView = document.querySelector('.view.active')?.id;
-      return activeView === 'view-settlement' ? '정산처리' : activeView === 'view-completed' ? '정산완료' : '계약관리';
+      return activeView === 'view-settlement' || activeView === 'view-completed' ? '정산 진행 관리' : '계약관리';
     }],
     'mail-admin.html': ['운영', () => '메일 발송'],
     'audit-log.html': ['운영', () => '관리 이력'],
@@ -94,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (split.classList.contains('content-split')) return;
       if (split.classList.contains('workflow-split')) return;
       if (split.classList.contains('intent-split')) return;
+      if (split.classList.contains('contract-split')) return;
       if (split.dataset.resizableBound) return;
 
       const leftPane = Array.from(split.children).find(child => child.classList.contains('lp'));

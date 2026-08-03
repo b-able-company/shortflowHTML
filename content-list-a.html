@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>콘텐츠 리스트 조회</title>
+  <title>콘텐츠 리스트 조회 A안</title>
   <link rel="stylesheet" href="dashboard-common.css">
   <script src="dashboard-nav.js"></script>
   <style>
@@ -23,8 +23,45 @@
       font-family: "Geist", "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    a { color: inherit; text-decoration: none; }
-    button, input { font: inherit; }
+	    a { color: inherit; text-decoration: none; }
+	    button, input { font: inherit; }
+	    .utility-remote { display: none !important; }
+	    .account-head { min-height: 54px; background: #fff; border-radius: 12px 12px 0 0; }
+	    .account-head strong { font-weight: 600; }
+	    .account-head span { font-weight: 400; }
+	    .account-menu-item { min-height: 43px; margin: 0 5px; font-weight: 500; }
+	    .account-menu { width: 160px; padding: 0 0 5px; overflow: hidden; }
+	    .variant-switcher {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 1200;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid #e5e7eb;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+    }
+    .variant-switcher a {
+      min-width: 42px;
+      height: 30px;
+      padding: 0 12px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .variant-switcher a.active {
+      background: #111827;
+      color: #fff;
+      pointer-events: none;
+    }
     .content-list-main {
       padding: 24px 0 32px;
     }
@@ -149,6 +186,81 @@
       font-weight: inherit;
     }
     .sort button.active { color: var(--orange); }
+    .favorite-download-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin: 0 4px 20px;
+      padding: 12px 14px 12px 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #fafafa;
+    }
+    .favorite-download-bar.is-visible {
+      display: flex;
+    }
+    .download-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .download-title {
+      color: #111827;
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .selected-count {
+      color: #7a8290;
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .selection-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .selection-link {
+      height: 34px;
+      border: 0;
+      background: transparent;
+      color: #5f6673;
+      padding: 0 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .selection-link:hover:not(:disabled) {
+      color: #111827;
+    }
+    .selection-link:disabled {
+      color: #b7bdc7;
+      cursor: default;
+    }
+    .download-btn {
+      min-width: 172px;
+      height: 36px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--orange);
+      color: #fff;
+      padding: 0 16px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(232, 93, 44, 0.18);
+    }
+    .download-btn:disabled {
+      background: #e5e7eb;
+      color: #9aa2af;
+      cursor: default;
+      box-shadow: none;
+    }
     .grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 225px));
@@ -193,6 +305,9 @@
       cursor: default;
     }
     .card { min-width: 0; position: relative; }
+    .card.is-selected .poster {
+      box-shadow: 0 0 0 3px rgba(232, 93, 44, 0.22), 0 1px 2px rgba(17,24,39,0.08);
+    }
     .poster {
       position: relative;
       width: 96%;
@@ -242,6 +357,55 @@
       font-weight: 700;
       line-height: 1;
       letter-spacing: 0.4px;
+    }
+    .card.is-selectable .new-badge {
+      top: 58px;
+    }
+    .card-check {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 3;
+      display: none;
+      width: 34px;
+      height: 34px;
+      cursor: pointer;
+    }
+    .card.is-selectable .card-check {
+      display: inline-flex;
+    }
+    .card-check input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .card-check span {
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 17px;
+      background: rgba(17, 24, 39, 0.7);
+      box-shadow: 0 8px 16px rgba(15, 23, 42, 0.18);
+      position: relative;
+    }
+    .card-check span::after {
+      content: "";
+      position: absolute;
+      left: 12px;
+      top: 8px;
+      width: 8px;
+      height: 13px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      opacity: 0;
+    }
+    .card-check input:checked + span {
+      border-color: var(--orange);
+      background: var(--orange);
+    }
+    .card-check input:checked + span::after {
+      opacity: 1;
     }
     .poster-actions {
       position: absolute;
@@ -352,13 +516,16 @@
     @media (max-width: 980px) {
       .grid { grid-template-columns: repeat(3, minmax(0, 222px)); }
     }
-    @media (max-width: 720px) {
-      .filter-line { grid-template-columns: 1fr; gap: 8px; }
-      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; }
-      .pagination { margin-top: 80px; margin-bottom: 56px; gap: 4px; }
-      .content-list-main { padding-bottom: 24px; }
-      .poster-title { font-size: 22px; }
-    }
+	    @media (max-width: 720px) {
+	      .filter-line { grid-template-columns: 1fr; gap: 8px; }
+	      .favorite-download-bar { align-items: stretch; flex-direction: column; }
+	      .selection-actions { justify-content: flex-start; }
+	      .download-btn { width: 100%; }
+	      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; }
+	      .pagination { margin-top: 80px; margin-bottom: 56px; gap: 4px; }
+	      .content-list-main { padding-bottom: 24px; }
+	      .poster-title { font-size: 22px; }
+	    }
   </style>
 </head>
 <body>
@@ -464,6 +631,18 @@
       </div>
     </div>
 
+    <div class="favorite-download-bar" id="favoriteDownloadBar" aria-hidden="true">
+      <div class="download-status">
+        <strong class="download-title" id="favoriteSummary">즐겨찾기 콘텐츠 0개</strong>
+        <span class="selected-count" id="selectedSummary">0개 선택됨</span>
+      </div>
+      <div class="selection-actions">
+        <button class="selection-link" type="button" id="selectAllFavorites">전체 선택</button>
+        <button class="selection-link" type="button" id="clearSelectedFavorites">선택 해제</button>
+        <button class="download-btn" type="button" id="downloadFavorites" disabled>기본 정보 엑셀 다운로드</button>
+      </div>
+    </div>
+
     <section class="grid" id="grid" aria-label="콘텐츠 목록"></section>
     <nav class="pagination" id="pagination" aria-label="콘텐츠 페이지"></nav>
   </main>
@@ -508,7 +687,15 @@
     const pagination = document.getElementById('pagination');
     const filterPanel = document.querySelector('.filter-panel');
     const filterToggle = document.getElementById('filterToggle');
+    const favoriteDownloadBar = document.getElementById('favoriteDownloadBar');
+    const favoriteSummary = document.getElementById('favoriteSummary');
+    const selectedSummary = document.getElementById('selectedSummary');
+    const selectAllFavorites = document.getElementById('selectAllFavorites');
+    const clearSelectedFavorites = document.getElementById('clearSelectedFavorites');
+    const downloadFavorites = document.getElementById('downloadFavorites');
     const productionStages = ['기획중', '제작중', '심의중', '제작완료'];
+    const selectedFavorites = new Set();
+    let currentFavoriteItems = [];
     contents.forEach((item, index) => {
       item.section = item.type;
       item.releaseType = index % 4 === 0 ? '신작(미공개)' : '기공개작';
@@ -540,9 +727,11 @@
       state.page = Math.min(state.page, totalPages);
       const start = (state.page - 1) * state.pageSize;
       const pageItems = items.slice(start, start + state.pageSize);
+      currentFavoriteItems = state.favoriteOnly ? items : [];
+      syncSelectedFavorites(items);
       count.textContent = `총 ${items.length}개`;
       grid.innerHTML = pageItems.map((item, index) => `
-        <article class="card">
+        <article class="card ${state.favoriteOnly ? 'is-selectable' : ''} ${selectedFavorites.has(item.title) ? 'is-selected' : ''}">
           <div class="poster ${item.poster} ${item.image ? 'has-image' : ''}">
             <a href="${item.href}">
               ${item.image
@@ -550,6 +739,12 @@
                 : `<div class="poster-sub">SHORTFLOW ORIGINAL</div>
                    <div class="poster-title">${item.posterTitle}</div>`}
             </a>
+            ${state.favoriteOnly ? `
+              <label class="card-check" aria-label="${item.title} 선택">
+                <input type="checkbox" data-select-title="${item.title}" ${selectedFavorites.has(item.title) ? 'checked' : ''}>
+                <span aria-hidden="true"></span>
+              </label>
+            ` : ''}
             ${item.isNew ? '<span class="new-badge">NEW</span>' : ''}
             <div class="poster-actions">
               <button class="poster-action fav ${item.favorite ? 'active' : ''}" type="button" data-title="${item.title}" aria-label="${item.title} 즐겨찾기">
@@ -567,6 +762,7 @@
         </article>
       `).join('');
       renderPagination(totalPages);
+      renderFavoriteDownloadBar();
     }
 
     function renderPagination(totalPages) {
@@ -582,6 +778,65 @@
         ${pages}
         <button class="page-btn" type="button" data-page="${state.page + 1}" aria-label="다음 페이지" ${state.page === totalPages ? 'disabled' : ''}>›</button>
       `;
+    }
+
+    function syncSelectedFavorites(items) {
+      if (!state.favoriteOnly) {
+        selectedFavorites.clear();
+        return;
+      }
+      const visibleTitles = new Set(items.map((item) => item.title));
+      selectedFavorites.forEach((title) => {
+        if (!visibleTitles.has(title)) selectedFavorites.delete(title);
+      });
+    }
+
+    function renderFavoriteDownloadBar() {
+      favoriteDownloadBar.classList.toggle('is-visible', state.favoriteOnly);
+      favoriteDownloadBar.setAttribute('aria-hidden', String(!state.favoriteOnly));
+      if (!state.favoriteOnly) return;
+
+      const selectedCount = selectedFavorites.size;
+      favoriteSummary.textContent = `즐겨찾기 콘텐츠 ${currentFavoriteItems.length}개`;
+      selectedSummary.textContent = `${selectedCount}개 선택됨`;
+      selectAllFavorites.disabled = currentFavoriteItems.length === 0 || selectedCount === currentFavoriteItems.length;
+      clearSelectedFavorites.disabled = selectedCount === 0;
+      downloadFavorites.disabled = selectedCount === 0;
+      downloadFavorites.textContent = selectedCount > 0
+        ? `${selectedCount}개 기본 정보 다운로드`
+        : '기본 정보 엑셀 다운로드';
+    }
+
+    function formatCsvValue(value) {
+      return `"${String(value ?? '').replace(/"/g, '""')}"`;
+    }
+
+    function downloadSelectedContentInfo() {
+      const selectedItems = contents.filter((item) => selectedFavorites.has(item.title));
+      if (!selectedItems.length) return;
+
+      const headers = ['콘텐츠명', '섹션', '장르', '연도', '언어', '제작단계', '릴리즈 유형'];
+      const rows = selectedItems.map((item) => [
+        item.title,
+        item.section,
+        item.genres.join(', '),
+        item.year,
+        item.language,
+        item.productionStage,
+        item.releaseType
+      ]);
+      const csv = [headers, ...rows]
+        .map((row) => row.map(formatCsvValue).join(','))
+        .join('\n');
+      const blob = new Blob([`\ufeff${csv}`], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'favorite-content-basic-info.csv';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
     }
 
     function resetPage() {
@@ -634,6 +889,7 @@
     document.getElementById('favoriteOnly').addEventListener('click', (event) => {
       state.favoriteOnly = !state.favoriteOnly;
       event.currentTarget.classList.toggle('is-active', state.favoriteOnly);
+      if (!state.favoriteOnly) selectedFavorites.clear();
       resetPage();
       render();
     });
@@ -652,19 +908,61 @@
       document.querySelector('.list-meta').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
+    selectAllFavorites.addEventListener('click', () => {
+      currentFavoriteItems.forEach((item) => selectedFavorites.add(item.title));
+      render();
+    });
+
+    clearSelectedFavorites.addEventListener('click', () => {
+      selectedFavorites.clear();
+      render();
+    });
+
+    downloadFavorites.addEventListener('click', downloadSelectedContentInfo);
+
+    grid.addEventListener('change', (event) => {
+      const input = event.target.closest('input[data-select-title]');
+      if (!input) return;
+      if (input.checked) {
+        selectedFavorites.add(input.dataset.selectTitle);
+      } else {
+        selectedFavorites.delete(input.dataset.selectTitle);
+      }
+      input.closest('.card')?.classList.toggle('is-selected', input.checked);
+      renderFavoriteDownloadBar();
+    });
+
     grid.addEventListener('click', (event) => {
       const btn = event.target.closest('.poster-action');
       if (!btn) return;
       event.preventDefault();
       const item = contents.find((content) => content.title === btn.dataset.title);
       if (!item) return;
-      if (btn.classList.contains('fav')) item.favorite = !item.favorite;
+      if (btn.classList.contains('fav')) {
+        item.favorite = !item.favorite;
+        if (!item.favorite) selectedFavorites.delete(item.title);
+      }
       if (btn.classList.contains('cart-add')) item.inCart = !item.inCart;
       render();
     });
 
     render();
 
+    const VARIANT_ACCOUNT_NAME = 'star pictures';
+    function applyVariantAccountName() {
+      document.querySelectorAll('.account-head strong').forEach((node) => {
+        if (/^Reel(?:io|oo)$/.test(node.textContent.trim())) {
+          node.textContent = VARIANT_ACCOUNT_NAME;
+        }
+      });
+    }
+    applyVariantAccountName();
+    document.addEventListener('DOMContentLoaded', applyVariantAccountName);
+
   </script>
+  <div class="variant-switcher" aria-label="시안 전환">
+    <a class="active" href="content-list-a.html" aria-current="page">A안</a>
+    <a href="content-list-b.html">B안</a>
+  </div>
 </body>
 </html>

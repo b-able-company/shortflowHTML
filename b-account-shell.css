@@ -1,0 +1,153 @@
+/* B proposal only: account-area sidebar and dropdown refinements. */
+.utility-remote,
+.utility-remote-collapse {
+  display: none !important;
+}
+
+.top-nav {
+  box-shadow: none !important;
+}
+
+.account-head {
+  min-height: 54px;
+  background: #fff;
+  border-radius: 12px 12px 0 0;
+}
+
+.account-head strong {
+  font-weight: 600;
+}
+
+.account-head span {
+  font-weight: 400;
+}
+
+.account-menu {
+  width: 160px;
+  padding: 0 0 5px;
+  overflow: hidden;
+}
+
+.account-menu-item {
+  position: relative;
+  min-height: 43px;
+  margin: 0 5px;
+  font-weight: 500;
+}
+
+.account-menu-item .nav-icon,
+.account-menu-item .account-menu-icon {
+  position: absolute;
+  left: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.14s ease, visibility 0.14s ease;
+}
+
+.account-menu-item:hover .nav-icon,
+.account-menu-item:hover .account-menu-icon,
+.account-menu-item.is-current .nav-icon,
+.account-menu-item.is-current .account-menu-icon,
+.account-menu-item[aria-current="page"] .nav-icon,
+.account-menu-item[aria-current="page"] .account-menu-icon {
+  opacity: 1;
+  visibility: visible;
+}
+
+.account-menu-item.is-current,
+.account-menu-item[aria-current="page"] {
+  background: #f3f4f6;
+  color: #1d1c1c;
+}
+
+.b-account-shell {
+  width: min(var(--max, 1140px), calc(100vw - 48px));
+  margin: 0 auto;
+  padding: 40px 0 0;
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.main > .b-account-shell {
+  width: 100%;
+  padding-top: 0;
+}
+
+.b-account-panel {
+  min-width: 0;
+}
+
+.b-account-stack {
+  position: sticky;
+  top: 86px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  border: 0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.b-stack-link {
+  min-height: 48px;
+  padding: 0 14px;
+  border-radius: 6px;
+  color: #626975;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.b-stack-link:hover {
+  background: #f7f7f9;
+  color: #1d1d1f;
+}
+
+.b-stack-link.is-active {
+  background: #f3f4f6;
+  color: #1d1d1f;
+  font-weight: 600;
+}
+
+.b-stack-link.danger {
+  color: #9ca0a6;
+}
+
+.b-stack-link.danger:hover {
+  color: #cc4b2b;
+  background: #fff8f6;
+}
+
+.b-account-shell #app .container {
+  width: 100%;
+  padding: 0 0 40px;
+}
+
+.b-account-shell #app .bundle-container {
+  --max: 100%;
+}
+
+@media (max-width: 900px) {
+  .b-account-shell {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .b-account-stack {
+    position: static;
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .b-stack-link {
+    flex: 0 0 auto;
+  }
+}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>shortflow | 콘텐츠 장바구니</title>
+  <link rel="stylesheet" href="dashboard-common.css">
+  <link rel="stylesheet" href="cart-b.css">
+  <link rel="stylesheet" href="b-account-shell.css">
+  <script src="dashboard-nav.js"></script>
+  <script src="b-account-shell.js" data-b-account-page="cart"></script>
+</head>
+<body>
+  <div data-shortflow-nav="content"></div>
+  <div class="b-account-shell">
+    <aside class="b-account-stack" aria-label="계정 메뉴">
+      <a class="b-stack-link" href="owner-b.html">마이페이지</a>
+      <a class="b-stack-link is-active" href="cart-b.html" aria-current="page">장바구니</a>
+      <a class="b-stack-link" href="content-favorites-b.html">즐겨찾기</a>
+      <a class="b-stack-link danger" href="login/login.html">로그아웃</a>
+    </aside>
+    <div class="b-account-panel" id="app"></div>
+  </div>
+
+  <script src="cart-data-b.js"></script>
+  <script src="cart-app-b.js"></script>
+</body>
+</html>
