@@ -34,13 +34,15 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; background: #fff; }
 .topbar { height: 46px; background: #fff; border-bottom: 0; display: flex; align-items: center; padding: 0 18px; flex-shrink: 0; }
 .topbar-title { font-size: 14px; font-weight: 600; }
+.main > .body { padding: 0 !important; }
 .body { --history-pane-width: 440px; flex: 1; min-height: 0; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) var(--history-pane-width); background: #fff; position: relative; }
 .body::before { content: ""; position: absolute; top: 0; right: 0; left: 0; height: 1px; background: #e5e5e5; pointer-events: none; z-index: 3; }
-.body::after { content: ""; position: absolute; top: 0; right: var(--history-pane-width); bottom: 0; width: 1px; background: #e5e5e5; pointer-events: none; z-index: 4; }
+.body::after { content: none; }
 .compose-pane,
 .history-pane { min-width: 0; height: 100%; overflow-y: auto; }
-.compose-pane { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 0; align-items: start; padding: 18px 18px 24px 6px; background: #fff; }
-.history-pane { padding: 18px 18px 24px 40px; background: #fff; }
+.compose-pane { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 0; align-items: start; padding: 38px 30px 54px 36px; background: #fff; }
+.history-pane { padding: 0 0 24px; border-left: 1px solid #e5e5e5; background: #fff; scrollbar-width: none; }
+.history-pane::-webkit-scrollbar { width: 0; height: 0; }
 .page-head { min-height: 52px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
 .page-title { color: #1a1a18; font-size: 17px; font-weight: 600; }
 .page-sub { margin-top: 4px; color: #999; font-size: 11.5px; line-height: 1.45; }
@@ -68,38 +70,41 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .btn-ghost:hover { background: #f7f7f7; border-color: transparent; color: #333; }
 
 /* MAIL STEPS */
-.compose-step-tabs { display: grid; grid-template-columns: 1fr; align-content: start; align-self: start; border: 0.5px solid #e3e3e3; border-radius: 4px 0 0 4px; overflow: hidden; background: #fff; }
-.compose-step-head { width: 100%; min-height: 64px; padding: 12px 12px; border: 0; border-bottom: 0.5px solid #eeeeee; background: #fff; font-family: inherit; display: flex; align-items: center; gap: 9px; cursor: pointer; text-align: left; }
+.compose-step-tabs { display: grid; grid-template-columns: 1fr; align-content: start; align-self: start; gap: 4px; border: 0; border-radius: 0; overflow: visible; background: transparent; }
+.compose-step-head { position: relative; width: 100%; min-height: 64px; padding: 12px 12px; border: 0; border-radius: 8px 0 0 8px; background: #fff; font-family: inherit; display: flex; align-items: center; gap: 9px; cursor: pointer; text-align: left; }
 .compose-step-head:last-child { border-bottom: 0; }
 .compose-step-head:hover { background: #fafafa; }
-.compose-step-head.active { background: #f3f3f3; }
+.compose-step-head.active { z-index: 1; background: #f3f3f3; }
 .compose-step-head.locked { cursor: not-allowed; opacity: 0.42; }
-.step-no { width: 20px; color: #aaa; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; line-height: 1.2; flex: 0 0 20px; }
-.compose-step-head.done .step-no { color: #639922; }
+.step-no { width: 20px; min-height: 17px; color: #aaa; display: inline-flex; align-self: center; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; line-height: 1.25; flex: 0 0 20px; }
+.compose-step-head.done .step-no { color: #1a1a18; }
 .compose-step-head.active .step-no { color: #1a1a18; font-weight: 500; }
-.step-label { min-width: 0; flex: 1; transform: translateY(4px); }
-.step-name { display: block; color: #333; font-size: 13px; font-weight: 500; line-height: 1.25; }
-.step-desc { display: block; margin-top: 3px; color: #aaa; font-size: 11.5px; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.step-label { min-width: 0; flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 86px; align-items: center; gap: 12px; }
+.step-name { min-width: 0; display: block; color: #333; font-size: 13px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.step-desc { min-width: 0; display: block; color: #e85d2c; font-size: 11.5px; line-height: 1.25; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .compose-step-toggle { display: none; }
 .compose-step-panel { display: none; grid-column: 2; grid-row: 1; align-self: start; min-height: 256px; margin: 0; border: 0.5px solid rgb(242, 242, 242); border-radius: 0 4px 4px 0; background: #fff; overflow: hidden; }
 .compose-step-panel.active { display: block; }
+.compose-step-panel.active[data-compose-step="3"] { position: relative; overflow: visible; margin-bottom: 58px; }
+.compose-step-panel.active[data-compose-step="4"] { position: relative; overflow: visible; margin-bottom: 58px; }
 .compose-step-body { padding: 14px; }
 .compose-nav { display: none; }
 .compose-nav-copy { color: #999; font-size: 11.5px; }
 .compose-nav-actions { display: flex; align-items: center; gap: 8px; }
 
 /* MAIL TYPE */
-.mail-type-step-body { min-height: 254px; display: flex; flex-direction: column; }
-.type-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.type-btn { width: 100%; min-height: 58px; padding: 10px 12px; border: 0.5px solid #e5e5e5; border-radius: 6px; background: #fff; color: #666; font-family: inherit; cursor: pointer; display: flex; align-items: center; gap: 10px; text-align: left; }
+.mail-type-step-body { min-height: 254px; display: flex; align-items: stretch; justify-content: center; }
+.type-group { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); justify-content: center; gap: 14px; }
+.type-btn { width: 100%; min-height: 100%; padding: 0 18px; border: 0.5px solid #e3e3e3; border-radius: 14px; background: #fff; color: #1a1a18; font-family: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; transition: background .14s ease, border-color .14s ease, color .14s ease; }
 .type-btn:hover { background: #fafafa; border-color: #d7d7d7; }
-.type-btn.active { background: #f8f8f8; border-color: #1a1a18; color: #1a1a18; }
-.type-check { width: 17px; height: 17px; border: 1.4px solid #d5d4ce; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 17px; }
-.type-btn.active .type-check { background: #1a1a18; border-color: #1a1a18; color: #fff; }
-.type-check i { display: none; font-size: 11px; }
-.type-btn.active .type-check i { display: block; }
-.type-name { color: #1a1a18; font-size: 13px; font-weight: 550; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.type-btn:active { background: #eeeeee; border-color: #d0d0d0; }
+.type-btn.active { background: #eeeeee; border-color: #d7d7d7; color: #1a1a18; }
+.type-name { color: inherit; font-size: 15.5px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .step-panel-actions { margin-top: auto; padding-top: 14px; display: flex; justify-content: flex-end; }
+.compose-step-panel[data-compose-step="3"] .step-panel-actions { position: absolute; right: 0; bottom: -56px; padding-top: 0; }
+#platform-next-btn { height: 42px; min-width: 122px; padding: 0 26px; border-radius: 999px; border-color: #1d1d1f; background: #1d1d1f; font-size: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); transition: background .16s ease, border-color .16s ease, transform .12s ease, box-shadow .16s ease; }
+#platform-next-btn:hover:not(:disabled) { background: #000; border-color: #000; box-shadow: 0 2px 5px rgba(0,0,0,0.12); }
+#platform-next-btn:active:not(:disabled) { transform: scale(0.98); }
 
 /* SOURCE LIST */
 .source-tools,
@@ -112,7 +117,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .source-row { display: grid; grid-template-columns: 58px minmax(0, 1fr) 92px 112px; align-items: center; min-height: 66px; border-bottom: 0.5px solid rgb(242, 242, 242); cursor: pointer; }
 .source-row:last-child { border-bottom: 0; }
 .source-row:hover { background: #fcfcfc; }
-.source-row.selected { background: #fafafa; box-shadow: inset 0 0 0 1px #1a1a18; }
+.source-row.selected { background: #f7f7f7; box-shadow: inset 0 0 0 1px #dedede; }
 .source-list.content-source-list .source-table-head,
 .source-list.content-source-list .source-row { grid-template-columns: minmax(230px, 1.25fr) minmax(130px, 0.85fr) 88px 108px; min-width: 650px; }
 .source-list.content-source-list .source-row { min-height: 64px; }
@@ -135,9 +140,9 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .source-meta { color: #777; font-size: 11.5px; white-space: nowrap; }
 .source-status { width: fit-content; min-height: 22px; padding: 0 8px; border-radius: 999px; background: #f7f7f7; border: 0.5px solid #e5e5e5; color: #666; display: inline-flex; align-items: center; font-size: 10.5px; white-space: nowrap; }
 .source-pagination { min-height: 38px; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; }
-.source-pagination .page-btn { border-color: transparent; background: transparent; }
-.source-pagination .page-btn:hover { background: #f7f7f7; border-color: transparent; }
-.source-pagination .page-btn.active { border-color: transparent; background: #1a1a18; color: #fff; }
+.source-pagination .page-btn { min-width: 22px; height: 24px; padding: 0 4px; border: 0; border-radius: 0; background: transparent; color: #aaa; font-size: 12px; line-height: 1; }
+.source-pagination .page-btn:hover { background: transparent; border-color: transparent; color: #555; }
+.source-pagination .page-btn.active { border-color: transparent; background: transparent; color: #1a1a18; font-weight: 500; }
 
 /* PLATFORM TABLE */
 .platform-summary { display: flex; align-items: center; gap: 8px; margin-left: auto; color: #888; font-size: 11.5px; }
@@ -145,66 +150,119 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .platform-table-scroll { width: 100%; overflow-x: auto; }
 .platform-head,
 .platform-row { display: grid; grid-template-columns: 42px minmax(200px, 1fr) 110px 120px; align-items: center; min-width: 520px; border-bottom: 0.5px solid rgb(242, 242, 242); }
-.platform-head { min-height: 36px; color: #a1a1a1; font-size: 10.5px; font-weight: 400; }
-.platform-row { min-height: 48px; cursor: pointer; }
+.platform-head { min-height: 32px; color: #a1a1a1; font-size: 10.5px; font-weight: 400; }
+.platform-row { min-height: 38px; cursor: pointer; }
 .platform-row:last-child { border-bottom: 0; }
 .platform-row:hover { background: #fcfcfc; }
 .platform-row.checked { background: #fafafa; }
-.platform-cell { min-width: 0; min-height: 100%; padding: 9px 12px; border-right: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; }
+.platform-cell { min-width: 0; min-height: 100%; padding: 6px 12px; border-right: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; }
 .platform-cell:last-child { border-right: 0; }
 .platform-check { width: 17px; height: 17px; border: 1.4px solid #d5d4ce; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
 .platform-row.checked .platform-check { background: #1a1a18; border-color: #1a1a18; }
-.platform-check i { display: none; color: #fff; font-size: 11px; }
+.platform-check i { display: none; color: #fff; font-size: 12px; font-weight: 700; line-height: 1; }
 .platform-row.checked .platform-check i { display: block; }
 .platform-name { color: #1a1a18; font-size: 12px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .plain-text { color: #555; font-size: 11.5px; white-space: nowrap; }
-.sent-text { color: #5f8a34; font-size: 11px; white-space: nowrap; }
+.sent-text { color: #555; font-size: 11.5px; white-space: nowrap; }
+.platform-pagination { min-height: 38px; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; }
+.platform-pagination .page-btn { min-width: 22px; height: 24px; padding: 0 4px; border: 0; border-radius: 0; background: transparent; color: #aaa; font-size: 12px; line-height: 1; }
+.platform-pagination .page-btn:hover { background: transparent; border-color: transparent; color: #555; }
+.platform-pagination .page-btn.active { border-color: transparent; background: transparent; color: #1a1a18; font-weight: 500; }
 .empty-state { padding: 28px 12px; color: #bbb; font-size: 12px; text-align: center; }
 
 /* PREVIEW */
-.preview-grid { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 14px; }
+.preview-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
 .mail-preview { min-height: 248px; border: 0.5px solid rgb(242, 242, 242); border-radius: 12px; overflow: hidden; background: #fff; }
-.preview-head { min-height: 42px; padding: 0 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 0.5px solid rgb(242, 242, 242); background: #fafafa; }
-.preview-subject { color: #1a1a18; font-size: 12.5px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.preview-type { color: #999; font-size: 11px; }
-.preview-body { padding: 15px 16px; color: #333; font-size: 12.5px; line-height: 1.7; white-space: pre-line; }
+.preview-head { min-height: 42px; padding: 0 14px; display: flex; align-items: center; border-bottom: 0.5px solid rgb(242, 242, 242); background: #f5f5f5; }
+.preview-subject { color: #1a1a18; font-size: 13px; font-weight: 400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.preview-body { padding: 20px 16px; background: #f5f5f5; color: #333; font-size: 12.5px; line-height: 1.7; }
+.email-template-card { max-width: 520px; margin: 0 auto; padding: 38px 34px; background: #fff; }
+.email-template-title { margin: 0 0 14px; color: #111; font-size: 18px; font-weight: 700; line-height: 1.3; }
+.email-template-copy { margin: 0 0 28px; color: #333; font-size: 12.5px; line-height: 1.8; }
+.email-template-copy strong { font-weight: 700; color: #111; }
+.email-template-link { display: inline-block; margin-bottom: 34px; color: #ff773d; font-size: 12.5px; font-weight: 600; text-decoration: none; }
+.email-template-foot { border-top: 1px solid #eee; padding-top: 18px; }
+.email-template-note { margin: 0 0 8px; color: #aaa; font-size: 11px; line-height: 1.5; }
+.email-template-brand { margin: 0; color: #555; font-size: 12px; font-weight: 700; }
 .send-review { border: 0.5px solid rgb(242, 242, 242); border-radius: 12px; background: #fff; overflow: hidden; }
-.review-row { min-height: 38px; padding: 9px 12px; border-bottom: 0.5px solid rgb(242, 242, 242); display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.preview-side { min-width: 0; }
+.review-title { min-height: 36px; padding: 10px 12px; border-bottom: 0.5px solid rgb(242, 242, 242); color: #1a1a18; font-size: 12px; font-weight: 600; }
+.review-row { min-height: 38px; padding: 9px 12px; border-bottom: 0.5px solid rgb(242, 242, 242); display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 12px; align-items: baseline; }
 .review-row:last-child { border-bottom: 0; }
-.review-key { color: #aaa; font-size: 11px; flex-shrink: 0; }
+.review-key { color: #aaa; font-size: 11px; min-width: 0; white-space: nowrap; }
 .review-val { color: #333; font-size: 12px; text-align: right; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.send-bar { margin-top: 12px; min-height: 48px; padding: 8px 0; display: flex; align-items: center; gap: 12px; }
-.send-count { color: #777; font-size: 12px; }
-.send-count strong { color: #1a1a18; }
+.review-val.multiline { white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.55; }
+.review-chip-list { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 5px; }
+.review-chip { min-height: 22px; padding: 4px 8px; border: 0.5px solid #e3e3e3; border-radius: 999px; background: #f8f8f8; color: #444; font-size: 11.5px; line-height: 1.2; white-space: nowrap; }
+.send-bar { margin-top: 18px; min-height: 52px; padding: 0; display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+.compose-step-panel[data-compose-step="4"] .send-bar { position: absolute; right: 0; bottom: -56px; margin-top: 0; }
+#send-btn { height: 42px; min-width: 126px; padding: 0 24px; border-radius: 999px; font-size: 11.5px; }
 .send-success { display: none; margin-top: 10px; padding: 12px 14px; border-radius: 9px; background: #EAF3DE; color: #3B6D11; font-size: 12px; }
 .send-success.show { display: block; }
 
+/* CONFIRM */
+.mail-confirm-backdrop { position: fixed; inset: 0; z-index: 420; display: none; align-items: center; justify-content: center; padding: 24px; background: rgba(0,0,0,0.08); }
+.mail-confirm-backdrop.show { display: flex; }
+.mail-confirm-dialog { width: min(322px, 100%); overflow: hidden; border: 0.5px solid rgba(0,0,0,0.08); border-radius: 18px; background: rgba(255,255,255,0.96); text-align: center; }
+.mail-confirm-body { padding: 24px 22px 20px; }
+.mail-confirm-icon { width: 54px; height: 54px; margin: 0 auto 15px; border-radius: 16px; background: #fff3ed; color: #e85d2c; display: flex; align-items: center; justify-content: center; font-size: 25px; }
+.mail-confirm-title { color: #1a1a18; font-size: 15px; font-weight: 600; line-height: 1.35; }
+.mail-confirm-copy { margin-top: 8px; color: #777d86; font-size: 12px; line-height: 1.5; white-space: pre-line; }
+.mail-confirm-actions { display: grid; grid-template-columns: 1fr 1fr; border-top: 0.5px solid #e7e7e7; }
+.mail-confirm-btn { height: 44px; border: 0; background: transparent; color: #4f5660; font-family: inherit; font-size: 13px; cursor: pointer; }
+.mail-confirm-btn + .mail-confirm-btn { border-left: 0.5px solid #e7e7e7; }
+.mail-confirm-btn:hover { background: rgba(0,0,0,0.035); }
+.mail-confirm-btn.primary { color: #007aff; font-weight: 600; }
+
 /* HISTORY */
-.history-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.history-head { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; padding: 18px 0 0 18px; }
 .history-title { display: flex; align-items: center; gap: 7px; color: #4f5965; font-size: 12px; font-weight: 600; }
 .history-title::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #e85d2c; flex: 0 0 6px; }
-.history-table { border: 0.5px solid rgb(242, 242, 242); border-radius: 12px; overflow: hidden; background: #fff; }
-.history-row { min-height: 72px; padding: 11px 12px; border-bottom: 0.5px solid rgb(242, 242, 242); cursor: pointer; display: grid; grid-template-columns: minmax(0, 1fr) 22px; gap: 10px; align-items: center; }
+.history-tools { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 7px; align-items: center; padding-right: 18px; }
+.history-type-filter {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 34px;
+  padding: 0 31px 0 10px;
+  border: 0.5px solid #e5e5e5;
+  border-radius: 8px;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.25 5.25 7 9l3.75-3.75' fill='none' stroke='%23888888' stroke-width='1.45' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px 14px;
+  color: #555;
+  font-family: inherit;
+  font-size: 12px;
+  outline: none;
+}
+.history-type-filter:focus { border-color: #aaa; }
+.history-table { --history-cols: 34px 52px minmax(0, 1fr) auto 20px; width: 100%; border-top: 0.5px solid rgb(242, 242, 242); border-bottom: 0; border-radius: 0; overflow: visible; background: #fff; }
+.history-list-head { min-height: 30px; padding: 0 16px 0 18px; border-bottom: 0.5px solid rgb(242, 242, 242); display: grid; grid-template-columns: var(--history-cols); column-gap: 7px; align-items: center; color: #aaa; font-size: 10.5px; }
+.history-row { min-height: 46px; padding: 5px 16px 5px 18px; border-bottom: 0.5px solid rgb(242, 242, 242); cursor: pointer; display: grid; grid-template-columns: var(--history-cols); column-gap: 7px; align-items: center; }
 .history-row:hover { background: #fcfcfc; }
 .history-row.open { background: #fafafa; }
-.history-date { color: #555; font-size: 11px; line-height: 1.35; }
-.history-main { min-width: 0; display: block; }
-.history-target { color: #1a1a18; font-size: 12px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.history-sub { margin-top: 2px; color: #aaa; font-size: 10.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.history-meta { margin-top: 7px; display: flex; align-items: center; justify-content: space-between; gap: 8px; color: #999; font-size: 10.5px; }
-.history-recipient { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.history-main { min-width: 0; display: contents; }
+.history-no,
+.history-kind { color: #999; font-size: 11px; white-space: nowrap; }
+.history-no { font-variant-numeric: tabular-nums; }
+.history-kind { color: #777; }
+.history-target { grid-column: 3; color: #1a1a18; font-size: 12.5px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.history-brief { grid-column: 4; justify-self: end; color: #999; font-size: 11px; line-height: 1.25; }
+.history-date { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .result-ok { color: #3B6D11; font-size: 11px; }
-.history-toggle { margin-left: auto; color: #aaa; font-size: 16px; transition: transform 0.18s ease, color 0.18s ease; }
+.history-toggle { grid-column: 5; align-self: center; justify-self: center; width: 20px; height: 20px; margin-left: 0; color: #aaa; font-size: 17px; display: flex; align-items: center; justify-content: center; transition: transform 0.18s ease, color 0.18s ease; }
 .history-row.open .history-toggle { color: #333; transform: rotate(180deg); }
-.history-inline-detail { border-bottom: 0.5px solid rgb(242, 242, 242); background: #fafafa; padding: 11px 12px 12px; }
+.history-inline-detail { border-bottom: 0.5px solid rgb(242, 242, 242); background: #fafafa; padding: 11px 18px 12px; }
 .history-inline-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.history-empty { min-height: 96px; padding: 26px 12px; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 12px; text-align: center; }
 .detail-head { min-height: 42px; padding: 0 12px; border-bottom: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; justify-content: space-between; background: #fafafa; }
 .detail-title { color: #1a1a18; font-size: 12.5px; font-weight: 600; }
 .detail-body { border: 0.5px solid rgb(242, 242, 242); border-radius: 10px; background: #fff; overflow: hidden; }
 .detail-platform-box { padding: 12px; }
 .detail-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
-.detail-platform { min-height: 30px; padding: 7px 9px; border: 0.5px solid #eeeeea; border-radius: 7px; display: flex; align-items: center; justify-content: space-between; gap: 10px; color: #333; font-size: 11.5px; }
-.detail-platform span:last-child { color: #639922; }
+.detail-platform { min-height: 30px; padding: 7px 9px; border: 0.5px solid #eeeeea; border-radius: 7px; display: flex; align-items: center; justify-content: flex-start; gap: 10px; color: #333; font-size: 11.5px; }
 .history-pane .review-row { align-items: flex-start; justify-content: flex-start; }
 .history-pane .review-key { width: 58px; }
 .history-pane .review-val { white-space: normal; text-align: left; line-height: 1.4; }
@@ -214,6 +272,33 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .page-btn:hover { background: #fafafa; border-color: #cfcfcf; }
 .page-btn.active { background: #1a1a18; border-color: #1a1a18; color: #fff; }
 .page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.history-pagination {
+  justify-content: center;
+  gap: 14px;
+}
+.history-pagination .page-btn {
+  min-width: 0;
+  width: auto;
+  height: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #aaa;
+  font-size: 12px;
+  line-height: 1;
+}
+.history-pagination .page-btn:hover {
+  background: transparent;
+  border-color: transparent;
+  color: #555;
+}
+.history-pagination .page-btn.active {
+  background: transparent;
+  border-color: transparent;
+  color: #1a1a18;
+  font-weight: 500;
+}
 
 @media (max-width: 1180px) {
   .body { grid-template-columns: 1fr; overflow-y: auto; }
@@ -297,7 +382,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
           <span class="step-no">1</span>
           <span class="step-label">
             <span class="step-name">메일 유형 선택</span>
-            <span class="step-desc" id="mail-type-summary">콘텐츠 제안</span>
+            <span class="step-desc" id="mail-type-summary"></span>
           </span>
           <i class="ti ti-chevron-right compose-step-toggle"></i>
         </button>
@@ -306,7 +391,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
           <span class="step-no">2</span>
           <span class="step-label">
             <span class="step-name" id="source-section-title">자료 선택</span>
-            <span class="step-desc" id="source-summary">검색 후 선택</span>
+            <span class="step-desc" id="source-summary"></span>
           </span>
           <i class="ti ti-chevron-right compose-step-toggle"></i>
         </button>
@@ -315,7 +400,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
           <span class="step-no">3</span>
           <span class="step-label">
             <span class="step-name">발송할 플랫폼사 선택</span>
-            <span class="step-desc" id="platform-summary">복수 선택 가능</span>
+            <span class="step-desc" id="platform-summary"></span>
           </span>
           <i class="ti ti-chevron-right compose-step-toggle"></i>
         </button>
@@ -324,7 +409,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
           <span class="step-no">4</span>
           <span class="step-label">
             <span class="step-name">메일 미리보기</span>
-            <span class="step-desc" id="preview-summary">대기</span>
+            <span class="step-desc" id="preview-summary"></span>
           </span>
           <i class="ti ti-chevron-right compose-step-toggle"></i>
         </button>
@@ -333,9 +418,6 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
       <section class="section compose-step-panel" data-compose-step="1">
         <div class="compose-step-body mail-type-step-body">
           <div class="type-group" id="mail-type-group"></div>
-          <div class="step-panel-actions">
-            <button class="btn btn-primary" type="button" onclick="handleMailStepNext()">다음</button>
-          </div>
         </div>
       </section>
 
@@ -349,9 +431,6 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
           </div>
           <div class="source-list" id="source-list"></div>
           <div class="source-pagination" id="source-pagination"></div>
-          <div class="step-panel-actions">
-            <button class="btn btn-primary" id="source-next-btn" type="button" onclick="handleMailStepNext()" disabled>다음</button>
-          </div>
         </div>
       </section>
 
@@ -360,12 +439,13 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
           <div class="platform-tools">
             <div class="search-wrap" style="flex:1">
               <i class="ti ti-search"></i>
-              <input class="search-input" id="platform-search" placeholder="플랫폼사명, 지역 검색" oninput="filterPlatforms(this.value)" />
+              <input class="search-input" id="platform-search" placeholder="플랫폼사명 검색" oninput="filterPlatforms(this.value)" />
             </div>
             <button class="btn" type="button" onclick="toggleHideSent()" id="hide-sent-btn">발송 완료 제외</button>
             <button class="btn" type="button" onclick="selectAllPlatforms()">전체 선택</button>
           </div>
           <div class="platform-table" id="platform-table"></div>
+          <div class="platform-pagination" id="platform-pagination"></div>
           <div class="step-panel-actions">
             <button class="btn btn-primary" id="platform-next-btn" type="button" onclick="handleMailStepNext()" disabled>다음</button>
           </div>
@@ -378,14 +458,12 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
             <div class="mail-preview">
               <div class="preview-head">
                 <div class="preview-subject" id="preview-subject">자료를 선택하면 메일 제목이 표시됩니다</div>
-                <div class="preview-type" id="preview-type"></div>
               </div>
               <div class="preview-body" id="preview-body">메일 유형과 발송 대상을 선택하면 템플릿 미리보기를 확인할 수 있습니다.</div>
             </div>
-            <div>
+            <div class="preview-side">
               <div class="send-review" id="send-review"></div>
               <div class="send-bar">
-                <div class="send-count" id="send-count">플랫폼사를 선택해주세요</div>
                 <button class="btn btn-primary" id="send-btn" type="button" onclick="sendMail()" disabled>메일 발송</button>
               </div>
               <div class="send-success" id="send-success"></div>
@@ -399,10 +477,35 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
     <aside class="history-pane" id="history-view">
       <div class="history-head">
         <div class="history-title">메일 발송 이력</div>
+        <div class="history-tools">
+          <select class="history-type-filter" id="history-type-filter" onchange="changeHistoryTypeFilter(this.value)">
+            <option value="">전체 유형</option>
+            <option value="content">콘텐츠 제안</option>
+            <option value="collaboration">제작협업</option>
+          </select>
+          <div class="search-wrap">
+            <i class="ti ti-search"></i>
+            <input class="search-input" id="history-search" placeholder="콘텐츠명 검색" oninput="filterHistory(this.value)" />
+          </div>
+        </div>
       </div>
       <div class="history-table" id="history-table"></div>
-      <div class="pagination" id="history-pagination"></div>
+      <div class="pagination history-pagination" id="history-pagination"></div>
     </aside>
+  </div>
+</div>
+
+<div class="mail-confirm-backdrop" id="mail-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="mail-confirm-title" onclick="closeMailConfirm(event)">
+  <div class="mail-confirm-dialog" onclick="event.stopPropagation()">
+    <div class="mail-confirm-body">
+      <div class="mail-confirm-icon" aria-hidden="true"><i class="ti ti-mail-forward"></i></div>
+      <div class="mail-confirm-title" id="mail-confirm-title">메일을 발송할까요?</div>
+      <div class="mail-confirm-copy" id="mail-confirm-message">선택한 플랫폼사에 메일이 발송됩니다.</div>
+    </div>
+    <div class="mail-confirm-actions">
+      <button class="mail-confirm-btn" type="button" onclick="closeMailConfirm()">취소</button>
+      <button class="mail-confirm-btn primary" type="button" onclick="submitMailConfirm()">발송</button>
+    </div>
   </div>
 </div>
 
@@ -411,14 +514,14 @@ const mailTypes = {
   content: {
     label: '콘텐츠 제안',
     sourceLabel: '콘텐츠 검색',
-    searchPlaceholder: '콘텐츠명, 제작사명, 제작연도 검색',
+    searchPlaceholder: '콘텐츠명 검색',
     subject: source => `[Shortflow] ${source.title} 콘텐츠 제안`,
     body: (source, count) => `안녕하세요.\n\nShortflow에서 ${source.company}의 "${source.title}" 콘텐츠를 제안드립니다.\n장르: ${source.genre}\n회차: ${source.episodes}화\n\n검토 가능한 메타데이터와 자료 링크를 함께 전달드립니다.\n수신 플랫폼사 ${count}곳에 동일 템플릿으로 발송됩니다.`,
   },
   collaboration: {
     label: '제작협업 기획안',
     sourceLabel: '제작협업 기획안 검색',
-    searchPlaceholder: '기획안명, 제작사명, 상태 검색',
+    searchPlaceholder: '기획안명 검색',
     subject: source => `[Shortflow] ${source.title} 제작협업 기획안 제안`,
     body: (source, count) => `안녕하세요.\n\nShortflow 제작협업 기획안 "${source.title}"을 공유드립니다.\n제작사: ${source.company}\n예상 포맷: ${source.format}\n상태: ${source.status}\n\n협업 검토를 위해 기획안과 요약 정보를 함께 전달드립니다.\n수신 플랫폼사 ${count}곳에 동일 템플릿으로 발송됩니다.`,
   },
@@ -463,6 +566,9 @@ const platforms = [
   { id: 10, name: 'MiniDrama', region: 'JP', manager: 'Yuto Sato', type: 'Shortform' },
   { id: 11, name: 'ShortMax', region: 'EU', manager: 'Noah Meyer', type: 'Shortform' },
   { id: 12, name: 'DramaWave', region: 'SEA', manager: 'Nora Lim', type: 'Platform' },
+  { id: 13, name: 'DramaBite', region: 'IN', manager: 'Anika Rao', type: 'Shortform' },
+  { id: 14, name: 'ReelPlay', region: 'MENA', manager: 'Omar Nasser', type: 'Platform' },
+  { id: 15, name: 'StoryLoop', region: 'EU', manager: 'Claire Dubois', type: 'OTT' },
 ];
 
 const sentHistory = {
@@ -493,19 +599,24 @@ const history = [
   { id: 15, date: '2026.06.16 16:30', sender: '김관리자', type: 'content', target: 'Midnight Tokyo Drift', company: 'ShortReel (US)', platforms: ['DramaWave', 'WeTV'], success: 2, failed: 0, subject: '[Shortflow] Midnight Tokyo Drift 콘텐츠 제안' },
 ];
 
-let selectedMailType = 'content';
+let selectedMailType = null;
 let selectedSourceId = null;
 let checkedPlatforms = new Set();
 let sourceQuery = '';
 let platformQuery = '';
+let historyQuery = '';
+let historyTypeFilter = '';
 let hideSent = false;
 let selectedHistoryId = null;
+let mailConfirmHandler = null;
 let currentView = 'history';
 let historyPage = 1;
 let currentMailStep = 1;
 let sourcePage = 1;
-const historyPageSize = 10;
+let platformPage = 1;
+const historyPageSize = 15;
 const sourcePageSize = 10;
+const platformPageSize = 15;
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, char => ({
@@ -518,7 +629,7 @@ function escapeHtml(value) {
 }
 
 function currentSources() {
-  return sourceData[selectedMailType];
+  return selectedMailType ? sourceData[selectedMailType] : [];
 }
 
 function currentSource() {
@@ -526,7 +637,7 @@ function currentSource() {
 }
 
 function getSentPlatformIds() {
-  return selectedSourceId ? (sentHistory[selectedMailType]?.[selectedSourceId] || []) : [];
+  return selectedMailType && selectedSourceId ? (sentHistory[selectedMailType]?.[selectedSourceId] || []) : [];
 }
 
 function renderView() {
@@ -557,8 +668,9 @@ function setMailType(type) {
   sourceQuery = '';
   platformQuery = '';
   hideSent = false;
-  currentMailStep = 1;
+  currentMailStep = 2;
   sourcePage = 1;
+  platformPage = 1;
   document.getElementById('source-search').value = '';
   document.getElementById('platform-search').value = '';
   renderAll();
@@ -574,14 +686,30 @@ function filterSources(value) {
 
 function filterPlatforms(value) {
   platformQuery = value.trim().toLowerCase();
+  platformPage = 1;
   renderPlatforms();
+}
+
+function filterHistory(value) {
+  historyQuery = value.trim().toLowerCase();
+  historyPage = 1;
+  selectedHistoryId = null;
+  renderHistory();
+}
+
+function changeHistoryTypeFilter(value) {
+  historyTypeFilter = value;
+  historyPage = 1;
+  selectedHistoryId = null;
+  renderHistory();
 }
 
 function selectSource(id) {
   selectedSourceId = id;
   checkedPlatforms.clear();
   platformQuery = '';
-  currentMailStep = 2;
+  platformPage = 1;
+  currentMailStep = 3;
   document.getElementById('platform-search').value = '';
   renderAll();
 }
@@ -589,21 +717,33 @@ function selectSource(id) {
 function clearSourceSelection() {
   selectedSourceId = null;
   checkedPlatforms.clear();
+  platformPage = 1;
   currentMailStep = 2;
   renderAll();
 }
 
 function toggleHideSent() {
   hideSent = !hideSent;
+  platformPage = 1;
+  if (hideSent) {
+    platforms
+      .filter(platform => isPlatformSent(platform))
+      .forEach(platform => checkedPlatforms.delete(platform.id));
+  }
   renderPlatforms();
+  renderPreview();
+}
+
+function isPlatformSent(platform) {
+  const sent = getSentPlatformIds();
+  return sent.includes(platform.id) || Boolean(getPlatformSentDate(platform));
 }
 
 function visiblePlatforms() {
-  const sent = getSentPlatformIds();
   return platforms.filter(platform => {
-    const keyword = `${platform.name} ${platform.region}`.toLowerCase();
+    const keyword = platform.name.toLowerCase();
     return (!platformQuery || keyword.includes(platformQuery)) &&
-      (!hideSent || !sent.includes(platform.id));
+      (!hideSent || !isPlatformSent(platform));
   });
 }
 
@@ -618,10 +758,7 @@ function togglePlatform(id) {
 
 function selectAllPlatforms() {
   if (!selectedSourceId) return;
-  const sent = getSentPlatformIds();
-  platforms
-    .filter(platform => !hideSent || !sent.includes(platform.id))
-    .forEach(platform => checkedPlatforms.add(platform.id));
+  visiblePlatforms().forEach(platform => checkedPlatforms.add(platform.id));
   currentMailStep = 3;
   renderPlatforms();
   renderPreview();
@@ -630,8 +767,7 @@ function selectAllPlatforms() {
 function renderTypeButtons() {
   const group = document.getElementById('mail-type-group');
   group.innerHTML = Object.entries(mailTypes).map(([key, type]) => `
-    <button class="type-btn ${selectedMailType === key ? 'active' : ''}" type="button" onclick="setMailType('${key}')">
-      <span class="type-check"><i class="ti ti-check"></i></span>
+    <button class="type-btn ${currentMailStep !== 1 && selectedMailType === key ? 'active' : ''}" type="button" onclick="setMailType('${key}')">
       <span class="type-name">${type.label}</span>
     </button>
   `).join('');
@@ -642,6 +778,7 @@ function renderStepper() {
 }
 
 function getMaxMailStep() {
+  if (!selectedMailType) return 1;
   if (!selectedSourceId) return 2;
   if (!checkedPlatforms.size) return 3;
   return 4;
@@ -652,7 +789,8 @@ function normalizeMailStep() {
 }
 
 function canEnterMailStep(step) {
-  if (step <= 2) return true;
+  if (step === 1) return true;
+  if (step === 2) return Boolean(selectedMailType);
   if (step === 3) return Boolean(selectedSourceId);
   return Boolean(selectedSourceId && checkedPlatforms.size > 0);
 }
@@ -664,15 +802,21 @@ function getMailStepNotice() {
   return '미리보기 확인 후 메일을 발송합니다.';
 }
 
+function truncateStepSummary(value, maxLength = 12) {
+  const text = String(value || '').trim();
+  return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+}
+
 function renderComposeStep() {
   normalizeMailStep();
   const source = currentSource();
-  document.getElementById('mail-type-summary').textContent = mailTypes[selectedMailType].label;
-  document.getElementById('source-summary').textContent = source ? source.title : '검색 후 선택';
-  document.getElementById('platform-summary').textContent = checkedPlatforms.size ? `${checkedPlatforms.size}개 선택` : '복수 선택 가능';
-  document.getElementById('preview-summary').textContent = checkedPlatforms.size ? '발송 가능' : '대기';
-  const sourceNextBtn = document.getElementById('source-next-btn');
-  if (sourceNextBtn) sourceNextBtn.disabled = !selectedSourceId;
+  const selectedPlatformNames = [...checkedPlatforms]
+    .map(id => platforms.find(platform => platform.id === id)?.name)
+    .filter(Boolean);
+  document.getElementById('mail-type-summary').textContent = selectedMailType ? mailTypes[selectedMailType].label : '';
+  document.getElementById('source-summary').textContent = source ? truncateStepSummary(source.title) : '';
+  document.getElementById('platform-summary').textContent = selectedPlatformNames.length ? `${selectedPlatformNames.length}개` : '';
+  document.getElementById('preview-summary').textContent = '';
   const platformNextBtn = document.getElementById('platform-next-btn');
   if (platformNextBtn) platformNextBtn.disabled = !checkedPlatforms.size;
   document.querySelectorAll('.compose-step-head').forEach(button => {
@@ -689,7 +833,7 @@ function renderComposeStep() {
 }
 
 function isMailStepDone(step) {
-  if (step === 1) return true;
+  if (step === 1) return Boolean(selectedMailType);
   if (step === 2) return Boolean(selectedSourceId);
   if (step === 3) return checkedPlatforms.size > 0;
   return checkedPlatforms.size > 0;
@@ -718,15 +862,18 @@ function handleMailStepNext() {
 
 function renderSources() {
   const type = mailTypes[selectedMailType];
-  document.getElementById('source-section-title').textContent = type.sourceLabel;
-  document.getElementById('source-search').placeholder = type.searchPlaceholder;
+  document.getElementById('source-section-title').textContent = type ? type.sourceLabel : '자료 선택';
+  document.getElementById('source-search').placeholder = type ? type.searchPlaceholder : '검색';
   const list = document.getElementById('source-list');
   const pagination = document.getElementById('source-pagination');
   list.classList.toggle('content-source-list', selectedMailType === 'content');
+  if (!type) {
+    list.innerHTML = '<div class="empty-state">메일 유형을 먼저 선택해주세요</div>';
+    pagination.innerHTML = '';
+    return;
+  }
   const filtered = currentSources().filter(item => {
-    const text = selectedMailType === 'content'
-      ? `${item.title} ${item.company}`.toLowerCase()
-      : `${item.title} ${item.company} ${item.format || ''} ${item.status || ''}`.toLowerCase();
+    const text = item.title.toLowerCase();
     return !sourceQuery || text.includes(sourceQuery);
   });
   if (!filtered.length) {
@@ -783,20 +930,16 @@ function sourcePosterHtml(item) {
 function renderSourcePagination(total, totalPages) {
   const pagination = document.getElementById('source-pagination');
   pagination.innerHTML = `
-    <button class="page-btn" type="button" onclick="setSourcePage(${sourcePage - 1})" ${sourcePage === 1 ? 'disabled' : ''}><i class="ti ti-chevron-left"></i></button>
     ${Array.from({ length: totalPages }, (_, index) => {
       const page = index + 1;
       return `<button class="page-btn ${sourcePage === page ? 'active' : ''}" type="button" onclick="setSourcePage(${page})">${page}</button>`;
     }).join('')}
-    <button class="page-btn" type="button" onclick="setSourcePage(${sourcePage + 1})" ${sourcePage === totalPages ? 'disabled' : ''}><i class="ti ti-chevron-right"></i></button>
   `;
 }
 
 function setSourcePage(page) {
   const total = currentSources().filter(item => {
-    const text = selectedMailType === 'content'
-      ? `${item.title} ${item.company}`.toLowerCase()
-      : `${item.title} ${item.company} ${item.format || ''} ${item.status || ''}`.toLowerCase();
+    const text = item.title.toLowerCase();
     return !sourceQuery || text.includes(sourceQuery);
   }).length;
   const totalPages = Math.max(1, Math.ceil(total / sourcePageSize));
@@ -806,13 +949,18 @@ function setSourcePage(page) {
 
 function renderPlatforms() {
   const table = document.getElementById('platform-table');
-  const sent = getSentPlatformIds();
+  const pagination = document.getElementById('platform-pagination');
   document.getElementById('hide-sent-btn').classList.toggle('btn-primary', hideSent);
   if (!selectedSourceId) {
     table.innerHTML = '<div class="empty-state">먼저 발송할 자료를 선택해주세요</div>';
+    if (pagination) pagination.innerHTML = '';
     return;
   }
   const rows = visiblePlatforms();
+  const totalPages = Math.max(1, Math.ceil(rows.length / platformPageSize));
+  platformPage = Math.min(Math.max(1, platformPage), totalPages);
+  const start = (platformPage - 1) * platformPageSize;
+  const pageRows = rows.slice(start, start + platformPageSize);
   table.innerHTML = `
     <div class="platform-table-scroll">
       <div class="platform-head">
@@ -821,7 +969,7 @@ function renderPlatforms() {
         <div class="platform-cell">지역</div>
         <div class="platform-cell">발송 내역</div>
       </div>
-      ${rows.length ? rows.map(platform => {
+      ${pageRows.length ? pageRows.map(platform => {
         const isChecked = checkedPlatforms.has(platform.id);
         const sentDate = getPlatformSentDate(platform);
         return `
@@ -835,6 +983,24 @@ function renderPlatforms() {
       }).join('') : '<div class="empty-state">조건에 맞는 플랫폼사가 없습니다</div>'}
     </div>
   `;
+  renderPlatformPagination(rows.length, totalPages);
+}
+
+function renderPlatformPagination(total, totalPages) {
+  const pagination = document.getElementById('platform-pagination');
+  if (!pagination) return;
+  pagination.innerHTML = total ? `
+    ${Array.from({ length: totalPages }, (_, index) => {
+      const page = index + 1;
+      return `<button class="page-btn ${platformPage === page ? 'active' : ''}" type="button" onclick="setPlatformPage(${page})">${page}</button>`;
+    }).join('')}
+  ` : '';
+}
+
+function setPlatformPage(page) {
+  const totalPages = Math.max(1, Math.ceil(visiblePlatforms().length / platformPageSize));
+  platformPage = Math.min(Math.max(1, page), totalPages);
+  renderPlatforms();
 }
 
 function getPlatformSentDate(platform) {
@@ -851,30 +1017,79 @@ function getPlatformSentDate(platform) {
 function renderPreview() {
   const source = currentSource();
   const type = mailTypes[selectedMailType];
-  const selectedPlatformNames = [...checkedPlatforms]
-    .map(id => platforms.find(platform => platform.id === id)?.name)
+  const selectedPlatforms = [...checkedPlatforms]
+    .map(id => platforms.find(platform => platform.id === id))
     .filter(Boolean);
+  const selectedPlatformNames = selectedPlatforms.map(platform => platform.name);
   const canSend = Boolean(source && selectedPlatformNames.length);
-  document.getElementById('preview-type').textContent = type.label;
-  document.getElementById('preview-subject').textContent = source ? type.subject(source) : '자료를 선택하면 메일 제목이 표시됩니다';
-  document.getElementById('preview-body').textContent = source
-    ? type.body(source, selectedPlatformNames.length || 0)
-    : '메일 유형과 발송 대상을 선택하면 템플릿 미리보기를 확인할 수 있습니다.';
+  const recipientName = selectedPlatforms.length
+    ? `${selectedPlatforms[0].manager}${selectedPlatforms.length > 1 ? ` 외 ${selectedPlatforms.length - 1}명` : ''}`
+    : '';
+  const contentTitle = source ? source.title : '';
+  const contentUrl = source ? `https://shortflow.io/content/${source.id}` : '';
+  document.getElementById('preview-subject').textContent = source && type ? type.subject(source) : '자료를 선택하면 메일 제목이 표시됩니다';
+  document.getElementById('preview-body').innerHTML = source && type ? `
+    <div class="email-template-card">
+      <h1 class="email-template-title">새로운 콘텐츠를 소개합니다</h1>
+      <p class="email-template-copy">
+        안녕하세요 <strong>recipientName</strong>님,<br>
+        새로운 콘텐츠 <strong>contentTitle</strong>이 Shortflow에 등록되었습니다.<br>
+        아래 버튼을 눌러 콘텐츠를 확인해보세요.
+      </p>
+      <a class="email-template-link" href="#">콘텐츠 확인하기 →</a>
+      <div class="email-template-foot">
+        <p class="email-template-note">본 메일은 발신전용이며, 문의사항은 Shortflow 서비스를 통해 접수해주세요.</p>
+        <p class="email-template-brand">Shortflow</p>
+      </div>
+    </div>
+  ` : '<div class="empty-state">메일 유형과 발송 대상을 선택하면 템플릿 미리보기를 확인할 수 있습니다</div>';
   document.getElementById('send-review').innerHTML = `
-    <div class="review-row"><span class="review-key">메일 유형</span><span class="review-val">${type.label}</span></div>
-    <div class="review-row"><span class="review-key">발송 대상</span><span class="review-val">${source ? escapeHtml(source.title) : '-'}</span></div>
-    <div class="review-row"><span class="review-key">플랫폼사</span><span class="review-val">${selectedPlatformNames.length ? `${selectedPlatformNames[0]}${selectedPlatformNames.length > 1 ? ` 외 ${selectedPlatformNames.length - 1}개` : ''}` : '-'}</span></div>
-    <div class="review-row"><span class="review-key">발송자</span><span class="review-val">김관리자</span></div>
+    <div class="review-title">실제 데이터</div>
+    <div class="review-row"><span class="review-key">recipientName</span><span class="review-val">${recipientName ? escapeHtml(recipientName) : '-'}</span></div>
+    <div class="review-row"><span class="review-key">contentTitle</span><span class="review-val">${contentTitle ? escapeHtml(contentTitle) : '-'}</span></div>
+    <div class="review-row"><span class="review-key">contentUrl</span><span class="review-val">${contentUrl ? escapeHtml(contentUrl) : '-'}</span></div>
+    <div class="review-row"><span class="review-key">메일 유형</span><span class="review-val">${type ? type.label : '-'}</span></div>
+    <div class="review-row"><span class="review-key">플랫폼사</span><span class="review-val multiline">${selectedPlatformNames.length ? `<span class="review-chip-list">${selectedPlatformNames.map(name => `<span class="review-chip">${escapeHtml(name)}</span>`).join('')}</span>` : '-'}</span></div>
   `;
-  document.getElementById('send-count').innerHTML = selectedPlatformNames.length
-    ? `<strong>${selectedPlatformNames.length}</strong>개 플랫폼사 선택됨`
-    : '플랫폼사를 선택해주세요';
   document.getElementById('send-btn').disabled = !canSend;
   renderStepper();
   renderComposeStep();
 }
 
 function sendMail() {
+  const source = currentSource();
+  if (!source || !checkedPlatforms.size) return;
+  const selected = [...checkedPlatforms]
+    .map(id => platforms.find(platform => platform.id === id))
+    .filter(Boolean);
+  openMailConfirm({
+    title: '메일을 발송할까요?',
+    message: `"${source.title}"\n선택한 ${selected.length}개 플랫폼사에 메일이 발송됩니다.`,
+    onConfirm: performSendMail,
+  });
+}
+
+function openMailConfirm({ title, message, onConfirm }) {
+  document.getElementById('mail-confirm-title').textContent = title || '메일을 발송할까요?';
+  document.getElementById('mail-confirm-message').textContent = message || '';
+  mailConfirmHandler = typeof onConfirm === 'function' ? onConfirm : null;
+  document.getElementById('mail-confirm-modal')?.classList.add('show');
+}
+
+function closeMailConfirm(event) {
+  event?.stopPropagation?.();
+  mailConfirmHandler = null;
+  document.getElementById('mail-confirm-modal')?.classList.remove('show');
+}
+
+function submitMailConfirm() {
+  const handler = mailConfirmHandler;
+  mailConfirmHandler = null;
+  document.getElementById('mail-confirm-modal')?.classList.remove('show');
+  if (typeof handler === 'function') handler();
+}
+
+function performSendMail() {
   const source = currentSource();
   if (!source || !checkedPlatforms.size) return;
   const type = mailTypes[selectedMailType];
@@ -905,59 +1120,79 @@ function sendMail() {
   });
   checkedPlatforms.clear();
   selectedHistoryId = newHistoryId;
+  historyQuery = '';
+  historyTypeFilter = '';
   historyPage = 1;
   document.getElementById('send-success').textContent = `${selected.length}개 플랫폼사에 메일을 발송했습니다.`;
   document.getElementById('send-success').classList.add('show');
   renderAll();
 }
 
+function filteredHistoryRows() {
+  return history.filter(item => {
+    const typeMatches = !historyTypeFilter || item.type === historyTypeFilter;
+    const searchable = item.target.toLowerCase();
+    const keywordMatches = !historyQuery || searchable.includes(historyQuery);
+    return typeMatches && keywordMatches;
+  });
+}
+
+function historyListTypeLabel(type) {
+  return type === 'collaboration' ? '기획안' : '콘텐츠';
+}
+
 function renderHistory() {
   const table = document.getElementById('history-table');
-  const totalPages = Math.max(1, Math.ceil(history.length / historyPageSize));
+  const searchInput = document.getElementById('history-search');
+  const typeFilter = document.getElementById('history-type-filter');
+  if (searchInput && searchInput.value !== historyQuery) searchInput.value = historyQuery;
+  if (typeFilter && typeFilter.value !== historyTypeFilter) typeFilter.value = historyTypeFilter;
+  const rows = filteredHistoryRows();
+  const totalPages = Math.max(1, Math.ceil(rows.length / historyPageSize));
   historyPage = Math.min(Math.max(1, historyPage), totalPages);
   const start = (historyPage - 1) * historyPageSize;
-  const pageRows = history.slice(start, start + historyPageSize);
+  const pageRows = rows.slice(start, start + historyPageSize);
   table.innerHTML = `
-    ${pageRows.map(item => {
+    <div class="history-list-head">
+      <span>No</span>
+      <span>유형</span>
+      <span>제목</span>
+      <span>시간</span>
+      <span></span>
+    </div>
+    ${pageRows.length ? pageRows.map((item, index) => {
       const isOpen = selectedHistoryId === item.id;
-      const recipientText = `${escapeHtml(item.platforms[0])}${item.platforms.length > 1 ? ` 외 ${item.platforms.length - 1}개` : ''}`;
       return `
       <div class="history-row ${isOpen ? 'open' : ''}" onclick="showHistoryDetail(${item.id})">
+        <span class="history-no">${rows.length - start - index}</span>
+        <span class="history-kind">${historyListTypeLabel(item.type)}</span>
         <div class="history-main">
-          <div class="history-date">${escapeHtml(item.date)} · ${escapeHtml(item.sender)}</div>
           <div class="history-target">${escapeHtml(item.target)}</div>
-          <div class="history-sub">${mailTypes[item.type].label} · ${escapeHtml(item.company)}</div>
-          <div class="history-meta">
-            <span class="history-recipient">${recipientText}</span>
-            <span class="result-ok">성공 ${item.success}</span>
+          <div class="history-brief">
+            <span class="history-date">${escapeHtml(item.date)}</span>
           </div>
         </div>
         <i class="ti ti-chevron-down history-toggle"></i>
       </div>
       ${isOpen ? renderHistoryInlineDetail(item) : ''}
     `;
-    }).join('')}
+    }).join('') : '<div class="history-empty">검색 결과가 없습니다</div>'}
   `;
   renderHistoryPagination(totalPages);
 }
 
 function renderHistoryPagination(totalPages) {
   const pagination = document.getElementById('history-pagination');
-  const start = history.length ? (historyPage - 1) * historyPageSize + 1 : 0;
-  const end = Math.min(historyPage * historyPageSize, history.length);
   pagination.innerHTML = `
-    <span class="page-info">${start}-${end} / ${history.length}</span>
-    <button class="page-btn" type="button" onclick="setHistoryPage(${historyPage - 1})" ${historyPage === 1 ? 'disabled' : ''}><i class="ti ti-chevron-left"></i></button>
     ${Array.from({ length: totalPages }, (_, index) => {
       const page = index + 1;
       return `<button class="page-btn ${historyPage === page ? 'active' : ''}" type="button" onclick="setHistoryPage(${page})">${page}</button>`;
     }).join('')}
-    <button class="page-btn" type="button" onclick="setHistoryPage(${historyPage + 1})" ${historyPage === totalPages ? 'disabled' : ''}><i class="ti ti-chevron-right"></i></button>
   `;
 }
 
 function setHistoryPage(page) {
-  const totalPages = Math.max(1, Math.ceil(history.length / historyPageSize));
+  const totalPages = Math.max(1, Math.ceil(filteredHistoryRows().length / historyPageSize));
   historyPage = Math.min(Math.max(1, page), totalPages);
   selectedHistoryId = null;
   renderHistory();
@@ -969,16 +1204,15 @@ function renderHistoryInlineDetail(item) {
       <div class="history-inline-grid">
         <div class="detail-body">
           <div class="review-row"><span class="review-key">메일 제목</span><span class="review-val">${escapeHtml(item.subject)}</span></div>
-          <div class="review-row"><span class="review-key">발송 대상</span><span class="review-val">${escapeHtml(item.target)}</span></div>
-          <div class="review-row"><span class="review-key">제작사</span><span class="review-val">${escapeHtml(item.company)}</span></div>
+          <div class="review-row"><span class="review-key">콘텐츠명</span><span class="review-val">${escapeHtml(item.target)}</span></div>
           <div class="review-row"><span class="review-key">메일 유형</span><span class="review-val">${mailTypes[item.type].label}</span></div>
           <div class="review-row"><span class="review-key">발송자</span><span class="review-val">${escapeHtml(item.sender)}</span></div>
           <div class="review-row"><span class="review-key">발송일시</span><span class="review-val">${escapeHtml(item.date)}</span></div>
         </div>
         <div class="detail-body detail-platform-box">
-          <div class="detail-title">수신 플랫폼사</div>
+          <div class="detail-title">보낸 플랫폼</div>
           <div class="detail-list">
-            ${item.platforms.map(name => `<div class="detail-platform"><span>${escapeHtml(name)}</span><span>성공</span></div>`).join('')}
+            ${item.platforms.map(name => `<div class="detail-platform"><span>${escapeHtml(name)}</span></div>`).join('')}
           </div>
         </div>
       </div>
