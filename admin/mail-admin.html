@@ -79,12 +79,15 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .step-no { width: 20px; min-height: 17px; color: #aaa; display: inline-flex; align-self: center; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; line-height: 1.25; flex: 0 0 20px; }
 .compose-step-head.done .step-no { color: #1a1a18; }
 .compose-step-head.active .step-no { color: #1a1a18; font-weight: 500; }
-.step-label { min-width: 0; flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 86px; align-items: center; gap: 12px; }
-.step-name { min-width: 0; display: block; color: #333; font-size: 13px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.step-desc { min-width: 0; display: block; color: #e85d2c; font-size: 11.5px; line-height: 1.25; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.step-label { min-width: 0; flex: 1; display: grid; grid-template-columns: minmax(max-content, 1fr) minmax(0, auto); align-items: center; gap: 12px; }
+.step-name { min-width: 0; display: block; color: #333; font-size: 13px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: visible; text-overflow: clip; }
+.step-desc { min-width: 0; display: block; color: #e85d2c; font-size: 11.5px; line-height: 1.25; text-align: right; white-space: normal; overflow: hidden; word-break: keep-all; }
+.step-desc-main,
+.step-desc-count { display: block; min-width: 0; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: clip; }
 .compose-step-toggle { display: none; }
 .compose-step-panel { display: none; grid-column: 2; grid-row: 1; align-self: start; min-height: 256px; margin: 0; border: 0.5px solid rgb(242, 242, 242); border-radius: 0 4px 4px 0; background: #fff; overflow: hidden; }
 .compose-step-panel.active { display: block; }
+.compose-step-panel.active[data-compose-step="2"] { position: relative; overflow: visible; margin-bottom: 58px; }
 .compose-step-panel.active[data-compose-step="3"] { position: relative; overflow: visible; margin-bottom: 58px; }
 .compose-step-panel.active[data-compose-step="4"] { position: relative; overflow: visible; margin-bottom: 58px; }
 .compose-step-body { padding: 14px; }
@@ -101,9 +104,13 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .type-btn.active { background: #eeeeee; border-color: #d7d7d7; color: #1a1a18; }
 .type-name { color: inherit; font-size: 15.5px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .step-panel-actions { margin-top: auto; padding-top: 14px; display: flex; justify-content: flex-end; }
+.compose-step-panel[data-compose-step="2"] .step-panel-actions,
 .compose-step-panel[data-compose-step="3"] .step-panel-actions { position: absolute; right: 0; bottom: -56px; padding-top: 0; }
+#source-next-btn,
 #platform-next-btn { height: 42px; min-width: 122px; padding: 0 26px; border-radius: 999px; border-color: #1d1d1f; background: #1d1d1f; font-size: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); transition: background .16s ease, border-color .16s ease, transform .12s ease, box-shadow .16s ease; }
+#source-next-btn:hover:not(:disabled),
 #platform-next-btn:hover:not(:disabled) { background: #000; border-color: #000; box-shadow: 0 2px 5px rgba(0,0,0,0.12); }
+#source-next-btn:active:not(:disabled),
 #platform-next-btn:active:not(:disabled) { transform: scale(0.98); }
 
 /* SOURCE LIST */
@@ -117,12 +124,16 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .source-row { display: grid; grid-template-columns: 58px minmax(0, 1fr) 92px 112px; align-items: center; min-height: 66px; border-bottom: 0.5px solid rgb(242, 242, 242); cursor: pointer; }
 .source-row:last-child { border-bottom: 0; }
 .source-row:hover { background: #fcfcfc; }
-.source-row.selected { background: #f7f7f7; box-shadow: inset 0 0 0 1px #dedede; }
+.source-row.selected { background: #f7f7f7; }
 .source-list.content-source-list .source-table-head,
-.source-list.content-source-list .source-row { grid-template-columns: minmax(230px, 1.25fr) minmax(130px, 0.85fr) 88px 108px; min-width: 650px; }
+.source-list.content-source-list .source-row { grid-template-columns: 42px minmax(230px, 1.25fr) minmax(130px, 0.85fr) 88px 108px; min-width: 692px; }
 .source-list.content-source-list .source-row { min-height: 64px; }
 .source-cell { min-width: 0; min-height: 100%; padding: 9px 12px; border-right: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; }
 .source-cell:last-child { border-right: 0; }
+.source-check-cell { justify-content: center; padding: 0 10px; }
+.source-check { width: 18px; height: 18px; border: 1px solid #d2d2d2; border-radius: 8px; background: #fff; color: transparent; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; line-height: 1; }
+.source-row.selected .source-check { border-color: #1a1a18; background: #1a1a18; color: #fff; }
+.source-check i { font-size: 12px; font-weight: 700; }
 .source-content-cell { gap: 10px; }
 .source-poster { width: 44px; height: 44px; border-radius: 7px; background: linear-gradient(145deg, #f1f1f1, #dadada); color: rgba(255,255,255,0.92); font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06); overflow: hidden; }
 .source-poster.p1 { background: linear-gradient(150deg, #30343f 0%, #6d8a93 52%, #e6c7a9 100%); }
@@ -149,7 +160,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .platform-table { border: 0.5px solid rgb(242, 242, 242); border-radius: 12px; overflow: hidden; background: #fff; }
 .platform-table-scroll { width: 100%; overflow-x: auto; }
 .platform-head,
-.platform-row { display: grid; grid-template-columns: 42px minmax(200px, 1fr) 110px 120px; align-items: center; min-width: 520px; border-bottom: 0.5px solid rgb(242, 242, 242); }
+.platform-row { display: grid; grid-template-columns: 42px minmax(200px, 1fr) 110px; align-items: center; min-width: 400px; border-bottom: 0.5px solid rgb(242, 242, 242); }
 .platform-head { min-height: 32px; color: #a1a1a1; font-size: 10.5px; font-weight: 400; }
 .platform-row { min-height: 38px; cursor: pointer; }
 .platform-row:last-child { border-bottom: 0; }
@@ -157,13 +168,12 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .platform-row.checked { background: #fafafa; }
 .platform-cell { min-width: 0; min-height: 100%; padding: 6px 12px; border-right: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; }
 .platform-cell:last-child { border-right: 0; }
-.platform-check { width: 17px; height: 17px; border: 1.4px solid #d5d4ce; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+.platform-check { width: 18px; height: 18px; border: 1px solid #d2d2d2; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
 .platform-row.checked .platform-check { background: #1a1a18; border-color: #1a1a18; }
 .platform-check i { display: none; color: #fff; font-size: 12px; font-weight: 700; line-height: 1; }
 .platform-row.checked .platform-check i { display: block; }
 .platform-name { color: #1a1a18; font-size: 12px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .plain-text { color: #555; font-size: 11.5px; white-space: nowrap; }
-.sent-text { color: #555; font-size: 11.5px; white-space: nowrap; }
 .platform-pagination { min-height: 38px; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; }
 .platform-pagination .page-btn { min-width: 22px; height: 24px; padding: 0 4px; border: 0; border-radius: 0; background: transparent; color: #aaa; font-size: 12px; line-height: 1; }
 .platform-pagination .page-btn:hover { background: transparent; border-color: transparent; color: #555; }
@@ -173,8 +183,6 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 /* PREVIEW */
 .preview-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
 .mail-preview { min-height: 248px; border: 0.5px solid rgb(242, 242, 242); border-radius: 12px; overflow: hidden; background: #fff; }
-.preview-head { min-height: 42px; padding: 0 14px; display: flex; align-items: center; border-bottom: 0.5px solid rgb(242, 242, 242); background: #f5f5f5; }
-.preview-subject { color: #1a1a18; font-size: 13px; font-weight: 400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .preview-body { padding: 20px 16px; background: #f5f5f5; color: #333; font-size: 12.5px; line-height: 1.7; }
 .email-template-card { max-width: 520px; margin: 0 auto; padding: 38px 34px; background: #fff; }
 .email-template-title { margin: 0 0 14px; color: #111; font-size: 18px; font-weight: 700; line-height: 1.3; }
@@ -184,16 +192,12 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .email-template-foot { border-top: 1px solid #eee; padding-top: 18px; }
 .email-template-note { margin: 0 0 8px; color: #aaa; font-size: 11px; line-height: 1.5; }
 .email-template-brand { margin: 0; color: #555; font-size: 12px; font-weight: 700; }
-.send-review { border: 0.5px solid rgb(242, 242, 242); border-radius: 12px; background: #fff; overflow: hidden; }
 .preview-side { min-width: 0; }
-.review-title { min-height: 36px; padding: 10px 12px; border-bottom: 0.5px solid rgb(242, 242, 242); color: #1a1a18; font-size: 12px; font-weight: 600; }
 .review-row { min-height: 38px; padding: 9px 12px; border-bottom: 0.5px solid rgb(242, 242, 242); display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 12px; align-items: baseline; }
 .review-row:last-child { border-bottom: 0; }
 .review-key { color: #aaa; font-size: 11px; min-width: 0; white-space: nowrap; }
 .review-val { color: #333; font-size: 12px; text-align: right; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .review-val.multiline { white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.55; }
-.review-chip-list { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 5px; }
-.review-chip { min-height: 22px; padding: 4px 8px; border: 0.5px solid #e3e3e3; border-radius: 999px; background: #f8f8f8; color: #444; font-size: 11.5px; line-height: 1.2; white-space: nowrap; }
 .send-bar { margin-top: 18px; min-height: 52px; padding: 0; display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
 .compose-step-panel[data-compose-step="4"] .send-bar { position: absolute; right: 0; bottom: -56px; margin-top: 0; }
 #send-btn { height: 42px; min-width: 126px; padding: 0 24px; border-radius: 999px; font-size: 11.5px; }
@@ -206,8 +210,12 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .mail-confirm-dialog { width: min(322px, 100%); overflow: hidden; border: 0.5px solid rgba(0,0,0,0.08); border-radius: 18px; background: rgba(255,255,255,0.96); text-align: center; }
 .mail-confirm-body { padding: 24px 22px 20px; }
 .mail-confirm-icon { width: 54px; height: 54px; margin: 0 auto 15px; border-radius: 16px; background: #fff3ed; color: #e85d2c; display: flex; align-items: center; justify-content: center; font-size: 25px; }
+.mail-confirm-icon.hidden { display: none; }
 .mail-confirm-title { color: #1a1a18; font-size: 15px; font-weight: 600; line-height: 1.35; }
 .mail-confirm-copy { margin-top: 8px; color: #777d86; font-size: 12px; line-height: 1.5; white-space: pre-line; }
+.mail-confirm-list { max-height: 190px; margin-top: 14px; border: 0.5px solid #eeeeee; border-radius: 10px; background: #fff; overflow: auto; text-align: left; }
+.mail-confirm-list-row { min-height: 34px; padding: 8px 11px; border-bottom: 0.5px solid #f1f1f1; color: #333; font-size: 12.5px; line-height: 1.35; }
+.mail-confirm-list-row:last-child { border-bottom: 0; }
 .mail-confirm-actions { display: grid; grid-template-columns: 1fr 1fr; border-top: 0.5px solid #e7e7e7; }
 .mail-confirm-btn { height: 44px; border: 0; background: transparent; color: #4f5660; font-family: inherit; font-size: 13px; cursor: pointer; }
 .mail-confirm-btn + .mail-confirm-btn { border-left: 0.5px solid #e7e7e7; }
@@ -264,8 +272,12 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .detail-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
 .detail-platform { min-height: 30px; padding: 7px 9px; border: 0.5px solid #eeeeea; border-radius: 7px; display: flex; align-items: center; justify-content: flex-start; gap: 10px; color: #333; font-size: 11.5px; }
 .history-pane .review-row { align-items: flex-start; justify-content: flex-start; }
-.history-pane .review-key { width: 58px; }
+.history-inline-detail .review-row { border-bottom: 0; }
+.history-pane .review-key { width: auto; }
 .history-pane .review-val { white-space: normal; text-align: left; line-height: 1.4; }
+.history-detail-list { width: 100%; max-height: 190px; margin-top: 0; }
+.history-platform-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.history-platform-badge { min-height: 24px; padding: 5px 9px; border: 0.5px solid #e3e3e3; border-radius: 999px; background: #fff; color: #444; font-size: 11.5px; line-height: 1.2; white-space: nowrap; }
 .pagination { min-height: 44px; margin-top: 12px; display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
 .page-info { margin-right: 6px; color: #999; font-size: 11.5px; }
 .page-btn { min-width: 31px; height: 31px; padding: 0 9px; border: 0.5px solid #dedede; border-radius: 7px; background: #fff; color: #555; font-family: inherit; font-size: 11.5px; cursor: pointer; }
@@ -431,6 +443,9 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
           </div>
           <div class="source-list" id="source-list"></div>
           <div class="source-pagination" id="source-pagination"></div>
+          <div class="step-panel-actions">
+            <button class="btn btn-primary" id="source-next-btn" type="button" onclick="handleMailStepNext()" disabled>다음</button>
+          </div>
         </div>
       </section>
 
@@ -441,7 +456,6 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
               <i class="ti ti-search"></i>
               <input class="search-input" id="platform-search" placeholder="플랫폼사명 검색" oninput="filterPlatforms(this.value)" />
             </div>
-            <button class="btn" type="button" onclick="toggleHideSent()" id="hide-sent-btn">발송 완료 제외</button>
             <button class="btn" type="button" onclick="selectAllPlatforms()">전체 선택</button>
           </div>
           <div class="platform-table" id="platform-table"></div>
@@ -456,13 +470,9 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
         <div class="compose-step-body">
           <div class="preview-grid">
             <div class="mail-preview">
-              <div class="preview-head">
-                <div class="preview-subject" id="preview-subject">자료를 선택하면 메일 제목이 표시됩니다</div>
-              </div>
               <div class="preview-body" id="preview-body">메일 유형과 발송 대상을 선택하면 템플릿 미리보기를 확인할 수 있습니다.</div>
             </div>
             <div class="preview-side">
-              <div class="send-review" id="send-review"></div>
               <div class="send-bar">
                 <button class="btn btn-primary" id="send-btn" type="button" onclick="sendMail()" disabled>메일 발송</button>
               </div>
@@ -501,10 +511,11 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
       <div class="mail-confirm-icon" aria-hidden="true"><i class="ti ti-mail-forward"></i></div>
       <div class="mail-confirm-title" id="mail-confirm-title">메일을 발송할까요?</div>
       <div class="mail-confirm-copy" id="mail-confirm-message">선택한 플랫폼사에 메일이 발송됩니다.</div>
+      <div id="mail-confirm-extra"></div>
     </div>
     <div class="mail-confirm-actions">
       <button class="mail-confirm-btn" type="button" onclick="closeMailConfirm()">취소</button>
-      <button class="mail-confirm-btn primary" type="button" onclick="submitMailConfirm()">발송</button>
+      <button class="mail-confirm-btn primary" id="mail-confirm-submit" type="button" onclick="submitMailConfirm()">발송</button>
     </div>
   </div>
 </div>
@@ -582,15 +593,15 @@ const sentHistory = {
 };
 
 const history = [
-  { id: 1, date: '2026.07.20 15:20', sender: '김관리자', type: 'content', target: 'The Last Letter', company: 'NextWave Studios', platforms: ['ShortReel (US)', 'Viki'], success: 2, failed: 0, subject: '[Shortflow] The Last Letter 콘텐츠 제안' },
-  { id: 2, date: '2026.07.18 11:00', sender: 'Lee Admin', type: 'collaboration', target: '글로벌 숏폼 로맨스 패키지', company: 'NextWave Studios', platforms: ['Viki', 'Rakuten Viki'], success: 2, failed: 0, subject: '[Shortflow] 글로벌 숏폼 로맨스 패키지 제작협업 기획안 제안' },
+  { id: 1, date: '2026.07.20 15:20', sender: '김관리자', type: 'content', target: 'The Last Letter', company: 'NextWave Studios', contents: [{ title: 'The Last Letter' }, { title: 'Echo of Spring' }, { title: 'Runaway Bride' }], platforms: ['ShortReel (US)', 'Viki'], success: 2, failed: 0, subject: '[Shortflow] The Last Letter 외 2개 콘텐츠 제안' },
+  { id: 2, date: '2026.07.18 11:00', sender: 'Lee Admin', type: 'collaboration', target: '글로벌 숏폼 로맨스 패키지', company: 'NextWave Studios', contents: [{ title: '글로벌 숏폼 로맨스 패키지' }, { title: '동남아 현지화 로맨스 프로젝트' }], platforms: ['Viki', 'Rakuten Viki'], success: 2, failed: 0, subject: '[Shortflow] 글로벌 숏폼 로맨스 패키지 외 1개 제작협업 기획안 제안' },
   { id: 3, date: '2026.07.15 09:30', sender: 'Lee Admin', type: 'content', target: 'Midnight Tokyo Drift', company: 'ShortReel (US)', platforms: ['WeTV'], success: 1, failed: 0, subject: '[Shortflow] Midnight Tokyo Drift 콘텐츠 제안' },
   { id: 4, date: '2026.07.14 17:45', sender: '김관리자', type: 'content', target: 'Reverse Cinderella', company: 'OneTake Media', platforms: ['iQIYI', 'WeTV', 'DramaWave'], success: 3, failed: 0, subject: '[Shortflow] Reverse Cinderella 콘텐츠 제안' },
   { id: 5, date: '2026.07.12 10:15', sender: 'Park Admin', type: 'content', target: 'Echo of Spring', company: 'NextWave Studios', platforms: ['MiniDrama', 'ShortMax'], success: 2, failed: 0, subject: '[Shortflow] Echo of Spring 콘텐츠 제안' },
-  { id: 6, date: '2026.07.10 16:05', sender: '김관리자', type: 'collaboration', target: '동남아 현지화 로맨스 프로젝트', company: 'PaperLens', platforms: ['WeTV', 'DramaWave', 'FlexTV'], success: 3, failed: 0, subject: '[Shortflow] 동남아 현지화 로맨스 프로젝트 제작협업 기획안 제안' },
+  { id: 6, date: '2026.07.10 16:05', sender: '김관리자', type: 'collaboration', target: '동남아 현지화 로맨스 프로젝트', company: 'PaperLens', contents: [{ title: '동남아 현지화 로맨스 프로젝트' }, { title: '액션 숏폼 시즌제 기획안' }, { title: 'AI 애니메이션 공동 제작안' }], platforms: ['WeTV', 'DramaWave', 'FlexTV'], success: 3, failed: 0, subject: '[Shortflow] 동남아 현지화 로맨스 프로젝트 외 2개 제작협업 기획안 제안' },
   { id: 7, date: '2026.07.08 13:20', sender: 'Lee Admin', type: 'content', target: 'Love Algorithm', company: 'PaperLens', platforms: ['GoodShort', 'MoboReels'], success: 2, failed: 0, subject: '[Shortflow] Love Algorithm 콘텐츠 제안' },
   { id: 8, date: '2026.07.06 09:50', sender: 'Kim Ops', type: 'collaboration', target: 'AI 애니메이션 공동 제작안', company: 'BrightFrame', platforms: ['Rakuten Viki'], success: 1, failed: 0, subject: '[Shortflow] AI 애니메이션 공동 제작안 제작협업 기획안 제안' },
-  { id: 9, date: '2026.07.03 18:10', sender: '김관리자', type: 'content', target: 'Seven Suns', company: 'BrightFrame', platforms: ['ShortMax', 'MiniDrama', 'FlexTV'], success: 3, failed: 0, subject: '[Shortflow] Seven Suns 콘텐츠 제안' },
+  { id: 9, date: '2026.07.03 18:10', sender: '김관리자', type: 'content', target: 'Seven Suns', company: 'BrightFrame', contents: [{ title: 'Seven Suns' }, { title: 'Neon Family' }, { title: 'City of Glass' }, { title: 'Silent Heir' }], platforms: ['ShortMax', 'MiniDrama', 'FlexTV'], success: 3, failed: 0, subject: '[Shortflow] Seven Suns 외 3개 콘텐츠 제안' },
   { id: 10, date: '2026.07.01 14:35', sender: 'Park Admin', type: 'content', target: 'Office Wife', company: 'OneTake Media', platforms: ['드라마박스', 'GoodShort'], success: 2, failed: 0, subject: '[Shortflow] Office Wife 콘텐츠 제안' },
   { id: 11, date: '2026.06.28 11:40', sender: 'Lee Admin', type: 'collaboration', target: '액션 숏폼 시즌제 기획안', company: 'ShortReel (US)', platforms: ['ShortReel (US)', 'MoboReels'], success: 2, failed: 0, subject: '[Shortflow] 액션 숏폼 시즌제 기획안 제작협업 기획안 제안' },
   { id: 12, date: '2026.06.25 15:05', sender: '김관리자', type: 'content', target: 'Bloom Again', company: 'PaperLens', platforms: ['Viki'], success: 1, failed: 0, subject: '[Shortflow] Bloom Again 콘텐츠 제안' },
@@ -601,12 +612,13 @@ const history = [
 
 let selectedMailType = null;
 let selectedSourceId = null;
+let selectedSourceIds = new Set();
+let draftSourceIds = new Set();
 let checkedPlatforms = new Set();
 let sourceQuery = '';
 let platformQuery = '';
 let historyQuery = '';
 let historyTypeFilter = '';
-let hideSent = false;
 let selectedHistoryId = null;
 let mailConfirmHandler = null;
 let currentView = 'history';
@@ -617,6 +629,7 @@ let platformPage = 1;
 const historyPageSize = 15;
 const sourcePageSize = 10;
 const platformPageSize = 15;
+const maxContentSelection = 10;
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, char => ({
@@ -636,8 +649,61 @@ function currentSource() {
   return currentSources().find(item => item.id === selectedSourceId);
 }
 
+function selectedSources() {
+  const sources = currentSources();
+  const ids = selectedSourceIds.size
+    ? selectedSourceIds
+    : (selectedSourceId ? new Set([selectedSourceId]) : new Set());
+  return sources.filter(item => ids.has(item.id));
+}
+
+function hasSelectedSources() {
+  return selectedSources().length > 0;
+}
+
+function draftSources() {
+  const sources = currentSources();
+  return sources.filter(item => draftSourceIds.has(item.id));
+}
+
+function hasDraftSources() {
+  return draftSources().length > 0;
+}
+
+function summarizeSources(sources) {
+  if (!sources.length) return '';
+  return sources.length > 1 ? `${sources[0].title} 외 ${sources.length - 1}개` : sources[0].title;
+}
+
+function sourceUrl(source) {
+  const path = selectedMailType === 'collaboration' ? 'collaboration' : 'content';
+  return `https://shortflow.io/${path}/${source.id}`;
+}
+
+function selectedSourceSummary() {
+  return summarizeSources(selectedSources());
+}
+
+function syncPrimarySourceId() {
+  const ids = selectedSourceIds.size ? selectedSourceIds : new Set();
+  selectedSourceId = currentSources().find(item => ids.has(item.id))?.id || null;
+}
+
+function commitDraftSourceSelection() {
+  if (!hasDraftSources()) return false;
+  selectedSourceIds = new Set(draftSourceIds);
+  syncPrimarySourceId();
+  checkedPlatforms.clear();
+  platformQuery = '';
+  platformPage = 1;
+  document.getElementById('platform-search').value = '';
+  return true;
+}
+
 function getSentPlatformIds() {
-  return selectedMailType && selectedSourceId ? (sentHistory[selectedMailType]?.[selectedSourceId] || []) : [];
+  if (!selectedMailType) return [];
+  const ids = selectedSources().map(source => source.id);
+  return [...new Set(ids.flatMap(id => sentHistory[selectedMailType]?.[id] || []))];
 }
 
 function renderView() {
@@ -664,10 +730,11 @@ function openHistoryView() {
 function setMailType(type) {
   selectedMailType = type;
   selectedSourceId = null;
+  selectedSourceIds.clear();
+  draftSourceIds.clear();
   checkedPlatforms.clear();
   sourceQuery = '';
   platformQuery = '';
-  hideSent = false;
   currentMailStep = 2;
   sourcePage = 1;
   platformPage = 1;
@@ -705,33 +772,31 @@ function changeHistoryTypeFilter(value) {
 }
 
 function selectSource(id) {
-  selectedSourceId = id;
+  if (selectedMailType === 'content') {
+    if (draftSourceIds.has(id)) draftSourceIds.delete(id);
+    else {
+      if (draftSourceIds.size >= maxContentSelection) return;
+      draftSourceIds.add(id);
+    }
+  } else {
+    draftSourceIds = new Set([id]);
+  }
   checkedPlatforms.clear();
   platformQuery = '';
   platformPage = 1;
-  currentMailStep = 3;
+  currentMailStep = 2;
   document.getElementById('platform-search').value = '';
   renderAll();
 }
 
 function clearSourceSelection() {
   selectedSourceId = null;
+  selectedSourceIds.clear();
+  draftSourceIds.clear();
   checkedPlatforms.clear();
   platformPage = 1;
   currentMailStep = 2;
   renderAll();
-}
-
-function toggleHideSent() {
-  hideSent = !hideSent;
-  platformPage = 1;
-  if (hideSent) {
-    platforms
-      .filter(platform => isPlatformSent(platform))
-      .forEach(platform => checkedPlatforms.delete(platform.id));
-  }
-  renderPlatforms();
-  renderPreview();
 }
 
 function isPlatformSent(platform) {
@@ -742,13 +807,12 @@ function isPlatformSent(platform) {
 function visiblePlatforms() {
   return platforms.filter(platform => {
     const keyword = platform.name.toLowerCase();
-    return (!platformQuery || keyword.includes(platformQuery)) &&
-      (!hideSent || !isPlatformSent(platform));
+    return !platformQuery || keyword.includes(platformQuery);
   });
 }
 
 function togglePlatform(id) {
-  if (!selectedSourceId) return;
+  if (!hasSelectedSources()) return;
   if (checkedPlatforms.has(id)) checkedPlatforms.delete(id);
   else checkedPlatforms.add(id);
   currentMailStep = 3;
@@ -757,7 +821,7 @@ function togglePlatform(id) {
 }
 
 function selectAllPlatforms() {
-  if (!selectedSourceId) return;
+  if (!hasSelectedSources()) return;
   visiblePlatforms().forEach(platform => checkedPlatforms.add(platform.id));
   currentMailStep = 3;
   renderPlatforms();
@@ -779,7 +843,7 @@ function renderStepper() {
 
 function getMaxMailStep() {
   if (!selectedMailType) return 1;
-  if (!selectedSourceId) return 2;
+  if (!hasSelectedSources()) return 2;
   if (!checkedPlatforms.size) return 3;
   return 4;
 }
@@ -791,13 +855,13 @@ function normalizeMailStep() {
 function canEnterMailStep(step) {
   if (step === 1) return true;
   if (step === 2) return Boolean(selectedMailType);
-  if (step === 3) return Boolean(selectedSourceId);
-  return Boolean(selectedSourceId && checkedPlatforms.size > 0);
+  if (step === 3) return hasSelectedSources();
+  return Boolean(hasSelectedSources() && checkedPlatforms.size > 0);
 }
 
 function getMailStepNotice() {
   if (currentMailStep === 1) return '메일 유형을 선택한 뒤 다음으로 이동합니다.';
-  if (currentMailStep === 2) return selectedSourceId ? '선택한 자료로 다음 단계 진행 가능' : '발송할 자료를 선택해주세요.';
+  if (currentMailStep === 2) return hasSelectedSources() ? '선택한 자료로 다음 단계 진행 가능' : '발송할 자료를 선택해주세요.';
   if (currentMailStep === 3) return checkedPlatforms.size ? `${checkedPlatforms.size}개 플랫폼사 선택됨` : '발송할 플랫폼사를 하나 이상 선택해주세요.';
   return '미리보기 확인 후 메일을 발송합니다.';
 }
@@ -809,15 +873,21 @@ function truncateStepSummary(value, maxLength = 12) {
 
 function renderComposeStep() {
   normalizeMailStep();
-  const source = currentSource();
+  const sourceSummary = selectedSourceSummary();
   const selectedPlatformNames = [...checkedPlatforms]
     .map(id => platforms.find(platform => platform.id === id)?.name)
     .filter(Boolean);
   document.getElementById('mail-type-summary').textContent = selectedMailType ? mailTypes[selectedMailType].label : '';
-  document.getElementById('source-summary').textContent = source ? truncateStepSummary(source.title) : '';
+  const sourceSummaryEl = document.getElementById('source-summary');
+  const selectedSourceItems = selectedSources();
+  sourceSummaryEl.innerHTML = selectedSourceItems.length > 1
+    ? `<span class="step-desc-main">${escapeHtml(selectedSourceItems[0].title)}</span><span class="step-desc-count">외 ${selectedSourceItems.length - 1}개</span>`
+    : escapeHtml(sourceSummary);
   document.getElementById('platform-summary').textContent = selectedPlatformNames.length ? `${selectedPlatformNames.length}개` : '';
   document.getElementById('preview-summary').textContent = '';
+  const sourceNextBtn = document.getElementById('source-next-btn');
   const platformNextBtn = document.getElementById('platform-next-btn');
+  if (sourceNextBtn) sourceNextBtn.disabled = !hasDraftSources();
   if (platformNextBtn) platformNextBtn.disabled = !checkedPlatforms.size;
   document.querySelectorAll('.compose-step-head').forEach(button => {
     const step = Number(button.dataset.composeStep);
@@ -834,7 +904,7 @@ function renderComposeStep() {
 
 function isMailStepDone(step) {
   if (step === 1) return Boolean(selectedMailType);
-  if (step === 2) return Boolean(selectedSourceId);
+  if (step === 2) return hasSelectedSources();
   if (step === 3) return checkedPlatforms.size > 0;
   return checkedPlatforms.size > 0;
 }
@@ -856,8 +926,33 @@ function handleMailStepBack() {
 }
 
 function handleMailStepNext() {
+  if (currentMailStep === 2) {
+    openSourceConfirm();
+    return;
+  }
   if (!canEnterMailStep(currentMailStep + 1)) return;
   setMailStep(currentMailStep + 1);
+}
+
+function openSourceConfirm() {
+  const sources = draftSources();
+  if (!sources.length) return;
+  openMailConfirm({
+    title: '선택한 콘텐츠를 확인해주세요',
+    message: `${sources.length}개 콘텐츠를 선택했어요.`,
+    confirmLabel: '다음',
+    showIcon: false,
+    extraHtml: `
+      <div class="mail-confirm-list">
+        ${sources.map(source => `<div class="mail-confirm-list-row">${escapeHtml(source.title)}</div>`).join('')}
+      </div>
+    `,
+    onConfirm: () => {
+      if (!commitDraftSourceSelection()) return;
+      setMailStep(3);
+      renderPlatforms();
+    },
+  });
 }
 
 function renderSources() {
@@ -888,13 +983,15 @@ function renderSources() {
     const pageRows = filtered.slice(start, start + sourcePageSize);
     list.innerHTML = `
       <div class="source-table-head">
+        <div class="source-head-cell"></div>
         <div class="source-head-cell">콘텐츠</div>
         <div class="source-head-cell">제작사명</div>
         <div class="source-head-cell">제작연도</div>
         <div class="source-head-cell">업로드일</div>
       </div>
       ${pageRows.map(item => `
-        <div class="source-row ${selectedSourceId === item.id ? 'selected' : ''}" onclick="selectSource(${item.id})">
+        <div class="source-row ${draftSourceIds.has(item.id) ? 'selected' : ''}" onclick="selectSource(${item.id})">
+          <div class="source-cell source-check-cell"><span class="source-check" aria-hidden="true"><i class="ti ti-check"></i></span></div>
           <div class="source-cell source-content-cell">${sourcePosterHtml(item)}<div class="source-title">${escapeHtml(item.title)}</div></div>
           <div class="source-cell"><span class="source-meta">${escapeHtml(item.company)}</span></div>
           <div class="source-cell"><span class="source-meta">${escapeHtml(item.year)}</span></div>
@@ -907,7 +1004,7 @@ function renderSources() {
   }
   pagination.innerHTML = '';
   list.innerHTML = filtered.map(item => `
-    <div class="source-row ${selectedSourceId === item.id ? 'selected' : ''}" onclick="selectSource(${item.id})">
+    <div class="source-row ${draftSourceIds.has(item.id) ? 'selected' : ''}" onclick="selectSource(${item.id})">
       <div class="source-cell"><div class="source-mark">${escapeHtml(item.mark)}</div></div>
       <div class="source-cell">
         <div class="source-title">${escapeHtml(item.title)}</div>
@@ -950,8 +1047,7 @@ function setSourcePage(page) {
 function renderPlatforms() {
   const table = document.getElementById('platform-table');
   const pagination = document.getElementById('platform-pagination');
-  document.getElementById('hide-sent-btn').classList.toggle('btn-primary', hideSent);
-  if (!selectedSourceId) {
+  if (!hasSelectedSources()) {
     table.innerHTML = '<div class="empty-state">먼저 발송할 자료를 선택해주세요</div>';
     if (pagination) pagination.innerHTML = '';
     return;
@@ -967,17 +1063,14 @@ function renderPlatforms() {
         <div class="platform-cell"></div>
         <div class="platform-cell">플랫폼사명</div>
         <div class="platform-cell">지역</div>
-        <div class="platform-cell">발송 내역</div>
       </div>
       ${pageRows.length ? pageRows.map(platform => {
         const isChecked = checkedPlatforms.has(platform.id);
-        const sentDate = getPlatformSentDate(platform);
         return `
           <div class="platform-row ${isChecked ? 'checked' : ''}" onclick="togglePlatform(${platform.id})">
             <div class="platform-cell"><div class="platform-check"><i class="ti ti-check"></i></div></div>
             <div class="platform-cell"><div class="platform-name">${escapeHtml(platform.name)}</div></div>
             <div class="platform-cell"><span class="plain-text">${escapeHtml(platform.region)}</span></div>
-            <div class="platform-cell">${sentDate ? `<span class="sent-text">${escapeHtml(sentDate)}</span>` : '<span class="plain-text">-</span>'}</div>
           </div>
         `;
       }).join('') : '<div class="empty-state">조건에 맞는 플랫폼사가 없습니다</div>'}
@@ -1004,36 +1097,36 @@ function setPlatformPage(page) {
 }
 
 function getPlatformSentDate(platform) {
-  const source = currentSource();
-  if (!source) return '';
+  const titles = selectedSources().map(source => source.title);
+  if (!titles.length) return '';
   const item = history.find(row =>
     row.type === selectedMailType &&
-    row.target === source.title &&
+    titles.some(title => row.target === title || row.target.startsWith(`${title} 외 `)) &&
     row.platforms.includes(platform.name)
   );
   return item ? item.date.split(' ')[0] : '';
 }
 
 function renderPreview() {
-  const source = currentSource();
+  const sources = selectedSources();
+  const source = sources[0];
   const type = mailTypes[selectedMailType];
   const selectedPlatforms = [...checkedPlatforms]
     .map(id => platforms.find(platform => platform.id === id))
     .filter(Boolean);
   const selectedPlatformNames = selectedPlatforms.map(platform => platform.name);
-  const canSend = Boolean(source && selectedPlatformNames.length);
+  const canSend = Boolean(sources.length && selectedPlatformNames.length);
   const recipientName = selectedPlatforms.length
     ? `${selectedPlatforms[0].manager}${selectedPlatforms.length > 1 ? ` 외 ${selectedPlatforms.length - 1}명` : ''}`
     : '';
-  const contentTitle = source ? source.title : '';
-  const contentUrl = source ? `https://shortflow.io/content/${source.id}` : '';
-  document.getElementById('preview-subject').textContent = source && type ? type.subject(source) : '자료를 선택하면 메일 제목이 표시됩니다';
-  document.getElementById('preview-body').innerHTML = source && type ? `
+  const sourceSummary = selectedSourceSummary();
+  const previewSource = source ? { ...source, title: sourceSummary } : null;
+  document.getElementById('preview-body').innerHTML = previewSource && type ? `
     <div class="email-template-card">
       <h1 class="email-template-title">새로운 콘텐츠를 소개합니다</h1>
       <p class="email-template-copy">
-        안녕하세요 <strong>recipientName</strong>님,<br>
-        새로운 콘텐츠 <strong>contentTitle</strong>이 Shortflow에 등록되었습니다.<br>
+        안녕하세요 <strong>사용자</strong>님,<br>
+        새로운 콘텐츠 <strong>콘텐츠제목</strong>이 Shortflow에 등록되었습니다.<br>
         아래 버튼을 눌러 콘텐츠를 확인해보세요.
       </p>
       <a class="email-template-link" href="#">콘텐츠 확인하기 →</a>
@@ -1043,35 +1136,36 @@ function renderPreview() {
       </div>
     </div>
   ` : '<div class="empty-state">메일 유형과 발송 대상을 선택하면 템플릿 미리보기를 확인할 수 있습니다</div>';
-  document.getElementById('send-review').innerHTML = `
-    <div class="review-title">실제 데이터</div>
-    <div class="review-row"><span class="review-key">recipientName</span><span class="review-val">${recipientName ? escapeHtml(recipientName) : '-'}</span></div>
-    <div class="review-row"><span class="review-key">contentTitle</span><span class="review-val">${contentTitle ? escapeHtml(contentTitle) : '-'}</span></div>
-    <div class="review-row"><span class="review-key">contentUrl</span><span class="review-val">${contentUrl ? escapeHtml(contentUrl) : '-'}</span></div>
-    <div class="review-row"><span class="review-key">메일 유형</span><span class="review-val">${type ? type.label : '-'}</span></div>
-    <div class="review-row"><span class="review-key">플랫폼사</span><span class="review-val multiline">${selectedPlatformNames.length ? `<span class="review-chip-list">${selectedPlatformNames.map(name => `<span class="review-chip">${escapeHtml(name)}</span>`).join('')}</span>` : '-'}</span></div>
-  `;
   document.getElementById('send-btn').disabled = !canSend;
   renderStepper();
   renderComposeStep();
 }
 
 function sendMail() {
-  const source = currentSource();
-  if (!source || !checkedPlatforms.size) return;
+  const sources = selectedSources();
+  if (!sources.length || !checkedPlatforms.size) return;
   const selected = [...checkedPlatforms]
     .map(id => platforms.find(platform => platform.id === id))
     .filter(Boolean);
   openMailConfirm({
     title: '메일을 발송할까요?',
-    message: `"${source.title}"\n선택한 ${selected.length}개 플랫폼사에 메일이 발송됩니다.`,
+    message: `"${selectedSourceSummary()}"\n선택한 ${selected.length}개 플랫폼사에 메일이 발송됩니다.`,
+    confirmLabel: '발송',
+    extraHtml: `
+      <div class="mail-confirm-list">
+        ${selected.map(platform => `<div class="mail-confirm-list-row">${escapeHtml(platform.name)}</div>`).join('')}
+      </div>
+    `,
     onConfirm: performSendMail,
   });
 }
 
-function openMailConfirm({ title, message, onConfirm }) {
+function openMailConfirm({ title, message, confirmLabel = '발송', extraHtml = '', showIcon = true, onConfirm }) {
   document.getElementById('mail-confirm-title').textContent = title || '메일을 발송할까요?';
   document.getElementById('mail-confirm-message').textContent = message || '';
+  document.getElementById('mail-confirm-extra').innerHTML = extraHtml || '';
+  document.getElementById('mail-confirm-submit').textContent = confirmLabel;
+  document.querySelector('.mail-confirm-icon')?.classList.toggle('hidden', !showIcon);
   mailConfirmHandler = typeof onConfirm === 'function' ? onConfirm : null;
   document.getElementById('mail-confirm-modal')?.classList.add('show');
 }
@@ -1079,23 +1173,32 @@ function openMailConfirm({ title, message, onConfirm }) {
 function closeMailConfirm(event) {
   event?.stopPropagation?.();
   mailConfirmHandler = null;
+  document.getElementById('mail-confirm-extra').innerHTML = '';
+  document.getElementById('mail-confirm-submit').textContent = '발송';
+  document.querySelector('.mail-confirm-icon')?.classList.remove('hidden');
   document.getElementById('mail-confirm-modal')?.classList.remove('show');
 }
 
 function submitMailConfirm() {
   const handler = mailConfirmHandler;
   mailConfirmHandler = null;
+  document.getElementById('mail-confirm-extra').innerHTML = '';
+  document.getElementById('mail-confirm-submit').textContent = '발송';
+  document.querySelector('.mail-confirm-icon')?.classList.remove('hidden');
   document.getElementById('mail-confirm-modal')?.classList.remove('show');
   if (typeof handler === 'function') handler();
 }
 
 function performSendMail() {
-  const source = currentSource();
+  const sources = selectedSources();
+  const source = sources[0];
   if (!source || !checkedPlatforms.size) return;
   const type = mailTypes[selectedMailType];
   const selected = [...checkedPlatforms]
     .map(id => platforms.find(platform => platform.id === id))
     .filter(Boolean);
+  const sourceSummary = selectedSourceSummary();
+  const previewSource = { ...source, title: sourceSummary };
   const now = new Date();
   const pad = value => String(value).padStart(2, '0');
   const date = `${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
@@ -1105,19 +1208,29 @@ function performSendMail() {
     date,
     sender: '김관리자',
     type: selectedMailType,
-    target: source.title,
-    company: source.company,
+    target: sourceSummary,
+    company: sources.length > 1 ? `${sources.length}개 콘텐츠` : source.company,
+    contents: sources.map(item => ({
+      id: item.id,
+      title: item.title,
+      url: sourceUrl(item),
+    })),
     platforms: selected.map(platform => platform.name),
     success: selected.length,
     failed: 0,
-    subject: type.subject(source),
+    subject: type.subject(previewSource),
   });
-  if (!sentHistory[selectedMailType][selectedSourceId]) sentHistory[selectedMailType][selectedSourceId] = [];
-  selected.forEach(platform => {
-    if (!sentHistory[selectedMailType][selectedSourceId].includes(platform.id)) {
-      sentHistory[selectedMailType][selectedSourceId].push(platform.id);
-    }
+  sources.forEach(item => {
+    if (!sentHistory[selectedMailType][item.id]) sentHistory[selectedMailType][item.id] = [];
+    selected.forEach(platform => {
+      if (!sentHistory[selectedMailType][item.id].includes(platform.id)) {
+        sentHistory[selectedMailType][item.id].push(platform.id);
+      }
+    });
   });
+  selectedSourceId = null;
+  selectedSourceIds.clear();
+  draftSourceIds.clear();
   checkedPlatforms.clear();
   selectedHistoryId = newHistoryId;
   historyQuery = '';
@@ -1131,10 +1244,24 @@ function performSendMail() {
 function filteredHistoryRows() {
   return history.filter(item => {
     const typeMatches = !historyTypeFilter || item.type === historyTypeFilter;
-    const searchable = item.target.toLowerCase();
+    const searchable = [historyTargetLabel(item), ...(historyContentNames(item)), ...(item.platforms || [])].join(' ').toLowerCase();
     const keywordMatches = !historyQuery || searchable.includes(historyQuery);
     return typeMatches && keywordMatches;
   });
+}
+
+function historyContentNames(item) {
+  if (Array.isArray(item.contents) && item.contents.length) {
+    return item.contents.map(content => content.title).filter(Boolean);
+  }
+  if (Array.isArray(item.contentTitles) && item.contentTitles.length) return item.contentTitles;
+  return item.target ? [item.target] : [];
+}
+
+function historyTargetLabel(item) {
+  const names = historyContentNames(item);
+  if (!names.length) return item.target || '';
+  return names.length > 1 ? `${names[0]} 외 ${names.length - 1}개` : names[0];
 }
 
 function historyListTypeLabel(type) {
@@ -1162,12 +1289,13 @@ function renderHistory() {
     </div>
     ${pageRows.length ? pageRows.map((item, index) => {
       const isOpen = selectedHistoryId === item.id;
+      const targetLabel = historyTargetLabel(item);
       return `
       <div class="history-row ${isOpen ? 'open' : ''}" onclick="showHistoryDetail(${item.id})">
         <span class="history-no">${rows.length - start - index}</span>
         <span class="history-kind">${historyListTypeLabel(item.type)}</span>
         <div class="history-main">
-          <div class="history-target">${escapeHtml(item.target)}</div>
+          <div class="history-target">${escapeHtml(targetLabel)}</div>
           <div class="history-brief">
             <span class="history-date">${escapeHtml(item.date)}</span>
           </div>
@@ -1199,21 +1327,23 @@ function setHistoryPage(page) {
 }
 
 function renderHistoryInlineDetail(item) {
+  const contentNames = historyContentNames(item);
+  const platformNames = item.platforms || [];
+  const contentListHtml = contentNames.length
+    ? contentNames.map(name => `<div class="mail-confirm-list-row">${escapeHtml(name)}</div>`).join('')
+    : '<div class="mail-confirm-list-row">발송한 콘텐츠가 없습니다</div>';
+  const platformListHtml = platformNames.length
+    ? platformNames.map(name => `<span class="history-platform-badge">${escapeHtml(name)}</span>`).join('')
+    : '<span class="history-platform-badge">발송한 플랫폼사가 없습니다</span>';
   return `
     <div class="history-inline-detail">
       <div class="history-inline-grid">
         <div class="detail-body">
-          <div class="review-row"><span class="review-key">메일 제목</span><span class="review-val">${escapeHtml(item.subject)}</span></div>
-          <div class="review-row"><span class="review-key">콘텐츠명</span><span class="review-val">${escapeHtml(item.target)}</span></div>
           <div class="review-row"><span class="review-key">메일 유형</span><span class="review-val">${mailTypes[item.type].label}</span></div>
-          <div class="review-row"><span class="review-key">발송자</span><span class="review-val">${escapeHtml(item.sender)}</span></div>
-          <div class="review-row"><span class="review-key">발송일시</span><span class="review-val">${escapeHtml(item.date)}</span></div>
-        </div>
-        <div class="detail-body detail-platform-box">
-          <div class="detail-title">보낸 플랫폼</div>
-          <div class="detail-list">
-            ${item.platforms.map(name => `<div class="detail-platform"><span>${escapeHtml(name)}</span></div>`).join('')}
-          </div>
+          <div class="review-row"><span class="review-key">콘텐츠명</span><span class="review-val"><div class="mail-confirm-list history-detail-list">${contentListHtml}</div></span></div>
+          <div class="review-row"><span class="review-key">관리자</span><span class="review-val">${escapeHtml(item.sender)}</span></div>
+          <div class="review-row"><span class="review-key">발송 일시</span><span class="review-val">${escapeHtml(item.date)}</span></div>
+          <div class="review-row"><span class="review-key">발송 플랫폼</span><span class="review-val"><div class="history-platform-badges">${platformListHtml}</div></span></div>
         </div>
       </div>
     </div>
