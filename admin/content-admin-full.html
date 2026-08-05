@@ -442,7 +442,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
 .content-create-ai-check { padding-left: 10px; }
 .content-create-platform-cell { padding: 0 !important; }
 .content-create-platform-editor { padding: 0; }
-.content-create-platform-row { display: grid; grid-template-columns: minmax(0, 1fr) auto 60px; align-items: stretch; gap: 10px; background: #fff; }
+.content-create-platform-row { display: grid; grid-template-columns: minmax(0, 1fr) 132px auto 60px; align-items: stretch; gap: 10px; background: #fff; }
 .content-create-platform-field { min-width: 0; }
 .content-create-platform-field input { height: 36px; padding: 0 0 0 10px; }
 .content-create-platform-field input::placeholder { color: #b6bac2; font-weight: 300; }
@@ -1738,33 +1738,46 @@ td { padding: 9px 12px; vertical-align: middle; }
 .release-toolbar .release-section-title { margin: 0; }
 .release-list { border: 0.5px solid rgb(242, 242, 242); border-radius: 12px; overflow: hidden; background: #fff; }
 .release-list-head,
-.release-row { display: grid; grid-template-columns: 54px minmax(210px, 1fr) minmax(132px, 150px) minmax(132px, 150px) 88px; align-items: center; gap: 0; min-width: 700px; border-bottom: 0.5px solid rgb(242, 242, 242); }
+.release-row { display: grid; grid-template-columns: 54px minmax(210px, 1fr) 108px 108px minmax(132px, 150px) 88px; align-items: center; gap: 0; min-width: 776px; border-bottom: 0.5px solid rgb(242, 242, 242); }
 .release-list-head { min-height: 36px; background: #fff; color: #a1a1a1; font-size: 10.5px; font-weight: 400; }
 .release-row { min-height: 48px; padding: 0; }
 .release-row:last-child { border-bottom: none; }
 .release-row:hover { background: #fcfcfc; }
-.release-row.editing { display: flex; min-width: 700px; padding: 10px 12px; background: #fff; align-items: center; }
+.release-row.editing { display: grid; min-width: 776px; padding: 0; background: #fff; align-items: center; }
+.release-row.editing .fg { width: 100%; }
 .release-row.editing .fg input,
 .release-row.editing .fg select {
+  min-height: 35px;
+  height: 35px;
   border-color: #dedede;
   background: #fff;
 }
+.release-row.editing .fg select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 34px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238d8d8d' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
 .release-row.editing .release-actions .btn {
-  height: 31px;
-  width: 68px;
-  min-width: 68px;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  padding: 0;
   justify-content: center;
   align-items: center;
 }
 .release-row.editing .release-actions {
-  margin-left: 18px;
+  margin-left: 0;
 }
-.release-row.editing .release-actions .btn:not(.btn-save) {
+.release-row.editing .release-actions .btn {
   background: #fff;
   border-color: #d7d7d7;
   color: #444;
 }
-.release-row.editing .release-actions .btn:not(.btn-save):hover {
+.release-row.editing .release-actions .btn:hover {
   background: #fafafa;
   border-color: #cfcfcf;
 }
@@ -1797,8 +1810,6 @@ td { padding: 9px 12px; vertical-align: middle; }
 .release-no { justify-content: center; color: #888; font-size: 11px; font-variant-numeric: tabular-nums; }
 .release-name { font-size: 12.5px; font-weight: 500; color: #1a1a18; }
 .release-meta { font-size: 11px; color: #aaa; margin-top: 2px; }
-.release-edit-grid { flex: 1; min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) 150px 150px; gap: 10px; }
-.release-edit-grid .fg { gap: 4px; }
 .release-type {
   color: #444;
   font-size: 12px;
@@ -1816,7 +1827,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 .release-empty { padding: 22px 12px; color: #bbb; font-size: 12px; text-align: center; }
 .release-form { display: none; border: 0.5px solid rgb(242, 242, 242); border-radius: 8px; background: rgb(242, 242, 242); padding: 12px; margin-bottom: 10px; }
 .release-form.show { display: block; }
-.release-form .form-grid { grid-template-columns: minmax(0, 1fr) 150px 150px; gap: 10px; }
+.release-form .form-grid { grid-template-columns: minmax(0, 1fr) 118px 118px 150px; gap: 10px; }
 .release-form-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 10px; }
 
 /* ── REVISION COMPARE ── */
@@ -2461,6 +2472,9 @@ td { padding: 9px 12px; vertical-align: middle; }
 .content-split #tab-basic .form-grid.full .fg:last-child,
 .content-split #tab-trans .form-grid.full .fg:last-child {
   border-bottom: 0;
+}
+.content-split #tab-basic #b-scheduled-release-date-row {
+  border-bottom: 0.5px solid #dedede;
 }
 .content-split #tab-trans .form-grid.full {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -3346,7 +3360,7 @@ td { padding: 9px 12px; vertical-align: middle; }
                           </div>
                         </td>
                       </tr>
-                      <tr id="new-content-release-date-row"><th>희망 릴리즈 일정<span class="plan-required">*</span></th><td colspan="3"><input id="new-content-desired-release-date" value="2026-07-01" placeholder="예: 2026년 7월, 3분기, 협의 가능" /></td></tr>
+                      <tr id="new-content-release-date-row"><th>희망 릴리즈 일정<span class="plan-required">*</span></th><td><input id="new-content-desired-release-date" value="2026.10.12" /></td><th>예정 플랫폼<span class="plan-required">*</span></th><td><input id="new-content-desired-platforms" value="플랫폼 A, 플랫폼 B, 플랫폼 C" /></td></tr>
                       <tr id="new-content-release-platform-row" style="display:none">
                         <th>기존 유통 플랫폼<span class="plan-required">*</span></th>
                         <td class="content-create-platform-cell" colspan="3">
@@ -3354,6 +3368,9 @@ td { padding: 9px 12px; vertical-align: middle; }
                             <div class="content-create-platform-row">
                               <label class="content-create-platform-field">
                                 <input id="new-content-previous-releases" type="text" placeholder="플랫폼 명" onkeydown="handleNewContentPreviousReleaseKey(event)" />
+                              </label>
+                              <label class="content-create-platform-field">
+                                <input id="new-content-previous-release-date" type="text" placeholder="릴리즈 날짜" onkeydown="handleNewContentPreviousReleaseKey(event)" />
                               </label>
                               <div class="content-create-platform-license">
                                 <label class="admin-check-field"><input id="new-content-license-nonexclusive" type="checkbox" checked onchange="selectNewContentPreviousReleaseLicense('비독점')" /> 비독점</label>
@@ -3853,7 +3870,15 @@ td { padding: 9px 12px; vertical-align: middle; }
                         <option value="기타">기타</option>
                       </select>
                     </div>
-                    <div class="fg"><label>유료 시청 시작 회차</label><input id="b-start-point" type="number" placeholder="예: 1" /></div>
+                    <div class="fg"><label>유료 시청 시작 회차</label><input id="b-start-point" type="number" /></div>
+                    <div class="fg"><label>유통 여부</label>
+                      <select id="b-is-distributed" onchange="syncContentDistributionFields()">
+                        <option value="false">미유통</option>
+                        <option value="true">기유통</option>
+                      </select>
+                    </div>
+                    <div class="fg" id="b-scheduled-release-date-row"><label>릴리즈 희망 날짜 <span class="req">*</span></label><input id="b-scheduled-release-date" type="text" /></div>
+                    <div class="fg span-2col" id="b-scheduled-platforms-row"><label>예정 플랫폼 <span class="req">*</span></label><input id="b-scheduled-platforms" type="text" /></div>
                   </div>
                 </div>
 
@@ -4928,18 +4953,18 @@ const translationGlossary = {
 
 const releaseHistories = {
   1: [
-    { id: 1, platformName: 'ShortReel (US)', isInternal: false },
-    { id: 2, platformName: 'Viki', isInternal: false },
+    { id: 1, platformName: 'ShortReel (US)', isInternal: false, releaseDate: '2026-05-20' },
+    { id: 2, platformName: 'Viki', isInternal: false, releaseDate: '2026-05-24' },
   ],
   2: [
-    { id: 3, platformName: 'WeTV', isInternal: false },
+    { id: 3, platformName: 'WeTV', isInternal: false, releaseDate: '2026-06-03' },
   ],
   3: [
-    { id: 4, platformName: 'Shortflow', isInternal: true },
-    { id: 5, platformName: 'WeTV', isInternal: false },
+    { id: 4, platformName: 'Shortflow', isInternal: true, releaseDate: '2026-05-05' },
+    { id: 5, platformName: 'WeTV', isInternal: false, releaseDate: '2026-05-12' },
   ],
   6: [
-    { id: 6, platformName: 'Viki', isInternal: false },
+    { id: 6, platformName: 'Viki', isInternal: false, releaseDate: '2026-04-30' },
   ],
 };
 
@@ -6354,13 +6379,14 @@ function getNewContentPreviousReleaseItems() {
     .map(badge => ({
       platformName: badge.dataset.platform || '',
       licenseType: badge.dataset.license || '비독점',
+      releaseDate: badge.dataset.releaseDate || '',
     }))
     .filter(item => item.platformName);
 }
 
 function getNewContentPreviousReleaseText() {
   return getNewContentPreviousReleaseItems()
-    .map(item => `${item.platformName} · ${item.licenseType}`)
+    .map(item => `${item.platformName} · ${item.licenseType}${item.releaseDate ? ` · ${item.releaseDate}` : ''}`)
     .join(', ');
 }
 
@@ -6401,6 +6427,7 @@ function getNewContentFormValues() {
     distributionHistory: document.getElementById('new-content-distribution-released')?.checked ? 'RELEASED' : 'NEW',
     distributionHistoryLabel: document.getElementById('new-content-distribution-released')?.checked ? '기유통' : '미유통 (신작)',
     desiredReleaseDate: contentCreateValue('new-content-desired-release-date'),
+    desiredPlatforms: contentCreateValue('new-content-desired-platforms'),
     exclusive: getNewContentPreviousReleaseLicense() === '독점',
     previousReleaseItems: getNewContentPreviousReleaseItems(),
     previousReleases: getNewContentPreviousReleaseText(),
@@ -6423,8 +6450,8 @@ function renderNewContentPreviousReleaseBadges(items) {
   if (!list) return;
   list.classList.toggle('has-items', items.length > 0);
   list.innerHTML = items.map((item, index) => `
-    <span class="content-create-platform-badge ${item.licenseType === '독점' ? 'is-exclusive' : ''}" data-platform="${escapeAttr(item.platformName)}" data-license="${escapeAttr(item.licenseType)}">
-      ${escapeAttr(item.platformName)} · ${escapeAttr(item.licenseType)}
+    <span class="content-create-platform-badge ${item.licenseType === '독점' ? 'is-exclusive' : ''}" data-platform="${escapeAttr(item.platformName)}" data-license="${escapeAttr(item.licenseType)}" data-release-date="${escapeAttr(item.releaseDate || '')}">
+      ${escapeAttr(item.platformName)} · ${escapeAttr(item.licenseType)}${item.releaseDate ? ` · ${escapeAttr(item.releaseDate)}` : ''}
       <button type="button" aria-label="삭제" onclick="removeNewContentPreviousRelease(${index})"><i class="ti ti-x"></i></button>
     </span>
   `).join('');
@@ -6432,19 +6459,28 @@ function renderNewContentPreviousReleaseBadges(items) {
 
 function addNewContentPreviousRelease() {
   const input = document.getElementById('new-content-previous-releases');
+  const dateInput = document.getElementById('new-content-previous-release-date');
   const platformName = input?.value.trim() || '';
+  const releaseDate = dateInput?.value.trim() || '';
   if (!platformName) {
     alert('기존 유통 플랫폼을 입력해주세요.');
     input?.focus();
+    return;
+  }
+  if (!releaseDate) {
+    alert('릴리즈 날짜를 입력해주세요.');
+    dateInput?.focus();
     return;
   }
   const items = getNewContentPreviousReleaseItems();
   items.push({
     platformName,
     licenseType: getNewContentPreviousReleaseLicense(),
+    releaseDate,
   });
   renderNewContentPreviousReleaseBadges(items);
   input.value = '';
+  if (dateInput) dateInput.value = '';
   selectNewContentPreviousReleaseLicense('비독점');
   input.focus();
 }
@@ -6698,6 +6734,7 @@ function renderContentCreateReview() {
     licenseRows.push(['기존 유통 플랫폼', form.previousReleases || '미입력', hasValue(form.previousReleases)]);
   } else {
     licenseRows.push(['희망 릴리즈 일정', form.desiredReleaseDate || '미입력', hasValue(form.desiredReleaseDate)]);
+    licenseRows.push(['예정 플랫폼', form.desiredPlatforms || '미입력', hasValue(form.desiredPlatforms)]);
   }
   const groups = [
     { title: '등록 정보', rows: [
@@ -6781,9 +6818,11 @@ function resetNewContentForm() {
   document.getElementById('new-content-license-territory').value = 'GLOBAL_EXCEPT_CHINA';
   document.getElementById('new-content-distribution-new').checked = true;
   document.getElementById('new-content-distribution-released').checked = false;
-  document.getElementById('new-content-desired-release-date').value = '2026-07-01';
+  document.getElementById('new-content-desired-release-date').value = '2026.10.12';
+  document.getElementById('new-content-desired-platforms').value = '플랫폼 A, 플랫폼 B, 플랫폼 C';
   selectNewContentPreviousReleaseLicense('비독점');
   document.getElementById('new-content-previous-releases').value = '';
+  document.getElementById('new-content-previous-release-date').value = '';
   renderNewContentPreviousReleaseBadges([]);
   syncNewContentDistributionFields();
   document.getElementById('new-content-start-point').value = '3';
@@ -6824,6 +6863,7 @@ function createAdminContent() {
   if (!form.genre) missing.push('장르');
   if (form.distributionHistory === 'RELEASED' && !form.previousReleases) missing.push('기존 유통 플랫폼');
   if (form.distributionHistory !== 'RELEASED' && !form.desiredReleaseDate) missing.push('희망 릴리즈 일정');
+  if (form.distributionHistory !== 'RELEASED' && !form.desiredPlatforms) missing.push('예정 플랫폼');
   if (!form.mainImageCount) missing.push('대표 이미지');
   if (missing.length) {
     alert(`필수 항목을 입력해주세요.\n- ${missing.join('\n- ')}`);
@@ -6859,7 +6899,11 @@ function createAdminContent() {
     licenseType: form.licenseTypeLabel,
     licenseRegion: form.licenseTerritoryLabel,
     distributionHistory: form.distributionHistory,
+    isDistributed: form.distributionHistory === 'RELEASED',
+    scheduledReleaseDate: form.distributionHistory === 'RELEASED' ? '' : form.desiredReleaseDate,
+    scheduledPlatforms: form.distributionHistory === 'RELEASED' ? '' : form.desiredPlatforms,
     desiredReleaseDate: form.distributionHistory === 'RELEASED' ? '' : form.desiredReleaseDate,
+    desiredPlatforms: form.distributionHistory === 'RELEASED' ? '' : form.desiredPlatforms,
     previousReleases: form.distributionHistory === 'RELEASED' ? form.previousReleases : '',
     previousReleaseItems: form.distributionHistory === 'RELEASED' ? form.previousReleaseItems : [],
     exclusive: form.distributionHistory === 'RELEASED'
@@ -6880,7 +6924,15 @@ function createAdminContent() {
   };
 
   contents.unshift(content);
-  releaseHistories[nextId] = [];
+  releaseHistories[nextId] = form.distributionHistory === 'RELEASED'
+    ? form.previousReleaseItems.map(item => ({
+      id: ++releaseSeq,
+      platformName: item.platformName,
+      isInternal: false,
+      licenseType: item.licenseType,
+      releaseDate: item.releaseDate,
+    }))
+    : [];
   resetNewContentForm();
   selectContent(nextId);
 }
@@ -6921,6 +6973,11 @@ function selectContent(id) {
   setSelectByText('b-lang', c.lang);
   document.getElementById('b-license-type').value = normalizeLicenseType(c.licenseType || (c.exclusive ? '독점' : '비독점'));
   setLicenseRegionValue(c.licenseRegion);
+  normalizeContentDistributionFields(c);
+  document.getElementById('b-is-distributed').value = c.isDistributed ? 'true' : 'false';
+  document.getElementById('b-scheduled-release-date').value = c.scheduledReleaseDate || '';
+  document.getElementById('b-scheduled-platforms').value = c.scheduledPlatforms || '';
+  syncContentDistributionFields();
   setSelectByText('b-rating', c.rating);
   setSelectByText('b-type', c.type);
   document.getElementById('b-media-category').value = c.mediaCategory || '';
@@ -6945,6 +7002,7 @@ function selectContent(id) {
   dd.style.display = 'flex';
   setContentDetailExpanded(document.getElementById('pane-contents')?.classList.contains('is-expanded'));
   setContentEditMode(true);
+  syncContentDistributionFields();
 
   // reset to first tab
   document.querySelectorAll('#dp-detail .dtab').forEach((t,i)=>t.classList.toggle('active',i===0));
@@ -7151,6 +7209,23 @@ function setLicenseRegionValue(value) {
   select.value = values.includes(target) ? target : '기타';
 }
 
+function normalizeContentDistributionFields(content) {
+  if (!content) return;
+  if (typeof content.isDistributed !== 'boolean') {
+    content.isDistributed = Boolean(releaseHistories[content.id]?.length);
+  }
+  content.scheduledReleaseDate = content.scheduledReleaseDate || (content.isDistributed ? '' : '2026.10.12');
+  content.scheduledPlatforms = content.scheduledPlatforms || (content.isDistributed ? '' : '플랫폼 A, 플랫폼 B, 플랫폼 C');
+}
+
+function syncContentDistributionFields() {
+  const isDistributed = document.getElementById('b-is-distributed')?.value === 'true';
+  const dateInput = document.getElementById('b-scheduled-release-date');
+  const platformsInput = document.getElementById('b-scheduled-platforms');
+  if (dateInput) dateInput.disabled = isDistributed;
+  if (platformsInput) platformsInput.disabled = isDistributed;
+}
+
 function saveContentTab(tab) {
   if (!selId) return;
   const c = contents.find(x => x.id === selId);
@@ -7168,6 +7243,17 @@ function saveContentTab(tab) {
     c.lang = selectedText('b-lang');
     c.licenseType = document.getElementById('b-license-type').value;
     c.licenseRegion = document.getElementById('b-license-region').value;
+    const isDistributed = document.getElementById('b-is-distributed').value === 'true';
+    const scheduledReleaseDate = document.getElementById('b-scheduled-release-date').value.trim();
+    const scheduledPlatforms = document.getElementById('b-scheduled-platforms').value.trim();
+    if (!isDistributed && (!scheduledReleaseDate || !scheduledPlatforms)) {
+      alert('미유통 콘텐츠는 릴리즈 희망 날짜와 예정 플랫폼을 입력해주세요.');
+      (!scheduledReleaseDate ? document.getElementById('b-scheduled-release-date') : document.getElementById('b-scheduled-platforms'))?.focus();
+      return;
+    }
+    c.isDistributed = isDistributed;
+    c.scheduledReleaseDate = c.isDistributed ? '' : scheduledReleaseDate;
+    c.scheduledPlatforms = c.isDistributed ? '' : scheduledPlatforms;
     c.rating = selectedText('b-rating');
     c.type = selectedText('b-type').replace(/\s*\(.+\)/, '');
     c.mediaCategory = document.getElementById('b-media-category').value;
@@ -7622,14 +7708,16 @@ function renderReleaseHistory() {
   const newRowHtml = editingReleaseId === 'new' ? `
     <div class="release-row editing">
       <div class="release-cell release-no"></div>
-      <div class="release-edit-grid">
-        <div class="fg"><input id="release-edit-platform-new" placeholder="예: ShortReel (US)" /></div>
+      <div class="release-cell"><div class="fg"><input id="release-edit-platform-new" /></div></div>
+      <div class="release-cell">
         <div class="fg">
           <select id="release-edit-internal-new">
             <option value="true">내부 거래</option>
             <option value="false" selected>외부 거래</option>
           </select>
         </div>
+      </div>
+      <div class="release-cell">
         <div class="fg">
           <select id="release-edit-license-type-new">
             <option value="독점" ${getDefaultReleaseLicenseType() === '독점' ? 'selected' : ''}>독점</option>
@@ -7637,9 +7725,10 @@ function renderReleaseHistory() {
           </select>
         </div>
       </div>
+      <div class="release-cell"><div class="fg"><input id="release-edit-date-new" /></div></div>
       <div class="release-actions">
-        <button class="btn btn-save" onclick="saveInlineReleaseHistory('new')">저장</button>
-        <button class="btn" onclick="cancelInlineReleaseEdit()">취소</button>
+        <button class="btn btn-icon" onclick="saveInlineReleaseHistory('new')" title="저장"><i class="ti ti-device-floppy"></i></button>
+        <button class="btn btn-icon" onclick="cancelInlineReleaseEdit()" title="취소"><i class="ti ti-x"></i></button>
       </div>
     </div>
   ` : '';
@@ -7651,20 +7740,23 @@ function renderReleaseHistory() {
         <div>플랫폼사명</div>
         <div>거래 구분</div>
         <div>라이선스</div>
+        <div>릴리즈 날짜</div>
         <div></div>
       </div>
       ${rows.map((r, index) => `
         ${editingReleaseId === r.id ? `
         <div class="release-row editing">
           <div class="release-cell release-no">${index + 1}</div>
-          <div class="release-edit-grid">
-            <div class="fg"><input id="release-edit-platform-${r.id}" value="${escapeAttr(r.platformName)}" /></div>
+          <div class="release-cell"><div class="fg"><input id="release-edit-platform-${r.id}" value="${escapeAttr(r.platformName)}" /></div></div>
+          <div class="release-cell">
             <div class="fg">
               <select id="release-edit-internal-${r.id}">
                 <option value="true" ${r.isInternal ? 'selected' : ''}>내부 거래</option>
                 <option value="false" ${!r.isInternal ? 'selected' : ''}>외부 거래</option>
               </select>
             </div>
+          </div>
+          <div class="release-cell">
             <div class="fg">
               <select id="release-edit-license-type-${r.id}">
                 <option value="독점" ${getReleaseLicenseType(r) === '독점' ? 'selected' : ''}>독점</option>
@@ -7672,16 +7764,17 @@ function renderReleaseHistory() {
               </select>
             </div>
           </div>
+          <div class="release-cell"><div class="fg"><input id="release-edit-date-${r.id}" value="${escapeAttr(r.releaseDate || '')}" /></div></div>
           <div class="release-actions">
-            <button class="btn btn-save" onclick="saveInlineReleaseHistory(${r.id})">저장</button>
-            <button class="btn" onclick="cancelInlineReleaseEdit()">취소</button>
+            <button class="btn btn-icon" onclick="saveInlineReleaseHistory(${r.id})" title="저장"><i class="ti ti-device-floppy"></i></button>
+            <button class="btn btn-icon" onclick="cancelInlineReleaseEdit()" title="취소"><i class="ti ti-x"></i></button>
           </div>
         </div>
         ` : `
         <div class="release-row">
           <div class="release-cell release-no">${index + 1}</div>
           <div class="release-cell release-main">
-            <div class="release-name">${r.platformName}</div>
+            <div class="release-name">${escapeAttr(r.platformName)}</div>
           </div>
           <div class="release-cell">
             <span class="release-type ${r.isInternal ? 'internal' : 'external'}">${r.isInternal ? '내부 거래' : '외부 거래'}</span>
@@ -7689,6 +7782,7 @@ function renderReleaseHistory() {
           <div class="release-cell">
             <span class="release-type ${getReleaseLicenseType(r) === '독점' ? 'exclusive' : 'non-exclusive'}">${getReleaseLicenseType(r)}</span>
           </div>
+          <div class="release-cell"><span class="release-type">${escapeAttr(r.releaseDate || '-')}</span></div>
           <div class="release-actions">
             <button class="btn btn-icon" onclick="editReleaseHistory(${r.id})" title="수정"><i class="ti ti-edit"></i></button>
             <button class="btn btn-icon" onclick="deleteReleaseHistory(${r.id})" title="삭제"><i class="ti ti-trash"></i></button>
@@ -7730,6 +7824,7 @@ function saveReleaseHistory() {
   const platformName = document.getElementById('release-platform').value.trim();
   const isInternal = document.getElementById('release-internal').value === 'true';
   const licenseType = document.getElementById('release-license-type').value;
+  const releaseDate = document.getElementById('release-date')?.value.trim() || '';
   const id = Number(document.getElementById('release-id').value);
   if (!platformName) {
     alert('회사명을 입력해주세요.');
@@ -7742,9 +7837,10 @@ function saveReleaseHistory() {
       row.platformName = platformName;
       row.isInternal = isInternal;
       row.licenseType = licenseType;
+      row.releaseDate = releaseDate;
     }
   } else {
-    rows.push({ id: ++releaseSeq, platformName, isInternal, licenseType });
+    rows.push({ id: ++releaseSeq, platformName, isInternal, licenseType, releaseDate });
   }
   editingReleaseId = null;
   hideReleaseForm();
@@ -7780,12 +7876,14 @@ function saveInlineReleaseHistory(id) {
   }
   const isInternal = document.getElementById(`release-edit-internal-${id}`).value === 'true';
   const licenseType = document.getElementById(`release-edit-license-type-${id}`).value;
+  const releaseDate = document.getElementById(`release-edit-date-${id}`).value.trim();
   if (isNew) {
-    getCurrentReleaseList().push({ id: ++releaseSeq, platformName, isInternal, licenseType });
+    getCurrentReleaseList().push({ id: ++releaseSeq, platformName, isInternal, licenseType, releaseDate });
   } else {
     row.platformName = platformName;
     row.isInternal = isInternal;
     row.licenseType = licenseType;
+    row.releaseDate = releaseDate;
   }
   editingReleaseId = null;
   renderReleaseHistory();
