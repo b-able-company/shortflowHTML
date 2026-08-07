@@ -1062,6 +1062,73 @@ td { padding: 9px 12px; vertical-align: middle; }
   padding: 6px 7px 6px 14px;
   transition: border-color 0.14s ease, box-shadow 0.14s ease;
 }
+.material-folder-field.is-create,
+.material-folder-field.is-generating {
+  justify-content: center;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+.material-folder-field.is-create:hover {
+  background: #fafafa;
+}
+.material-folder-create-icon {
+  display: none;
+  width: 24px;
+  height: 24px;
+  color: #555;
+  flex-shrink: 0;
+}
+.material-folder-create-label {
+  display: none;
+  color: #999;
+  font-size: 12.5px;
+  font-weight: 400;
+}
+.material-folder-field.is-create .material-folder-create-icon {
+  display: inline-flex;
+}
+.material-folder-field.is-create .material-folder-create-label {
+  display: inline-flex;
+}
+.material-folder-field.is-generating .material-folder-create-icon {
+  display: none;
+}
+.material-folder-field.is-generating .material-folder-create-label {
+  display: none;
+}
+.material-folder-field.is-create {
+  gap: 6px;
+}
+.material-folder-field.is-create input,
+.material-folder-field.is-generating input {
+  display: none;
+  pointer-events: none;
+}
+.material-folder-field.is-create .btn-material,
+.material-folder-field.is-generating .btn-material {
+  display: none;
+}
+.material-folder-field.is-generating {
+  cursor: default;
+  pointer-events: none;
+  position: relative;
+}
+.material-folder-field.is-generating input {
+  display: none;
+}
+.material-folder-field.is-generating::after {
+  content: "";
+  width: 18px;
+  height: 18px;
+  border: 2px solid #eeeeee;
+  border-top-color: #777;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  animation: materialButtonSpin 0.8s linear infinite;
+}
 .material-folder-field:focus-within {
   border-color: #aaa;
   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
@@ -1076,6 +1143,9 @@ td { padding: 9px 12px; vertical-align: middle; }
   color: #1a1a18;
   font-family: inherit;
   font-size: 12.5px;
+}
+.material-folder-field.is-empty input {
+  color: #999;
 }
 .btn-material {
   height: 30px;
@@ -1097,17 +1167,135 @@ td { padding: 9px 12px; vertical-align: middle; }
 }
 .btn-material-text {
   width: auto;
-  min-width: 88px;
+  min-width: 112px;
   padding: 0 14px;
   font-size: 12px;
   font-weight: 400;
   line-height: 28px;
   align-items: flex-start;
 }
+.btn-material.is-loading {
+  color: transparent;
+  position: relative;
+  pointer-events: none;
+}
+.btn-material.is-loading::after {
+  content: "";
+  width: 15px;
+  height: 15px;
+  border: 2px solid #dddddd;
+  border-top-color: #777;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  animation: materialButtonSpin 0.8s linear infinite;
+}
 .content-preview-field input[readonly] {
   background: transparent;
   color: #555;
 }
+.material-status {
+  margin-top: 12px;
+  border: 0.5px solid #dcdcdc;
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+}
+.material-status-standby,
+.material-status-loading {
+  min-height: 118px;
+  background: #fff;
+}
+.material-status-standby {
+  width: 100%;
+  border: 0;
+  color: #555;
+  font-size: 13.5px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  cursor: pointer;
+}
+.material-status-standby i {
+  color: #8a8a8a;
+  font-size: 16px;
+}
+.material-status-standby:hover { background: #fafafa; }
+.material-status-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.material-status-spinner {
+  width: 26px;
+  height: 26px;
+  border: 2px solid #eeeeee;
+  border-top-color: #9a9a9a;
+  border-radius: 50%;
+  animation: materialStatusSpin 0.8s linear infinite;
+}
+@keyframes materialStatusSpin {
+  to { transform: rotate(360deg); }
+}
+@keyframes materialButtonSpin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+.material-status-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.material-status-table tbody tr {
+  border-bottom: 0;
+  cursor: default;
+}
+.material-status-table tbody tr:hover,
+.material-status-table tbody tr:hover td { background: #fff; }
+.material-status-table td {
+  min-height: 42px;
+  padding: 10px 12px;
+  border-bottom: 0.5px solid #dcdcdc;
+  color: #333;
+  font-size: 12px;
+  vertical-align: top;
+}
+.material-status-table tbody tr:last-child td { border-bottom: 0; }
+.material-status-table td.material-status-detail-cell { padding: 0; }
+.material-status-inline-items {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  height: 100%;
+}
+.material-status-inline-item {
+  min-height: 40px;
+  padding: 0 0 0 12px;
+  color: #444;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+}
+.material-status-inline-item:nth-child(odd) { border-right: 0.5px solid rgb(242, 242, 242); }
+.material-status-inline-item:nth-child(n+3) { border-top: 0.5px solid rgb(242, 242, 242); }
+.material-status-inline-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 10px;
+}
+.material-status-inline-item.is-empty { color: #aaa; }
+.material-status-inline-count {
+  height: 100%;
+  padding-left: 12px;
+  border-left: 0.5px solid rgb(242, 242, 242);
+  color: #1a1a18;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.material-status-inline-item.is-empty .material-status-inline-count { color: #aaa; }
+.material-status-empty { padding: 18px 12px; color: #aaa; font-size: 12px; text-align: center; }
 .planning-upload-box {
   min-height: 118px;
   border: 1px dashed #d5d4ce;
@@ -4098,10 +4286,13 @@ td { padding: 9px 12px; vertical-align: middle; }
                 <div class="sec">
                   <div class="sec-title material-section-title">메타데이터 자료 폴더</div>
                   <div class="material-folder">
-                    <div class="material-folder-field">
-                      <input id="b-drive-url" placeholder="https://drive.google.com/..." />
-                      <button class="btn btn-material" type="button" onclick="openDriveFolder()" aria-label="자료 폴더 열기"><i class="ti ti-arrow-up-right"></i></button>
+                    <div class="material-folder-field" id="material-folder-field">
+                      <svg class="material-folder-create-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" aria-hidden="true"><path fill="#CCCCCC" d="M450-450v130q0 12.75 8.63 21.37 8.63 8.63 21.38 8.63 12.76 0 21.37-8.63Q510-307.25 510-320v-130h130q12.75 0 21.37-8.63 8.63-8.63 8.63-21.38 0-12.76-8.63-21.37Q652.75-510 640-510H510v-130q0-12.75-8.63-21.37-8.63-8.63-21.38-8.63-12.76 0-21.37 8.63Q450-652.75 450-640v130H320q-12.75 0-21.37 8.63-8.63 8.63-8.63 21.38 0 12.76 8.63 21.37Q307.25-450 320-450h130Zm30.07 350q-78.84 0-148.21-29.92t-120.68-81.21q-51.31-51.29-81.25-120.63Q100-401.1 100-479.93q0-78.84 29.92-148.21t81.21-120.68q51.29-51.31 120.63-81.25Q401.1-860 479.93-860q78.84 0 148.21 29.92t120.68 81.21q51.31 51.29 81.25 120.63Q860-558.9 860-480.07q0 78.84-29.92 148.21t-81.21 120.68q-51.29 51.31-120.63 81.25Q558.9-100 480.07-100Zm-.07-60q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>
+                      <span class="material-folder-create-label">구글 드라이브 생성하기</span>
+                      <input id="b-drive-url" placeholder="https://drive.google.com/..." readonly />
+                      <button class="btn btn-material" id="material-folder-action" type="button" onclick="openDriveFolder()" aria-label="자료 폴더 열기"><i class="ti ti-arrow-up-right"></i></button>
                     </div>
+                    <div id="material-folder-status"></div>
                   </div>
                 </div>
                 <div class="sec">
@@ -4404,7 +4595,10 @@ function openRevisionRejectReasonModal() {
   const modal = document.getElementById('revision-reject-modal');
   const input = document.getElementById('revision-reject-reason-input');
   const error = document.getElementById('revision-reject-error');
-  if (input) input.value = '';
+  if (input) {
+    input.value = '';
+    input.dataset.driveUrl = '';
+  }
   error?.classList.remove('show');
   modal?.classList.add('show');
   window.setTimeout(() => input?.focus(), 0);
@@ -4434,7 +4628,7 @@ const contents = [
   { id:1, title:'The Last Letter', origTitle:'마지막 편지', company:'NextWave Studios', genre:'드라마, 로맨스', year:'2024', status:'PENDING', date:'2026.05.08',
     poster:'poster-p1',
     lang:'한국어', eps:16, runtime:12, totalRuntime:192, startPoint:1, rating:'15세 이상', type:'오리지널', mediaCategory:'DRAMA', coProduction:'SOLO', exclusive:false, pstatus:'제작 완료',
-    driveFolderUrl:'https://drive.google.com/drive/folders/last-letter', rejectReason:'',
+    driveFolderUrl:'', rejectReason:'',
     producerRequest:'이전 반려 사유였던 캐릭터 소개를 보강했습니다. 신규 포스터와 1-3화 무료 공개용 영상을 우선 검수 부탁드립니다.',
     bookmarks:['ShortReel (US)','Viki'],
     timeline:[
@@ -4447,7 +4641,7 @@ const contents = [
   { id:2, title:'Reverse Cinderella', origTitle:'역신데렐라', company:'OneTake Media', genre:'로맨스', year:'2024', status:'PENDING', date:'2026.05.07',
     poster:'poster-p2',
     lang:'한국어', eps:20, runtime:10, totalRuntime:200, startPoint:1, rating:'전체 관람가', type:'오리지널', mediaCategory:'DRAMA', coProduction:'AGENCY', exclusive:false, pstatus:'제작 완료',
-    driveFolderUrl:'https://drive.google.com/drive/folders/reverse-cinderella', rejectReason:'',
+    driveFolderUrl:'', rejectReason:'',
     producerRequest:'중국어 번역 데이터는 다음 주 업데이트 예정입니다. 우선 한국어/영어 메타데이터 기준으로 검토 부탁드립니다.',
     bookmarks:['WeTV'],
     timeline:[{dot:'blue',text:'제작사가 등록 신청함',time:'2026.05.07 · 11:00'}],
@@ -4456,7 +4650,7 @@ const contents = [
   { id:3, title:'Midnight Tokyo Drift', origTitle:'Midnight Tokyo Drift', company:'ShortReel (US)', genre:'액션', year:'2023', status:'APPROVED', date:'2026.05.01',
     poster:'poster-p3',
     lang:'일본어', eps:12, runtime:8, totalRuntime:96, startPoint:1, rating:'15세 이상', type:'오리지널', mediaCategory:'DRAMA', coProduction:'JOINT', exclusive:true, pstatus:'제작 완료',
-    driveFolderUrl:'https://drive.google.com/drive/folders/tokyo-drift', rejectReason:'',
+    driveFolderUrl:'', rejectReason:'',
     producerRequest:'',
     bookmarks:['Viki','iQIYI','WeTV'],
     timeline:[
@@ -4593,6 +4787,45 @@ const contents = [
   },
 ];
 
+const defaultMaterialFolderStatus = {
+  '심의필증': 1,
+  '영상': {
+    '자막O & 음악O': 12,
+    '자막X & 음악O': 0,
+    '자막O & 음악X': 0,
+    '자막X & 음악X': 0,
+  },
+  '예고편': { '자막O & 음악O': 1, '자막X & 음악O': 0 },
+  '음향트랙': { '대사': 0, '음악 & 대사': 0 },
+  '자막': { '영어': 12, '한국어': 12, '일본어': 0, '기타언어': 0 },
+  '작품소개서': 1,
+  '포스터': 1,
+  '홍보자료': 0,
+};
+
+const materialFolderStatusByContentId = {
+  2: {
+    '심의필증': 0,
+    '영상': { '자막O & 음악O': 20, '자막X & 음악O': 0, '자막O & 음악X': 0, '자막X & 음악X': 0 },
+    '예고편': { '자막O & 음악O': 0, '자막X & 음악O': 1 },
+    '음향트랙': { '대사': 1, '음악 & 대사': 1 },
+    '자막': { '영어': 20, '한국어': 20, '일본어': 0, '기타언어': 0 },
+    '작품소개서': 1,
+    '포스터': 2,
+    '홍보자료': 3,
+  },
+  3: {
+    '심의필증': 1,
+    '영상': { '자막O & 음악O': 12, '자막X & 음악O': 12, '자막O & 음악X': 0, '자막X & 음악X': 0 },
+    '예고편': { '자막O & 음악O': 2, '자막X & 음악O': 1 },
+    '음향트랙': { '대사': 12, '음악 & 대사': 12 },
+    '자막': { '영어': 12, '한국어': 0, '일본어': 12, '기타언어': 0 },
+    '작품소개서': 1,
+    '포스터': 1,
+    '홍보자료': 2,
+  },
+};
+
 const contentPosterImages = [
   '../images/대표님이내전남친입니다.png',
   '../images/재벌집막내비서.png',
@@ -4612,21 +4845,21 @@ const contentPosterImages = [
 ];
 
 const contentDisplayOverrides = [
-  { title:'대표님이 내 전남친입니다', origTitle:'대표님이 내 전남친입니다', genre:'로맨스, 멜로', year:'2026', eps:18, runtime:9, totalRuntime:162, rating:'12세 이상', pstatus:'제작 완료', driveFolderUrl:'https://drive.google.com/drive/folders/ceo-ex-boyfriend', producerRequest:'대표작 포스터 교체본 기준으로 플랫폼 노출 검토를 요청드립니다.' },
+  { title:'대표님이 내 전남친입니다', origTitle:'대표님이 내 전남친입니다', genre:'로맨스, 멜로', year:'2026', eps:18, runtime:9, totalRuntime:162, rating:'12세 이상', pstatus:'제작 완료', driveFolderUrl:'', producerRequest:'대표작 포스터 교체본 기준으로 플랫폼 노출 검토를 요청드립니다.' },
   { title:'재벌집 막내 비서', origTitle:'재벌집 막내 비서', genre:'로맨스, 여성향', year:'2026', eps:24, runtime:8, totalRuntime:192, rating:'15세 이상', pstatus:'제작 완료', driveFolderUrl:'https://drive.google.com/drive/folders/chaebol-secretary', producerRequest:'영문/중문 제목 확정 전 국문 메타데이터 기준으로 우선 검수 부탁드립니다.' },
-  { title:'죽었다가 회귀한 톱스타', origTitle:'죽었다가 회귀한 톱스타', genre:'시간 여행, 액션, 판타지', year:'2025', eps:20, runtime:10, totalRuntime:200, rating:'15세 이상', pstatus:'제작 완료', driveFolderUrl:'https://drive.google.com/drive/folders/return-topstar', producerRequest:'회귀 설정 요약본과 티저 이미지를 추가했습니다.' },
+  { title:'죽었다가 회귀한 톱스타', origTitle:'죽었다가 회귀한 톱스타', genre:'시간 여행, 액션, 판타지', year:'2025', eps:20, runtime:10, totalRuntime:200, rating:'15세 이상', pstatus:'제작 완료', driveFolderUrl:'', producerRequest:'회귀 설정 요약본과 티저 이미지를 추가했습니다.' },
   { title:'우리 집에 킬러가 산다', origTitle:'우리 집에 킬러가 산다', genre:'스릴러, 로맨스, 코미디', year:'2025', eps:16, runtime:9, totalRuntime:144, rating:'15세 이상', pstatus:'제작 완료', driveFolderUrl:'https://drive.google.com/drive/folders/killer-at-home', producerRequest:'폭력 수위 관련 등급 검토를 함께 부탁드립니다.' },
-  { title:'오늘부터 악녀 대행합니다', origTitle:'오늘부터 악녀 대행합니다', genre:'복수, 코미디', year:'2024', eps:12, runtime:11, totalRuntime:132, rating:'12세 이상', pstatus:'제작 완료', driveFolderUrl:'https://drive.google.com/drive/folders/villainess-agent', producerRequest:'주요 캐릭터 소개와 회차별 줄거리를 보강했습니다.' },
+  { title:'오늘부터 악녀 대행합니다', origTitle:'오늘부터 악녀 대행합니다', genre:'복수, 코미디', year:'2024', eps:12, runtime:11, totalRuntime:132, rating:'12세 이상', pstatus:'제작 완료', driveFolderUrl:'', producerRequest:'주요 캐릭터 소개와 회차별 줄거리를 보강했습니다.' },
   { title:'남편이 AI입니다', origTitle:'남편이 AI입니다', genre:'로맨스, SF', year:'2024', eps:14, runtime:10, totalRuntime:140, rating:'전체 관람가', pstatus:'제작 완료', driveFolderUrl:'https://drive.google.com/drive/folders/ai-husband', producerRequest:'AI 설정 관련 키워드가 플랫폼 검색에 노출되도록 확인 부탁드립니다.' },
-  { title:'퇴사했더니 황제가 됐다', origTitle:'퇴사했더니 황제가 됐다', genre:'판타지, 시간 여행', year:'2023', eps:18, runtime:8, totalRuntime:144, rating:'12세 이상', pstatus:'제작 완료', driveFolderUrl:'https://drive.google.com/drive/folders/resigned-emperor', producerRequest:'애니메이션 카테고리 기준으로 검토 요청드립니다.' },
+  { title:'퇴사했더니 황제가 됐다', origTitle:'퇴사했더니 황제가 됐다', genre:'판타지, 시간 여행', year:'2023', eps:18, runtime:8, totalRuntime:144, rating:'12세 이상', pstatus:'제작 완료', driveFolderUrl:'', producerRequest:'애니메이션 카테고리 기준으로 검토 요청드립니다.' },
   { title:'살인범과 룸메이트가 되었다', origTitle:'살인범과 룸메이트가 되었다', genre:'스릴러, 미스터리', year:'2026', eps:10, runtime:12, totalRuntime:120, rating:'15세 이상', pstatus:'제작 완료', driveFolderUrl:'https://drive.google.com/drive/folders/murderer-roommate', producerRequest:'자극적인 표현 수위가 포함되어 등급 검토가 필요합니다.' },
-  { title:'내 남편의 비밀 계정', origTitle:'내 남편의 비밀 계정', genre:'미스터리, 로맨스, 치정', year:'2025', eps:15, runtime:9, totalRuntime:135, rating:'15세 이상', pstatus:'제작 완료', driveFolderUrl:'https://drive.google.com/drive/folders/secret-account', producerRequest:'비밀 계정 단서 이미지 3종을 추가 업로드했습니다.' },
+  { title:'내 남편의 비밀 계정', origTitle:'내 남편의 비밀 계정', genre:'미스터리, 로맨스, 치정', year:'2025', eps:15, runtime:9, totalRuntime:135, rating:'15세 이상', pstatus:'제작 완료', driveFolderUrl:'', producerRequest:'비밀 계정 단서 이미지 3종을 추가 업로드했습니다.' },
   { title:'첫사랑은 계약 종료', origTitle:'첫사랑은 계약 종료', genre:'로맨스, 멜로', year:'2023', eps:12, runtime:10, totalRuntime:120, rating:'전체 관람가', pstatus:'제작 완료', driveFolderUrl:'https://drive.google.com/drive/folders/first-love-contract', producerRequest:'계약 연애 테마 태그 반영 여부 확인 부탁드립니다.' },
-  { title:'달빛 아래 편의점', origTitle:'달빛 아래 편의점', genre:'청춘, 로맨스', year:'2022', eps:16, runtime:7, totalRuntime:112, rating:'전체 관람가', pstatus:'제작 완료', driveFolderUrl:'https://drive.google.com/drive/folders/moonlight-store', producerRequest:'야간 배경 스틸컷을 대표 이미지 후보로 추가했습니다.' },
+  { title:'달빛 아래 편의점', origTitle:'달빛 아래 편의점', genre:'청춘, 로맨스', year:'2022', eps:16, runtime:7, totalRuntime:112, rating:'전체 관람가', pstatus:'제작 완료', driveFolderUrl:'', producerRequest:'야간 배경 스틸컷을 대표 이미지 후보로 추가했습니다.' },
   { title:'그녀의 두 번째 엔딩', origTitle:'그녀의 두 번째 엔딩', genre:'시간 여행, 로맨스', year:'2026', eps:18, runtime:9, totalRuntime:162, rating:'12세 이상', pstatus:'제작 완료', driveFolderUrl:'https://drive.google.com/drive/folders/second-ending', producerRequest:'엔딩 스포일러가 포함된 줄거리는 비공개 메모로 분리했습니다.' },
-  { title:'재벌가 입주 과외', origTitle:'재벌가 입주 과외', genre:'로맨스, 가족', year:'2024', eps:14, runtime:10, totalRuntime:140, rating:'전체 관람가', pstatus:'제작 완료', driveFolderUrl:'https://drive.google.com/drive/folders/chaebol-tutor', producerRequest:'가족 시청 가능 등급으로 검토 요청드립니다.' },
+  { title:'재벌가 입주 과외', origTitle:'재벌가 입주 과외', genre:'로맨스, 가족', year:'2024', eps:14, runtime:10, totalRuntime:140, rating:'전체 관람가', pstatus:'제작 완료', driveFolderUrl:'', producerRequest:'가족 시청 가능 등급으로 검토 요청드립니다.' },
   { title:'나의 위험한 파트너', origTitle:'나의 위험한 파트너', genre:'스릴러, 로맨스, 액션', year:'2025', eps:16, runtime:11, totalRuntime:176, rating:'15세 이상', pstatus:'제작 완료', driveFolderUrl:'https://drive.google.com/drive/folders/dangerous-partner', producerRequest:'액션 장면 썸네일 교체본 기준으로 재검수 부탁드립니다.' },
-  { title:'황후의 복수 노트', origTitle:'황후의 복수 노트', genre:'사극, 복수, 로맨스', year:'2026', eps:20, runtime:10, totalRuntime:200, rating:'15세 이상', pstatus:'제작 완료', driveFolderUrl:'https://drive.google.com/drive/folders/empress-revenge', producerRequest:'사극/복수 장르 키워드가 함께 노출되도록 확인 부탁드립니다.' },
+  { title:'황후의 복수 노트', origTitle:'황후의 복수 노트', genre:'사극, 복수, 로맨스', year:'2026', eps:20, runtime:10, totalRuntime:200, rating:'15세 이상', pstatus:'제작 완료', driveFolderUrl:'', producerRequest:'사극/복수 장르 키워드가 함께 노출되도록 확인 부탁드립니다.' },
 ];
 
 contents.forEach((content, index) => {
@@ -4833,6 +5066,10 @@ const translationLangs = ['KO', 'EN', 'ZH'];
 const translationFields = ['title', 'logline', 'synopsis', 'characters', 'releaseSchedule', 'director', 'writer', 'cast', 'themes', 'hashtags'];
 let activeTranslationLang = 'KO';
 let activePlanLang = 'KO';
+const materialFolderStatusLoadState = {
+  contentId: null,
+  timer: null,
+};
 
 const translationTitleMap = {
   '대표님이 내 전남친입니다': { EN: 'My CEO Is My Ex-Boyfriend', ZH: '总裁是我的前男友' },
@@ -6968,7 +7205,7 @@ function selectContent(id) {
   document.getElementById('b-runtime').value = c.runtime || '';
   document.getElementById('b-total-runtime').value = c.totalRuntime || '';
   document.getElementById('b-start-point').value = c.startPoint || '';
-  document.getElementById('b-drive-url').value = c.driveFolderUrl || '';
+  renderMaterialFolderField(c);
   updateContentPreviewLinkField(c);
   setSelectByText('b-lang', c.lang);
   document.getElementById('b-license-type').value = normalizeLicenseType(c.licenseType || (c.exclusive ? '독점' : '비독점'));
@@ -7265,7 +7502,8 @@ function saveContentTab(tab) {
   }
 
   if (tab === 'material') {
-    c.driveFolderUrl = document.getElementById('b-drive-url').value.trim();
+    const driveInput = document.getElementById('b-drive-url');
+    c.driveFolderUrl = driveInput?.dataset.driveUrl || '';
   }
 
   if (tab === 'trans') {
@@ -7375,8 +7613,77 @@ function confirmReissueContentPreviewLink(contentId) {
   closeAdminConfirm();
 }
 
+function generatedDriveFolderUrl(content) {
+  const base = String(content?.title || content?.origTitle || `content-${content?.id || 'new'}`)
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9가-힣]+/gi, '-')
+    .replace(/^-+|-+$/g, '');
+  return `https://drive.google.com/drive/folders/${encodeURIComponent(base || `content-${content?.id || 'new'}`)}`;
+}
+
+function renderMaterialFolderField(content) {
+  const field = document.getElementById('material-folder-field');
+  const input = document.getElementById('b-drive-url');
+  const button = document.getElementById('material-folder-action');
+  const statusWrap = document.getElementById('material-folder-status');
+  if (!field || !input || !button) return;
+  const url = content?.driveFolderUrl || '';
+  input.dataset.driveUrl = url;
+  input.value = url || '구글 드라이브 생성하기';
+  field.classList.toggle('is-empty', !url);
+  field.classList.toggle('is-create', !url);
+  field.classList.remove('is-generating');
+  field.onclick = url ? null : createMaterialDriveFolder;
+  field.setAttribute('role', url ? 'group' : 'button');
+  field.setAttribute('tabindex', url ? '-1' : '0');
+  field.onkeydown = url ? null : event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      createMaterialDriveFolder();
+    }
+  };
+  button.disabled = false;
+  button.classList.remove('is-loading');
+  if (url) {
+    button.style.display = '';
+    button.className = 'btn btn-material';
+    button.setAttribute('aria-label', '자료 폴더 열기');
+    button.onclick = openDriveFolder;
+    button.innerHTML = '<i class="ti ti-arrow-up-right"></i>';
+    renderMaterialFolderStatusPrompt(content);
+    return;
+  }
+  button.style.display = 'none';
+  button.onclick = null;
+  if (statusWrap) statusWrap.innerHTML = '';
+}
+
+function createMaterialDriveFolder() {
+  const content = contents.find(item => item.id === selId);
+  const field = document.getElementById('material-folder-field');
+  const input = document.getElementById('b-drive-url');
+  const button = document.getElementById('material-folder-action');
+  if (!content || !field || field.classList.contains('is-generating')) return;
+  field.classList.remove('is-create');
+  field.classList.add('is-generating');
+  field.onclick = null;
+  field.onkeydown = null;
+  if (input) input.value = '';
+  if (button) {
+    button.style.display = 'none';
+    button.disabled = true;
+  }
+  setTimeout(() => {
+    if (selId !== content.id) return;
+    content.driveFolderUrl = generatedDriveFolderUrl(content);
+    renderMaterialFolderField(content);
+  }, 1000);
+}
+
 function openDriveFolder() {
-  const url = document.getElementById('b-drive-url')?.value.trim();
+  const input = document.getElementById('b-drive-url');
+  const url = input?.dataset.driveUrl || input?.value.trim();
   if (!url) {
     alert('등록된 드라이브 폴더 URL이 없습니다.');
     return;
@@ -7406,6 +7713,101 @@ function handlePlanningFileUpload(input) {
       <span class="planning-file-size">${formatFileSize(file.size)}</span>
     </div>
   `).join('');
+}
+
+function materialFolderStatusForContent(content) {
+  return content?.materialFolderStatus || materialFolderStatusByContentId[content?.id] || defaultMaterialFolderStatus;
+}
+
+function clearMaterialFolderStatusTimer() {
+  if (materialFolderStatusLoadState.timer) {
+    clearTimeout(materialFolderStatusLoadState.timer);
+    materialFolderStatusLoadState.timer = null;
+  }
+}
+
+function renderMaterialFolderStatusFrame(innerHtml) {
+  return `
+    <div class="material-status">
+      ${innerHtml}
+    </div>
+  `;
+}
+
+function renderMaterialFolderStatusPrompt(content) {
+  const wrap = document.getElementById('material-folder-status');
+  if (!wrap) return;
+  clearMaterialFolderStatusTimer();
+  materialFolderStatusLoadState.contentId = content?.id || null;
+  wrap.innerHTML = renderMaterialFolderStatusFrame(
+    `<button class="material-status-standby" type="button" onclick="loadMaterialFolderStatus(${Number(content?.id || 0)})"><i class="ti ti-search" aria-hidden="true"></i><span>자료 업로드 현황 보기</span></button>`
+  );
+}
+
+function renderMaterialFolderStatusLoading(contentId) {
+  const wrap = document.getElementById('material-folder-status');
+  if (!wrap) return;
+  materialFolderStatusLoadState.contentId = contentId;
+  wrap.innerHTML = renderMaterialFolderStatusFrame(
+    '<div class="material-status-loading"><div class="material-status-spinner" aria-label="자료 업로드 현황 불러오는 중"></div></div>'
+  );
+}
+
+function loadMaterialFolderStatus(contentId) {
+  const content = contents.find(item => item.id === contentId);
+  if (!content) return;
+  clearMaterialFolderStatusTimer();
+  renderMaterialFolderStatusLoading(contentId);
+  materialFolderStatusLoadState.timer = setTimeout(() => {
+    materialFolderStatusLoadState.timer = null;
+    if (selId !== contentId || materialFolderStatusLoadState.contentId !== contentId) return;
+    renderMaterialFolderStatus(content);
+  }, 1000);
+}
+
+function renderMaterialFolderStatus(content) {
+  const wrap = document.getElementById('material-folder-status');
+  if (!wrap) return;
+  clearMaterialFolderStatusTimer();
+  const status = materialFolderStatusForContent(content);
+  const entries = Object.entries(status || {});
+  if (!entries.length) {
+    wrap.innerHTML = renderMaterialFolderStatusFrame('<div class="material-status-empty">자료 업로드 현황이 없습니다</div>');
+    return;
+  }
+  const nestedGroups = entries
+    .filter(([, value]) => value && typeof value === 'object')
+    .map(([category, value]) => ({
+      title: category,
+      items: Object.entries(value).map(([label, count]) => ({ label, count: Number(count || 0) })),
+    }));
+  const simpleItems = entries
+    .filter(([, value]) => typeof value === 'number')
+    .map(([label, count]) => ({ label, count: Number(count || 0) }));
+  const groups = simpleItems.length
+    ? [...nestedGroups, { title: '기타 자료', items: simpleItems }]
+    : nestedGroups;
+  const rowHtml = groups.map(group => {
+    const itemHtml = group.items.map(item => {
+      const label = `${group.title} (${item.label})`;
+      return `
+      <span class="material-status-inline-item ${item.count ? '' : 'is-empty'}" title="${escapeAttr(label)} ${item.count}개">
+        <span class="material-status-inline-label">${escapeAttr(label)}</span>
+        <span class="material-status-inline-count">${item.count}개</span>
+      </span>
+    `;
+    }).join('');
+    return `
+      <tr>
+        <td class="material-status-detail-cell"><div class="material-status-inline-items">${itemHtml}</div></td>
+      </tr>
+    `;
+  }).join('');
+  wrap.innerHTML = renderMaterialFolderStatusFrame(`
+      <table class="material-status-table">
+        <tbody>${rowHtml}</tbody>
+      </table>
+  `);
 }
 
 function switchLang(el, lang, ctx) {

@@ -197,6 +197,37 @@ td { padding: 9px 12px; vertical-align: middle; }
 .member-company-split #company-detail .dh-acts {
   margin-top: 6px;
 }
+.company-header-actions {
+  display: flex;
+  align-items: flex-end;
+}
+.company-header-actions-top {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.company-drive-shortcut {
+  width: 28px;
+  height: 28px;
+  border: 0.5px solid #dcdcdc;
+  border-radius: 8px;
+  background: #fff;
+  color: #555;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.company-drive-shortcut:hover {
+  background: #fafafa;
+  border-color: #cfcfcf;
+}
+.company-drive-shortcut i { font-size: 16px; }
+.company-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 .user-detail-side-top {
   display: flex;
   align-items: center;
@@ -1637,7 +1668,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 .login-log-table tbody tr { cursor: default; }
 .login-log-table tbody tr:hover { background: transparent; }
 .login-log-table tbody tr:last-child { border-bottom: none; }
-.login-log-table td { font-size: 12.5px; padding: 8px 12px; color: #444; line-height: 1.35; }
+.login-log-table td { font-size: 12.5px; padding: 8px 12px; color: #444; line-height: 1.35; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .login-result-badge {
   min-height: 26px;
   min-width: 58px;
@@ -1660,7 +1691,13 @@ td { padding: 9px 12px; vertical-align: middle; }
 .login-log-table th.log-ip,
 .login-log-table td.log-ip,
 .login-log-table th.log-location,
-.login-log-table td.log-location { text-align: left; }
+.login-log-table td.log-location,
+.login-log-table th.log-browser,
+.login-log-table td.log-browser,
+.login-log-table th.log-os,
+.login-log-table td.log-os { text-align: left; }
+.login-log-table th.log-no,
+.login-log-table td.log-no,
 .login-log-table th.log-result,
 .login-log-table td.log-result { text-align: center; }
 .login-log-table .log-date,
@@ -1669,6 +1706,8 @@ td { padding: 9px 12px; vertical-align: middle; }
 .login-log-table .log-no { color: #9aa0a9; font-size: 12px; font-weight: 400; }
 .login-ip { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: #444; }
 .login-location { color: #555; }
+.login-device { color: #555; }
+.login-empty-cell { color: #aaa; }
 .login-location-note {
   min-height: 46px;
   margin-top: 10px;
@@ -2010,13 +2049,18 @@ td { padding: 9px 12px; vertical-align: middle; }
               <div class="user-detail-identity">
                 <div class="user-detail-avatar" id="cd-avatar" aria-hidden="true">회사</div>
                 <div class="user-detail-copy">
-                  <div class="dh-title" id="cd-name"></div>
+                  <div class="company-title-row">
+                    <div class="dh-title" id="cd-name"></div>
+                    <button class="company-drive-shortcut" id="company-drive-shortcut" type="button" aria-label="구글 드라이브 바로가기" onclick="openCompanyDriveFolder()"><i class="ti ti-brand-google-drive"></i></button>
+                  </div>
                   <div class="dh-sub" id="cd-sub"></div>
                 </div>
               </div>
-              <div style="display:flex;align-items:center;gap:7px">
-                <span class="user-status-text" id="cd-status"></span>
-                <button class="btn-close-panel" onclick="closeCompanyDetail()"><i class="ti ti-x"></i></button>
+              <div class="company-header-actions">
+                <div class="company-header-actions-top">
+                  <span class="user-status-text" id="cd-status"></span>
+                  <button class="btn-close-panel" onclick="closeCompanyDetail()"><i class="ti ti-x"></i></button>
+                </div>
               </div>
             </div>
             <div class="dh-acts" id="cd-acts"></div>
@@ -2394,20 +2438,18 @@ const creditHistory = [
 ];
 
 const userLoginHistory = {
-  1: [
-    { date:'2026.06.05 · 09:18', ip:'121.134.82.10', result:'성공' },
-    { date:'2026.06.04 · 18:42', ip:'121.134.82.10', result:'성공' },
-    { date:'2026.06.04 · 09:06', ip:'121.134.82.10', result:'성공' },
-    { date:'2026.06.03 · 21:14', ip:'211.36.142.55', result:'실패' },
-    { date:'2026.06.03 · 10:11', ip:'211.36.142.55', result:'성공' },
-    { date:'2026.06.02 · 17:25', ip:'121.134.82.10', result:'성공' },
-    { date:'2026.06.01 · 08:48', ip:'121.134.82.10', result:'성공' },
-    { date:'2026.05.30 · 19:32', ip:'118.235.5.91', result:'성공' },
-    { date:'2026.05.29 · 11:09', ip:'121.134.82.10', result:'성공' },
-    { date:'2026.05.28 · 14:51', ip:'121.134.82.10', result:'성공' },
-    { date:'2026.05.26 · 09:22', ip:'211.36.142.55', result:'실패' },
-    { date:'2026.05.23 · 16:05', ip:'121.134.82.10', result:'성공' },
-  ],
+  1: {
+    content: [
+      { loginAt: '2026-08-06T15:22:47', ipAddress: '121.134.53.96', success: true, country: 'South Korea', city: 'Seoul', browser: 'Chrome', os: 'macOS' },
+      { loginAt: '2026-08-06T14:19:15', ipAddress: '223.62.170.12', success: true, country: 'South Korea', city: 'Incheon', browser: 'Safari', os: 'iOS' },
+      { loginAt: '2026-08-06T06:53:39', ipAddress: '121.134.53.96', success: false, country: 'South Korea', city: 'Seoul', browser: 'Chrome', os: 'macOS' },
+      { loginAt: '2026-07-20T09:12:03', ipAddress: '58.122.11.4', success: true, country: 'South Korea', city: 'Seoul', browser: null, os: null },
+    ],
+    totalElements: 4,
+    totalPages: 1,
+    size: 20,
+    number: 0,
+  },
   2: [
     { date:'2026.06.05 · 08:55', ip:'58.140.21.77', result:'성공' },
     { date:'2026.06.02 · 15:07', ip:'58.140.21.77', result:'성공' },
@@ -2521,6 +2563,26 @@ function getCompanyInviteCode(c) {
     c.inviteCode = `${seed}-${paddedId}K-${c.type === 'PLATFORM' ? 'PLT' : 'PRD'}`;
   }
   return c.inviteCode;
+}
+
+function getCompanyDriveFolderUrl(c) {
+  if (!c) return '';
+  if (c.driveFolderUrl) return c.driveFolderUrl;
+  const slug = c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `company-${c.id}`;
+  return `https://drive.google.com/drive/folders/${slug}`;
+}
+
+function updateCompanyDriveShortcut(c) {
+  const button = document.getElementById('company-drive-shortcut');
+  if (!button) return;
+  const show = c?.type === 'PRODUCTION';
+  button.style.display = show ? 'inline-flex' : 'none';
+}
+
+function openCompanyDriveFolder() {
+  const c = companies.find(company => company.id === selectedCompanyId);
+  if (!c || c.type !== 'PRODUCTION') return;
+  window.open(getCompanyDriveFolderUrl(c), '_blank');
 }
 
 function copyCompanyInviteCode() {
@@ -2789,10 +2851,41 @@ function confirmUserSetupRequirement(userId, nextStatus, wasSetupRequired) {
   closeAdminConfirm();
 }
 
+function formatLoginDateTime(value) {
+  if (!value) return '-';
+  const text = String(value);
+  const legacyMatch = text.match(/^(\d{4})\.(\d{2})\.(\d{2})\s*·\s*(\d{2}):(\d{2})/);
+  if (legacyMatch) return text;
+  const isoMatch = text.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+  if (isoMatch) return `${isoMatch[1]}.${isoMatch[2]}.${isoMatch[3]} · ${isoMatch[4]}:${isoMatch[5]}`;
+  return text;
+}
+
+function loginLocationText(row) {
+  const country = row.country || '';
+  const city = row.city || '';
+  if (country && city) return `${country}, ${city}`;
+  if (country || city) return country || city;
+  return row.location || loginLocationByIp[row.ipAddress || row.ip] || '-';
+}
+
+function normalizeLoginHistoryRows(source) {
+  const rows = Array.isArray(source) ? source : (Array.isArray(source?.content) ? source.content : []);
+  return rows.map(row => ({
+    loginAt: row.loginAt || row.date || '',
+    ipAddress: row.ipAddress || row.ip || '-',
+    success: typeof row.success === 'boolean' ? row.success : row.result !== '실패',
+    location: loginLocationText(row),
+    browser: row.browser || '-',
+    os: row.os || '-',
+  }));
+}
+
 function renderUserLoginHistory(userId) {
   const wrap = document.getElementById('user-login-history');
   if (!wrap) return;
-  const rows = userLoginHistory[userId] || [];
+  const source = userLoginHistory[userId];
+  const rows = normalizeLoginHistoryRows(source);
   if (!rows.length) {
     wrap.innerHTML = '<div class="login-empty">로그인 기록이 없습니다</div>';
     return;
@@ -2805,18 +2898,22 @@ function renderUserLoginHistory(userId) {
     <div class="login-log-table">
       <table>
         <colgroup>
-          <col style="width:7%" />
-          <col style="width:27%" />
-          <col style="width:24%" />
-          <col style="width:24%" />
+          <col style="width:34px" />
           <col style="width:18%" />
+          <col style="width:17%" />
+          <col style="width:24%" />
+          <col style="width:11%" />
+          <col style="width:13%" />
+          <col style="width:13%" />
         </colgroup>
         <thead>
           <tr>
             <th class="log-no">No</th>
-            <th class="log-date">일시</th>
+            <th class="log-date">접속 일시</th>
             <th class="log-ip">IP</th>
-            <th class="log-location">위치</th>
+            <th class="log-location">국가/도시</th>
+            <th class="log-os">OS</th>
+            <th class="log-browser">브라우저</th>
             <th class="log-result">결과</th>
           </tr>
         </thead>
@@ -2824,10 +2921,12 @@ function renderUserLoginHistory(userId) {
           ${pageRows.map((row, index) => `
             <tr>
               <td class="log-no">${rows.length - start - index}</td>
-              <td class="tmeta log-date">${row.date}</td>
-              <td class="login-ip log-ip">${row.ip}</td>
-              <td class="login-location log-location">${row.location || loginLocationByIp[row.ip] || '-'}</td>
-              <td class="log-result"><span class="login-result-badge ${row.result === '성공' ? 'is-success' : 'is-fail'}">${row.result === '성공' ? 'Success' : 'Failed'}</span></td>
+              <td class="tmeta log-date">${formatLoginDateTime(row.loginAt)}</td>
+              <td class="login-ip log-ip">${row.ipAddress}</td>
+              <td class="login-location log-location">${escapeHtml(row.location)}</td>
+              <td class="login-device log-os ${row.os === '-' ? 'login-empty-cell' : ''}">${escapeHtml(row.os)}</td>
+              <td class="login-device log-browser ${row.browser === '-' ? 'login-empty-cell' : ''}">${escapeHtml(row.browser)}</td>
+              <td class="log-result"><span class="login-result-badge ${row.success ? 'is-success' : 'is-fail'}">${row.success ? 'Success' : 'Failed'}</span></td>
             </tr>
           `).join('')}
         </tbody>
@@ -2935,6 +3034,7 @@ function closeUserDetail() {
 function resetCompanyDetailTab(company) {
   const showCredit = company?.type === 'PRODUCTION';
   const showDistributionContracts = company?.type === 'PLATFORM';
+  updateCompanyDriveShortcut(company);
   document.getElementById('company-works-tab').style.display = showCredit ? '' : 'none';
   document.getElementById('company-credit-tab').style.display = showCredit ? '' : 'none';
   document.getElementById('company-owned-content-tab').style.display = showCredit ? '' : 'none';
@@ -3503,6 +3603,7 @@ function closeCompanyDetail() {
   selectedCompanyId = null;
   document.getElementById('company-split')?.classList.remove('has-detail');
   document.querySelector('.main')?.classList.remove('company-detail-open');
+  updateCompanyDriveShortcut(null);
   renderCompanies();
   document.getElementById('company-empty').style.display = '';
   document.getElementById('company-detail').style.display = 'none';
