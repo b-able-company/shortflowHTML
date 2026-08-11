@@ -16,58 +16,61 @@
     { label: '매칭보류', value: 1 },
   ];
 
-  const producerStatusLabels = {
-    CONTENT_DRAFT: '임시저장',
-    CONTENT_SUBMITTED: '검토중',
-    CONTENT_APPROVED: '승인됨',
-    REVISION_REQUESTED: '수정 요청',
-    REVISION_APPROVED: '수정 승인됨',
-  };
+  function producerStatusLabel(item) {
+    const labels = {
+      PRODUCTION_CONTENT_SUBMITTED: '검토중',
+      PRODUCTION_CONTENT_APPROVED: '승인완료',
+      PRODUCTION_REVISION_REQUESTED: '검토중',
+      PRODUCTION_REVISION_APPROVED: '승인완료',
+      PRODUCTION_REVISION_CANCELLED: '승인완료',
+    };
+    return labels[item.status] || item.status;
+  }
 
   const producerWorkflowItems = [
-    { id: 'prod-space-courier', title: '우주 택배 기사님', sub: '숏애니 · 48화 · SF 가족', status: 'CONTENT_APPROVED', date: '2026년 7월 12일', poster: 'indigo', image: 'images/우주택배기사님.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
-    { id: 'prod-chaebol-secretary', title: '재벌집 막내 비서', sub: '숏드라마 · 72화 · 로맨스', status: 'CONTENT_SUBMITTED', date: '2026년 7월 12일', poster: 'indigo', image: 'images/재벌집막내비서.png' },
-    { id: 'prod-idol-transfer', title: '우리 반 전학생은 아이돌', sub: '숏드라마 · 60화 · 학원물', status: 'CONTENT_DRAFT', date: '2026년 7월 11일', poster: 'magenta', image: 'images/우리반전학생은아이돌.png' },
+    { id: 'prod-space-courier', title: '우주 택배 기사님', sub: '숏애니 · 48화 · SF 가족', status: 'PRODUCTION_CONTENT_APPROVED', date: '2026년 7월 12일', poster: 'indigo', image: 'images/우주택배기사님.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
+    { id: 'prod-chaebol-secretary', title: '재벌집 막내 비서', sub: '숏드라마 · 72화 · 로맨스', status: 'PRODUCTION_CONTENT_SUBMITTED', date: '2026년 7월 12일', poster: 'indigo', image: 'images/재벌집막내비서.png' },
+    { id: 'prod-idol-transfer', title: '우리 반 전학생은 아이돌', contentKind: '기획안', sub: '숏드라마 · 60화 · 학원물', status: 'PRODUCTION_CONTENT_SUBMITTED', date: '2026년 7월 11일', poster: 'magenta', image: 'images/우리반전학생은아이돌.png' },
     {
       id: 'prod-secret-marriage',
       title: '비밀 사내 결혼',
       sub: '숏드라마 · 72화 · 오피스 로맨스',
-      status: 'CONTENT_APPROVED',
+      status: 'PRODUCTION_CONTENT_APPROVED',
       date: '2026년 7월 13일',
       poster: 'indigo',
       image: 'images/비밀사내결혼.png',
       driveUrl: 'https://drive.google.com/drive/my-drive',
       detailUrl: 'my-content-detail.html?title=%EB%B9%84%EB%B0%80%20%EC%82%AC%EB%82%B4%20%EA%B2%B0%ED%98%BC',
       timeline: [
-        { title: '콘텐츠 등록이 승인되었습니다.', date: '2026년 7월 13일 오후 04:20', active: true },
+        { title: '관리자가 콘텐츠 등록을 승인했어요.', date: '2026년 7월 13일 오후 04:20', active: true },
         { title: '관리자 검토가 완료되었습니다.', date: '2026년 7월 13일 오후 03:10' },
-        { title: '콘텐츠 등록 신청이 접수되었습니다.', date: '2026년 7월 12일 오전 10:12' },
+        { title: '콘텐츠 등록을 신청했어요.', date: '2026년 7월 12일 오전 10:12' },
         { title: '콘텐츠 정보가 저장되었습니다.', date: '2026년 7월 12일 오전 09:54' },
       ],
     },
-    { id: 'prod-prince-afterwork', title: '왕자님의 퇴근길', sub: '숏드라마 · 56화 · 판타지 로맨스', status: 'CONTENT_DRAFT', date: '2026년 7월 11일', poster: 'magenta', image: 'images/왕자님의퇴근길.png' },
-    { id: 'prod-ai-husband', title: '남편이 AI입니다', sub: 'AI · 60화 · 로맨스 SF', status: 'CONTENT_APPROVED', date: '2026년 7월 10일', poster: 'rose', image: 'images/남편이AI.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
-    { id: 'prod-villainess-agency', title: '오늘부터 악녀 대행합니다', sub: '숏드라마 · 70화 · 복수 코미디', status: 'CONTENT_DRAFT', date: '2026년 7월 10일', poster: 'rose', image: 'images/오늘부터악녀대행.png' },
-    { id: 'prod-emperor-resign', title: '퇴사했더니 황제가 됐다', sub: '숏드라마 · 66화 · 판타지', status: 'CONTENT_SUBMITTED', date: '2026년 7월 9일', poster: 'indigo', image: 'images/퇴사했더니황제.png' },
-    { id: 'prod-danger-partner', title: '나의 위험한 파트너', sub: '숏드라마 · 64화 · 스릴러 로맨스', status: 'CONTENT_SUBMITTED', date: '2026년 7월 9일', poster: 'magenta', image: 'images/나의위험한파트너.png' },
-    { id: 'prod-second-ending', title: '그녀의 두 번째 엔딩', sub: '숏드라마 · 58화 · 시간 여행', status: 'CONTENT_DRAFT', date: '2026년 7월 8일', poster: 'indigo', image: 'images/그녀의두번째엔딩.png' },
-    { id: 'prod-ceo-contract-love', title: '대표님, 계약 연애는 처음이라서요', sub: '숏드라마 · 80화 · 로맨스', status: 'CONTENT_APPROVED', date: '2026년 7월 8일', poster: 'rose', image: 'images/대표님이내전남친입니다.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
-    { id: 'prod-moonlight-store', title: '달빛 아래 편의점', sub: '숏애니 · 52화 · 청춘 로맨스', status: 'CONTENT_SUBMITTED', date: '2026년 7월 7일', poster: 'indigo', image: 'images/달빛아래편의점.png' },
-    { id: 'prod-killer-roommate', title: '살인범과 룸메이트가 되었다', sub: '숏드라마 · 62화 · 스릴러', status: 'CONTENT_APPROVED', date: '2026년 7월 7일', poster: 'magenta', image: 'images/살인범과룸메이트.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
-    { id: 'prod-dawn-delivery', title: '새벽 배송 로맨스', sub: '숏드라마 · 50화 · 로맨스', status: 'CONTENT_DRAFT', date: '2026년 7월 6일', poster: 'rose', image: 'images/새벽배송로맨스.png' },
-    { id: 'prod-fox-manager', title: '내 매니저는 구미호', sub: '숏드라마 · 54화 · 판타지', status: 'CONTENT_SUBMITTED', date: '2026년 7월 6일', poster: 'rose', image: 'images/내매니저는구미호.png' },
-    { id: 'prod-first-love-reset', title: '첫사랑 리셋 버튼', sub: '숏드라마 · 48화 · 청춘 로맨스', status: 'CONTENT_SUBMITTED', date: '2026년 7월 5일', poster: 'indigo', image: 'images/첫사랑리셋버튼.png' },
-    { id: 'prod-contract-3days', title: '계약 종료 3일 전', sub: '숏드라마 · 45화 · 멜로', status: 'CONTENT_APPROVED', date: '2026년 7월 5일', poster: 'magenta', image: 'images/계약종료3일전.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
-  ].map(item => ({ ...item, statusLabel: producerStatusLabels[item.status] }));
+    { id: 'prod-prince-afterwork', title: '왕자님의 퇴근길', contentKind: '기획안', sub: '숏드라마 · 56화 · 판타지 로맨스', status: 'PRODUCTION_REVISION_REQUESTED', date: '2026년 7월 11일', poster: 'magenta', image: 'images/왕자님의퇴근길.png' },
+    { id: 'prod-ai-husband', title: '남편이 AI입니다', sub: 'AI · 60화 · 로맨스 SF', status: 'PRODUCTION_REVISION_APPROVED', date: '2026년 7월 10일', poster: 'rose', image: 'images/남편이AI.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
+    { id: 'prod-villainess-agency', title: '오늘부터 악녀 대행합니다', sub: '숏드라마 · 70화 · 복수 코미디', status: 'PRODUCTION_CONTENT_SUBMITTED', date: '2026년 7월 10일', poster: 'rose', image: 'images/오늘부터악녀대행.png' },
+    { id: 'prod-emperor-resign', title: '퇴사했더니 황제가 됐다', sub: '숏드라마 · 66화 · 판타지', status: 'PRODUCTION_REVISION_REQUESTED', date: '2026년 7월 9일', poster: 'indigo', image: 'images/퇴사했더니황제.png' },
+    { id: 'prod-danger-partner', title: '나의 위험한 파트너', sub: '숏드라마 · 64화 · 스릴러 로맨스', status: 'PRODUCTION_REVISION_CANCELLED', date: '2026년 7월 9일', poster: 'magenta', image: 'images/나의위험한파트너.png' },
+    { id: 'prod-second-ending', title: '그녀의 두 번째 엔딩', contentKind: '기획안', sub: '숏드라마 · 58화 · 시간 여행', status: 'PRODUCTION_CONTENT_SUBMITTED', date: '2026년 7월 8일', poster: 'indigo', image: 'images/그녀의두번째엔딩.png' },
+    { id: 'prod-ceo-contract-love', title: '대표님, 계약 연애는 처음이라서요', sub: '숏드라마 · 80화 · 로맨스', status: 'PRODUCTION_CONTENT_APPROVED', date: '2026년 7월 8일', poster: 'rose', image: 'images/대표님이내전남친입니다.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
+    { id: 'prod-moonlight-store', title: '달빛 아래 편의점', sub: '숏애니 · 52화 · 청춘 로맨스', status: 'PRODUCTION_REVISION_REQUESTED', date: '2026년 7월 7일', poster: 'indigo', image: 'images/달빛아래편의점.png' },
+    { id: 'prod-killer-roommate', title: '살인범과 룸메이트가 되었다', sub: '숏드라마 · 62화 · 스릴러', status: 'PRODUCTION_CONTENT_APPROVED', date: '2026년 7월 7일', poster: 'magenta', image: 'images/살인범과룸메이트.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
+    { id: 'prod-dawn-delivery', title: '새벽 배송 로맨스', contentKind: '기획안', sub: '숏드라마 · 50화 · 로맨스', status: 'PRODUCTION_REVISION_CANCELLED', date: '2026년 7월 6일', poster: 'rose', image: 'images/새벽배송로맨스.png' },
+    { id: 'prod-fox-manager', title: '내 매니저는 구미호', sub: '숏드라마 · 54화 · 판타지', status: 'PRODUCTION_REVISION_APPROVED', date: '2026년 7월 6일', poster: 'rose', image: 'images/내매니저는구미호.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
+    { id: 'prod-first-love-reset', title: '첫사랑 리셋 버튼', sub: '숏드라마 · 48화 · 청춘 로맨스', status: 'PRODUCTION_CONTENT_SUBMITTED', date: '2026년 7월 5일', poster: 'indigo', image: 'images/첫사랑리셋버튼.png' },
+    { id: 'prod-contract-3days', title: '계약 종료 3일 전', sub: '숏드라마 · 45화 · 멜로', status: 'PRODUCTION_REVISION_APPROVED', date: '2026년 7월 5일', poster: 'magenta', image: 'images/계약종료3일전.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
+  ].map(item => {
+    const normalized = { contentKind: '콘텐츠', ...item };
+    return { ...normalized, statusLabel: producerStatusLabel(normalized) };
+  });
 
-  const producerDraftStatuses = new Set(['CONTENT_DRAFT']);
-  const producerInProgressStatuses = new Set(['CONTENT_SUBMITTED', 'REVISION_REQUESTED']);
-  const producerCompletedStatuses = new Set(['CONTENT_APPROVED', 'REVISION_APPROVED']);
   const producerWorkflowStats = [
-    { label: '전체', value: producerWorkflowItems.length, accent: true },
-    { label: '임시저장', value: producerWorkflowItems.filter(item => producerDraftStatuses.has(item.status)).length },
-    { label: '검토중', value: producerWorkflowItems.filter(item => producerInProgressStatuses.has(item.status)).length },
-    { label: '완료', value: producerWorkflowItems.filter(item => producerCompletedStatuses.has(item.status)).length },
+    { label: '전체', value: 17, accent: true },
+    { label: '진행중', value: 5 },
+    { label: '완료', value: 6 },
+    { label: '보류', value: 6 },
   ];
 
   const PRODUCTION_INQUIRY_STORAGE_KEY = 'shortflow-production-inquiries';
@@ -187,7 +190,6 @@
   window.ShortflowData = {
     workflowItems,
     workflowStats,
-    producerStatusLabels,
     producerWorkflowItems,
     producerWorkflowStats,
     messageItems,

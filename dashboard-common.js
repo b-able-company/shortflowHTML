@@ -7,6 +7,8 @@
     contractSearch: '',
     contractPage: 1,
     selectedWorkflowId: null,
+    workflowDetailMode: 'timeline',
+    materialUploadEvents: {},
     selectedMessageId: 'm1',
   };
 
