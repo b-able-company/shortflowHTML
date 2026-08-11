@@ -156,45 +156,77 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .compose-step-panel.active { display: block; }
 .compose-step-panel.active[data-compose-step="2"] { position: relative; overflow: visible; margin-bottom: 58px; }
 .compose-step-panel.active[data-compose-step="3"] { position: relative; overflow: visible; margin-bottom: 58px; }
-.compose-step-panel.active[data-compose-step="4"] { position: relative; overflow: visible; margin-bottom: 58px; }
+.compose-step-panel.active[data-compose-step="4"],
+.compose-step-panel.active[data-compose-step="5"] { position: relative; overflow: visible; margin-bottom: 58px; }
+.compose-step-head.hidden,
+.compose-step-panel.hidden { display: none !important; }
+.compose-step-head.first-visible::before,
+.compose-step-head.last-visible::after { content: none; }
 .compose-step-body { padding: 14px; }
 .compose-nav { display: none; }
 .compose-nav-copy { color: #999; font-size: 11.5px; }
 .compose-nav-actions { display: flex; align-items: center; gap: 8px; }
 
 /* MAIL TYPE */
-.mail-type-step-body { min-height: 254px; display: flex; align-items: stretch; justify-content: center; }
-.type-group { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); justify-content: center; gap: 14px; }
+.mail-type-step-body { min-height: 254px; display: flex; flex-direction: column; align-items: stretch; justify-content: center; }
+.mail-type-prompt { display: none; color: #1a1a18; font-size: 18px; font-weight: 500; text-align: center; transform: translateY(-8px); }
+.type-group { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); justify-content: center; gap: 14px; }
 .type-btn { width: 100%; min-height: 100%; padding: 0 18px; border: 0.5px solid #e3e3e3; border-radius: 14px; background: #fff; color: #1a1a18; font-family: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; transition: background .14s ease, border-color .14s ease, color .14s ease; }
 .type-btn:hover { background: #fafafa; border-color: #d7d7d7; }
 .type-btn:active { background: #eeeeee; border-color: #d0d0d0; }
 .type-btn.active { background: #eeeeee; border-color: #d7d7d7; color: #1a1a18; }
 .type-name { color: inherit; font-size: 15.5px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.compose-pane.type-selecting .compose-panel-head { min-height: 46px; padding-top: 7px; padding-bottom: 7px; justify-content: flex-end; }
+.compose-pane.type-selecting .compose-step-tabs { display: none; }
+.compose-pane.type-selecting .compose-flow { padding-top: 14px; }
+.compose-pane.type-selecting .compose-step-panel { border: 0; border-radius: 0; background: transparent; }
+.compose-pane.type-selecting .compose-step-body { padding: 0; }
+.compose-pane.type-selecting .mail-type-step-body { min-height: 420px; align-items: center; justify-content: center; gap: 22px; }
+.compose-pane.type-selecting .mail-type-prompt { display: block; }
+.compose-pane.type-selecting .type-group { width: calc(100% - 44px); max-width: 620px; display: flex; flex-direction: column; gap: 12px; }
+.compose-pane.type-selecting .type-btn { min-height: 78px; padding: 0 28px; border-radius: 12px; border-color: #dcdcdc; background: #fff; box-shadow: none; }
+.compose-pane.type-selecting .type-btn:hover { background: #f5f5f5; border-color: #dcdcdc; box-shadow: none; }
+.compose-pane.type-selecting .type-name { font-size: 16px; font-weight: 400; }
 .step-panel-actions { margin-top: auto; padding-top: 14px; display: flex; justify-content: flex-end; }
 .compose-step-panel[data-compose-step="2"] .step-panel-actions,
-.compose-step-panel[data-compose-step="3"] .step-panel-actions { position: absolute; right: 0; bottom: -56px; padding-top: 0; }
+.compose-step-panel[data-compose-step="3"] .step-panel-actions,
+.compose-step-panel[data-compose-step="4"] .settlement-message-actions { position: absolute; right: 0; bottom: -56px; padding-top: 0; }
 #source-next-btn,
-#platform-next-btn { height: 42px; min-width: 122px; padding: 0 26px; border-radius: 999px; border-color: #1d1d1f; background: #1d1d1f; font-size: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); transition: background .16s ease, border-color .16s ease, transform .12s ease, box-shadow .16s ease; }
+#platform-next-btn,
+#settlement-message-next-btn { height: 42px; min-width: 122px; padding: 0 26px; border-radius: 999px; border-color: #1d1d1f; background: #1d1d1f; font-size: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); transition: background .16s ease, border-color .16s ease, transform .12s ease, box-shadow .16s ease; }
 #source-next-btn:hover:not(:disabled),
-#platform-next-btn:hover:not(:disabled) { background: #000; border-color: #000; box-shadow: 0 2px 5px rgba(0,0,0,0.12); }
+#platform-next-btn:hover:not(:disabled),
+#settlement-message-next-btn:hover:not(:disabled) { background: #000; border-color: #000; box-shadow: 0 2px 5px rgba(0,0,0,0.12); }
 #source-next-btn:active:not(:disabled),
-#platform-next-btn:active:not(:disabled) { transform: scale(0.98); }
+#platform-next-btn:active:not(:disabled),
+#settlement-message-next-btn:active:not(:disabled) { transform: scale(0.98); }
 
 /* SOURCE LIST */
 .source-tools,
 .platform-tools { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.settlement-company-filter { display: none; min-width: 148px; margin: 0; }
+.source-tools.show-settlement-filter .settlement-company-filter { display: block; }
 .source-list { max-height: 252px; overflow: auto; border: 0.5px solid rgb(242, 242, 242); border-radius: 10px; background: #fff; }
 .compose-step-panel.active[data-compose-step="2"] .source-list.content-source-list { height: auto; max-height: none; overflow: visible; }
+.compose-step-panel.active[data-compose-step="2"] .source-list.settlement-source-list { max-height: calc(100vh - 238px); overflow: auto; }
 .source-table-head { display: grid; align-items: center; min-height: 34px; border-bottom: 0.5px solid rgb(242, 242, 242); color: #aaa; font-size: 10.5px; }
-.source-head-cell { min-width: 0; padding: 8px 12px; border-right: 0.5px solid rgb(242, 242, 242); white-space: nowrap; }
+.source-head-cell { min-width: 0; overflow: hidden; text-overflow: ellipsis; padding: 8px 12px; border-right: 0.5px solid rgb(242, 242, 242); white-space: nowrap; }
 .source-head-cell:last-child { border-right: 0; }
 .source-row { display: grid; grid-template-columns: 58px minmax(0, 1fr) 92px 112px; align-items: center; min-height: 66px; border-bottom: 0.5px solid rgb(242, 242, 242); cursor: pointer; }
 .source-row:last-child { border-bottom: 0; }
 .source-row:hover { background: #fcfcfc; }
 .source-row.selected { background: #f7f7f7; }
 .source-list.content-source-list .source-table-head,
-.source-list.content-source-list .source-row { grid-template-columns: 42px minmax(230px, 1.25fr) minmax(130px, 0.85fr) 88px 108px; min-width: 692px; }
+.source-list.content-source-list .source-row { grid-template-columns: 34px minmax(0, 1.35fr) minmax(0, 0.75fr) minmax(44px, 0.42fr) minmax(64px, 0.52fr); min-width: 0; }
 .source-list.content-source-list .source-row { min-height: 64px; }
+.source-list.content-source-list .source-head-cell,
+.source-list.content-source-list .source-cell { padding-left: 9px; padding-right: 9px; }
+.source-list.content-source-list .source-check-cell { padding-left: 0; padding-right: 0; }
+.source-list.settlement-source-list .source-table-head,
+.source-list.settlement-source-list .source-row { grid-template-columns: 42px minmax(260px, 1fr) 96px; min-width: 420px; }
+.source-list.settlement-company-source-list .source-row { min-height: 38px; }
+.source-list.settlement-company-source-list .source-cell { padding-top: 7px; padding-bottom: 7px; }
+.source-list.settlement-company-source-list .source-title { font-weight: 400; }
 .source-cell { min-width: 0; min-height: 100%; padding: 9px 12px; border-right: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; }
 .source-cell:last-child { border-right: 0; }
 .source-check-cell { justify-content: center; padding: 0 10px; }
@@ -202,7 +234,9 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .source-row.selected .source-check { border-color: #1a1a18; background: #1a1a18; color: #fff; }
 .source-check i { font-size: 12px; font-weight: 700; }
 .source-content-cell { gap: 10px; }
+.source-content-cell .source-title { min-width: 0; }
 .source-poster { width: 44px; height: 44px; border-radius: 7px; background: linear-gradient(145deg, #f1f1f1, #dadada); color: rgba(255,255,255,0.92); font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06); overflow: hidden; }
+.source-list.content-source-list .source-poster { flex: 0 0 38px; width: 38px; height: 38px; }
 .source-poster.p1 { background: linear-gradient(150deg, #30343f 0%, #6d8a93 52%, #e6c7a9 100%); }
 .source-poster.p2 { background: linear-gradient(150deg, #503148 0%, #ba7280 54%, #f0cfc5 100%); }
 .source-poster.p3 { background: linear-gradient(150deg, #181b24 0%, #405f7d 48%, #d95e38 100%); }
@@ -215,7 +249,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .source-mark { width: 30px; height: 30px; border-radius: 6px; background: #f2f2f2; color: #999; font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
 .source-title { color: #1a1a18; font-size: 12.5px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .source-sub { margin-top: 2px; color: #aaa; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.source-meta { color: #777; font-size: 11.5px; white-space: nowrap; }
+.source-meta { min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; color: #777; font-size: 11.5px; white-space: nowrap; }
 .source-status { width: fit-content; min-height: 22px; padding: 0 8px; border-radius: 999px; background: #f7f7f7; border: 0.5px solid #e5e5e5; color: #666; display: inline-flex; align-items: center; font-size: 10.5px; white-space: nowrap; }
 .source-pagination { min-height: 38px; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; }
 .source-pagination .page-btn { min-width: 22px; height: 24px; padding: 0 4px; border: 0; border-radius: 0; background: transparent; color: #aaa; font-size: 12px; line-height: 1; }
@@ -228,6 +262,9 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .platform-table-scroll { width: 100%; overflow-x: auto; }
 .platform-head,
 .platform-row { display: grid; grid-template-columns: 42px minmax(200px, 1fr) 110px; align-items: center; min-width: 400px; border-bottom: 0.5px solid rgb(242, 242, 242); }
+.platform-table.settlement-content-table .platform-head,
+.platform-table.settlement-content-table .platform-row { grid-template-columns: 42px minmax(210px, 1fr) minmax(130px, 0.78fr) 96px; min-width: 560px; }
+.platform-table.settlement-content-table .platform-row { min-height: 64px; }
 .platform-head { min-height: 32px; color: #a1a1a1; font-size: 10.5px; font-weight: 400; }
 .platform-row { min-height: 38px; cursor: pointer; }
 .platform-row:last-child { border-bottom: 0; }
@@ -246,19 +283,46 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .platform-pagination .page-btn:hover { background: transparent; border-color: transparent; color: #555; }
 .platform-pagination .page-btn.active { border-color: transparent; background: transparent; color: #1a1a18; font-weight: 500; }
 .empty-state { padding: 28px 12px; color: #bbb; font-size: 12px; text-align: center; }
+.settlement-message-panel { display: none; min-height: 252px; padding: 18px 4px 0; }
+.settlement-message-panel.show { display: block; }
+.settlement-message-actions { justify-content: flex-end; margin-top: 0; }
+.settlement-message-label { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px; color: #333; font-size: 12.5px; font-weight: 500; }
+.settlement-message-label > span:first-child > span { margin-left: 4px; color: #aaa; font-size: 11px; font-weight: 400; }
+.settlement-message-count { margin-left: auto; color: #b8b8b8; font-size: 11px; font-weight: 400; }
+.settlement-message-input { width: 100%; min-height: 168px; padding: 14px; border: 0.5px solid #e5e5e5; border-radius: 10px; background: #fff; color: #1a1a18; font-family: inherit; font-size: 12.5px; line-height: 1.6; resize: vertical; outline: none; }
+.settlement-message-input:focus { border-color: #aaa; }
 
 /* PREVIEW */
 .preview-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.preview-grid.hidden { display: none; }
 .mail-preview { min-height: 248px; border: 0.5px solid rgb(242, 242, 242); border-radius: 12px; overflow: hidden; background: #fff; }
 .preview-body { padding: 20px 16px; background: #f5f5f5; color: #333; font-size: 12.5px; line-height: 1.7; }
-.email-template-card { max-width: 520px; margin: 0 auto; padding: 38px 34px; background: #fff; }
-.email-template-title { margin: 0 0 14px; color: #111; font-size: 18px; font-weight: 700; line-height: 1.3; }
-.email-template-copy { margin: 0 0 28px; color: #333; font-size: 12.5px; line-height: 1.8; }
+.email-template-card { max-width: 600px; margin: 0 auto; padding: 48px 40px; border: 1px solid #e5e5e5; border-radius: 4px; background: #fff; }
+.email-template-copy { margin: 0 0 28px 0; color: #333; font-size: 14px; line-height: 1.8; }
 .email-template-copy strong { font-weight: 700; color: #111; }
-.email-template-link { display: inline-block; margin-bottom: 34px; color: #ff773d; font-size: 12.5px; font-weight: 600; text-decoration: none; }
-.email-template-foot { border-top: 1px solid #eee; padding-top: 18px; }
-.email-template-note { margin: 0 0 8px; color: #aaa; font-size: 11px; line-height: 1.5; }
-.email-template-brand { margin: 0; color: #555; font-size: 12px; font-weight: 700; }
+.email-content-list { width: 100%; margin: 0 0 20px 0; border-collapse: collapse; color: #333; font-size: 14px; line-height: 22px; table-layout: auto; }
+.email-content-list td { padding: 13px 0; border-bottom: 1px solid #eeeeee; }
+.email-content-list tr:last-child td { border-bottom: 0; }
+.email-content-list .email-content-link-cell { text-align: right; white-space: nowrap; }
+.email-content-link { color: #111 !important; font-weight: 600; text-decoration: none; }
+.email-template-foot { border-top: 1px solid #eee; padding-top: 20px; }
+.email-template-note { margin: 0 0 8px 0; color: #aaa; font-size: 12px; line-height: 1; }
+.email-template-brand { margin: 0; color: #555; font-size: 13px; font-weight: 700; line-height: 1; }
+.email-template-brand span { color: #ff773d; }
+.settlement-preview { max-width: 600px; margin: 0 auto; }
+.settlement-preview-label { margin: 0 0 6px 2px; color: #888; font-size: 13px; font-weight: 400; }
+.settlement-subject-box { margin-bottom: 24px; padding: 14px 20px; border: 1px solid #e5e5e5; border-radius: 4px; background: #fff; color: #111; font-size: 14px; font-weight: 600; line-height: 1.35; }
+.settlement-body-box { padding: 48px 40px; border: 1px solid #e5e5e5; border-radius: 4px; background: #fff; color: #333; }
+.settlement-body-copy { margin: 0 0 28px 0; color: #333; font-size: 14px; line-height: 1.8; }
+table.settlement-content-list { width: 100%; margin: 0 0 28px 0; border-collapse: collapse; color: #333; font-size: 14px; }
+table.settlement-content-list td { padding: 13px 0; border-bottom: 1px solid #eeeeee; }
+table.settlement-content-list tr:last-child td { border-bottom: 1px solid #eeeeee; }
+.settlement-cta { display: inline-block; margin: 0 0 32px; color: #ff773d !important; font-size: 14px; font-weight: 600; text-decoration: none; }
+.settlement-admin-message { margin: 0 0 28px; padding: 16px 18px; border-radius: 6px; background: #f8f8f8; color: #555; font-size: 13px; line-height: 1.7; white-space: pre-wrap; }
+.settlement-divider { margin: 0 0 20px 0; border: 0; border-top: 1px solid #eeeeee; }
+.settlement-template-foot p { margin: 0 0 8px 0; color: #aaa; font-size: 12px; line-height: 1.5; }
+.settlement-template-brand { color: #555 !important; font-size: 13px !important; font-weight: 700; }
+.settlement-template-brand span { color: #ff773d; }
 .preview-side { min-width: 0; }
 .review-row { min-height: 38px; padding: 9px 12px; border-bottom: 0.5px solid rgb(242, 242, 242); display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 12px; align-items: baseline; }
 .review-row:last-child { border-bottom: 0; }
@@ -266,8 +330,10 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .review-val { color: #333; font-size: 12px; text-align: right; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .review-val.multiline { white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.55; }
 .send-bar { margin-top: 18px; min-height: 52px; padding: 0; display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
-.compose-step-panel[data-compose-step="4"] .send-bar { position: absolute; right: 0; bottom: -56px; margin-top: 0; }
-#send-btn { height: 42px; min-width: 126px; padding: 0 24px; border-radius: 999px; font-size: 11.5px; }
+.compose-step-panel[data-compose-step="4"] .send-bar,
+.compose-step-panel[data-compose-step="5"] .send-bar { position: absolute; right: 0; bottom: -56px; margin-top: 0; }
+#send-btn,
+#settlement-send-btn { height: 46px; min-width: 138px; padding: 0 30px; border-radius: 999px; font-size: 11.5px; }
 .send-success { display: none; margin-top: 10px; padding: 12px 14px; border-radius: 9px; background: #EAF3DE; color: #3B6D11; font-size: 12px; }
 .send-success.show { display: block; }
 
@@ -587,7 +653,9 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
         <select class="history-type-filter" id="history-type-filter" onchange="changeHistoryTypeFilter(this.value)">
           <option value="">전체 유형</option>
           <option value="content">콘텐츠 제안</option>
-          <option value="collaboration">제작협업</option>
+          <option value="collaboration">기획안 제안</option>
+          <option value="settlement">정산 알림</option>
+          <option value="performance">퍼포먼스 알림</option>
         </select>
       </div>
       <div class="history-table" id="history-table"></div>
@@ -616,13 +684,21 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
           <button class="compose-step-head" type="button" data-compose-step="3" onclick="setMailStep(3)">
             <span class="step-no">3</span>
             <span class="step-label">
-              <span class="step-name">발송할 플랫폼사 선택</span>
+              <span class="step-name" id="target-section-title">발송할 플랫폼사 선택</span>
               <span class="step-desc" id="platform-summary"></span>
             </span>
           </button>
 
           <button class="compose-step-head" type="button" data-compose-step="4" onclick="setMailStep(4)">
             <span class="step-no">4</span>
+            <span class="step-label">
+              <span class="step-name" id="message-section-title">메일 미리보기</span>
+              <span class="step-desc" id="message-summary"></span>
+            </span>
+          </button>
+
+          <button class="compose-step-head settlement-only-step" type="button" data-compose-step="5" onclick="setMailStep(5)">
+            <span class="step-no">5</span>
             <span class="step-label">
               <span class="step-name">메일 미리보기</span>
               <span class="step-desc" id="preview-summary"></span>
@@ -636,6 +712,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
       <div class="compose-flow">
         <section class="section compose-step-panel" data-compose-step="1">
           <div class="compose-step-body mail-type-step-body">
+            <div class="mail-type-prompt">메일 유형을 선택해주세요</div>
             <div class="type-group" id="mail-type-group"></div>
           </div>
         </section>
@@ -643,6 +720,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
         <section class="section compose-step-panel" data-compose-step="2">
           <div class="compose-step-body">
             <div class="source-tools">
+              <select class="history-type-filter settlement-company-filter" id="settlement-company-filter" onchange="setSettlementCompanyFilter(this.value)" aria-label="제작사 회사 필터"></select>
               <div class="search-wrap" style="flex:1">
                 <i class="ti ti-search"></i>
                 <input class="search-input" id="source-search" placeholder="검색" oninput="filterSources(this.value)" />
@@ -663,7 +741,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
                 <i class="ti ti-search"></i>
                 <input class="search-input" id="platform-search" placeholder="플랫폼사명 검색" oninput="filterPlatforms(this.value)" />
               </div>
-              <button class="btn" type="button" onclick="selectAllPlatforms()">전체 선택</button>
+              <button class="btn" id="select-all-targets-btn" type="button" onclick="selectAllPlatforms()">전체 선택</button>
             </div>
             <div class="platform-table" id="platform-table"></div>
             <div class="platform-pagination" id="platform-pagination"></div>
@@ -675,6 +753,16 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 
         <section class="section compose-step-panel" data-compose-step="4">
           <div class="compose-step-body">
+            <div class="settlement-message-panel" id="settlement-message-panel">
+              <label class="settlement-message-label" for="settlement-admin-message">
+                <span>관리자 메시지 <span>선택 입력</span></span>
+                <span class="settlement-message-count" id="settlement-message-count">0/200</span>
+              </label>
+              <textarea class="settlement-message-input" id="settlement-admin-message" maxlength="200" placeholder="정산 안내에 추가할 메시지를 입력해주세요." oninput="setSettlementAdminMessage(this.value)"></textarea>
+              <div class="step-panel-actions settlement-message-actions">
+                <button class="btn btn-primary" id="settlement-message-next-btn" type="button" onclick="handleMailStepNext()">다음</button>
+              </div>
+            </div>
             <div class="preview-grid">
               <div class="mail-preview">
                 <div class="preview-body" id="preview-body">메일 유형과 발송 대상을 선택하면 템플릿 미리보기를 확인할 수 있습니다.</div>
@@ -684,6 +772,22 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
                   <button class="btn btn-primary" id="send-btn" type="button" onclick="sendMail()" disabled>메일 발송</button>
                 </div>
                 <div class="send-success" id="send-success"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section compose-step-panel settlement-only-step" data-compose-step="5">
+          <div class="compose-step-body">
+            <div class="preview-grid">
+              <div class="mail-preview">
+                <div class="preview-body" id="settlement-preview-body">정산 알림을 보낼 콘텐츠를 선택하면 템플릿 미리보기를 확인할 수 있습니다.</div>
+              </div>
+              <div class="preview-side">
+                <div class="send-bar">
+                  <button class="btn btn-primary" id="settlement-send-btn" type="button" onclick="sendMail()" disabled>메일 발송</button>
+                </div>
+                <div class="send-success" id="settlement-send-success"></div>
               </div>
             </div>
           </div>
@@ -727,16 +831,38 @@ const mailTypes = {
   content: {
     label: '콘텐츠 제안',
     sourceLabel: '콘텐츠 검색',
+    targetLabel: '발송할 플랫폼사 선택',
     searchPlaceholder: '콘텐츠명 검색',
+    targetSearchPlaceholder: '플랫폼사명 검색',
     subject: source => `[Shortflow] ${source.title} 콘텐츠 제안`,
     body: (source, count) => `안녕하세요.\n\nShortflow에서 ${source.company}의 "${source.title}" 콘텐츠를 제안드립니다.\n장르: ${source.genre}\n회차: ${source.episodes}화\n\n검토 가능한 메타데이터와 자료 링크를 함께 전달드립니다.\n수신 플랫폼사 ${count}곳에 동일 템플릿으로 발송됩니다.`,
   },
   collaboration: {
-    label: '제작협업 기획안',
-    sourceLabel: '제작협업 기획안 검색',
+    label: '기획안 제안',
+    sourceLabel: '기획안 검색',
+    targetLabel: '발송할 플랫폼사 선택',
     searchPlaceholder: '기획안명 검색',
-    subject: source => `[Shortflow] ${source.title} 제작협업 기획안 제안`,
+    targetSearchPlaceholder: '플랫폼사명 검색',
+    subject: source => `[Shortflow] ${source.title} 기획안 제안`,
     body: (source, count) => `안녕하세요.\n\nShortflow 제작협업 기획안 "${source.title}"을 공유드립니다.\n제작사: ${source.company}\n예상 포맷: ${source.format}\n상태: ${source.status}\n\n협업 검토를 위해 기획안과 요약 정보를 함께 전달드립니다.\n수신 플랫폼사 ${count}곳에 동일 템플릿으로 발송됩니다.`,
+  },
+  settlement: {
+    label: '정산 알림',
+    sourceLabel: '콘텐츠 선택',
+    targetLabel: '관리자 메시지',
+    searchPlaceholder: '콘텐츠명 검색',
+    targetSearchPlaceholder: '관리자 메시지 입력',
+    subject: source => `[Shortflow] ${source.contentTitleSummary} 정산 정보 업데이트`,
+    body: source => `정산 정보 업데이트\n\n안녕하세요, ${source.companyName}님,\n\n아래 콘텐츠의 정산 관련 정보가 업데이트되어 안내드립니다.\n\n${(source.contentTitles || []).map(title => `- ${title}`).join('\n')}\n\n아래 버튼을 눌러 정산 내역을 확인해 주세요.\n\n[정산 확인하기] → ${source.settlementUrl}\n\n${source.adminMessage ? `${source.adminMessage}\n\n` : ''}`,
+  },
+  performance: {
+    label: '퍼포먼스 알림',
+    sourceLabel: '콘텐츠 선택',
+    targetLabel: '관리자 메시지',
+    searchPlaceholder: '콘텐츠명 검색',
+    targetSearchPlaceholder: '관리자 메시지 입력',
+    subject: source => `[Shortflow] ${source.contentTitleSummary} 퍼포먼스 정보 업데이트`,
+    body: source => `퍼포먼스 정보 업데이트\n\n안녕하세요, ${source.companyName}님,\n\n아래 콘텐츠의 퍼포먼스 관련 정보가 업데이트되어 안내드립니다.\n\n${(source.contentTitles || []).map(title => `- ${title}`).join('\n')}\n\n아래 버튼을 눌러 퍼포먼스 내역을 확인해 주세요.\n\n[퍼포먼스 확인하기] → ${source.performanceUrl || source.settlementUrl}\n\n${source.adminMessage ? `${source.adminMessage}\n\n` : ''}`,
   },
 };
 
@@ -763,6 +889,84 @@ const sourceData = {
     { id: 102, title: 'AI 애니메이션 공동 제작안', company: 'BrightFrame', format: '8부작 애니메이션', status: '초안 보강', mark: 'AA' },
     { id: 103, title: '동남아 현지화 로맨스 프로젝트', company: 'PaperLens', format: '12부작 리메이크', status: '검토 가능', mark: 'SR' },
     { id: 104, title: '액션 숏폼 시즌제 기획안', company: 'ShortReel (US)', format: '시즌제 액션', status: '파트너 모집', mark: 'AS' },
+  ],
+  settlement: [
+    { id: 201, title: 'NextWave Studios', region: 'KR', manager: '이서연', email: 'settlement@nextwave.example', completedCount: 4, mark: 'NW' },
+    { id: 202, title: 'OneTake Media', region: 'KR', manager: '박민준', email: 'finance@onetake.example', completedCount: 3, mark: 'OT' },
+    { id: 203, title: 'PaperLens', region: 'JP', manager: '최하나', email: 'accounting@paperlens.example', completedCount: 3, mark: 'PL' },
+    { id: 204, title: 'BrightFrame', region: 'US', manager: '정우진', email: 'ops@brightframe.example', completedCount: 2, mark: 'BF' },
+    { id: 205, title: 'BlueHour Pictures', region: 'KR', manager: '강서윤', email: 'settlement@bluehour.example', completedCount: 2, mark: 'BH' },
+    { id: 206, title: 'VOD Company', region: 'KR', manager: '한지우', email: 'finance@vodcompany.example', completedCount: 5, mark: 'VC' },
+    { id: 207, title: 'Studio Monday', region: 'KR', manager: '오민재', email: 'accounts@studiomonday.example', completedCount: 1, mark: 'SM' },
+    { id: 208, title: 'DramaWorks', region: 'TH', manager: 'Narin Chai', email: 'ops@dramaworks.example', completedCount: 2, mark: 'DW' },
+    { id: 209, title: 'Moonlit Media', region: 'TW', manager: 'Ivy Lin', email: 'settlement@moonlit.example', completedCount: 2, mark: 'MM' },
+    { id: 210, title: 'ReelNest Studio', region: 'US', manager: 'Sarah Kim', email: 'finance@reelnest.example', completedCount: 3, mark: 'RN' },
+    { id: 211, title: 'Comma Pictures', region: 'JP', manager: 'Yui Tanaka', email: 'accounting@comma.example', completedCount: 1, mark: 'CP' },
+    { id: 212, title: 'ShortCake Lab', region: 'KR', manager: '문도윤', email: 'settlement@shortcake.example', completedCount: 2, mark: 'SL' },
+    { id: 213, title: 'Neon Door', region: 'SG', manager: 'Alicia Wong', email: 'finance@neondoor.example', completedCount: 1, mark: 'ND' },
+    { id: 214, title: 'Plan B Stories', region: 'KR', manager: '윤하린', email: 'ops@planbstories.example', completedCount: 2, mark: 'PB' },
+  ],
+};
+
+const settlementContentData = {
+  201: [
+    { id: 3001, title: 'The Last Letter', year: 2026, poster: 'p1', image: '../images/대표님이내전남친입니다.png', settlementMonth: '2026.07', amount: '₩12,450,000', status: '정산 완료' },
+    { id: 3002, title: 'Echo of Spring', year: 2024, poster: 'p4', image: '../images/killer-at-home.png', settlementMonth: '2026.07', amount: '₩8,920,000', status: '정산 완료' },
+    { id: 3003, title: 'Runaway Bride', year: 2025, poster: 'p2', image: '../images/황후의복수노트.png', settlementMonth: '2026.06', amount: '₩10,140,000', status: '정산 완료' },
+    { id: 3004, title: '글로벌 숏폼 로맨스 패키지', year: 2026, poster: 'p7', image: '../images/왕자님의퇴근길.png', settlementMonth: '2026.06', amount: '₩6,300,000', status: '정산 완료' },
+  ],
+  202: [
+    { id: 3101, title: 'Reverse Cinderella', year: 2025, poster: 'p2', image: '../images/재벌집막내비서.png', settlementMonth: '2026.07', amount: '₩9,770,000', status: '정산 완료' },
+    { id: 3102, title: 'Office Wife', year: 2024, poster: 'p2', image: '../images/resigned-emperor.png', settlementMonth: '2026.07', amount: '₩11,050,000', status: '정산 완료' },
+    { id: 3103, title: 'My Secret Boss', year: 2025, poster: 'p8', image: '../images/첫사랑은계약종료.png', settlementMonth: '2026.06', amount: '₩7,810,000', status: '정산 완료' },
+  ],
+  203: [
+    { id: 3201, title: 'Bloom Again', year: 2025, poster: 'p5', image: '../images/villainess-agent.png', settlementMonth: '2026.07', amount: '₩5,460,000', status: '정산 완료' },
+    { id: 3202, title: 'Love Algorithm', year: 2025, poster: 'p4', image: '../images/murderer-roommate.png', settlementMonth: '2026.07', amount: '₩13,220,000', status: '정산 완료' },
+    { id: 3203, title: 'Summer Contract', year: 2024, poster: 'p5', image: '../images/내매니저는구미호.png', settlementMonth: '2026.06', amount: '₩6,780,000', status: '정산 완료' },
+  ],
+  204: [
+    { id: 3301, title: 'Seven Suns', year: 2026, poster: 'p6', image: '../images/ai-husband.png', settlementMonth: '2026.07', amount: '₩14,600,000', status: '정산 완료' },
+    { id: 3302, title: 'Neon Family', year: 2026, poster: 'p6', image: '../images/달빛아래편의점.png', settlementMonth: '2026.06', amount: '₩4,980,000', status: '정산 완료' },
+  ],
+  205: [
+    { id: 3401, title: 'City of Glass', year: 2026, poster: 'p7', image: '../images/chaebol-secretary.png', settlementMonth: '2026.07', amount: '₩7,400,000', status: '정산 완료' },
+    { id: 3402, title: 'Silent Heir', year: 2024, poster: 'p3', image: '../images/나의위험한파트너.png', settlementMonth: '2026.06', amount: '₩5,920,000', status: '정산 완료' },
+  ],
+  206: [
+    { id: 3501, title: '여름밤의 약속', year: 2026, poster: 'p1', image: '../images/대표님이내전남친입니다.png', settlementMonth: '2026.07', amount: '₩15,100,000', status: '정산 완료' },
+    { id: 3502, title: '다시, 첫사랑', year: 2025, poster: 'p4', image: '../images/첫사랑은계약종료.png', settlementMonth: '2026.07', amount: '₩9,880,000', status: '정산 완료' },
+    { id: 3503, title: '사장님의 비밀', year: 2024, poster: 'p8', image: '../images/재벌집막내비서.png', settlementMonth: '2026.06', amount: '₩6,430,000', status: '정산 완료' },
+  ],
+  207: [
+    { id: 3601, title: 'Monday Lovers', year: 2025, poster: 'p5', image: '../images/villainess-agent.png', settlementMonth: '2026.07', amount: '₩4,210,000', status: '정산 완료' },
+  ],
+  208: [
+    { id: 3701, title: 'Bangkok After Midnight', year: 2026, poster: 'p6', image: '../images/ai-husband.png', settlementMonth: '2026.07', amount: '₩8,710,000', status: '정산 완료' },
+    { id: 3702, title: 'Love in Chiang Mai', year: 2025, poster: 'p2', image: '../images/resigned-emperor.png', settlementMonth: '2026.06', amount: '₩5,300,000', status: '정산 완료' },
+  ],
+  209: [
+    { id: 3801, title: 'Moon Cafe', year: 2024, poster: 'p7', image: '../images/왕자님의퇴근길.png', settlementMonth: '2026.07', amount: '₩3,980,000', status: '정산 완료' },
+    { id: 3802, title: 'Taipei Replay', year: 2026, poster: 'p3', image: '../images/return-topstar-poster.png', settlementMonth: '2026.06', amount: '₩6,760,000', status: '정산 완료' },
+  ],
+  210: [
+    { id: 3901, title: 'LA Contract', year: 2026, poster: 'p1', image: '../images/killer-at-home.png', settlementMonth: '2026.07', amount: '₩12,020,000', status: '정산 완료' },
+    { id: 3902, title: 'Thirty Seconds', year: 2025, poster: 'p4', image: '../images/murderer-roommate.png', settlementMonth: '2026.07', amount: '₩7,050,000', status: '정산 완료' },
+    { id: 3903, title: 'Sunset Office', year: 2024, poster: 'p6', image: '../images/달빛아래편의점.png', settlementMonth: '2026.06', amount: '₩4,900,000', status: '정산 완료' },
+  ],
+  211: [
+    { id: 4001, title: 'Comma Romance', year: 2025, poster: 'p5', image: '../images/내매니저는구미호.png', settlementMonth: '2026.07', amount: '₩3,640,000', status: '정산 완료' },
+  ],
+  212: [
+    { id: 4101, title: 'Sweet Revenge', year: 2026, poster: 'p2', image: '../images/황후의복수노트.png', settlementMonth: '2026.07', amount: '₩8,440,000', status: '정산 완료' },
+    { id: 4102, title: 'Cake Shop Prince', year: 2025, poster: 'p7', image: '../images/왕자님의퇴근길.png', settlementMonth: '2026.06', amount: '₩5,110,000', status: '정산 완료' },
+  ],
+  213: [
+    { id: 4201, title: 'Neon Doorstep', year: 2026, poster: 'p3', image: '../images/return-topstar-poster.png', settlementMonth: '2026.07', amount: '₩6,220,000', status: '정산 완료' },
+  ],
+  214: [
+    { id: 4301, title: 'Plan B Wedding', year: 2025, poster: 'p8', image: '../images/첫사랑은계약종료.png', settlementMonth: '2026.07', amount: '₩7,830,000', status: '정산 완료' },
+    { id: 4302, title: 'Backup Love', year: 2024, poster: 'p4', image: '../images/killer-at-home.png', settlementMonth: '2026.06', amount: '₩4,570,000', status: '정산 완료' },
   ],
 };
 
@@ -795,6 +999,29 @@ const sentHistory = {
 };
 
 const history = [
+  {
+    id: 17,
+    sendBatchId: 'settlement-202607-nextwave',
+    type: 'settlement',
+    contents: [
+      { contentId: 3001, contentTitle: 'The Last Letter', settlementMonth: '2026.07', amount: '₩12,450,000' },
+      { contentId: 3002, contentTitle: 'Echo of Spring', settlementMonth: '2026.07', amount: '₩8,920,000' },
+    ],
+    contentTrack: 'SETTLEMENT_COMPLETED',
+    sentByName: '김관리자',
+    sentAt: '2026-08-07T10:24:18',
+    targets: [
+      {
+        companyId: 201,
+        companyName: 'NextWave Studios',
+        sentToUserCount: 1,
+        recipients: [
+          { name: '이서연', email: 'settlement@nextwave.example', opened: true, openedAt: '2026-08-07T11:02:33' },
+        ],
+      },
+    ],
+    subject: '[Shortflow] The Last Letter 외 1건 정산 정보 업데이트',
+  },
   {
     id: 16,
     sendBatchId: '8f14e45f-ceea-467f-8a5e-2c3d1a9b7e21',
@@ -1007,6 +1234,10 @@ let draftSourceIds = new Set();
 let checkedPlatforms = new Set();
 let sourceQuery = '';
 let platformQuery = '';
+let settlementCompanyFilter = '';
+let selectedSettlementCompanyId = null;
+let draftSettlementCompanyId = null;
+let settlementAdminMessage = '';
 let historyQuery = '';
 let historyTypeFilter = '';
 let selectedHistoryId = null;
@@ -1019,7 +1250,9 @@ let platformPage = 1;
 const historyPageSize = 15;
 const sourcePageSize = 10;
 const platformPageSize = 15;
+const settlementCompanyPageSize = 15;
 const maxContentSelection = 10;
+const adminMessageMaxLength = 200;
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, char => ({
@@ -1086,8 +1319,99 @@ function mockRecipientEmail(platform) {
   return `contact@${slug}.example`;
 }
 
+function settlementCompanies() {
+  return sourceData.settlement || [];
+}
+
+function settlementContentSources() {
+  return settlementCompanies().flatMap(company =>
+    (settlementContentData[company.id] || []).map(item => ({
+      ...item,
+      company: company.title,
+      companyName: company.title,
+      companyId: company.id,
+      companyRegion: company.region,
+      companyManager: company.manager,
+      companyEmail: company.email,
+    }))
+  );
+}
+
 function currentSources() {
-  return selectedMailType ? sourceData[selectedMailType] : [];
+  if (!selectedMailType) return [];
+  if (isSettlementMail()) return settlementContentSources();
+  return sourceData[selectedMailType] || [];
+}
+
+function isSettlementMail() {
+  return selectedMailType === 'settlement' || selectedMailType === 'performance';
+}
+
+function currentNoticeLabel() {
+  return selectedMailType === 'performance' ? '퍼포먼스' : '정산';
+}
+
+function currentNoticeTypeLabel() {
+  return `${currentNoticeLabel()} 알림`;
+}
+
+function currentNoticeUrl(company) {
+  const path = selectedMailType === 'performance' ? 'performance' : 'settlement';
+  return `https://shortflow.io/admin/${path}/${company?.id || ''}`;
+}
+
+function selectedSettlementCompany() {
+  if (!isSettlementMail()) return null;
+  const firstContent = selectedSettlementContents()[0];
+  const companyId = (currentMailStep === 2 && draftSettlementCompanyId)
+    || selectedSettlementCompanyId
+    || draftSettlementCompanyId
+    || firstContent?.companyId;
+  return settlementCompanies().find(company => String(company.id) === String(companyId)) || null;
+}
+
+function hasSelectedSettlementCompany() {
+  return Boolean(selectedSettlementCompanyId);
+}
+
+function settlementContentsForSelectedCompany() {
+  const company = selectedSettlementCompany();
+  return company ? currentSources().filter(item => item.companyId === company.id) : currentSources();
+}
+
+function selectedSettlementContents() {
+  if (!isSettlementMail()) return [];
+  return settlementContentSources().filter(item => checkedPlatforms.has(item.id));
+}
+
+function setSettlementCompanyFilter(value) {
+  settlementCompanyFilter = value;
+  sourcePage = 1;
+  draftSourceIds.clear();
+  selectedSourceId = null;
+  selectedSourceIds.clear();
+  renderSources();
+  renderComposeStep();
+  renderPreview();
+}
+
+function selectSettlementCompany(id) {
+  draftSettlementCompanyId = id;
+  currentMailStep = 2;
+  renderAll();
+}
+
+function updateSettlementMessageCount() {
+  const counter = document.getElementById('settlement-message-count');
+  if (counter) counter.textContent = `${settlementAdminMessage.length}/${adminMessageMaxLength}`;
+}
+
+function setSettlementAdminMessage(value) {
+  settlementAdminMessage = String(value || '').slice(0, adminMessageMaxLength);
+  const input = document.getElementById('settlement-admin-message');
+  if (input && input.value !== settlementAdminMessage) input.value = settlementAdminMessage;
+  updateSettlementMessageCount();
+  renderPreview();
 }
 
 function currentSource() {
@@ -1095,6 +1419,7 @@ function currentSource() {
 }
 
 function selectedSources() {
+  if (isSettlementMail()) return selectedSettlementContents();
   const sources = currentSources();
   const ids = selectedSourceIds.size
     ? selectedSourceIds
@@ -1103,6 +1428,7 @@ function selectedSources() {
 }
 
 function hasSelectedSources() {
+  if (isSettlementMail()) return selectedSettlementContents().length > 0;
   return selectedSources().length > 0;
 }
 
@@ -1120,9 +1446,18 @@ function summarizeSources(sources) {
   return sources.length > 1 ? `${sources[0].title} 외 ${sources.length - 1}개` : sources[0].title;
 }
 
+function summarizeSettlementSubject(contents) {
+  if (!contents.length) return '콘텐츠';
+  return contents.length > 1 ? `${contents[0].title}외 ${contents.length - 1}건` : contents[0].title;
+}
+
 function sourceUrl(source) {
   const path = selectedMailType === 'collaboration' ? 'collaboration' : 'content';
   return `https://shortflow.io/${path}/${source.id}`;
+}
+
+function settlementUrl(company) {
+  return `https://shortflow.io/admin/settlement/${company?.id || ''}`;
 }
 
 function selectedSourceSummary() {
@@ -1146,7 +1481,7 @@ function commitDraftSourceSelection() {
 }
 
 function getSentPlatformIds() {
-  if (!selectedMailType) return [];
+  if (!selectedMailType || isSettlementMail()) return [];
   const ids = selectedSources().map(source => source.id);
   return [...new Set(ids.flatMap(id => sentHistory[selectedMailType]?.[id] || []))];
 }
@@ -1161,9 +1496,7 @@ function renderView() {
   document.getElementById('mail-compose-btn')?.classList.toggle('active', isComposing);
 }
 
-function openComposeView() {
-  currentView = 'compose';
-  currentMailStep = 1;
+function resetComposeSelection() {
   selectedMailType = null;
   selectedSourceId = null;
   selectedSourceIds.clear();
@@ -1171,12 +1504,28 @@ function openComposeView() {
   checkedPlatforms.clear();
   sourceQuery = '';
   platformQuery = '';
+  settlementCompanyFilter = '';
+  selectedSettlementCompanyId = null;
+  draftSettlementCompanyId = null;
+  settlementAdminMessage = '';
   sourcePage = 1;
   platformPage = 1;
-  selectedHistoryId = null;
   document.getElementById('source-search').value = '';
   document.getElementById('platform-search').value = '';
+  document.getElementById('settlement-admin-message').value = '';
   document.getElementById('send-success')?.classList.remove('show');
+  document.getElementById('settlement-send-success')?.classList.remove('show');
+}
+
+function openComposeView() {
+  if (currentView === 'compose') {
+    openHistoryView();
+    return;
+  }
+  currentView = 'compose';
+  currentMailStep = 1;
+  selectedHistoryId = null;
+  resetComposeSelection();
   renderAll();
 }
 
@@ -1197,11 +1546,16 @@ function setMailType(type) {
   checkedPlatforms.clear();
   sourceQuery = '';
   platformQuery = '';
+  settlementCompanyFilter = '';
+  selectedSettlementCompanyId = null;
+  draftSettlementCompanyId = null;
+  settlementAdminMessage = '';
   currentMailStep = 2;
   sourcePage = 1;
   platformPage = 1;
   document.getElementById('source-search').value = '';
   document.getElementById('platform-search').value = '';
+  document.getElementById('settlement-admin-message').value = '';
   renderAll();
 }
 
@@ -1257,10 +1611,17 @@ function toggleHistoryFilterPanel() {
 }
 
 function selectSource(id) {
-  if (selectedMailType === 'content') {
+  if (selectedMailType === 'content' || isSettlementMail()) {
+    if (isSettlementMail()) {
+      const selectedItem = currentSources().find(item => item.id === id);
+      const firstDraft = draftSources()[0];
+      if (selectedItem && firstDraft && selectedItem.companyId !== firstDraft.companyId) {
+        draftSourceIds.clear();
+      }
+    }
     if (draftSourceIds.has(id)) draftSourceIds.delete(id);
     else {
-      if (draftSourceIds.size >= maxContentSelection) return;
+      if (selectedMailType === 'content' && draftSourceIds.size >= maxContentSelection) return;
       draftSourceIds.add(id);
     }
   } else {
@@ -1279,6 +1640,10 @@ function clearSourceSelection() {
   selectedSourceIds.clear();
   draftSourceIds.clear();
   checkedPlatforms.clear();
+  if (isSettlementMail()) {
+    selectedSettlementCompanyId = null;
+    draftSettlementCompanyId = null;
+  }
   platformPage = 1;
   currentMailStep = 2;
   renderAll();
@@ -1290,6 +1655,12 @@ function isPlatformSent(platform) {
 }
 
 function visiblePlatforms() {
+  if (isSettlementMail()) {
+    return settlementContentsForSelectedCompany().filter(item => {
+      const keyword = item.title.toLowerCase();
+      return !platformQuery || keyword.includes(platformQuery);
+    });
+  }
   return platforms.filter(platform => {
     const keyword = platform.name.toLowerCase();
     return !platformQuery || keyword.includes(platformQuery);
@@ -1297,7 +1668,8 @@ function visiblePlatforms() {
 }
 
 function togglePlatform(id) {
-  if (!hasSelectedSources()) return;
+  if (isSettlementMail() && !hasSelectedSettlementCompany()) return;
+  if (!isSettlementMail() && !hasSelectedSources()) return;
   if (checkedPlatforms.has(id)) checkedPlatforms.delete(id);
   else checkedPlatforms.add(id);
   currentMailStep = 3;
@@ -1306,7 +1678,8 @@ function togglePlatform(id) {
 }
 
 function selectAllPlatforms() {
-  if (!hasSelectedSources()) return;
+  if (isSettlementMail() && !hasSelectedSettlementCompany()) return;
+  if (!isSettlementMail() && !hasSelectedSources()) return;
   visiblePlatforms().forEach(platform => checkedPlatforms.add(platform.id));
   currentMailStep = 3;
   renderPlatforms();
@@ -1316,7 +1689,7 @@ function selectAllPlatforms() {
 function renderTypeButtons() {
   const group = document.getElementById('mail-type-group');
   group.innerHTML = Object.entries(mailTypes).map(([key, type]) => `
-    <button class="type-btn ${currentMailStep !== 1 && selectedMailType === key ? 'active' : ''}" type="button" onclick="setMailType('${key}')">
+    <button class="type-btn ${selectedMailType === key ? 'active' : ''}" type="button" onclick="setMailType('${key}')">
       <span class="type-name">${type.label}</span>
     </button>
   `).join('');
@@ -1328,6 +1701,11 @@ function renderStepper() {
 
 function getMaxMailStep() {
   if (!selectedMailType) return 1;
+  if (isSettlementMail()) {
+    if (!hasSelectedSettlementCompany()) return 2;
+    if (!selectedSettlementContents().length) return 3;
+    return 5;
+  }
   if (!hasSelectedSources()) return 2;
   if (!checkedPlatforms.size) return 3;
   return 4;
@@ -1340,14 +1718,26 @@ function normalizeMailStep() {
 function canEnterMailStep(step) {
   if (step === 1) return true;
   if (step === 2) return Boolean(selectedMailType);
+  if (isSettlementMail()) {
+    if (step === 3) return hasSelectedSettlementCompany();
+    if (step === 4) return selectedSettlementContents().length > 0;
+    if (step === 5) return selectedSettlementContents().length > 0;
+    return false;
+  }
   if (step === 3) return hasSelectedSources();
   return Boolean(hasSelectedSources() && checkedPlatforms.size > 0);
 }
 
 function getMailStepNotice() {
+  const noticeLabel = currentNoticeLabel();
   if (currentMailStep === 1) return '메일 유형을 선택한 뒤 다음으로 이동합니다.';
-  if (currentMailStep === 2) return hasSelectedSources() ? '선택한 자료로 다음 단계 진행 가능' : '발송할 자료를 선택해주세요.';
-  if (currentMailStep === 3) return checkedPlatforms.size ? `${checkedPlatforms.size}개 플랫폼사 선택됨` : '발송할 플랫폼사를 하나 이상 선택해주세요.';
+  if (currentMailStep === 2) return isSettlementMail()
+    ? (hasSelectedSettlementCompany() ? '선택한 제작사로 다음 단계 진행 가능' : `${noticeLabel} 알림을 보낼 제작사를 선택해주세요.`)
+    : (hasSelectedSources() ? '선택한 콘텐츠로 다음 단계 진행 가능' : '발송할 자료를 선택해주세요.');
+  if (currentMailStep === 3) return isSettlementMail()
+    ? (selectedSettlementContents().length ? `${selectedSettlementContents().length}개 콘텐츠 선택됨` : `${noticeLabel} 알림을 보낼 콘텐츠를 선택해주세요.`)
+    : (checkedPlatforms.size ? `${checkedPlatforms.size}개 선택됨` : '발송할 플랫폼사를 하나 이상 선택해주세요.');
+  if (currentMailStep === 4 && isSettlementMail()) return '관리자 메시지는 선택 입력입니다.';
   return '미리보기 확인 후 메일을 발송합니다.';
 }
 
@@ -1358,29 +1748,68 @@ function truncateStepSummary(value, maxLength = 12) {
 
 function renderComposeStep() {
   normalizeMailStep();
+  const isTypeSelecting = currentMailStep === 1 && !selectedMailType;
+  const noticeLabel = currentNoticeLabel();
+  document.getElementById('compose-view')?.classList.toggle('type-selecting', isTypeSelecting);
   const sourceSummary = selectedSourceSummary();
   const selectedPlatformNames = [...checkedPlatforms]
-    .map(id => platforms.find(platform => platform.id === id)?.name)
+    .map(id => {
+      const targetPool = isSettlementMail() ? settlementContentsForSelectedCompany() : platforms;
+      const item = targetPool.find(target => target.id === id);
+      return item?.name || item?.title;
+    })
     .filter(Boolean);
   document.getElementById('mail-type-summary').textContent = selectedMailType ? mailTypes[selectedMailType].label : '';
+  const company = selectedSettlementCompany();
+  const settlementContents = selectedSettlementContents();
+  document.getElementById('source-section-title').textContent = isSettlementMail() ? '제작사 선택' : (selectedMailType ? mailTypes[selectedMailType].sourceLabel : '자료 선택');
+  document.getElementById('target-section-title').textContent = isSettlementMail() ? '콘텐츠 선택' : (selectedMailType ? mailTypes[selectedMailType].targetLabel : '발송할 플랫폼사 선택');
+  document.getElementById('message-section-title').textContent = isSettlementMail() ? '관리자 메시지' : '메일 미리보기';
+  document.getElementById('platform-search').placeholder = isSettlementMail() ? '콘텐츠명 검색' : (selectedMailType ? mailTypes[selectedMailType].targetSearchPlaceholder : '플랫폼사명 검색');
+  document.getElementById('select-all-targets-btn').textContent = isSettlementMail() ? '전체 선택' : '전체 선택';
+  document.getElementById('settlement-admin-message').placeholder = `${noticeLabel} 안내에 추가할 메시지를 입력해주세요.`;
+  updateSettlementMessageCount();
   const sourceSummaryEl = document.getElementById('source-summary');
   const selectedSourceItems = selectedSources();
-  sourceSummaryEl.innerHTML = selectedSourceItems.length > 1
+  sourceSummaryEl.innerHTML = isSettlementMail()
+    ? escapeHtml(company?.title || '')
+    : selectedSourceItems.length > 1
     ? `<span class="step-desc-main">${escapeHtml(selectedSourceItems[0].title)}</span><span class="step-desc-count">외 ${selectedSourceItems.length - 1}개</span>`
     : escapeHtml(sourceSummary);
-  document.getElementById('platform-summary').textContent = selectedPlatformNames.length ? `${selectedPlatformNames.length}개` : '';
+  document.getElementById('platform-summary').textContent = isSettlementMail()
+    ? (settlementContents.length ? `${settlementContents.length}개` : '')
+    : (selectedPlatformNames.length ? `${selectedPlatformNames.length}개` : '');
+  document.getElementById('message-summary').textContent = isSettlementMail()
+    ? (settlementAdminMessage.trim() ? '작성됨' : '선택 입력')
+    : '';
   document.getElementById('preview-summary').textContent = '';
   const sourceNextBtn = document.getElementById('source-next-btn');
   const platformNextBtn = document.getElementById('platform-next-btn');
-  if (sourceNextBtn) sourceNextBtn.disabled = !hasDraftSources();
-  if (platformNextBtn) platformNextBtn.disabled = !checkedPlatforms.size;
+  const settlementMessageNextBtn = document.getElementById('settlement-message-next-btn');
+  if (sourceNextBtn) sourceNextBtn.disabled = isSettlementMail() ? !draftSettlementCompanyId : !hasDraftSources();
+  if (platformNextBtn) platformNextBtn.disabled = isSettlementMail() ? !settlementContents.length : !checkedPlatforms.size;
+  if (settlementMessageNextBtn) settlementMessageNextBtn.disabled = isSettlementMail() ? !settlementContents.length : true;
+  document.querySelectorAll('.settlement-only-step').forEach(el => {
+    el.classList.toggle('hidden', !isSettlementMail());
+  });
+  document.querySelector('#preview-body')?.closest('.preview-grid')?.classList.toggle('hidden', isSettlementMail());
+  document.getElementById('settlement-message-panel')?.classList.toggle('show', isSettlementMail());
   document.querySelectorAll('.compose-step-head').forEach(button => {
     const step = Number(button.dataset.composeStep);
+    button.classList.remove('first-visible', 'last-visible');
     button.classList.toggle('active', step === currentMailStep);
     button.classList.toggle('done', isMailStepDone(step));
     button.classList.toggle('pending', step > currentMailStep);
     button.classList.toggle('locked', !canEnterMailStep(step));
   });
+  const visibleStepHeads = [...document.querySelectorAll('.compose-step-head')]
+    .filter(button => !button.classList.contains('hidden'));
+  visibleStepHeads.forEach((button, index) => {
+    const stepNo = button.querySelector('.step-no');
+    if (stepNo) stepNo.textContent = String(index + 1);
+  });
+  visibleStepHeads[0]?.classList.add('first-visible');
+  visibleStepHeads[visibleStepHeads.length - 1]?.classList.add('last-visible');
   document.querySelectorAll('.compose-step-panel').forEach(panel => {
     const step = Number(panel.dataset.composeStep);
     panel.classList.toggle('active', step === currentMailStep);
@@ -1391,12 +1820,24 @@ function renderComposeStep() {
 function isMailStepDone(step) {
   if (step >= currentMailStep) return false;
   if (step === 1) return Boolean(selectedMailType);
+  if (isSettlementMail()) {
+    if (step === 2) return hasSelectedSettlementCompany();
+    if (step === 3) return selectedSettlementContents().length > 0;
+    if (step === 4) return true;
+    return false;
+  }
   if (step === 2) return hasSelectedSources();
   if (step === 3) return checkedPlatforms.size > 0;
   return false;
 }
 
 function setMailStep(step) {
+  if (step === 1) {
+    currentMailStep = 1;
+    resetComposeSelection();
+    renderAll();
+    return;
+  }
   if (!canEnterMailStep(step)) return;
   currentMailStep = step;
   renderStepper();
@@ -1414,6 +1855,17 @@ function handleMailStepBack() {
 
 function handleMailStepNext() {
   if (currentMailStep === 2) {
+    if (isSettlementMail()) {
+      if (!draftSettlementCompanyId) return;
+      selectedSettlementCompanyId = draftSettlementCompanyId;
+      checkedPlatforms.clear();
+      platformQuery = '';
+      platformPage = 1;
+      document.getElementById('platform-search').value = '';
+      setMailStep(3);
+      renderPlatforms();
+      return;
+    }
     openSourceConfirm();
     return;
   }
@@ -1422,11 +1874,41 @@ function handleMailStepNext() {
 }
 
 function openSourceConfirm() {
+  if (isSettlementMail()) {
+    const company = settlementCompanies().find(item => item.id === draftSettlementCompanyId);
+    if (!company) return;
+    openMailConfirm({
+      title: '선택한 제작사를 확인해주세요',
+      message: `${company.title} 제작사를 선택했어요.`,
+      confirmLabel: '다음',
+      showIcon: false,
+      extraHtml: `
+        <div class="mail-confirm-list">
+          <div class="mail-confirm-list-row">${escapeHtml(company.title)}</div>
+        </div>
+      `,
+      onConfirm: () => {
+        selectedSettlementCompanyId = draftSettlementCompanyId;
+        checkedPlatforms.clear();
+        platformQuery = '';
+        platformPage = 1;
+        document.getElementById('platform-search').value = '';
+        setMailStep(3);
+        renderPlatforms();
+      },
+    });
+    return;
+  }
   const sources = draftSources();
   if (!sources.length) return;
+  const title = '선택한 콘텐츠를 확인해주세요';
+  const noticeLabel = currentNoticeLabel();
+  const message = isSettlementMail()
+    ? `${sources[0].companyName}의 ${sources.length}개 ${noticeLabel} 콘텐츠를 선택했어요.`
+    : `${sources.length}개 콘텐츠를 선택했어요.`;
   openMailConfirm({
-    title: '선택한 콘텐츠를 확인해주세요',
-    message: `${sources.length}개 콘텐츠를 선택했어요.`,
+    title,
+    message,
     confirmLabel: '다음',
     showIcon: false,
     extraHtml: `
@@ -1444,14 +1926,57 @@ function openSourceConfirm() {
 
 function renderSources() {
   const type = mailTypes[selectedMailType];
-  document.getElementById('source-section-title').textContent = type ? type.sourceLabel : '자료 선택';
-  document.getElementById('source-search').placeholder = type ? type.searchPlaceholder : '검색';
+  document.getElementById('source-section-title').textContent = isSettlementMail() ? '제작사 선택' : (type ? type.sourceLabel : '자료 선택');
+  document.getElementById('source-search').placeholder = isSettlementMail() ? '제작사명 검색' : (type ? type.searchPlaceholder : '검색');
   const list = document.getElementById('source-list');
   const pagination = document.getElementById('source-pagination');
+  const tools = document.querySelector('.source-tools');
+  const companyFilter = document.getElementById('settlement-company-filter');
   list.classList.toggle('content-source-list', selectedMailType === 'content');
+  list.classList.toggle('settlement-source-list', isSettlementMail());
+  list.classList.toggle('settlement-company-source-list', isSettlementMail());
+  tools?.classList.toggle('show-settlement-filter', false);
+  if (companyFilter) {
+    companyFilter.innerHTML = `
+      <option value="">전체 제작사</option>
+      ${settlementCompanies().map(company => `<option value="${company.id}">${escapeHtml(company.title)}</option>`).join('')}
+    `;
+    companyFilter.value = settlementCompanyFilter;
+  }
   if (!type) {
     list.innerHTML = '<div class="empty-state">메일 유형을 먼저 선택해주세요</div>';
     pagination.innerHTML = '';
+    return;
+  }
+  if (isSettlementMail()) {
+    const filteredCompanies = settlementCompanies().filter(company => {
+      const text = `${company.title} ${company.region}`.toLowerCase();
+      return !sourceQuery || text.includes(sourceQuery);
+    });
+    if (!filteredCompanies.length) {
+      list.innerHTML = '<div class="empty-state">조건에 맞는 제작사가 없습니다</div>';
+      pagination.innerHTML = '';
+      return;
+    }
+    const totalPages = Math.max(1, Math.ceil(filteredCompanies.length / settlementCompanyPageSize));
+    sourcePage = Math.min(Math.max(1, sourcePage), totalPages);
+    const start = (sourcePage - 1) * settlementCompanyPageSize;
+    const pageRows = filteredCompanies.slice(start, start + settlementCompanyPageSize);
+    list.innerHTML = `
+      <div class="source-table-head">
+        <div class="source-head-cell"></div>
+        <div class="source-head-cell">제작사 회사</div>
+        <div class="source-head-cell">지역</div>
+      </div>
+      ${pageRows.map(company => `
+        <div class="source-row ${draftSettlementCompanyId === company.id ? 'selected' : ''}" onclick="selectSettlementCompany(${company.id})">
+          <div class="source-cell source-check-cell"><span class="source-check" aria-hidden="true"><i class="ti ti-check"></i></span></div>
+          <div class="source-cell"><div class="source-title">${escapeHtml(company.title)}</div></div>
+          <div class="source-cell"><span class="source-meta">${escapeHtml(company.region)}</span></div>
+        </div>
+      `).join('')}
+    `;
+    renderSourcePagination(filteredCompanies.length, totalPages);
     return;
   }
   const filtered = currentSources().filter(item => {
@@ -1522,11 +2047,17 @@ function renderSourcePagination(total, totalPages) {
 }
 
 function setSourcePage(page) {
-  const total = currentSources().filter(item => {
-    const text = item.title.toLowerCase();
-    return !sourceQuery || text.includes(sourceQuery);
-  }).length;
-  const totalPages = Math.max(1, Math.ceil(total / sourcePageSize));
+  const total = isSettlementMail()
+    ? settlementCompanies().filter(company => {
+      const text = `${company.title} ${company.region}`.toLowerCase();
+      return !sourceQuery || text.includes(sourceQuery);
+    }).length
+    : currentSources().filter(item => {
+      const text = item.title.toLowerCase();
+      return !sourceQuery || text.includes(sourceQuery);
+    }).length;
+  const pageSize = isSettlementMail() ? settlementCompanyPageSize : sourcePageSize;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
   sourcePage = Math.min(Math.max(1, page), totalPages);
   renderSources();
 }
@@ -1534,6 +2065,56 @@ function setSourcePage(page) {
 function renderPlatforms() {
   const table = document.getElementById('platform-table');
   const pagination = document.getElementById('platform-pagination');
+  const tools = document.querySelector('.platform-tools');
+  const messageInput = document.getElementById('settlement-admin-message');
+  const noticeLabel = currentNoticeLabel();
+  table.classList.toggle('settlement-content-table', isSettlementMail());
+  if (isSettlementMail()) {
+    if (tools) tools.style.display = '';
+    if (table) table.style.display = '';
+    if (pagination) pagination.style.display = '';
+    if (messageInput && messageInput.value !== settlementAdminMessage) messageInput.value = settlementAdminMessage;
+    updateSettlementMessageCount();
+    if (!hasSelectedSettlementCompany()) {
+      table.innerHTML = '<div class="empty-state">먼저 제작사를 선택해주세요</div>';
+      if (pagination) pagination.innerHTML = '';
+      return;
+    }
+    const rows = visiblePlatforms();
+    const totalPages = Math.max(1, Math.ceil(rows.length / platformPageSize));
+    platformPage = Math.min(Math.max(1, platformPage), totalPages);
+    const start = (platformPage - 1) * platformPageSize;
+    const pageRows = rows.slice(start, start + platformPageSize);
+    table.innerHTML = `
+      <div class="platform-table-scroll">
+        <div class="platform-head">
+          <div class="platform-cell"></div>
+          <div class="platform-cell">콘텐츠명</div>
+          <div class="platform-cell">제작사명</div>
+          <div class="platform-cell">제작연도</div>
+        </div>
+        ${pageRows.length ? pageRows.map(item => {
+          const isChecked = checkedPlatforms.has(item.id);
+          return `
+            <div class="platform-row ${isChecked ? 'checked' : ''}" onclick="togglePlatform(${item.id})">
+              <div class="platform-cell"><div class="platform-check"><i class="ti ti-check"></i></div></div>
+              <div class="platform-cell source-content-cell">
+                ${sourcePosterHtml(item)}
+                <div class="platform-name">${escapeHtml(item.title)}</div>
+              </div>
+              <div class="platform-cell"><span class="plain-text">${escapeHtml(item.companyName)}</span></div>
+              <div class="platform-cell"><span class="plain-text">${escapeHtml(item.year)}</span></div>
+            </div>
+          `;
+        }).join('') : `<div class="empty-state">조건에 맞는 ${noticeLabel} 콘텐츠가 없습니다</div>`}
+      </div>
+    `;
+    renderPlatformPagination(rows.length, totalPages);
+    return;
+  }
+  if (tools) tools.style.display = '';
+  if (table) table.style.display = '';
+  if (pagination) pagination.style.display = '';
   if (!hasSelectedSources()) {
     table.innerHTML = '<div class="empty-state">먼저 발송할 자료를 선택해주세요</div>';
     if (pagination) pagination.innerHTML = '';
@@ -1588,60 +2169,114 @@ function getPlatformSentDate(platform) {
   if (!titles.length) return '';
   const item = history.find(row =>
     row.type === selectedMailType &&
-    titles.some(title => row.target === title || row.target.startsWith(`${title} 외 `)) &&
+    titles.some(title => {
+      const target = String(row.target || '');
+      return target === title || target.startsWith(`${title} 외 `);
+    }) &&
+    Array.isArray(row.platforms) &&
     row.platforms.includes(platform.name)
   );
-  return item ? item.date.split(' ')[0] : '';
+  return item ? historySentAt(item).split(' ')[0] : '';
 }
 
 function renderPreview() {
   const sources = selectedSources();
   const source = sources[0];
   const type = mailTypes[selectedMailType];
+  const previewBody = document.getElementById(isSettlementMail() ? 'settlement-preview-body' : 'preview-body');
+  const sendButton = document.getElementById(isSettlementMail() ? 'settlement-send-btn' : 'send-btn');
+  if (isSettlementMail()) {
+    const noticeLabel = currentNoticeLabel();
+    const settlementContents = selectedSettlementContents();
+    const company = settlementCompanies().find(item => item.id === settlementContents[0]?.companyId) || selectedSettlementCompany();
+    const canSend = Boolean(settlementContents.length);
+    const settlementContentTitles = settlementContents.map(item => item.title);
+    const settlementContentSummary = summarizeSettlementSubject(settlementContents);
+    const adminMessage = settlementAdminMessage.trim();
+    const previewLinkHref = currentNoticeUrl(company);
+    const settlementPreviewHtml = canSend && type ? `
+      <div class="settlement-preview">
+        <div class="settlement-preview-label">본문 미리보기</div>
+        <div class="settlement-body-box">
+          <p class="settlement-body-copy">
+            안녕하세요, <strong>${escapeHtml(company?.title || '제작사')}</strong>님,<br>
+            아래 콘텐츠의 ${noticeLabel} 관련 정보가 업데이트되어 안내드립니다.
+          </p>
+          <table class="settlement-content-list">
+            ${settlementContentTitles.map(title => `<tr><td>${escapeHtml(title)}</td></tr>`).join('')}
+          </table>
+          ${adminMessage ? `<div class="settlement-admin-message">${escapeHtml(adminMessage)}</div>` : ''}
+          <a class="settlement-cta" href="${escapeHtml(previewLinkHref)}">${noticeLabel} 확인하기 →</a>
+          <hr class="settlement-divider" />
+          <div class="settlement-template-foot">
+            <p>본 메일은 발신전용이며, 문의사항은 Shortflow 서비스를 통해 접수해주세요.</p>
+            <p class="settlement-template-brand">Short<span>flow</span></p>
+          </div>
+        </div>
+      </div>
+    ` : `<div class="empty-state">${noticeLabel} 알림을 보낼 콘텐츠를 선택하면 템플릿 미리보기를 확인할 수 있습니다</div>`;
+    if (previewBody) previewBody.innerHTML = settlementPreviewHtml;
+    if (sendButton) sendButton.disabled = !canSend;
+    renderStepper();
+    renderComposeStep();
+    return;
+  }
   const selectedPlatforms = [...checkedPlatforms]
     .map(id => platforms.find(platform => platform.id === id))
     .filter(Boolean);
-  const selectedPlatformNames = selectedPlatforms.map(platform => platform.name);
-  const canSend = Boolean(sources.length && selectedPlatformNames.length);
-  const recipientName = selectedPlatforms.length
-    ? `${selectedPlatforms[0].manager}${selectedPlatforms.length > 1 ? ` 외 ${selectedPlatforms.length - 1}명` : ''}`
-    : '';
+  const canSend = Boolean(sources.length && selectedPlatforms.length);
   const sourceSummary = selectedSourceSummary();
   const previewSource = source ? { ...source, title: sourceSummary } : null;
-  document.getElementById('preview-body').innerHTML = previewSource && type ? `
+  const recipientName = selectedPlatforms[0]?.manager || '사용자';
+  const proposalTypeName = selectedMailType === 'collaboration' ? '기획안' : '콘텐츠';
+  if (previewBody) previewBody.innerHTML = previewSource && type ? `
     <div class="email-template-card">
-      <h1 class="email-template-title">새로운 콘텐츠를 소개합니다</h1>
       <p class="email-template-copy">
-        안녕하세요 <strong>사용자</strong>님,<br>
-        새로운 콘텐츠 <strong>콘텐츠제목</strong>이 Shortflow에 등록되었습니다.<br>
-        아래 버튼을 눌러 콘텐츠를 확인해보세요.
+        안녕하세요 <strong>${escapeHtml(recipientName)}</strong>님,<br>
+        새로운 ${proposalTypeName} <strong>${sources.length}건</strong>이 Shortflow에 등록되었습니다.<br>
+        아래 목록에서 ${proposalTypeName}를 확인해보세요.
       </p>
-      <a class="email-template-link" href="#">콘텐츠 확인하기 →</a>
+      <table class="email-content-list">
+        ${sources.map(item => `
+          <tr>
+            <td>${escapeHtml(item.title)}</td>
+            <td class="email-content-link-cell">
+              <a class="email-content-link" href="${escapeHtml(sourceUrl(item))}" target="_blank">바로가기 →</a>
+            </td>
+          </tr>
+        `).join('')}
+      </table>
       <div class="email-template-foot">
         <p class="email-template-note">본 메일은 발신전용이며, 문의사항은 Shortflow 서비스를 통해 접수해주세요.</p>
-        <p class="email-template-brand">Shortflow</p>
+        <p class="email-template-brand">Short<span>flow</span></p>
       </div>
     </div>
   ` : '<div class="empty-state">메일 유형과 발송 대상을 선택하면 템플릿 미리보기를 확인할 수 있습니다</div>';
-  document.getElementById('send-btn').disabled = !canSend;
+  if (sendButton) sendButton.disabled = !canSend;
   renderStepper();
   renderComposeStep();
 }
 
 function sendMail() {
   const sources = selectedSources();
-  if (!sources.length || !checkedPlatforms.size) return;
-  const selected = [...checkedPlatforms]
-    .map(id => platforms.find(platform => platform.id === id))
-    .filter(Boolean);
+  if (!sources.length || (!isSettlementMail() && !checkedPlatforms.size)) return;
+  const selected = isSettlementMail()
+    ? selectedSettlementContents()
+    : [...checkedPlatforms]
+      .map(id => platforms.find(platform => platform.id === id))
+      .filter(Boolean);
+  const noticeLabel = currentNoticeLabel();
+  const message = isSettlementMail()
+    ? `"${selectedSourceSummary()}"\n선택한 ${selected.length}개 콘텐츠의 ${noticeLabel} 알림 메일이 발송됩니다.`
+    : `"${selectedSourceSummary()}"\n선택한 ${selected.length}개 플랫폼사에 메일이 발송됩니다.`;
   openMailConfirm({
     title: '메일을 발송할까요?',
-    message: `"${selectedSourceSummary()}"\n선택한 ${selected.length}개 플랫폼사에 메일이 발송됩니다.`,
+    message,
     confirmLabel: '발송',
     showIcon: false,
     extraHtml: `
       <div class="mail-confirm-list">
-        ${selected.map(platform => `<div class="mail-confirm-list-row">${escapeHtml(platform.name)}</div>`).join('')}
+        ${selected.map(item => `<div class="mail-confirm-list-row">${escapeHtml(item.name || item.title)}</div>`).join('')}
       </div>
     `,
     onConfirm: performSendMail,
@@ -1680,16 +2315,84 @@ function submitMailConfirm() {
 function performSendMail() {
   const sources = selectedSources();
   const source = sources[0];
-  if (!source || !checkedPlatforms.size) return;
+  if (!source || (!isSettlementMail() && !checkedPlatforms.size)) return;
   const type = mailTypes[selectedMailType];
-  const selected = [...checkedPlatforms]
-    .map(id => platforms.find(platform => platform.id === id))
-    .filter(Boolean);
+  const selected = isSettlementMail()
+    ? selectedSettlementContents()
+    : [...checkedPlatforms]
+      .map(id => platforms.find(platform => platform.id === id))
+      .filter(Boolean);
   const sourceSummary = selectedSourceSummary();
-  const previewSource = { ...source, title: sourceSummary };
+  const settlementContentSummary = isSettlementMail()
+    ? summarizeSettlementSubject(selected)
+    : '';
+  const previewSource = { ...source, title: isSettlementMail() ? settlementContentSummary : sourceSummary };
   const now = new Date();
   const sentAt = localMailIso(now);
   const newHistoryId = Date.now();
+  if (isSettlementMail()) {
+    const company = settlementCompanies().find(item => item.id === source.companyId) || selectedSettlementCompany() || {};
+    const adminMessage = settlementAdminMessage.trim();
+    const noticeUrl = currentNoticeUrl(company);
+    history.unshift({
+      id: newHistoryId,
+      sendBatchId: `batch-${newHistoryId}`,
+      type: selectedMailType,
+      contentTrack: selectedMailType === 'performance' ? 'PERFORMANCE_UPDATED' : 'SETTLEMENT_COMPLETED',
+      sentByName: '김관리자',
+      sentAt,
+      target: settlementContentSummary,
+      company: company.title || source.companyName,
+      contents: selected.map(item => ({
+        contentId: item.id,
+        contentTitle: item.title,
+        settlementMonth: item.settlementMonth,
+        amount: item.amount,
+        url: sourceUrl(item),
+      })),
+      platforms: [company.title || source.companyName],
+      targets: [{
+        companyId: company.id || source.companyId,
+        companyName: company.title || source.companyName,
+        sentToUserCount: 1,
+        recipients: [
+          {
+            name: company.manager || source.companyManager || '-',
+            email: company.email || source.companyEmail || '-',
+            opened: false,
+            openedAt: null,
+          },
+        ],
+      }],
+      success: 1,
+      failed: 0,
+      subject: type.subject({
+        ...previewSource,
+        companyName: company.title || source.companyName,
+        contentTitles: selected.map(item => item.title),
+        contentTitleSummary: summarizeSettlementSubject(selected),
+        settlementUrl: noticeUrl,
+        performanceUrl: noticeUrl,
+        adminMessage,
+      }),
+    });
+    selectedSourceId = null;
+    selectedSourceIds.clear();
+    draftSourceIds.clear();
+    checkedPlatforms.clear();
+    settlementCompanyFilter = '';
+    selectedSettlementCompanyId = null;
+    draftSettlementCompanyId = null;
+    settlementAdminMessage = '';
+    selectedHistoryId = newHistoryId;
+    historyQuery = '';
+    historyTypeFilter = '';
+    historyPage = 1;
+    currentView = 'history';
+    document.getElementById('send-success')?.classList.remove('show');
+    renderAll();
+    return;
+  }
   history.unshift({
     id: newHistoryId,
     sendBatchId: `batch-${newHistoryId}`,
@@ -1774,7 +2477,10 @@ function historyTargetLabel(item) {
 }
 
 function historyListTypeLabel(type) {
-  return type === 'collaboration' ? '기획안' : '콘텐츠';
+  if (type === 'collaboration') return '기획안제안';
+  if (type === 'settlement') return '정산알림';
+  if (type === 'performance') return '퍼포먼스알림';
+  return '콘텐츠제안';
 }
 
 function renderHistory() {
