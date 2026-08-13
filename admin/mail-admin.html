@@ -41,7 +41,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
   bottom: 0;
   width: 1px;
   background: #e5e5e5;
-  z-index: 20;
+  z-index: 80;
   pointer-events: none;
 }
 .main.mail-panel-expanded::before { content: none; }
@@ -76,7 +76,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
   margin-top: -46px;
   border-left: 0;
   position: relative;
-  z-index: 10;
+  z-index: 60;
 }
 .body.has-detail .compose-pane { display: none; }
 .body.mail-panel-expanded .history-pane { width: 0; min-width: 0; flex: 0 0 0; padding: 0; overflow: hidden; }
@@ -468,6 +468,10 @@ table.settlement-content-list tr:last-child td { border-bottom: 1px solid #eeeee
 .review-row { min-height: 38px; padding: 9px 12px; border-bottom: 0.5px solid rgb(242, 242, 242); display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 12px; align-items: baseline; }
 .review-row:last-child { border-bottom: 0; }
 .review-key { color: #aaa; font-size: 11px; min-width: 0; white-space: nowrap; }
+.review-key.with-tooltip { display: inline-flex; align-items: center; gap: 5px; }
+.review-help { position: relative; width: 15px; height: 15px; border: 0.5px solid #d8d8d8; border-radius: 50%; color: #aaa; font-size: 10px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; cursor: help; }
+.review-help::after { content: attr(data-tooltip); position: absolute; left: calc(100% + 8px); top: 50%; width: 230px; padding: 8px 10px; border: 0.5px solid #e5e5e5; border-radius: 8px; background: #fff; color: #555; font-size: 11px; font-weight: 400; line-height: 1.45; white-space: normal; box-shadow: 0 6px 18px rgba(0,0,0,0.08); transform: translateY(-50%); opacity: 0; pointer-events: none; transition: opacity .12s ease; z-index: 1000; }
+.review-help:hover::after { opacity: 1; }
 .review-val { color: #333; font-size: 12px; text-align: right; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .review-val.multiline { white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.55; }
 .send-bar { margin-top: 18px; min-height: 52px; padding: 0; display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
@@ -563,6 +567,7 @@ table.settlement-content-list tr:last-child td { border-bottom: 1px solid #eeeee
 .history-table { width: 100%; overflow: auto; background: #fff; }
 .history-table table { width: 100%; min-width: 980px; table-layout: fixed; border-collapse: collapse; }
 .history-table thead th { height: 40px; padding: 0 14px; background: #fff; border-bottom: 1px solid #e5e7eb; color: #9aa0a9; font-size: 11px; font-weight: 400; text-align: left; white-space: nowrap; }
+.history-table thead th.history-platform-head { text-align: center; }
 .history-table tbody tr.history-row { height: 39px; border-bottom: 1px solid #eef0f3; background: #fff; cursor: pointer; }
 .history-table tbody tr.history-row:hover { background: #fafafa; }
 .history-table tbody tr.history-row.open { background: rgb(242, 242, 242); }
@@ -573,7 +578,7 @@ table.settlement-content-list tr:last-child td { border-bottom: 1px solid #eeeee
 .history-no { color: #1b1d21; font-size: 12px; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
 .history-target { color: #14171c; font-size: 12px; font-weight: 400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .history-date { display: inline-flex; align-items: center; color: #14171c; font-size: 12px; }
-.history-platform-cell { text-align: center; }
+.history-platform-cell { text-align: center; padding-left: 0 !important; padding-right: 0 !important; }
 .history-platform-count { color: #3f4650; font-size: 12px; white-space: nowrap; display: flex; align-items: center; justify-content: center; }
 .result-ok { color: #3B6D11; font-size: 11px; }
 .history-toggle { width: 20px; height: 20px; margin-left: auto; color: #aaa; font-size: 17px; display: flex; align-items: center; justify-content: center; transition: transform 0.18s ease, color 0.18s ease; }
@@ -593,7 +598,7 @@ table.settlement-content-list tr:last-child td { border-bottom: 1px solid #eeeee
 .detail-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
 .detail-platform { min-height: 30px; padding: 7px 9px; border: 0.5px solid #eeeeea; border-radius: 7px; display: flex; align-items: center; justify-content: flex-start; gap: 10px; color: #333; font-size: 11.5px; }
 .history-pane .review-row { align-items: flex-start; justify-content: flex-start; }
-.history-inline-detail .detail-body { border-radius: 0; }
+.history-inline-detail .detail-body { border-radius: 0; overflow: visible; }
 .history-inline-detail .review-row {
   min-height: 42px;
   padding: 0;
@@ -601,6 +606,7 @@ table.settlement-content-list tr:last-child td { border-bottom: 1px solid #eeeee
   grid-template-columns: 108px minmax(0, 1fr);
   gap: 0;
   align-items: stretch;
+  overflow: visible;
 }
 .history-inline-detail .review-row:last-child { border-bottom: 0; }
 .history-inline-detail .review-row.review-row-dual {
@@ -659,6 +665,13 @@ table.settlement-content-list tr:last-child td { border-bottom: 1px solid #eeeee
 .open-status.opened { border-color: #2f8f68; background: #2f8f68; color: #fff; }
 .open-status.unopened { background: transparent; color: #999; }
 .recipient-empty { min-height: 42px; padding: 13px 12px; color: #aaa; font-size: 11.5px; }
+.owner-notice-row { min-width: 650px; min-height: 38px; display: grid; grid-template-columns: 150px minmax(96px, 0.62fr) minmax(170px, 1fr) 74px 128px; align-items: stretch; }
+.owner-notice-row:last-child .owner-notice-cell { border-bottom: 0; }
+.owner-notice-row.head { min-height: 32px; background: #fff; }
+.owner-notice-cell { min-width: 0; padding: 8px 10px; border-right: 0.5px solid rgb(232, 232, 232); border-bottom: 0.5px solid rgb(232, 232, 232); color: #333; font-size: 11.5px; display: flex; align-items: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.owner-notice-cell:last-child { border-right: 0; }
+.owner-notice-row.head .owner-notice-cell { color: #777; font-size: 10.5px; justify-content: center; text-align: center; }
+.owner-notice-row:not(.head) .owner-notice-cell:first-child { color: #1a1a18; }
 .pagination { min-height: 44px; margin-top: 12px; display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
 .page-info { margin-right: 6px; color: #999; font-size: 11.5px; }
 .page-btn { min-width: 31px; height: 31px; padding: 0 9px; border: 0.5px solid #dedede; border-radius: 7px; background: #fff; color: #555; font-family: inherit; font-size: 11.5px; cursor: pointer; }
@@ -1227,6 +1240,9 @@ const history = [
         ],
       },
     ],
+    ownerNotifications: [
+      { companyName: 'NextWave Studios', name: '이서연', email: 'settlement@nextwave.example', opened: true, openedAt: '2026-08-06T14:18:22' },
+    ],
     subject: '[Shortflow] 돌아온 재벌집 막내아들 외 1개 콘텐츠 제안',
   },
   { id: 1, date: '2026.07.20 15:20', sender: '김관리자', type: 'content', target: 'The Last Letter', company: 'NextWave Studios', contents: [{ title: 'The Last Letter' }, { title: 'Echo of Spring' }, { title: 'Runaway Bride' }], platforms: ['ShortReel (US)', 'Viki'], success: 2, failed: 0, subject: '[Shortflow] The Last Letter 외 2개 콘텐츠 제안' },
@@ -1522,6 +1538,35 @@ function mockRecipientEmail(platform) {
     .replace(/[^a-z0-9]+/g, '')
     .slice(0, 18) || `partner${platform.id}`;
   return `contact@${slug}.example`;
+}
+
+function companySlug(value) {
+  return String(value || 'company')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '')
+    .slice(0, 18) || 'company';
+}
+
+function ownerContactForCompany(companyName) {
+  const matched = (sourceData.settlement || []).find(company => company.title === companyName);
+  return {
+    companyName: companyName || '제작사',
+    name: matched?.manager || `${companyName || '제작사'} 담당자`,
+    email: matched?.email || `owner@${companySlug(companyName)}.example`,
+  };
+}
+
+function buildOwnerNotifications(sources) {
+  const owners = new Map();
+  sources.forEach(source => {
+    const owner = ownerContactForCompany(source.company);
+    owners.set(owner.companyName, {
+      ...owner,
+      opened: false,
+      openedAt: null,
+    });
+  });
+  return [...owners.values()];
 }
 
 function selectedRegisteredPlatforms() {
@@ -2921,6 +2966,7 @@ function performSendMail() {
     ? selectedSettlementContents()
     : selectedRegisteredPlatforms();
   const manualTargets = validManualRecipients();
+  const ownerNotifications = buildOwnerNotifications(sources);
   const sourceSummary = selectedSourceSummary();
   const settlementContentSummary = isSettlementMail()
     ? summarizeSettlementSubject(selected)
@@ -3044,6 +3090,7 @@ function performSendMail() {
         ],
       })),
     ],
+    ownerNotifications,
     success: selected.length + manualTargets.length,
     failed: 0,
     subject: type.subject(previewSource),
@@ -3137,7 +3184,7 @@ function renderHistory() {
           <th>유형</th>
           <th>제목</th>
           <th>발송일시</th>
-          <th>플랫폼</th>
+          <th class="history-platform-head">플랫폼</th>
         </tr>
       </thead>
       <tbody>
@@ -3207,12 +3254,16 @@ function renderHistoryInlineDetail(item) {
   const contentNames = historyContentNames(item);
   const targets = historyTargets(item);
   const adminMessage = (item.type === 'settlement' || item.type === 'performance') ? String(item.adminMessage || '').trim() : '';
+  const ownerNotifications = historyOwnerNotifications(item);
   const contentListHtml = contentNames.length
     ? `<div class="history-content-tags">${contentNames.map(name => `<span class="history-content-tag" title="${escapeHtml(name)}">${escapeHtml(name)}</span>`).join('')}</div>`
     : '<span class="muted-copy">발송한 콘텐츠가 없습니다</span>';
   const targetListHtml = targets.length
     ? renderHistoryRecipientTable(targets, item.type)
     : '<div class="recipient-empty">발송한 플랫폼사가 없습니다</div>';
+  const ownerNotificationHtml = ownerNotifications.length
+    ? renderOwnerNotificationTable(ownerNotifications)
+    : '<div class="recipient-empty">제작사 알림 발송 내역이 없습니다</div>';
   return `
     <div class="history-inline-detail">
       <div class="history-inline-grid">
@@ -3222,7 +3273,45 @@ function renderHistoryInlineDetail(item) {
           <div class="review-row review-row-dual"><span class="review-key">관리자</span><span class="review-val">${escapeHtml(historySenderName(item))}</span><span class="review-key">발송 일시</span><span class="review-val">${escapeHtml(historySentAt(item))}</span></div>
           ${adminMessage ? `<div class="review-row"><span class="review-key">관리자 메시지</span><span class="review-val multiline">${escapeHtml(adminMessage)}</span></div>` : ''}
           <div class="review-row"><span class="review-key">수신 상세</span><span class="review-val"><div class="history-target-list">${targetListHtml}</div></span></div>
+          ${ownerNotifications.length ? `<div class="review-row"><span class="review-key with-tooltip">제작사 알림 <span class="review-help" data-tooltip="플랫폼사에 제안 메일이 발송될 때, 해당 콘텐츠의 제작사에게도 자동으로 발송되는 홍보 알림 메일입니다.">?</span></span><span class="review-val"><div class="history-target-list">${ownerNotificationHtml}</div></span></div>` : ''}
         </div>
+      </div>
+    </div>
+  `;
+}
+
+function historyOwnerNotifications(item) {
+  if (item.type !== 'content' && item.type !== 'collaboration') return [];
+  if (Array.isArray(item.ownerNotifications) && item.ownerNotifications.length) return item.ownerNotifications;
+  if (!item.company || /^\d+개/.test(String(item.company))) return [];
+  return [{
+    ...ownerContactForCompany(item.company),
+    opened: false,
+    openedAt: null,
+  }];
+}
+
+function renderOwnerNotificationTable(notifications) {
+  const rows = notifications.map(notification => `
+    <div class="owner-notice-row">
+      <div class="owner-notice-cell">${escapeHtml(notification.companyName || '-')}</div>
+      <div class="owner-notice-cell">${escapeHtml(notification.name || '-')}</div>
+      <div class="owner-notice-cell" title="${escapeHtml(notification.email || '-')}">${escapeHtml(notification.email || '-')}</div>
+      <div class="owner-notice-cell recipient-status-cell">${renderOpenedStatus(notification.opened)}</div>
+      <div class="owner-notice-cell">${escapeHtml(notification.opened ? (formatMailDateTime(notification.openedAt) || '-') : '-')}</div>
+    </div>
+  `).join('');
+  return `
+    <div class="history-target-card">
+      <div class="recipient-table">
+        <div class="owner-notice-row head">
+          <div class="owner-notice-cell">제작사명</div>
+          <div class="owner-notice-cell">수신자</div>
+          <div class="owner-notice-cell">이메일</div>
+          <div class="owner-notice-cell">열람 여부</div>
+          <div class="owner-notice-cell">열람 일시</div>
+        </div>
+        ${rows}
       </div>
     </div>
   `;
