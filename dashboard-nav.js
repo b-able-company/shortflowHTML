@@ -9,7 +9,6 @@
   const primaryNavItems = [
     { id: 'content', label: '콘텐츠', href: 'content-list.html', role: 'platform' },
     { id: 'platform-collab', label: '제작협업', href: 'platform-collaboration.html', role: 'platform' },
-    { id: 'concierge', label: '컨시어지', href: 'concierge.html', role: 'platform' },
     { id: 'platform-dashboard', label: '대시보드', href: 'shortflow-dashboard.html', aliases: ['dashboard'], role: 'platform' },
     { id: 'my-content', label: '콘텐츠 관리', href: 'contentlist-prod.html', role: 'producer' },
     { id: 'producer-dashboard', label: '대시보드', href: 'producer-dashboard.html', role: 'producer' },

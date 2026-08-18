@@ -48,6 +48,39 @@
     return '';
   }
 
+  function workflowHasNewUpdate(item) {
+    return item && item.hasWorkflowUpdate;
+  }
+
+  function producerWorkflowListMeta(item) {
+    return `${workflowSummary(item, true)} | ${item.statusLabel || item.status}`;
+  }
+
+  function platformWorkflowKind(item) {
+    return item && item.workflowType ? item.workflowType : '단일';
+  }
+
+  function platformStatusLabel(itemOrStatus) {
+    const status = typeof itemOrStatus === 'string'
+      ? itemOrStatus
+      : itemOrStatus ? (itemOrStatus.statusLabel || itemOrStatus.status || '') : '';
+    const workflowType = typeof itemOrStatus === 'string' ? '단일' : platformWorkflowKind(itemOrStatus);
+    const isConcierge = workflowType === '컨시어지' || workflowType === '턴키';
+    const labels = {
+      INQUIRY_SENT: isConcierge ? '컨시어지 의뢰 전달' : '구매의사 전달',
+      CONFIRM_SENT: isConcierge ? '관리자 추천안 회신' : workflowType === '묶음' ? '관리자 묶음 조건 회신' : '관리자 조건 회신',
+      CONFIRM_ACKNOWLEDGED: '컨펌 확인',
+      METADATA_GRANTED: '메타데이터 권한 열림',
+      CLOSED: '워크플로우 종료',
+    };
+    return labels[status] || status;
+  }
+
+  function platformWorkflowListMeta(item) {
+    const workflowType = platformWorkflowKind(item);
+    return `${workflowType} | ${platformStatusLabel(item)}`;
+  }
+
   const producerMaterialGroups = [
     {
       title: '영상',
@@ -142,14 +175,642 @@
     `;
   }
 
-  const timelineItems = [
-    { title: '메타데이터 다운로드가 완료되었습니다.', date: '2026년 4월 22일 오후 01:43', active: true },
-    { title: '메타데이터 다운로드가 완료되었습니다.', date: '2026년 4월 21일 오전 10:11' },
-    { title: '메타데이터 권한이 부여되었습니다.', date: '2026년 4월 21일 오전 10:10' },
-    { title: '제안 조건을 승인했습니다.', date: '2026년 4월 21일 오전 10:10' },
-    { title: '제안 조건이 수신되었습니다.', date: '2026년 4월 21일 오전 10:09' },
-    { title: '유통 제안이 접수되었습니다.', date: '2026년 4월 21일 오전 10:06' },
-  ];
+  const platformTimelineOffsets = {
+    w1: ['2026년 5월 20일 오후 02:18'],
+    w2: ['2026년 5월 19일 오후 06:12', '2026년 5월 19일 오후 03:44', '2026년 5월 19일 오전 11:20'],
+    w3: ['2026년 5월 19일 오후 01:08'],
+    w4: ['2026년 5월 19일 오전 10:42'],
+    w5: ['2026년 5월 18일 오후 05:16', '2026년 5월 18일 오후 01:35'],
+    w6: ['2026년 5월 18일 오후 07:40', '2026년 5월 18일 오후 05:21', '2026년 5월 18일 오후 02:10', '2026년 5월 18일 오전 10:05'],
+    w7: ['2026년 5월 18일 오후 06:55', '2026년 5월 18일 오후 04:18', '2026년 5월 18일 오후 01:02', '2026년 5월 17일 오후 05:33'],
+    w8: ['2026년 5월 17일 오후 04:45', '2026년 5월 17일 오후 01:21', '2026년 5월 16일 오후 06:04'],
+    w9: ['2026년 5월 16일 오후 03:12', '2026년 5월 16일 오전 11:38'],
+    w10: ['2026년 5월 15일 오후 07:30', '2026년 5월 15일 오후 05:14', '2026년 5월 15일 오후 02:42', '2026년 5월 15일 오전 11:08', '2026년 5월 14일 오후 04:27'],
+  };
+
+  function platformWorkflowStage(item) {
+    const status = item.statusLabel || item.status || '';
+    return ['INQUIRY_SENT', 'CONFIRM_SENT', 'CONFIRM_ACKNOWLEDGED', 'METADATA_GRANTED', 'CLOSED'].includes(status)
+      ? status
+      : 'INQUIRY_SENT';
+  }
+
+  function platformTimelineForItem(item) {
+    const workflowType = platformWorkflowKind(item);
+    const isBundle = workflowType === '묶음';
+    const isConcierge = workflowType === '컨시어지' || workflowType === '턴키';
+    const stageOrder = ['INQUIRY_SENT', 'CONFIRM_SENT', 'CONFIRM_ACKNOWLEDGED', 'METADATA_GRANTED', 'CLOSED'];
+    const stageIndex = stageOrder.indexOf(platformWorkflowStage(item));
+    const dates = platformTimelineOffsets[item.id] || [item.date];
+    const steps = [
+      { key: 'INQUIRY_SENT', title: isConcierge ? '컨시어지 의뢰를 보냈습니다.' : isBundle ? '묶음 구매의사를 보냈습니다.' : '단일 구매의사를 보냈습니다.' },
+      { key: 'CONFIRM_SENT', title: isConcierge ? '관리자가 확정 콘텐츠와 조건을 회신했습니다.' : isBundle ? '관리자가 묶음 조건을 회신했습니다.' : '관리자가 조건을 회신했습니다.' },
+      { key: 'CONFIRM_ACKNOWLEDGED', title: '플랫폼이 컨펌 내용을 확인했습니다.' },
+      { key: 'METADATA_GRANTED', title: isBundle || isConcierge ? '확정 콘텐츠 메타데이터 권한이 열렸습니다.' : '콘텐츠 메타데이터 권한이 열렸습니다.' },
+      { key: 'CLOSED', title: '워크플로우가 종료되었습니다.' },
+    ];
+
+    return steps
+      .slice(0, stageIndex + 1)
+      .reverse()
+      .map((step, index) => ({
+        key: step.key,
+        title: step.title,
+        date: dates[index] || item.date,
+        active: index === 0,
+        detail: step.detail,
+      }));
+  }
+
+  function platformProposalForItem(item) {
+    const proposals = {
+      w2: {
+        price: 'USD 30,000',
+        settlementMethod: 'RS',
+        rsRatio: '30%',
+        distributionType: '비독점',
+        region: '중국 제외 글로벌',
+        term: '2026.05.01 - 2028.04.30',
+        message: '글로벌 숏폼 플랫폼 편성을 검토 중입니다. 로맨스 장르 메인 슬롯에 맞춰 우선 제안드립니다.',
+      },
+      w3: {
+        price: 'MG USD 22,000',
+        settlementMethod: 'MG + RS',
+        rsRatio: '25%',
+        distributionType: '독점',
+        region: '중국·태국 제외 글로벌',
+        term: '계약일로부터 2년',
+        message: '초반 화제성과 여성향 타깃 반응이 좋아 독점 선공개 조건으로 협의하고 싶습니다.',
+      },
+      w4: {
+        price: 'USD 18,000',
+        settlementMethod: 'Flat Fee',
+        distributionType: '비독점',
+        region: '일본 제외 글로벌',
+        term: '2026.07.15 - 2027.07.14',
+        message: '액션 장르 특집 편성 후보로 검토 중입니다. 메타데이터 확인 후 세부 조건 조율 가능합니다.',
+      },
+      w5: {
+        price: 'USD 12,000',
+        settlementMethod: 'RS',
+        rsRatio: '35%',
+        distributionType: '비독점',
+        region: '기타 지정 지역',
+        term: '계약일로부터 1년',
+        message: '스릴러 코미디 라인업 보강 목적으로 제안드립니다. 시즌형 후속 협의도 열어두고 있습니다.',
+      },
+      w7: {
+        price: 'MG USD 16,500',
+        settlementMethod: 'MG + RS',
+        rsRatio: '28%',
+        distributionType: '독점',
+        region: '중국 제외 글로벌',
+        term: '2026.08.01 - 2027.07.31',
+        message: 'SF 로맨스 카테고리 신규 캠페인에 적합해 보입니다. 자막 제공 범위 확인 부탁드립니다.',
+      },
+      w10: {
+        price: 'USD 32,000',
+        settlementMethod: 'RS',
+        rsRatio: '30%',
+        distributionType: '비독점',
+        region: '중국 제외 글로벌',
+        term: '계약일로부터 1년',
+        message: '청춘 로맨스와 오피스 로맨스를 묶어 주말 편성 패키지로 제안드립니다.',
+      },
+    };
+
+    return proposals[item.id] || {
+      price: 'USD 20,000',
+      settlementMethod: 'RS',
+      rsRatio: '30%',
+      distributionType: '비독점',
+      region: '중국 제외 글로벌',
+      term: '계약일로부터 1년',
+      message: '콘텐츠 특성과 플랫폼 편성 방향이 잘 맞아 유통 제안을 전달드립니다.',
+    };
+  }
+
+  function platformAdminConditionOverride(item) {
+    const overrides = {
+      w2: {
+        single: {
+          price: 'USD 28,000',
+          rsRatio: '32%',
+          region: '중국·일본 제외 글로벌',
+          term: '2026.06.01 - 2028.05.31',
+        },
+      },
+      w6: {
+        single: {
+          price: 'MG USD 18,000',
+          settlementMethod: 'MG + RS',
+          rsRatio: '24%',
+          distributionType: '독점',
+          term: '2026.07.01 - 2028.06.30',
+        },
+      },
+      w10: {
+        bundle: {
+          bundleAmount: 'USD 35,000',
+          regionTermSummary: '중국 제외 글로벌 · 2026.06.01 - 2027.05.31',
+          confirmedContents: [
+            { title: '첫사랑 리셋 버튼', price: 'USD 11,000', distributionType: '비독점', settlementMethod: 'Flat Fee', rsRatio: '-' },
+            { title: '비밀 사내 결혼', price: 'USD 24,000', distributionType: '비독점', settlementMethod: 'RS', rsRatio: '32%' },
+          ],
+        },
+      },
+    };
+
+    return overrides[item.id] || {};
+  }
+
+  function platformSentContentsForItem(item) {
+    const sentContents = {
+      w10: [
+        { title: '첫사랑 리셋 버튼', price: 'USD 10,000', distributionType: '비독점', settlementMethod: 'Flat Fee', rsRatio: '-' },
+        { title: '비밀 사내 결혼', price: 'USD 22,000', distributionType: '비독점', settlementMethod: 'RS', rsRatio: '30%' },
+      ],
+      w5: [
+        { title: '우리 집에 킬러가 산다', price: 'USD 12,000', distributionType: '비독점', settlementMethod: 'RS', rsRatio: '35%' },
+        { title: '남편이 AI입니다', price: 'MG USD 15,000', distributionType: '비독점', settlementMethod: 'MG + RS', rsRatio: '25%' },
+      ],
+      w4: [
+        { title: '죽었다가 회귀한 톱스타', price: 'USD 18,000', distributionType: '비독점', settlementMethod: 'Flat Fee', rsRatio: '-' },
+        { title: '우리 집에 킬러가 산다', price: 'USD 12,000', distributionType: '비독점', settlementMethod: 'RS', rsRatio: '35%' },
+        { title: '오늘부터 악녀 대행합니다', price: 'MG USD 14,000', distributionType: '비독점', settlementMethod: 'MG + RS', rsRatio: '22%' },
+      ],
+    };
+
+    return sentContents[item.id] || platformConfirmedContents(item);
+  }
+
+  function renderPlatformProposalPanel(item) {
+    const proposal = platformProposalForItem(item);
+    const workflowType = platformWorkflowKind(item);
+    const sentContents = platformSentContentsForItem(item);
+    const splitProposalPrice = (value) => {
+      const text = String(value || '').trim();
+      const amount = text.match(/[\d,]+(?:\.\d+)?/)?.[0] || '-';
+      const currency = text.replace(amount, '').trim() || '-';
+      return { currency, amount };
+    };
+    const priceParts = splitProposalPrice(proposal.price);
+    const renderBundleContentSection = () => workflowType === '묶음' ? `
+      <div class="workflow-condition-section">
+        <h4>콘텐츠</h4>
+        <div class="workflow-confirmed-contents workflow-bundle-contents">
+          <table>
+            <thead>
+              <tr>
+                <th>콘텐츠명</th>
+                <th>가격</th>
+                <th>유통 방식</th>
+                <th>정산 방식</th>
+                <th>RS 비율</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${sentContents.map(content => `
+                <tr>
+                  <td>${escapeHtml(content.title)}</td>
+                  <td>${escapeHtml(content.price)}</td>
+                  <td>${escapeHtml(content.distributionType)}</td>
+                  <td>${escapeHtml(content.settlementMethod)}</td>
+                  <td>${escapeHtml(content.rsRatio || '-')}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    ` : '';
+    const renderProposalConditionSections = (messageTitle = '메세지') => `
+      ${renderBundleContentSection()}
+      <div class="workflow-condition-section">
+        <h4>유통 조건</h4>
+        <table class="workflow-proposal-table workflow-proposal-table-paired">
+          <tbody>
+            <tr>
+              <th>유통방식</th>
+              <td>${escapeHtml(proposal.distributionType)}</td>
+              <th>릴리즈기간</th>
+              <td>${escapeHtml(proposal.term)}</td>
+            </tr>
+            <tr>
+              <th>릴리즈지역</th>
+              <td colspan="3">${escapeHtml(proposal.region)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="workflow-condition-section">
+        <h4>정산 조건</h4>
+        <table class="workflow-proposal-table workflow-proposal-table-paired">
+          <tbody>
+            <tr>
+              <th>정산타입</th>
+              <td>${escapeHtml(proposal.settlementMethod)}</td>
+              <th>RS비율</th>
+              <td>${escapeHtml(proposal.rsRatio || '-')}</td>
+            </tr>
+            <tr>
+              <th>통화</th>
+              <td>${escapeHtml(priceParts.currency)}</td>
+              <th>금액</th>
+              <td>${escapeHtml(priceParts.amount)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="workflow-condition-section">
+        <h4>${escapeHtml(messageTitle)}</h4>
+        <table class="workflow-proposal-table">
+          <tbody>
+            <tr>
+              <td class="workflow-table-message">${escapeHtml(proposal.message)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    `;
+
+    if (workflowType === '단일') {
+      return `
+        <div class="workflow-proposal-panel">
+          <section class="workflow-proposal-card">
+            ${renderProposalConditionSections()}
+          </section>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="workflow-proposal-panel">
+        <section class="workflow-proposal-card">
+          ${renderProposalConditionSections()}
+        </section>
+      </div>
+    `;
+  }
+
+  function platformConfirmedContents(item) {
+    if (Array.isArray(item.confirmedContents) && item.confirmedContents.length) {
+      return item.confirmedContents;
+    }
+
+    const proposal = platformProposalForItem(item);
+    return [{
+      title: item.title,
+      price: proposal.price,
+      distributionType: proposal.distributionType,
+      settlementMethod: proposal.settlementMethod,
+      rsRatio: proposal.rsRatio || '-',
+    }];
+  }
+
+  function isTurnkeyWorkflow(item) {
+    return item && item.workflowType === '턴키';
+  }
+
+  function isTurnkeyConfirmed(item) {
+    const status = item ? (item.statusLabel || item.status || '') : '';
+    return ['CONFIRM_SENT', 'CONFIRM_ACKNOWLEDGED', 'METADATA_GRANTED', 'CLOSED'].includes(status);
+  }
+
+  function bundledTitle(contents, fallbackTitle) {
+    if (contents.length > 1) return `${contents[0].title} 외 ${contents.length - 1}개`;
+    return contents[0]?.title || fallbackTitle;
+  }
+
+  function platformDetailTitle(item, isProducer, isUnconfirmedPlatformItem) {
+    if (isProducer) return item.title;
+    const contents = platformConfirmedContents(item);
+    if (item.workflowType === '묶음' || item.workflowType === '컨시어지') return bundledTitle(contents, item.title);
+    if (isTurnkeyWorkflow(item)) return isTurnkeyConfirmed(item) ? bundledTitle(contents, item.title) : '턴키 구매 의사';
+    return isUnconfirmedPlatformItem ? '콘텐츠 미확정' : item.title;
+  }
+
+  function platformReceivedConditionForItem(item) {
+    const proposal = platformProposalForItem(item);
+    const contents = platformConfirmedContents(item);
+    const override = platformAdminConditionOverride(item);
+    const splitPrice = (value) => {
+      const text = String(value || '').trim();
+      const amount = text.match(/[\d,]+(?:\.\d+)?/)?.[0] || '-';
+      const currency = text.replace(amount, '').trim() || '-';
+      return {
+        currency,
+        amount,
+      };
+    };
+    const priceParts = splitPrice(proposal.price);
+    const singleConditions = {
+      title: item.title,
+      episodes: (item.sub || '').match(/(\d+화)/)?.[1] || '80화',
+      runningTime: '회당 2분 내외',
+      currency: priceParts.currency,
+      amount: priceParts.amount,
+      price: proposal.price,
+      rsRatio: proposal.rsRatio || '-',
+      distributionType: proposal.distributionType,
+      settlementMethod: proposal.settlementMethod,
+      region: proposal.region,
+      term: proposal.term,
+      releaseDate: '2026.10.12',
+      adminMessage: '검토 후 조정된 조건으로 제안드립니다. 확인 후 회신 부탁드립니다.',
+      ...(override.single || {}),
+    };
+    const overridePriceParts = splitPrice(singleConditions.price);
+    singleConditions.currency = singleConditions.currency === priceParts.currency ? overridePriceParts.currency : singleConditions.currency;
+    singleConditions.amount = singleConditions.amount === priceParts.amount ? overridePriceParts.amount : singleConditions.amount;
+
+    const bundleTotal = contents.reduce((total, content) => {
+      const amount = String(content.price || '').match(/[\d,]+/)?.[0];
+      return total + (amount ? Number(amount.replace(/,/g, '')) : 0);
+    }, 0);
+
+    const bundleConditions = {
+        bundleAmount: bundleTotal ? `USD ${bundleTotal.toLocaleString('en-US')}` : proposal.price,
+        licenseRights: item.workflowType === '컨시어지' ? '컨시어지 추천 패키지 유통권' : '번들 패키지 유통권',
+        regionTermSummary: `${proposal.region} · ${proposal.term}`,
+        confirmedContents: contents,
+        ...(override.bundle || {}),
+      };
+
+    return {
+      single: singleConditions,
+      bundle: bundleConditions,
+    };
+  }
+
+  function diffValue(value) {
+    return value || '-';
+  }
+
+  function renderDiffRows(rows) {
+    return rows.map(row => {
+      const sent = diffValue(row.sent);
+      const received = diffValue(row.received);
+      const changed = sent !== received;
+      return `
+        <tr class="${changed ? 'is-changed' : ''}">
+          <th>${escapeHtml(row.label)}</th>
+          <td>${escapeHtml(sent)}</td>
+          <td>${escapeHtml(received)}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function renderPlatformConditionDiffPanel(item) {
+    const workflowType = platformWorkflowKind(item);
+    if (workflowType === '컨시어지' || workflowType === '턴키') return '';
+
+    const proposal = platformProposalForItem(item);
+    const condition = platformReceivedConditionForItem(item);
+    const rows = workflowType === '단일'
+      ? [
+          { label: '가격', sent: proposal.price, received: condition.single.price },
+          { label: '유통 방식', sent: proposal.distributionType, received: condition.single.distributionType },
+          { label: '정산 방식', sent: proposal.settlementMethod, received: condition.single.settlementMethod },
+          { label: 'RS 비율', sent: proposal.rsRatio || '-', received: condition.single.rsRatio },
+          { label: '유통 지역', sent: proposal.region, received: condition.single.region },
+          { label: '유통 기간', sent: proposal.term, received: condition.single.term },
+        ]
+      : [
+          { label: '번들 총액', sent: proposal.price, received: condition.bundle.bundleAmount },
+          { label: '유통 지역·기간', sent: `${proposal.region} · ${proposal.term}`, received: condition.bundle.regionTermSummary },
+          ...condition.bundle.confirmedContents.flatMap((content, index) => {
+            const sentContent = platformSentContentsForItem(item)[index] || {};
+            const labelPrefix = content.title;
+            return [
+              { label: `${labelPrefix} · 가격`, sent: sentContent.price, received: content.price },
+              { label: `${labelPrefix} · 정산 방식`, sent: sentContent.settlementMethod, received: content.settlementMethod },
+              { label: `${labelPrefix} · RS 비율`, sent: sentContent.rsRatio || '-', received: content.rsRatio || '-' },
+            ];
+          }),
+        ];
+
+    return `
+      <section class="workflow-proposal-card workflow-diff-card">
+        <h3>조건 변경 비교</h3>
+        <table class="workflow-proposal-table workflow-diff-table">
+          <thead>
+            <tr>
+              <th>항목</th>
+              <th>보낸 제안</th>
+              <th>관리자 제안</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${renderDiffRows(rows)}
+          </tbody>
+        </table>
+      </section>
+    `;
+  }
+
+  function renderPlatformReceivedConditionPanel(item) {
+    const isSingle = (item.workflowType || '단일') === '단일';
+    const condition = platformReceivedConditionForItem(item);
+    const renderReceivedConditionTable = (single) => {
+      const distributionRows = [
+        ['회차수', single.episodes, '러닝타임', single.runningTime],
+        ['유통방식', single.distributionType, '릴리즈기간', single.term],
+        ['릴리즈지역', single.region, '릴리즈 예상 날짜', single.releaseDate],
+      ];
+      const settlementRows = [
+        ['정산타입', single.settlementMethod, 'RS비율', single.rsRatio],
+        ['통화', single.currency, '금액', single.amount],
+      ];
+      const renderPairedTable = (rows) => `
+        <table class="workflow-proposal-table workflow-proposal-table-paired">
+          <tbody>
+            ${rows.map(([leftLabel, leftValue, rightLabel, rightValue]) => `
+              <tr>
+                <th>${escapeHtml(leftLabel)}</th>
+                <td>${escapeHtml(leftValue)}</td>
+                <th>${escapeHtml(rightLabel)}</th>
+                <td>${escapeHtml(rightValue)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+
+      return `
+        <div class="workflow-condition-section">
+          <h4>유통 조건</h4>
+          ${renderPairedTable(distributionRows)}
+        </div>
+        <div class="workflow-condition-section">
+          <h4>정산 조건</h4>
+          ${renderPairedTable(settlementRows)}
+        </div>
+        <div class="workflow-condition-section">
+          <h4>관리자 메세지</h4>
+          <table class="workflow-proposal-table">
+            <tbody>
+              <tr>
+                <td class="workflow-table-message">${escapeHtml(single.adminMessage)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+    };
+
+    if (isSingle) {
+      return `
+        <div class="workflow-proposal-panel">
+          <section class="workflow-proposal-card">
+            ${renderReceivedConditionTable(condition.single)}
+          </section>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="workflow-proposal-panel">
+        <section class="workflow-proposal-card">
+          ${renderReceivedConditionTable(condition.single)}
+          <div class="workflow-confirmed-contents">
+            <h4>확정 콘텐츠</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>콘텐츠명</th>
+                  <th>가격</th>
+                  <th>유통 방식</th>
+                  <th>정산 방식</th>
+                  <th>RS 비율</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${condition.bundle.confirmedContents.map(content => `
+                  <tr>
+                    <td>${escapeHtml(content.title)}</td>
+                    <td>${escapeHtml(content.price)}</td>
+                    <td>${escapeHtml(content.distributionType)}</td>
+                    <td>${escapeHtml(content.settlementMethod)}</td>
+                    <td>${escapeHtml(content.rsRatio || '-')}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    `;
+  }
+
+  function renderPlatformDetailPanel(item, detailMode) {
+    if (detailMode === 'received-condition') return renderPlatformReceivedConditionPanel(item);
+    return renderPlatformProposalPanel(item);
+  }
+
+  function normalizePlatformStageMode(item, detailMode) {
+    const availableStages = platformTimelineForItem(item).map(step => step.key);
+    return availableStages.includes(detailMode) ? detailMode : platformWorkflowStage(item);
+  }
+
+  function renderPlatformAckPanel(item) {
+    return `
+      <div class="workflow-proposal-panel">
+        ${renderPlatformConditionDiffPanel(item)}
+      </div>
+    `;
+  }
+
+  function renderPlatformMetadataPanel(item) {
+    const metadataUrl = item.metadataUrl || item.driveUrl || '#';
+    return `
+      <div class="workflow-proposal-panel">
+        <section class="workflow-proposal-card">
+          <a class="workflow-metadata-download" href="${escapeHtml(metadataUrl)}" ${metadataUrl === '#' ? '' : 'target="_blank" rel="noopener noreferrer"'}>
+            메타데이터 다운로드
+          </a>
+        </section>
+      </div>
+    `;
+  }
+
+  function renderPlatformClosedPanel(item) {
+    return `
+      <div class="workflow-proposal-panel">
+        <section class="workflow-proposal-card">
+          <h3>종료 요약</h3>
+          <table class="workflow-proposal-table">
+            <tbody>
+              <tr>
+                <th>상태</th>
+                <td>워크플로우 종료</td>
+              </tr>
+              <tr>
+                <th>대상</th>
+                <td>${escapeHtml(platformDetailTitle(item, false, item.id === 'w1'))}</td>
+              </tr>
+              <tr>
+                <th>종료 일시</th>
+                <td>${escapeHtml(platformTimelineForItem(item)[0]?.date || item.date)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    `;
+  }
+
+  function renderPlatformStageDetail(item, stageKey) {
+    if (stageKey === 'CONFIRM_SENT') return renderPlatformReceivedConditionPanel(item);
+    if (stageKey === 'CONFIRM_ACKNOWLEDGED') return renderPlatformAckPanel(item);
+    if (stageKey === 'METADATA_GRANTED') return renderPlatformMetadataPanel(item);
+    if (stageKey === 'CLOSED') return renderPlatformClosedPanel(item);
+    return renderPlatformProposalPanel(item);
+  }
+
+  function renderPlatformWorkflowDetailBody(item, detailMode) {
+    const selectedStage = normalizePlatformStageMode(item, detailMode);
+    const timeline = platformTimelineForItem(item);
+
+    return `
+      <div class="platform-workflow-stage-layout">
+        <div class="timeline-panel platform-timeline-panel">
+          <h3>진행 타임라인</h3>
+          <ol class="timeline-list platform-timeline-list">
+            ${timeline.map(step => `
+              <li class="${step.active ? 'active' : ''} ${step.key === selectedStage ? 'selected' : ''}">
+                <span class="timeline-selection-bg" aria-hidden="true"></span>
+                <button type="button" data-platform-workflow-stage="${escapeHtml(step.key)}">
+                  <strong>${escapeHtml(step.title)}</strong>
+                  <time>${escapeHtml(step.date)}</time>
+                </button>
+              </li>
+            `).join('')}
+          </ol>
+        </div>
+        <div class="platform-stage-detail" data-platform-workflow-stage-detail>
+          ${renderPlatformStageDetail(item, selectedStage)}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderTimelinePanel(isProducer, detailTimeline) {
+    return `
+      <div class="timeline-panel">
+        <h3>${isProducer ? '상태 변경 이력' : '진행 타임라인'}</h3>
+        <ol class="timeline-list">
+          ${detailTimeline.map(step => `
+            <li class="${step.active ? 'active' : ''}">
+              <strong>${escapeHtml(step.title)}</strong>
+              <time>${escapeHtml(step.date)}</time>
+            </li>
+          `).join('')}
+        </ol>
+      </div>
+    `;
+  }
 
   const producerTimelineByStatus = {
     PRODUCTION_CONTENT_SUBMITTED: [
@@ -219,11 +880,11 @@
             <span class="workflow-copy">
               <span class="workflow-title-row">
                 <strong>${escapeHtml(item.title)}</strong>
-                <small class="${workflowStatusClass(item)}">${escapeHtml(item.statusLabel || item.status)}</small>
+                ${workflowHasNewUpdate(item) ? '<span class="workflow-new-badge" aria-label="상태 변경 이력 업데이트">N</span>' : ''}
               </span>
-              ${isProducer && workflowSummary(item, isProducer)
-                ? `<em>${escapeHtml(workflowSummary(item, isProducer))}</em>`
-                : !isProducer && item.englishTitle ? `<em>${escapeHtml(item.englishTitle)}</em>` : ''}
+              ${isProducer
+                ? `<em>${escapeHtml(producerWorkflowListMeta(item))}</em>`
+                : `<em>${escapeHtml(platformWorkflowListMeta(item))}</em>`}
               <span class="workflow-meta">
                 <time>${escapeHtml(item.date)}</time>
               </span>
@@ -245,19 +906,15 @@
     }
 
     const isUnconfirmedPlatformItem = !isProducer && item.id === 'w1';
-    const title = isUnconfirmedPlatformItem ? '콘텐츠 미확정' : item.title;
-    const subtitle = isUnconfirmedPlatformItem ? '' : (isProducer ? workflowSummary(item, isProducer) : item.englishTitle);
-    const subtitleHtml = isUnconfirmedPlatformItem
-      ? '<p class="detail-subtitle-placeholder" aria-hidden="true">&nbsp;</p>'
-      : subtitle ? `<p>${escapeHtml(subtitle)}</p>` : '';
-    const status = isUnconfirmedPlatformItem ? '메타데이터 전달됨' : (item.statusLabel || item.status);
-    const statusClass = workflowStatusClass(item);
+    const title = platformDetailTitle(item, isProducer, isUnconfirmedPlatformItem);
+    const subtitle = isProducer ? producerWorkflowListMeta(item) : platformWorkflowListMeta(item);
+    const subtitleHtml = subtitle ? `<p>${escapeHtml(subtitle)}</p>` : '';
     const materialUploadEvents = isProducer && state.materialUploadEvents && state.materialUploadEvents[item.id]
       ? state.materialUploadEvents[item.id]
       : [];
     const baseTimeline = isProducer
       ? (item.timeline || producerTimelineForItem(item)).map(step => ({ ...step, date: step.date || item.date }))
-      : timelineItems;
+      : platformTimelineForItem(item);
     const detailTimeline = materialUploadEvents.length
       ? [
           ...materialUploadEvents.map((step, index) => ({ ...step, active: index === 0 })),
@@ -266,6 +923,7 @@
       : baseTimeline;
     const showGoogleDrive = isProducer && item.status !== 'PRODUCTION_CONTENT_SUBMITTED' && item.driveUrl;
     const showMaterials = isProducer && detailMode === 'materials';
+    const platformDetailMode = isProducer ? '' : platformWorkflowStage(item);
     const detailUrl = item.detailUrl || `my-content-detail.html?title=${encodeURIComponent(item.title)}`;
 
     return `
@@ -275,7 +933,6 @@
           <div class="detail-copy">
             <div class="detail-copy-top">
               <div class="detail-copy-main">
-                <span class="detail-status ${statusClass}">${escapeHtml(status)}</span>
                 <h2>${escapeHtml(title)}</h2>
                 ${subtitleHtml}
               </div>
@@ -305,29 +962,12 @@
                 <button class="${!showMaterials ? 'active' : ''}" type="button" data-workflow-detail-mode="timeline">워크플로우</button>
                 ${showGoogleDrive ? `<button class="${showMaterials ? 'active' : ''}" type="button" data-workflow-detail-mode="materials">구글 드라이브</button>` : ''}
               </div>
-            ` : `
-              <div class="detail-actions">
-                <button>보낸 유통 제안 보기</button>
-                <button>받은 제안 조건 확인</button>
-                <button>↔ 비교</button>
-                <button>↓ 메타데이터 다운로드</button>
-              </div>
-            `}
+            ` : ''}
           </div>
         </div>
-        ${showMaterials ? renderProducerMaterialsPanel(item) : `
-          <div class="timeline-panel">
-            <h3>${isProducer ? '상태 변경 이력' : '진행 타임라인'}</h3>
-            <ol class="timeline-list">
-              ${detailTimeline.map(step => `
-                <li class="${step.active ? 'active' : ''}">
-                  <strong>${escapeHtml(step.title)}</strong>
-                  <time>${escapeHtml(step.date)}</time>
-                </li>
-              `).join('')}
-            </ol>
-          </div>
-        `}
+        ${!isProducer
+          ? `<div data-platform-workflow-detail-body>${renderPlatformWorkflowDetailBody(item, platformDetailMode)}</div>`
+          : showMaterials ? renderProducerMaterialsPanel(item) : renderTimelinePanel(isProducer, detailTimeline)}
       </section>
     `;
   }
@@ -350,5 +990,5 @@
     `;
   }
 
-  window.ShortflowWorkflow = { renderWorkflowView };
+  window.ShortflowWorkflow = { renderWorkflowView, renderPlatformWorkflowDetailBody, renderPlatformStageDetail };
 })();

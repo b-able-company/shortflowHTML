@@ -1446,7 +1446,7 @@ function ContentDetailPageD(_ref20) {
     style: {
       margin: '0 auto',
       padding: '32px 40px 140px',
-      maxWidth: 1140
+      maxWidth: 1290
     }
   }, /*#__PURE__*/React.createElement("button", {
     style: {
@@ -1507,7 +1507,7 @@ function ContentDetailPage(_ref21) {
     style: {
       margin: '0 auto',
       padding: '32px 40px 140px',
-      maxWidth: 1140
+      maxWidth: 1290
     }
   }, /*#__PURE__*/React.createElement("button", {
     style: {

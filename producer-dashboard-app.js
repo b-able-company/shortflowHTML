@@ -24,6 +24,14 @@
     });
   }
 
+  function renderPreservingWorkflowScroll() {
+    const workflowList = root.querySelector('.workflow-list');
+    const scrollTop = workflowList ? workflowList.scrollTop : 0;
+    render();
+    const nextWorkflowList = root.querySelector('.workflow-list');
+    if (nextWorkflowList) nextWorkflowList.scrollTop = scrollTop;
+  }
+
   function formatWorkflowTimestamp(date) {
     const hours = date.getHours();
     const period = hours < 12 ? '오전' : '오후';
@@ -46,7 +54,7 @@
       appState.selectedWorkflowId = workflowButton.dataset.workflowId;
       appState.workflowDetailMode = 'timeline';
       window.history.replaceState(null, '', `producer-dashboard.html?tab=workflow&workflow=${encodeURIComponent(appState.selectedWorkflowId)}`);
-      render();
+      renderPreservingWorkflowScroll();
       return;
     }
 

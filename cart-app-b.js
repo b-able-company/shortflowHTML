@@ -539,7 +539,7 @@
     }
 
     if (action === "go-concierge-buy") {
-      window.location.href = "concierge.html#buy";
+      window.location.href = "concierge.html#select";
     }
 
     if (action === "submit-proposal") {

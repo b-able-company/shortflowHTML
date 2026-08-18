@@ -2,9 +2,10 @@
   const root = document.getElementById('app');
   const { appState } = window.ShortflowCommon;
   const { renderShell } = window.ShortflowNav;
-  const { renderWorkflowView } = window.ShortflowWorkflow;
+  const { renderWorkflowView, renderPlatformStageDetail } = window.ShortflowWorkflow;
   const { renderMessagesView } = window.ShortflowMessages;
   const { renderContractsView } = window.ShortflowContracts;
+  const { workflowItems } = window.ShortflowData;
   const dashboardTabs = new Set(['workflow', 'contracts', 'messages']);
   const DEFAULT_INQUIRY_TYPE = '컨시어지판매';
 
@@ -25,6 +26,14 @@
       dashboardKind: 'platform',
       hideFooter: appState.tab === 'workflow' || appState.tab === 'messages',
     });
+  }
+
+  function renderPreservingWorkflowScroll() {
+    const workflowList = root.querySelector('.workflow-list');
+    const scrollTop = workflowList ? workflowList.scrollTop : 0;
+    render();
+    const nextWorkflowList = root.querySelector('.workflow-list');
+    if (nextWorkflowList) nextWorkflowList.scrollTop = scrollTop;
   }
 
   root.addEventListener('click', event => {
@@ -48,7 +57,28 @@
     const workflowButton = event.target.closest('[data-workflow-id]');
     if (workflowButton) {
       appState.selectedWorkflowId = workflowButton.dataset.workflowId;
-      render();
+      appState.workflowDetailMode = '';
+      renderPreservingWorkflowScroll();
+      return;
+    }
+
+    const workflowStageButton = event.target.closest('[data-platform-workflow-stage]');
+    if (workflowStageButton) {
+      const stageKey = workflowStageButton.dataset.platformWorkflowStage;
+      appState.workflowDetailMode = stageKey;
+      const timeline = workflowStageButton.closest('.platform-timeline-list');
+      const detailBody = root.querySelector('[data-platform-workflow-stage-detail]');
+      const selectedWorkflow = workflowItems.find(item => item.id === appState.selectedWorkflowId);
+
+      if (timeline && detailBody && selectedWorkflow) {
+        timeline.querySelectorAll('li').forEach(item => {
+          const button = item.querySelector('[data-platform-workflow-stage]');
+          item.classList.toggle('selected', button && button.dataset.platformWorkflowStage === stageKey);
+        });
+        detailBody.innerHTML = renderPlatformStageDetail(selectedWorkflow, stageKey);
+      } else {
+        render();
+      }
       return;
     }
 

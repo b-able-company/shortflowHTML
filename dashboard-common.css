@@ -15,7 +15,7 @@
   --green-bg: #e6f4e8;
   --dropdown-hover: #f1f1f1;
   --dropdown-active: #ececec;
-  --max: 1140px;
+  --max: 1290px;
   font-family: "Pretendard Variable", "Pretendard", "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
@@ -1186,6 +1186,12 @@ body.onboarding-modal-open {
   font-weight: 500;
 }
 
+.workflow-status-row {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
+
 .workflow-copy em {
   margin-top: 5px;
   overflow: hidden;
@@ -1206,11 +1212,13 @@ body.onboarding-modal-open {
   font-weight: 600;
 }
 
+.workflow-status-row small,
 .workflow-title-row small {
   display: inline-flex;
   flex: 0 0 auto;
 }
 
+.workflow-status-row small.is-review,
 .workflow-title-row small.is-review,
 .detail-status.is-review {
   border-color: #e1e1e1;
@@ -1218,11 +1226,26 @@ body.onboarding-modal-open {
   color: var(--ink);
 }
 
+.workflow-status-row small.is-approved,
 .workflow-title-row small.is-approved,
 .detail-status.is-approved {
   border: 1px solid var(--line);
   background: #fff;
   color: var(--ink);
+}
+
+.workflow-new-badge {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--orange);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
 }
 
 .workflow-meta {
@@ -1316,6 +1339,8 @@ body.onboarding-modal-open {
 }
 
 .workflow-detail {
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   min-height: 540px;
 }
@@ -1334,7 +1359,7 @@ body.onboarding-modal-open {
   display: grid;
   grid-template-columns: 88px minmax(0, 1fr);
   gap: 18px;
-  padding: 20px 24px;
+  padding: 14px 24px;
   border-bottom: 1px solid var(--line-soft);
 }
 
@@ -1347,7 +1372,9 @@ body.onboarding-modal-open {
 
 .detail-copy {
   min-width: 0;
-  padding-top: 2px;
+  min-height: 124px;
+  display: flex;
+  flex-direction: column;
 }
 
 .detail-copy-top {
@@ -1359,6 +1386,7 @@ body.onboarding-modal-open {
 
 .detail-copy-main {
   min-width: 0;
+  padding-top: 4px;
 }
 
 .detail-status {
@@ -1390,6 +1418,7 @@ body.onboarding-modal-open {
   flex: 0 0 auto;
   display: inline-flex;
   gap: 7px;
+  margin-top: 4px;
 }
 
 .detail-external-action {
@@ -1460,39 +1489,39 @@ body.onboarding-modal-open {
   width: fit-content;
   display: inline-flex;
   gap: 0;
-  margin-top: 2px;
-  padding: 2px;
-  border-radius: 999px;
-  background: #f0f0f0;
+  margin-top: auto;
+  padding: 3px;
+  border-radius: 12px;
+  background: #f7f7f7;
 }
 
 .detail-switch-thumb {
   position: absolute;
-  top: 2px;
-  bottom: 2px;
-  left: 2px;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
   width: 88px;
-  border-radius: 999px;
+  border-radius: 10px;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.12);
   transform: translateX(0);
   will-change: transform, width;
   transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1), width 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .detail-switch.is-materials .detail-switch-thumb {
-  width: calc(100% - 92px);
+  width: calc(100% - 94px);
   transform: translateX(88px);
 }
 
 .detail-switch button {
   position: relative;
   z-index: 1;
-  height: 28px;
+  height: 32px;
   min-width: 88px;
-  padding: 0 14px;
+  padding: 0 17px;
   border: 0;
-  border-radius: 999px;
+  border-radius: 10px;
   background: transparent;
   color: var(--ink-muted);
   font-size: 12px;
@@ -1512,24 +1541,339 @@ body.onboarding-modal-open {
   gap: 8px;
 }
 
+.detail-action-switch {
+  --action-thumb-x: 0px;
+  --action-thumb-width: 82px;
+  position: relative;
+  width: fit-content;
+  display: inline-grid;
+  grid-template-columns: 82px 112px 112px 58px 92px;
+  gap: 0;
+  margin-top: auto;
+  padding: 3px;
+  border-radius: 12px;
+  background: #f7f7f7;
+}
+
+.detail-action-switch.is-sent-proposal {
+  --action-thumb-x: 82px;
+  --action-thumb-width: 112px;
+}
+
+.detail-action-switch.is-received-condition {
+  --action-thumb-x: 194px;
+  --action-thumb-width: 112px;
+}
+
+.detail-action-switch-thumb {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: var(--action-thumb-width);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.12);
+  transform: translateX(var(--action-thumb-x));
+  will-change: transform, width;
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1), width 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 .detail-actions button,
 .detail-actions a {
-  height: 30px;
+  position: relative;
+  z-index: 1;
+  height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 10px;
-  border: 1px solid #d7d9de;
-  border-radius: 6px;
-  background: #fff;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink-muted);
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 180ms ease;
+}
+
+.detail-action-switch button.active,
+.detail-action-switch button:hover {
   color: var(--ink);
+}
+
+.timeline-panel {
+  padding: 24px 26px 32px;
+}
+
+.workflow-proposal-panel {
+  padding: 24px 26px 32px;
+}
+
+.workflow-proposal-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.workflow-proposal-card h3::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--ink);
+}
+
+.workflow-condition-section + .workflow-condition-section {
+  margin-top: 16px;
+}
+
+.workflow-condition-section h4 {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 8px;
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.workflow-condition-section h4::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--ink);
+}
+
+.workflow-proposal-table {
+  width: 100%;
+  border: 1px solid #dedbd3;
+  border-radius: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  background: #fff;
+  overflow: hidden;
+  font-size: 12px;
+}
+
+.workflow-proposal-table th,
+.workflow-proposal-table td {
+  height: 42px;
+  padding: 0 16px;
+  border-bottom: 1px solid #eceae5;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.workflow-proposal-table th {
+  width: 140px;
+  border-right: 1px solid #eceae5;
+  background: #fafafa;
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+
+.workflow-proposal-table td {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.workflow-proposal-table-paired th {
+  width: 18%;
+}
+
+.workflow-proposal-table-paired td {
+  width: 32%;
+}
+
+.workflow-proposal-table-paired th:nth-child(3) {
+  border-left: 1px solid #eceae5;
+}
+
+.workflow-proposal-table-paired td[colspan="3"] {
+  width: auto;
+}
+
+.workflow-proposal-table-paired .workflow-table-message {
+  height: auto;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.workflow-proposal-table tr:last-child th,
+.workflow-proposal-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.workflow-proposal-table .workflow-table-message:only-child {
+  border-bottom: 0;
+}
+
+.workflow-diff-card {
+  margin-top: 18px;
+}
+
+.workflow-proposal-panel > .workflow-diff-card:first-child {
+  margin-top: 0;
+}
+
+.workflow-diff-card h3 {
+  margin: 0 0 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.workflow-diff-table th {
+  width: auto;
+}
+
+.workflow-diff-table thead th {
+  height: 38px;
+  border-bottom: 1px solid #eceae5 !important;
+  background: #fafafa;
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+
+.workflow-diff-table thead th:nth-child(2),
+.workflow-diff-table tbody td:first-of-type {
+  border-right: 1px solid #eceae5;
+}
+
+.workflow-diff-table thead th:first-child,
+.workflow-diff-table tbody th {
+  width: 26%;
+}
+
+.workflow-diff-table tbody td {
+  width: 37%;
+}
+
+.workflow-diff-table tbody tr.is-changed td:last-child {
+  color: var(--orange);
+  font-weight: 600;
+}
+
+.workflow-message-box {
+  margin-top: 14px;
+  padding: 15px 16px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #fff;
+}
+
+.workflow-message-box span,
+.workflow-message-box p {
+  display: block;
+}
+
+.workflow-message-box span {
+  margin-bottom: 8px;
+  color: var(--ink-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.workflow-message-box p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+.workflow-metadata-download {
+  min-width: 176px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border: 1px solid #1f1f1f;
+  border-radius: 0;
+  background: #1f1f1f;
+  color: #fff;
   font-size: 12px;
   font-weight: 600;
   text-decoration: none;
 }
 
-.timeline-panel {
-  padding: 24px 26px 32px;
+.workflow-metadata-download:hover {
+  background: #000;
+}
+
+.workflow-confirmed-contents {
+  margin-top: 18px;
+}
+
+.workflow-bundle-contents {
+  margin-top: 0;
+}
+
+.workflow-confirmed-contents h4 {
+  margin: 0 0 10px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.workflow-confirmed-contents table {
+  width: 100%;
+  border: 1px solid #dedbd3;
+  border-radius: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  background: #fff;
+  overflow: hidden;
+  font-size: 12px;
+}
+
+.workflow-confirmed-contents th,
+.workflow-confirmed-contents td {
+  height: 40px;
+  padding: 0 12px;
+  border-right: 1px solid #eceae5;
+  border-bottom: 1px solid #eceae5;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.workflow-confirmed-contents th {
+  background: #fafafa;
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+
+.workflow-confirmed-contents td {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.workflow-confirmed-contents th:first-child,
+.workflow-confirmed-contents td:first-child {
+  width: 30%;
+}
+
+.workflow-confirmed-contents th:last-child,
+.workflow-confirmed-contents td:last-child {
+  border-right: 0;
+}
+
+.workflow-confirmed-contents tbody tr:last-child td {
+  border-bottom: 0;
 }
 
 .timeline-panel h3 {
@@ -1615,7 +1959,7 @@ body.onboarding-modal-open {
 .workflow-material-table {
   width: 100%;
   border: 1px solid var(--line);
-  border-radius: 7px;
+  border-radius: 0;
   border-collapse: collapse;
   table-layout: fixed;
   background: #fff;
@@ -1722,6 +2066,105 @@ body.onboarding-modal-open {
   margin-top: 6px;
   color: var(--ink-muted);
   font-size: 11px;
+}
+
+.platform-workflow-stage-layout {
+  --platform-timeline-width: clamp(230px, 41%, 520px);
+  position: relative;
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: var(--platform-timeline-width) minmax(0, 1fr);
+  min-height: 360px;
+}
+
+.platform-workflow-stage-layout::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--platform-timeline-width);
+  width: 1px;
+  background: var(--line-soft);
+}
+
+.platform-timeline-panel {
+  position: relative;
+  z-index: 1;
+  padding: 24px 24px 32px 26px;
+}
+
+.platform-stage-detail {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.platform-stage-detail .workflow-proposal-panel {
+  padding: 24px 26px 32px;
+}
+
+.platform-timeline-list {
+  gap: 18px;
+}
+
+.platform-timeline-list::before {
+  z-index: 2;
+}
+
+.platform-timeline-list li {
+  margin-left: -24px;
+  padding-left: 24px;
+  border-radius: 8px;
+}
+
+.platform-timeline-list .timeline-selection-bg {
+  position: absolute;
+  inset: -4px 0;
+  z-index: 0;
+  border-radius: 8px;
+  background: #f8f8f8;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 140ms ease;
+}
+
+.platform-timeline-list li.selected .timeline-selection-bg {
+  opacity: 1;
+}
+
+.platform-timeline-list li::before {
+  top: 13px;
+  left: 3px;
+  z-index: 6;
+}
+
+.platform-timeline-list li.active:not(:last-child)::after {
+  top: 17px;
+  left: 6px;
+  z-index: 3;
+}
+
+.platform-timeline-list li button {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  display: block;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  transition: color 140ms ease;
+}
+
+.platform-timeline-list li button:hover strong,
+.platform-timeline-list li.selected strong {
+  color: var(--ink);
+}
+
+.platform-timeline-list li.selected strong {
+  font-weight: 600;
 }
 
 .contracts-view {
@@ -2301,7 +2744,7 @@ body.onboarding-modal-open {
 .contract-modal {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: 20050;
   display: none;
   align-items: center;
   justify-content: center;

@@ -1,12 +1,40 @@
 (function () {
   const workflowItems = [
-    { id: 'w2', title: '대표님이 내 전남친입니다', englishTitle: 'My CEO Is My Ex-Boyfriend', sub: '로맨스 · 80화', status: '컨펌 확인됨', date: '2026년 5월 19일', poster: 'rose', image: 'images/대표님이내전남친입니다.png' },
-    { id: 'w3', title: '재벌집 막내 비서', englishTitle: 'The Chaebol Family’s Youngest Secretary', sub: '로맨스 · 여성향 · 72화', status: '유통 제안 전달됨', date: '2026년 5월 19일', poster: 'indigo', image: 'images/재벌집막내비서.png' },
-    { id: 'w4', title: '죽었다가 회귀한 톱스타', englishTitle: 'The Top Star Who Came Back to Life', sub: '타임슬립 · 액션 · 80화', status: '유통 제안 전달됨', date: '2026년 5월 19일', poster: 'rose', image: 'images/죽었다가회귀한.png' },
-    { id: 'w5', title: '우리 집에 킬러가 산다', englishTitle: 'A Killer Lives in My House', sub: '스릴러 · 코미디 · 64화', status: '제안 조건 수신됨', date: '2026년 5월 18일', poster: 'indigo', image: 'images/우리집에킬러가.png' },
-    { id: 'w6', title: '오늘부터 악녀 대행합니다', englishTitle: 'Villainess for Hire', sub: '로맨스 · 코미디 · 70화', status: '유통 제안 전달됨', date: '2026년 5월 18일', poster: 'rose', image: 'images/오늘부터악녀대행.png' },
-    { id: 'w7', title: '남편이 AI입니다', englishTitle: 'My Husband Is an AI', sub: '로맨스 · SF · 코미디 · 60화', status: '메타데이터 전달됨', date: '2026년 5월 18일', poster: 'magenta', image: 'images/남편이AI.png' },
-    { id: 'w1', title: '컨시어지 구매 의사', englishTitle: 'Content Not Selected', sub: '콘텐츠 미확정', status: '유통 제안 전달됨', date: '2026년 5월 20일', poster: 'none' },
+    { id: 'w1', title: '턴키 구매 의사', englishTitle: 'Content Not Selected', sub: '콘텐츠 미확정', workflowType: '턴키', status: 'INQUIRY_SENT', date: '2026년 5월 20일', poster: 'none', hasWorkflowUpdate: true, confirmedContents: [
+      { title: '비밀 사내 결혼', price: 'USD 24,000', distributionType: '비독점', settlementMethod: 'RS', rsRatio: '32%' },
+      { title: '달빛 아래 편의점', price: 'MG USD 13,000', distributionType: '독점', settlementMethod: 'MG + RS', rsRatio: '24%' },
+      { title: '첫사랑 리셋 버튼', price: 'USD 11,000', distributionType: '비독점', settlementMethod: 'Flat Fee', rsRatio: '-' },
+    ] },
+    { id: 'w2', title: '대표님이 내 전남친입니다', englishTitle: 'My CEO Is My Ex-Boyfriend', sub: '로맨스 · 80화', workflowType: '단일', status: 'CONFIRM_ACKNOWLEDGED', date: '2026년 5월 19일', poster: 'rose', image: 'images/대표님이내전남친입니다.png', hasWorkflowUpdate: true },
+    { id: 'w3', title: '재벌집 막내 비서', englishTitle: 'The Chaebol Family’s Youngest Secretary', sub: '로맨스 · 여성향 · 72화', workflowType: '단일', status: 'INQUIRY_SENT', date: '2026년 5월 19일', poster: 'indigo', image: 'images/재벌집막내비서.png' },
+    { id: 'w4', title: '죽었다가 회귀한 톱스타', englishTitle: 'The Top Star Who Came Back to Life', sub: '타임슬립 · 액션 · 80화', workflowType: '묶음', status: 'INQUIRY_SENT', date: '2026년 5월 19일', poster: 'rose', image: 'images/죽었다가회귀한.png', confirmedContents: [
+      { title: '죽었다가 회귀한 톱스타', price: 'USD 18,000', distributionType: '비독점', settlementMethod: 'Flat Fee', rsRatio: '-' },
+      { title: '우리 집에 킬러가 산다', price: 'USD 12,000', distributionType: '비독점', settlementMethod: 'RS', rsRatio: '35%' },
+      { title: '오늘부터 악녀 대행합니다', price: 'MG USD 16,000', distributionType: '독점', settlementMethod: 'MG + RS', rsRatio: '25%' },
+    ] },
+    { id: 'w5', title: '우리 집에 킬러가 산다', englishTitle: 'A Killer Lives in My House', sub: '스릴러 · 코미디 · 64화', workflowType: '묶음', status: 'CONFIRM_SENT', date: '2026년 5월 18일', poster: 'indigo', image: 'images/우리집에킬러가.png', hasWorkflowUpdate: true, confirmedContents: [
+      { title: '우리 집에 킬러가 산다', price: 'USD 12,000', distributionType: '비독점', settlementMethod: 'RS', rsRatio: '35%' },
+      { title: '남편이 AI입니다', price: 'MG USD 16,500', distributionType: '독점', settlementMethod: 'MG + RS', rsRatio: '28%' },
+    ] },
+    { id: 'w6', title: '오늘부터 악녀 대행합니다', englishTitle: 'Villainess for Hire', sub: '로맨스 · 코미디 · 70화', workflowType: '단일', status: 'METADATA_GRANTED', date: '2026년 5월 18일', poster: 'rose', image: 'images/오늘부터악녀대행.png' },
+    { id: 'w7', title: '남편이 AI입니다', englishTitle: 'My Husband Is an AI', sub: '로맨스 · SF · 코미디 · 60화', workflowType: '컨시어지', status: 'METADATA_GRANTED', date: '2026년 5월 18일', poster: 'magenta', image: 'images/남편이AI.png', hasWorkflowUpdate: true, confirmedContents: [
+      { title: '남편이 AI입니다', price: 'MG USD 16,500', distributionType: '독점', settlementMethod: 'MG + RS', rsRatio: '28%' },
+      { title: '대표님이 내 전남친입니다', price: 'USD 30,000', distributionType: '비독점', settlementMethod: 'RS', rsRatio: '30%' },
+      { title: '재벌집 막내 비서', price: 'MG USD 22,000', distributionType: '독점', settlementMethod: 'MG + RS', rsRatio: '25%' },
+    ] },
+    { id: 'w8', title: '비밀 사내 결혼', englishTitle: 'Secret Office Marriage', sub: '오피스 로맨스 · 72화', workflowType: '턴키', status: 'CONFIRM_ACKNOWLEDGED', date: '2026년 5월 17일', poster: 'indigo', image: 'images/비밀사내결혼.png', confirmedContents: [
+      { title: '비밀 사내 결혼', price: 'USD 24,000', distributionType: '비독점', settlementMethod: 'RS', rsRatio: '32%' },
+      { title: '왕자님의 퇴근길', price: 'MG USD 19,000', distributionType: '독점', settlementMethod: 'MG + RS', rsRatio: '26%' },
+      { title: '새벽 배송 로맨스', price: 'USD 10,000', distributionType: '비독점', settlementMethod: 'Flat Fee', rsRatio: '-' },
+    ] },
+    { id: 'w9', title: '달빛 아래 편의점', englishTitle: 'Moonlight Convenience Store', sub: '청춘 로맨스 · 52화', workflowType: '컨시어지', status: 'CONFIRM_SENT', date: '2026년 5월 16일', poster: 'indigo', image: 'images/달빛아래편의점.png', hasWorkflowUpdate: true, confirmedContents: [
+      { title: '달빛 아래 편의점', price: 'MG USD 13,000', distributionType: '독점', settlementMethod: 'MG + RS', rsRatio: '24%' },
+      { title: '첫사랑 리셋 버튼', price: 'USD 11,000', distributionType: '비독점', settlementMethod: 'Flat Fee', rsRatio: '-' },
+    ] },
+    { id: 'w10', title: '첫사랑 리셋 버튼', englishTitle: 'First Love Reset Button', sub: '청춘 로맨스 · 48화', workflowType: '묶음', status: 'CLOSED', date: '2026년 5월 15일', poster: 'rose', image: 'images/첫사랑리셋버튼.png', confirmedContents: [
+      { title: '첫사랑 리셋 버튼', price: 'USD 11,000', distributionType: '비독점', settlementMethod: 'Flat Fee', rsRatio: '-' },
+      { title: '비밀 사내 결혼', price: 'USD 24,000', distributionType: '비독점', settlementMethod: 'RS', rsRatio: '32%' },
+    ] },
   ];
 
   const workflowStats = [
@@ -28,7 +56,7 @@
   }
 
   const producerWorkflowItems = [
-    { id: 'prod-space-courier', title: '우주 택배 기사님', sub: '숏애니 · 48화 · SF 가족', status: 'PRODUCTION_CONTENT_APPROVED', date: '2026년 7월 12일', poster: 'indigo', image: 'images/우주택배기사님.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
+    { id: 'prod-space-courier', title: '우주 택배 기사님', sub: '숏애니 · 48화 · SF 가족', status: 'PRODUCTION_CONTENT_APPROVED', date: '2026년 7월 12일', poster: 'indigo', image: 'images/우주택배기사님.png', driveUrl: 'https://drive.google.com/drive/my-drive', hasWorkflowUpdate: true },
     { id: 'prod-chaebol-secretary', title: '재벌집 막내 비서', sub: '숏드라마 · 72화 · 로맨스', status: 'PRODUCTION_CONTENT_SUBMITTED', date: '2026년 7월 12일', poster: 'indigo', image: 'images/재벌집막내비서.png' },
     { id: 'prod-idol-transfer', title: '우리 반 전학생은 아이돌', contentKind: '기획안', sub: '숏드라마 · 60화 · 학원물', status: 'PRODUCTION_CONTENT_SUBMITTED', date: '2026년 7월 11일', poster: 'magenta', image: 'images/우리반전학생은아이돌.png' },
     {
@@ -41,6 +69,7 @@
       image: 'images/비밀사내결혼.png',
       driveUrl: 'https://drive.google.com/drive/my-drive',
       detailUrl: 'my-content-detail.html?title=%EB%B9%84%EB%B0%80%20%EC%82%AC%EB%82%B4%20%EA%B2%B0%ED%98%BC',
+      hasWorkflowUpdate: true,
       timeline: [
         { title: '관리자가 콘텐츠 등록을 승인했어요.', date: '2026년 7월 13일 오후 04:20', active: true },
         { title: '관리자 검토가 완료되었습니다.', date: '2026년 7월 13일 오후 03:10' },
@@ -49,13 +78,13 @@
       ],
     },
     { id: 'prod-prince-afterwork', title: '왕자님의 퇴근길', contentKind: '기획안', sub: '숏드라마 · 56화 · 판타지 로맨스', status: 'PRODUCTION_REVISION_REQUESTED', date: '2026년 7월 11일', poster: 'magenta', image: 'images/왕자님의퇴근길.png' },
-    { id: 'prod-ai-husband', title: '남편이 AI입니다', sub: 'AI · 60화 · 로맨스 SF', status: 'PRODUCTION_REVISION_APPROVED', date: '2026년 7월 10일', poster: 'rose', image: 'images/남편이AI.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
+    { id: 'prod-ai-husband', title: '남편이 AI입니다', sub: 'AI · 60화 · 로맨스 SF', status: 'PRODUCTION_REVISION_APPROVED', date: '2026년 7월 10일', poster: 'rose', image: 'images/남편이AI.png', driveUrl: 'https://drive.google.com/drive/my-drive', hasWorkflowUpdate: true },
     { id: 'prod-villainess-agency', title: '오늘부터 악녀 대행합니다', sub: '숏드라마 · 70화 · 복수 코미디', status: 'PRODUCTION_CONTENT_SUBMITTED', date: '2026년 7월 10일', poster: 'rose', image: 'images/오늘부터악녀대행.png' },
     { id: 'prod-emperor-resign', title: '퇴사했더니 황제가 됐다', sub: '숏드라마 · 66화 · 판타지', status: 'PRODUCTION_REVISION_REQUESTED', date: '2026년 7월 9일', poster: 'indigo', image: 'images/퇴사했더니황제.png' },
     { id: 'prod-danger-partner', title: '나의 위험한 파트너', sub: '숏드라마 · 64화 · 스릴러 로맨스', status: 'PRODUCTION_REVISION_CANCELLED', date: '2026년 7월 9일', poster: 'magenta', image: 'images/나의위험한파트너.png' },
     { id: 'prod-second-ending', title: '그녀의 두 번째 엔딩', contentKind: '기획안', sub: '숏드라마 · 58화 · 시간 여행', status: 'PRODUCTION_CONTENT_SUBMITTED', date: '2026년 7월 8일', poster: 'indigo', image: 'images/그녀의두번째엔딩.png' },
     { id: 'prod-ceo-contract-love', title: '대표님, 계약 연애는 처음이라서요', sub: '숏드라마 · 80화 · 로맨스', status: 'PRODUCTION_CONTENT_APPROVED', date: '2026년 7월 8일', poster: 'rose', image: 'images/대표님이내전남친입니다.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
-    { id: 'prod-moonlight-store', title: '달빛 아래 편의점', sub: '숏애니 · 52화 · 청춘 로맨스', status: 'PRODUCTION_REVISION_REQUESTED', date: '2026년 7월 7일', poster: 'indigo', image: 'images/달빛아래편의점.png' },
+    { id: 'prod-moonlight-store', title: '달빛 아래 편의점', sub: '숏애니 · 52화 · 청춘 로맨스', status: 'PRODUCTION_REVISION_REQUESTED', date: '2026년 7월 7일', poster: 'indigo', image: 'images/달빛아래편의점.png', hasWorkflowUpdate: true },
     { id: 'prod-killer-roommate', title: '살인범과 룸메이트가 되었다', sub: '숏드라마 · 62화 · 스릴러', status: 'PRODUCTION_CONTENT_APPROVED', date: '2026년 7월 7일', poster: 'magenta', image: 'images/살인범과룸메이트.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
     { id: 'prod-dawn-delivery', title: '새벽 배송 로맨스', contentKind: '기획안', sub: '숏드라마 · 50화 · 로맨스', status: 'PRODUCTION_REVISION_CANCELLED', date: '2026년 7월 6일', poster: 'rose', image: 'images/새벽배송로맨스.png' },
     { id: 'prod-fox-manager', title: '내 매니저는 구미호', sub: '숏드라마 · 54화 · 판타지', status: 'PRODUCTION_REVISION_APPROVED', date: '2026년 7월 6일', poster: 'rose', image: 'images/내매니저는구미호.png', driveUrl: 'https://drive.google.com/drive/my-drive' },
