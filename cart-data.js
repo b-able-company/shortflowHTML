@@ -6,7 +6,7 @@ window.CART_ITEMS = [
     episodes: 80,
     year: 2026,
     posterTone: "rose",
-    posterImage: "images/대표님이내전남친입니다.png",
+    posterImage: "images/posters/대표님이내전남친입니다.png",
     genres: ["로맨스"],
     language: "한국어",
     addedDays: 2
@@ -18,7 +18,7 @@ window.CART_ITEMS = [
     episodes: 72,
     year: 2026,
     posterTone: "indigo",
-    posterImage: "images/재벌집막내비서.png",
+    posterImage: "images/posters/재벌집막내비서.png",
     genres: ["로맨스", "여성향"],
     language: "한국어",
     addedDays: 5
@@ -30,7 +30,7 @@ window.CART_ITEMS = [
     episodes: 80,
     year: 2025,
     posterTone: "slate",
-    posterImage: "images/죽었다가회귀한.png",
+    posterImage: "images/posters/죽었다가회귀한.png",
     genres: ["타임슬립", "액션"],
     language: "한국어",
     addedDays: 8
@@ -42,7 +42,7 @@ window.CART_ITEMS = [
     episodes: 64,
     year: 2025,
     posterTone: "teal",
-    posterImage: "images/우리집에킬러가.png",
+    posterImage: "images/posters/우리집에킬러가산다.png",
     genres: ["스릴러", "코미디"],
     language: "영어",
     addedDays: 12
@@ -54,7 +54,7 @@ window.CART_ITEMS = [
     episodes: 70,
     year: 2024,
     posterTone: "teal",
-    posterImage: "images/남편이AI.png",
+    posterImage: "images/posters/남편이AI.png",
     genres: ["로맨스", "SF", "코미디"],
     language: "한국어",
     addedDays: 14

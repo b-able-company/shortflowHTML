@@ -33,23 +33,23 @@ function makePerfContent(id, title, subtitle, posterTone, posterImage, lastUpdat
   };
 }
 var PERF_CONTENTS = [
-  makePerfContent('perf-space-courier', '우주 택배 기사님', '48부작 · 숏애니 · SF 가족', 'indigo', 'images/우주택배기사님.png', '2026-07-12', 8420000, 4),
-  makePerfContent('perf-chaebol-secretary', '재벌집 막내 비서', '72부작 · 로맨스 · 여성향', 'indigo', 'images/재벌집막내비서.png', '2026-07-12', 22140000, 4),
-  makePerfContent('perf-idol-transfer', '우리 반 전학생은 아이돌', '60부작 · 학원물 · 청춘', 'teal', 'images/우리반전학생은아이돌.png', '2026-07-11', 3860000, 2),
-  makePerfContent('perf-secret-marriage', '비밀 사내 결혼', '72부작 · 오피스 로맨스', 'teal', 'images/비밀사내결혼.png', '2026-07-13', 19820000, 4),
-  makePerfContent('perf-prince-afterwork', '왕자님의 퇴근길', '56부작 · 판타지 로맨스', 'indigo', 'images/왕자님의퇴근길.png', '2026-07-11', 5120000, 3),
-  makePerfContent('perf-ai-husband', '남편이 AI입니다', '60부작 · 로맨스 SF', 'amber', 'images/남편이AI.png', '2026-07-10', 7240000, 3),
-  makePerfContent('perf-villainess-agency', '오늘부터 악녀 대행합니다', '70부작 · 복수 코미디', 'rose', 'images/오늘부터악녀대행.png', '2026-07-10', 9120000, 3),
-  makePerfContent('perf-emperor-resign', '퇴사했더니 황제가 됐다', '66부작 · 판타지', 'rose', 'images/퇴사했더니황제.png', '2026-07-09', 4680000, 2),
-  makePerfContent('perf-danger-partner', '나의 위험한 파트너', '64부작 · 스릴러 로맨스', 'indigo', 'images/나의위험한파트너.png', '2026-07-09', 6840000, 3),
-  makePerfContent('perf-second-ending', '그녀의 두 번째 엔딩', '58부작 · 시간 여행 로맨스', 'indigo', 'images/그녀의두번째엔딩.png', '2026-07-08', 5340000, 3),
-  makePerfContent('perf-ceo-contract-love', '대표님, 계약 연애는 처음이라서요', '80부작 · 로맨스', 'rose', 'images/대표님이내전남친입니다.png', '2026-07-08', 12840000, 4),
-  makePerfContent('perf-moonlight-store', '달빛 아래 편의점', '52부작 · 숏애니 · 청춘 로맨스', 'indigo', 'images/달빛아래편의점.png', '2026-07-07', 2940000, 2),
-  makePerfContent('perf-killer-roommate', '살인범과 룸메이트가 되었다', '62부작 · 스릴러', 'slate', 'images/살인범과룸메이트.png', '2026-07-07', 7760000, 3),
-  makePerfContent('perf-dawn-delivery', '새벽 배송 로맨스', '50부작 · 로맨스', 'rose', 'images/새벽배송로맨스.png', '2026-07-06', 2160000, 2),
-  makePerfContent('perf-fox-manager', '내 매니저는 구미호', '54부작 · 판타지', 'amber', 'images/내매니저는구미호.png', '2026-07-06', 3420000, 2),
-  makePerfContent('perf-first-love-reset', '첫사랑 리셋 버튼', '48부작 · 청춘 로맨스', 'slate', 'images/첫사랑리셋버튼.png', '2026-07-05', 1840000, 2),
-  makePerfContent('perf-contract-3days', '계약 종료 3일 전', '45부작 · 멜로', 'indigo', 'images/계약종료3일전.png', '2026-07-05', 2580000, 2)
+  makePerfContent('perf-space-courier', '우주 택배 기사님', '48부작 · 숏애니 · SF 가족', 'indigo', 'images/posters/우주택배기사님.png', '2026-07-12', 8420000, 4),
+  makePerfContent('perf-chaebol-secretary', '재벌집 막내 비서', '72부작 · 로맨스 · 여성향', 'indigo', 'images/posters/재벌집막내비서.png', '2026-07-12', 22140000, 4),
+  makePerfContent('perf-idol-transfer', '우리 반 전학생은 아이돌', '60부작 · 학원물 · 청춘', 'teal', 'images/posters/우리반전학생은아이돌.png', '2026-07-11', 3860000, 2),
+  makePerfContent('perf-secret-marriage', '비밀 사내 결혼', '72부작 · 오피스 로맨스', 'teal', 'images/posters/비밀사내결혼.png', '2026-07-13', 19820000, 4),
+  makePerfContent('perf-prince-afterwork', '왕자님의 퇴근길', '56부작 · 판타지 로맨스', 'indigo', 'images/posters/왕자님의퇴근길.png', '2026-07-11', 5120000, 3),
+  makePerfContent('perf-ai-husband', '남편이 AI입니다', '60부작 · 로맨스 SF', 'amber', 'images/posters/남편이AI.png', '2026-07-10', 7240000, 3),
+  makePerfContent('perf-villainess-agency', '오늘부터 악녀 대행합니다', '70부작 · 복수 코미디', 'rose', 'images/posters/오늘부터악녀대행.png', '2026-07-10', 9120000, 3),
+  makePerfContent('perf-emperor-resign', '퇴사했더니 황제가 됐다', '66부작 · 판타지', 'rose', 'images/posters/퇴사했더니황제.png', '2026-07-09', 4680000, 2),
+  makePerfContent('perf-danger-partner', '나의 위험한 파트너', '64부작 · 스릴러 로맨스', 'indigo', 'images/posters/나의위험한파트너.png', '2026-07-09', 6840000, 3),
+  makePerfContent('perf-second-ending', '그녀의 두 번째 엔딩', '58부작 · 시간 여행 로맨스', 'indigo', 'images/posters/그녀의두번째엔딩.png', '2026-07-08', 5340000, 3),
+  makePerfContent('perf-ceo-contract-love', '대표님, 계약 연애는 처음이라서요', '80부작 · 로맨스', 'rose', 'images/posters/대표님이내전남친입니다.png', '2026-07-08', 12840000, 4),
+  makePerfContent('perf-moonlight-store', '달빛 아래 편의점', '52부작 · 숏애니 · 청춘 로맨스', 'indigo', 'images/posters/달빛아래편의점.png', '2026-07-07', 2940000, 2),
+  makePerfContent('perf-killer-roommate', '살인범과 룸메이트가 되었다', '62부작 · 스릴러', 'slate', 'images/posters/살인범과룸메이트.png', '2026-07-07', 7760000, 3),
+  makePerfContent('perf-dawn-delivery', '새벽 배송 로맨스', '50부작 · 로맨스', 'rose', 'images/posters/새벽배송로맨스.png', '2026-07-06', 2160000, 2),
+  makePerfContent('perf-fox-manager', '내 매니저는 구미호', '54부작 · 판타지', 'amber', 'images/posters/내매니저는구미호.png', '2026-07-06', 3420000, 2),
+  makePerfContent('perf-first-love-reset', '첫사랑 리셋 버튼', '48부작 · 청춘 로맨스', 'slate', 'images/posters/첫사랑리셋버튼.png', '2026-07-05', 1840000, 2),
+  makePerfContent('perf-contract-3days', '계약 종료 3일 전', '45부작 · 멜로', 'indigo', 'images/posters/계약종료3일전.png', '2026-07-05', 2580000, 2)
 ];
 
 // ───── helpers ─────

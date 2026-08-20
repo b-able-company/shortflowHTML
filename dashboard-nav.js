@@ -78,7 +78,7 @@
       <header class="top-nav">
         <div class="nav-inner">
           <a class="brand" href="${homeLinks[currentRole] || homeLinks.platform}" aria-label="숏플로우 홈">
-            <img class="brand-logo" src="images/shortflow-logo.svg" alt="숏플로우 Shortflow">
+            <img class="brand-logo" src="images/ui/shortflow-logo.svg" alt="숏플로우 Shortflow">
           </a>
           <nav class="primary-nav" aria-label="주 메뉴">
             ${primaryNavItems.filter(item => item.role === 'shared' || item.role === currentRole).map(item => {

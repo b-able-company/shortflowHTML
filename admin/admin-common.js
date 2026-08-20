@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
     logoMain.innerHTML = `
       <span class="admin-sidebar-logo-stack">
         <a class="admin-sidebar-logo-link" href="dashboard-admin.html" aria-label="숏플로우 관리자 홈">
-          <img class="admin-sidebar-logo-img" src="../images/shortflow-logo.svg" alt="shortflow">
+          <img class="admin-sidebar-logo-img" src="../images/ui/shortflow-logo.svg" alt="shortflow">
         </a>
         <span class="admin-sidebar-logo-sub">Admin</span>
       </span>

@@ -346,9 +346,9 @@ function PreviewSection({ t }) {
 
 function StillsSection({ t }) {
   const stills = [
-    'images/톱스타스틸컷1.png',
-    'images/톱스타스틸컷2.png',
-    'images/톱스타스틸컷3.png',
+    'images/media/톱스타스틸컷1.png',
+    'images/media/톱스타스틸컷2.png',
+    'images/media/톱스타스틸컷3.png',
   ];
   const [selected, setSelected] = React.useState(null);
 

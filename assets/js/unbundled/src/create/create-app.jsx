@@ -59,7 +59,7 @@ function AIIntroModal({ onLater, onTry, t }) {
     <div onClick={onLater} style={{ position: 'fixed', inset: 0, zIndex: 2100, background: 'rgba(15,17,21,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <div onClick={(e) => e.stopPropagation()} style={{ position: 'relative', width: 380, height: 350, maxWidth: 'calc(100vw - 48px)', maxHeight: 'calc(100vh - 48px)', boxSizing: 'border-box', background: t.surface, borderRadius: 22, boxShadow: 'none', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'stretch', textAlign: 'center' }}>
         <button aria-label="닫기" onClick={onLater} style={{ position: 'absolute', top: 12, right: 12, zIndex: 2, width: 34, height: 34, borderRadius: 999, border: 'none', background: 'rgba(255,255,255,0.82)', color: t.inkMute, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontFamily: t.sans, fontSize: 22, lineHeight: 1 }}>×</button>
-        <img src="images/기획서팝업.png" alt="" style={{ width: '100%', height: 166, objectFit: 'cover', display: 'block', flexShrink: 0 }} />
+        <img src="images/ui/기획서팝업.png" alt="" style={{ width: '100%', height: 166, objectFit: 'cover', display: 'block', flexShrink: 0 }} />
         <div style={{ flex: 1, padding: '22px 28px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
           <h2 style={{ margin: 0, fontFamily: t.sans, fontSize: 18, fontWeight: 500, color: t.ink, letterSpacing: -0.45, textAlign: 'center' }}>AI 기획서 자동 추출</h2>
           <p style={{ margin: '9px 0 0', maxWidth: 300, fontFamily: t.sans, fontSize: 13.5, color: t.inkMute, lineHeight: 1.65, textAlign: 'center' }}>

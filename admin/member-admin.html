@@ -110,6 +110,20 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
   overflow: visible;
   padding-right: 0 !important;
 }
+.member-user-split.has-detail.is-expanded {
+  padding-left: 0 !important;
+  gap: 0 !important;
+}
+.member-user-split.has-detail.is-expanded .lp {
+  display: none !important;
+}
+.member-user-split.has-detail.is-expanded .dp {
+  flex: 1 1 100% !important;
+  width: 100% !important;
+  max-width: none;
+  margin-left: 0;
+  border-left: 0 !important;
+}
 .member-user-split .admin-split-resizer,
 .member-company-split .admin-split-resizer {
   width: 0 !important;
@@ -451,6 +465,209 @@ td { padding: 9px 12px; vertical-align: middle; }
 }
 .member-user-split #user-detail .operation-setting-desc {
   font-size: 11.5px;
+}
+.member-user-split #user-create .dh {
+  min-height: 58px;
+  padding: 8px 20px 6px 8px;
+  border-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.member-user-split #user-create .dh-title {
+  color: #1a1a18;
+  font-size: 18px;
+  font-weight: 480;
+  line-height: 1.25;
+  transform: translateY(3px);
+}
+.member-user-split #user-create .dbody {
+  flex: 1;
+  overflow-y: auto;
+}
+.member-user-split #user-create .detail-panel.active {
+  min-height: 100%;
+  height: 100%;
+}
+.member-user-split #user-create .sec-title {
+  margin-bottom: 9px;
+  padding-bottom: 0;
+  border-bottom: 0;
+  color: #4f5965;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.member-user-split #user-create .sec-title::before {
+  width: 5px;
+  height: 5px;
+  flex-basis: 5px;
+  background: #e85d2c;
+}
+.member-user-split #user-create .edit-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 0.5px solid #dedede;
+  background: #fff;
+}
+.member-user-split #user-create .fg {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  min-height: 38px;
+  gap: 0;
+  border-right: 0.5px solid #dedede;
+  border-bottom: 0.5px solid #dedede;
+}
+.member-user-split #user-create .fg:last-child {
+  border-right: 0;
+}
+.member-user-split #user-create .fg:last-child,
+.member-user-split #user-create .fg:nth-last-child(2):nth-child(odd) {
+  border-bottom: 0;
+}
+.member-user-split #user-create .fg.full {
+  grid-column: 1 / -1;
+  border-right: 0;
+}
+.member-user-split #user-create .fg.form-right {
+  border-right: 0;
+}
+.member-user-split #user-create .fg.form-last-row {
+  border-bottom: 0;
+}
+.member-user-split #user-create .fg label {
+  min-width: 0;
+  padding: 0 12px;
+  background: #f7f7f7;
+  border-right: 0.5px solid #dedede;
+  color: #4f5965;
+  display: flex;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 500;
+}
+.member-user-split #user-create .fg input,
+.member-user-split #user-create .fg select {
+  height: 100%;
+  min-height: 37px;
+  border: 0;
+  border-radius: 0;
+  background-color: #fff;
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: background 0.14s ease, box-shadow 0.14s ease;
+}
+.member-user-split #user-create .fg textarea {
+  min-height: 74px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 0;
+  background-color: #fff;
+  color: #1a1a18;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  resize: vertical;
+  outline: none;
+}
+.member-user-split #user-create .fg input:hover,
+.member-user-split #user-create .fg select:hover,
+.member-user-split #user-create .fg textarea:hover {
+  background-color: #fcfcfc;
+}
+.member-user-split #user-create .fg input:focus,
+.member-user-split #user-create .fg select:focus,
+.member-user-split #user-create .fg textarea:focus {
+  background-color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(232, 93, 44, 0.26);
+}
+.member-user-split #user-create .fg:focus-within label {
+  color: #1a1a18;
+}
+.member-user-split #user-create #user-create-phone-country,
+.member-user-split #user-create #user-create-company,
+.member-user-split #user-create #user-create-role,
+.member-user-split #user-create #user-create-perm,
+.member-user-split #user-create #user-create-status,
+.member-user-split #user-create #user-create-company-type,
+.member-user-split #user-create #user-create-company-country,
+.member-user-split #user-create #user-create-company-phone-country {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 34px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+}
+.member-user-split #user-create .btn {
+  font-size: 12px;
+}
+.member-user-split #user-create .btn-panel-expand {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #aaa;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+}
+.member-user-split #user-create .btn-panel-expand:hover {
+  background: #f7f7f7;
+  color: #555;
+}
+.member-user-split #user-create .user-create-step {
+  display: none;
+}
+.member-user-split #user-create .user-create-step.show {
+  display: block;
+}
+.member-user-split #user-create #user-create-step-choice.show {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.user-create-choice-section {
+  width: 100%;
+  margin: 0;
+}
+.user-create-choice-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+.user-create-choice-btn {
+  min-height: 136px;
+  border: 0.5px solid #dedede;
+  border-radius: 8px;
+  background: #fff;
+  color: #1a1a18;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 440;
+  cursor: pointer;
+  transition: background 0.14s ease, border-color 0.14s ease, transform 0.14s ease;
+}
+.user-create-choice-btn:hover {
+  background: #fafafa;
+  border-color: #cfcfcf;
+  transform: translateY(-1px);
+}
+.user-create-choice-btn.active {
+  background: #1f1f1d;
+  border-color: #1f1f1d;
+  color: #fff;
+}
+.member-user-split #user-create #user-create-submit-btn {
+  min-height: 40px;
+  min-width: 104px;
+  padding: 0 20px;
 }
 .member-company-split #company-detail .detail-tab {
   font-size: 12.5px;
@@ -1821,6 +2038,7 @@ td { padding: 9px 12px; vertical-align: middle; }
       <!-- 유저 목록 -->
       <div class="lp user-list-pane">
         <div class="toolbar user-list-toolbar">
+          <button class="list-icon-btn" id="user-create-toggle" type="button" aria-label="유저 생성" onclick="openUserCreatePanel()"><i class="ti ti-plus"></i></button>
           <button class="list-icon-btn" id="user-filter-toggle" type="button" aria-label="필터" aria-expanded="false" onclick="toggleUserFilterPanel()"><i class="ti ti-filter"></i></button>
           <div class="user-list-search">
             <i class="ti ti-search"></i>
@@ -1976,6 +2194,127 @@ td { padding: 9px 12px; vertical-align: middle; }
           </div>
           <div class="detail-savebar" id="user-savebar">
             <button class="btn btn-save" onclick="saveUserDetail()">저장</button>
+          </div>
+        </div>
+        <div id="user-create" style="display:none;flex-direction:column;height:100%">
+          <div class="dh">
+            <div class="dh-top">
+              <div>
+                <div class="dh-title">새 유저 등록</div>
+              </div>
+              <div class="user-detail-side-top">
+                <button class="btn-panel-expand" id="user-create-expand-toggle" type="button" aria-label="상세 확장" aria-pressed="false" onclick="toggleUserCreateExpanded()"><i class="ti ti-arrows-maximize"></i></button>
+                <button class="btn-close-panel" type="button" onclick="closeUserCreatePanel()"><i class="ti ti-x"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="dbody">
+            <div class="detail-panel active">
+              <div class="user-create-step" id="user-create-step-choice">
+                <div class="sec user-create-choice-section">
+                  <div class="user-create-choice-grid">
+                    <button class="user-create-choice-btn" id="user-create-new-company-btn" type="button" onclick="chooseUserCreateMode('new')">새 회사 유저</button>
+                    <button class="user-create-choice-btn" id="user-create-existing-company-btn" type="button" onclick="chooseUserCreateMode('existing')">기존 회사 유저</button>
+                  </div>
+                </div>
+              </div>
+              <div class="user-create-step" id="user-create-step-company">
+                <div class="sec" id="user-create-existing-company-section">
+                  <div class="sec-title">회사 선택</div>
+                  <div class="edit-grid">
+                    <div class="fg full form-last-row"><label>회사명</label><select id="user-create-company" onchange="syncUserCreateCompanyRole()"></select></div>
+                  </div>
+                </div>
+                <div class="sec" id="user-create-new-company-section">
+                  <div class="sec-title">회사 정보</div>
+                  <div class="edit-grid">
+                    <div class="fg"><label>회사명</label><input id="user-create-company-name" value="New Partner Studio" /></div>
+                    <div class="fg form-right"><label>회사 이메일</label><input id="user-create-company-email" value="contact@newpartner.io" /></div>
+                    <div class="fg full"><label>회사 설명</label><textarea id="user-create-company-description">글로벌 숏폼 콘텐츠 제작 및 유통 협업을 진행하는 파트너사입니다.</textarea></div>
+                    <div class="fg"><label>국가</label>
+                      <select id="user-create-company-country">
+                        <option value="KR">KR</option>
+                        <option value="US">US</option>
+                        <option value="JP">JP</option>
+                        <option value="CN">CN</option>
+                        <option value="TW">TW</option>
+                        <option value="SG">SG</option>
+                      </select>
+                    </div>
+                    <div class="fg form-right"><label>회사 타입</label>
+                      <select id="user-create-company-type" onchange="syncUserCreateCompanyRole()">
+                        <option value="PRODUCTION">제작사</option>
+                        <option value="PLATFORM">플랫폼</option>
+                      </select>
+                    </div>
+                    <div class="fg full"><label>주소</label><input id="user-create-company-address" value="서울시 강남구 테헤란로 123" /></div>
+                    <div class="fg"><label>전화 국가 코드</label>
+                      <select id="user-create-company-phone-country">
+                        <option value="">선택 안 함</option>
+                        <option value="+82">+82</option>
+                        <option value="+1">+1</option>
+                        <option value="+81">+81</option>
+                        <option value="+86">+86</option>
+                        <option value="+886">+886</option>
+                        <option value="+65">+65</option>
+                      </select>
+                    </div>
+                    <div class="fg form-right"><label>전화번호</label><input id="user-create-company-phone" value="" /></div>
+                    <div class="fg full" id="user-create-company-google-row"><label>Google Email</label><input id="user-create-company-google-email" value="drive@newpartner.io" /></div>
+                    <div class="fg full form-last-row"><label>회사 홈페이지</label><input id="user-create-company-website" value="https://newpartner.io" /></div>
+                  </div>
+                </div>
+              </div>
+              <div class="user-create-step" id="user-create-step-user">
+                <div class="sec">
+                  <div class="sec-title">기본 프로필</div>
+                  <div class="edit-grid">
+                    <div class="fg"><label>이름</label><input id="user-create-name" value="신규 유저" /></div>
+                    <div class="fg form-right"><label>이메일</label><input id="user-create-email" value="new.user@shortflow.io" /></div>
+                    <div class="fg form-last-row"><label>전화 국가 코드</label>
+                      <select id="user-create-phone-country">
+                        <option value="+82">+82</option>
+                        <option value="+1">+1</option>
+                        <option value="+81">+81</option>
+                        <option value="+86">+86</option>
+                        <option value="+886">+886</option>
+                        <option value="+65">+65</option>
+                      </select>
+                    </div>
+                    <div class="fg form-right form-last-row"><label>전화번호</label><input id="user-create-phone" value="010-0000-0000" /></div>
+                  </div>
+                </div>
+                <div class="sec">
+                  <div class="sec-title">유저 권한</div>
+                  <div class="edit-grid">
+                    <div class="fg"><label>역할</label>
+                      <select id="user-create-role">
+                        <option value="PRODUCTION">제작사</option>
+                        <option value="PLATFORM">플랫폼</option>
+                      </select>
+                    </div>
+                    <div class="fg form-right"><label>권한 레벨</label>
+                      <select id="user-create-perm">
+                        <option value="OWNER">OWNER</option>
+                        <option value="WRITE">WRITE</option>
+                        <option value="READ">READ</option>
+                      </select>
+                    </div>
+                    <div class="fg full form-last-row"><label>상태</label>
+                      <select id="user-create-status">
+                        <option value="APPROVED">Approved</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="SETUP_REQUIRED">Onboarding</option>
+                        <option value="REJECTED">Rejected</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="detail-savebar" id="user-create-savebar">
+            <button class="btn btn-save" id="user-create-submit-btn" type="button" onclick="createUserFromPanel()">생성하기</button>
           </div>
         </div>
       </div>
@@ -2242,7 +2581,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 <div class="admin-confirm-backdrop" id="admin-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="admin-confirm-title" onclick="closeAdminConfirm(event)">
   <div class="admin-confirm-dialog" onclick="event.stopPropagation()">
     <div class="admin-confirm-body">
-      <div class="admin-confirm-icon" aria-hidden="true"><img src="../images/icon/image.png" alt=""></div>
+      <div class="admin-confirm-icon" aria-hidden="true"><img src="../images/ui/icon/image.png" alt=""></div>
       <div class="admin-confirm-title" id="admin-confirm-title">처리할까요?</div>
       <div class="admin-confirm-copy" id="admin-confirm-message"></div>
     </div>
@@ -2303,6 +2642,260 @@ const users = [
   { id:23, name:'고나은', email:'naeun@nextwave.io', phone:'010-4040-5050', company:'NextWave Studios', companyId:1, role:'PRODUCTION', perm:'WRITE', status:'APPROVED', date:'2026.03.22', rejectReason:'' },
 ];
 
+let userCreateFlowMode = '';
+let userCreateFlowStep = 'choice';
+
+function openUserCreatePanel() {
+  selectedUserId = null;
+  setUserCreateExpanded(false);
+  document.getElementById('user-split')?.classList.add('has-detail');
+  document.querySelector('.main')?.classList.remove('company-detail-open');
+  document.querySelector('.main')?.classList.add('user-detail-open');
+  renderUsers();
+  populateUserCreateCompanies();
+  resetUserCreateForm();
+  document.getElementById('user-empty').style.display = 'none';
+  document.getElementById('user-detail').style.display = 'none';
+  document.getElementById('user-create').style.display = 'flex';
+}
+
+function populateUserCreateCompanies() {
+  const select = document.getElementById('user-create-company');
+  if (!select) return;
+  select.innerHTML = companies.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+}
+
+function resetUserCreateForm() {
+  const company = companies[0];
+  userCreateFlowMode = '';
+  userCreateFlowStep = 'choice';
+  document.getElementById('user-create-name').value = '신규 유저';
+  document.getElementById('user-create-email').value = 'new.user@shortflow.io';
+  document.getElementById('user-create-phone-country').value = '+82';
+  document.getElementById('user-create-phone').value = '010-0000-0000';
+  document.getElementById('user-create-company').value = company ? String(company.id) : '';
+  document.getElementById('user-create-company-name').value = 'New Partner Studio';
+  document.getElementById('user-create-company-description').value = '글로벌 숏폼 콘텐츠 제작 및 유통 협업을 진행하는 파트너사입니다.';
+  document.getElementById('user-create-company-email').value = 'contact@newpartner.io';
+  document.getElementById('user-create-company-country').value = 'KR';
+  document.getElementById('user-create-company-address').value = '서울시 강남구 테헤란로 123';
+  document.getElementById('user-create-company-type').value = 'PRODUCTION';
+  document.getElementById('user-create-company-phone-country').value = '';
+  document.getElementById('user-create-company-phone').value = '';
+  document.getElementById('user-create-company-google-email').value = 'drive@newpartner.io';
+  document.getElementById('user-create-company-website').value = 'https://newpartner.io';
+  document.getElementById('user-create-role').value = company?.type || 'PRODUCTION';
+  document.getElementById('user-create-perm').value = 'OWNER';
+  document.getElementById('user-create-status').value = 'APPROVED';
+  renderUserCreateFlow();
+}
+
+function getUserCreateCompanyMode() {
+  return userCreateFlowMode || 'existing';
+}
+
+function chooseUserCreateMode(mode) {
+  userCreateFlowMode = mode === 'new' ? 'new' : 'existing';
+  userCreateFlowStep = 'user';
+  renderUserCreateFlow();
+  syncUserCreateCompanyRole();
+  const focusTarget = userCreateFlowMode === 'new' ? 'user-create-company-name' : 'user-create-company';
+  document.getElementById(focusTarget)?.focus();
+}
+
+function renderUserCreateFlow() {
+  document.getElementById('user-create-step-choice')?.classList.toggle('show', userCreateFlowStep === 'choice');
+  document.getElementById('user-create-step-company')?.classList.toggle('show', userCreateFlowStep === 'user');
+  document.getElementById('user-create-step-user')?.classList.toggle('show', userCreateFlowStep === 'user');
+  const isNewCompany = userCreateFlowMode === 'new';
+  const isExistingCompany = userCreateFlowMode === 'existing';
+  document.getElementById('user-create-new-company-section').hidden = !isNewCompany;
+  document.getElementById('user-create-existing-company-section').hidden = !isExistingCompany;
+  document.getElementById('user-create-new-company-btn')?.classList.toggle('active', isNewCompany);
+  document.getElementById('user-create-existing-company-btn')?.classList.toggle('active', isExistingCompany);
+  const showSubmit = userCreateFlowStep === 'user';
+  document.getElementById('user-create-savebar').style.display = showSubmit ? 'flex' : 'none';
+  document.getElementById('user-create-submit-btn').style.display = showSubmit ? 'inline-flex' : 'none';
+  updateUserCreateCompanyTypeFields();
+}
+
+function setUserCreateExpanded(isExpanded) {
+  const split = document.getElementById('user-split');
+  const toggle = document.getElementById('user-create-expand-toggle');
+  split?.classList.toggle('is-expanded', !!isExpanded);
+  if (!toggle) return;
+  toggle.setAttribute('aria-pressed', String(!!isExpanded));
+  toggle.setAttribute('aria-label', isExpanded ? '상세 축소' : '상세 확장');
+  toggle.innerHTML = `<i class="ti ${isExpanded ? 'ti-arrows-minimize' : 'ti-arrows-maximize'}"></i>`;
+}
+
+function toggleUserCreateExpanded() {
+  const split = document.getElementById('user-split');
+  setUserCreateExpanded(!split?.classList.contains('is-expanded'));
+}
+
+function isValidEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function updateUserCreateCompanyTypeFields() {
+  const isProduction = document.getElementById('user-create-company-type')?.value === 'PRODUCTION';
+  document.getElementById('user-create-company-google-row').hidden = !isProduction;
+}
+
+function validateUserCreateCompanyStep() {
+  if (getUserCreateCompanyMode() === 'new') {
+    const companyName = document.getElementById('user-create-company-name')?.value.trim();
+    const description = document.getElementById('user-create-company-description')?.value.trim();
+    const companyEmail = document.getElementById('user-create-company-email')?.value.trim();
+    const country = document.getElementById('user-create-company-country')?.value.trim();
+    const address = document.getElementById('user-create-company-address')?.value.trim();
+    const type = document.getElementById('user-create-company-type')?.value.trim();
+    if (!companyName || !description || !companyEmail || !country || !address || !type) {
+      alert('회사 필수 정보를 모두 입력해주세요.');
+      return false;
+    }
+    if (!isValidEmail(companyEmail)) {
+      alert('회사 이메일 형식을 확인해주세요.');
+      return false;
+    }
+    if (companies.some(c => c.name.toLowerCase() === companyName.toLowerCase() || c.email.toLowerCase() === companyEmail.toLowerCase())) {
+      alert('이미 등록된 회사명 또는 회사 이메일입니다.');
+      return false;
+    }
+    return true;
+  }
+  const companyId = Number(document.getElementById('user-create-company')?.value);
+  const company = companies.find(c => c.id === companyId);
+  if (!company) {
+    alert('회사를 선택해주세요.');
+    return false;
+  }
+  return true;
+}
+
+function syncUserCreateCompanyRole() {
+  const roleSelect = document.getElementById('user-create-role');
+  if (!roleSelect) return;
+  if (getUserCreateCompanyMode() === 'new') {
+    roleSelect.value = document.getElementById('user-create-company-type')?.value || 'PRODUCTION';
+    updateUserCreateCompanyTypeFields();
+    return;
+  }
+  const companyId = Number(document.getElementById('user-create-company')?.value);
+  const company = companies.find(c => c.id === companyId);
+  if (company) roleSelect.value = company.type;
+}
+
+function closeUserCreatePanel() {
+  selectedUserId = null;
+  setUserCreateExpanded(false);
+  document.getElementById('user-split')?.classList.remove('has-detail');
+  document.querySelector('.main')?.classList.remove('user-detail-open');
+  renderUsers();
+  document.getElementById('user-empty').style.display = '';
+  document.getElementById('user-detail').style.display = 'none';
+  document.getElementById('user-create').style.display = 'none';
+}
+
+function getTodayDotDate() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}.${month}.${day}`;
+}
+
+function createUserFromPanel() {
+  if (!validateUserCreateCompanyStep()) return;
+  const name = document.getElementById('user-create-name')?.value.trim();
+  const email = document.getElementById('user-create-email')?.value.trim();
+  if (!name || !email) {
+    alert('이름과 이메일을 입력해주세요.');
+    return;
+  }
+  if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+    alert('이미 등록된 유저 이메일입니다.');
+    return;
+  }
+
+  const today = getTodayDotDate();
+  const companyMode = getUserCreateCompanyMode();
+  const nextId = Math.max(0, ...users.map(u => u.id)) + 1;
+  let company;
+  let newCompany = null;
+
+  if (companyMode === 'new') {
+    const companyName = document.getElementById('user-create-company-name')?.value.trim();
+    const description = document.getElementById('user-create-company-description')?.value.trim();
+    const companyEmail = document.getElementById('user-create-company-email')?.value.trim();
+    const country = document.getElementById('user-create-company-country')?.value.trim();
+    const address = document.getElementById('user-create-company-address')?.value.trim();
+    const type = document.getElementById('user-create-company-type')?.value || 'PRODUCTION';
+    if (!companyName || !description || !companyEmail || !country || !address || !type) {
+      alert('회사 필수 정보를 모두 입력해주세요.');
+      return;
+    }
+    if (!isValidEmail(companyEmail)) {
+      alert('회사 이메일 형식을 확인해주세요.');
+      return;
+    }
+    if (companies.some(c => c.name.toLowerCase() === companyName.toLowerCase() || c.email.toLowerCase() === companyEmail.toLowerCase())) {
+      alert('이미 등록된 회사명 또는 회사 이메일입니다.');
+      return;
+    }
+    const nextCompanyId = Math.max(0, ...companies.map(c => c.id)) + 1;
+    newCompany = {
+      id: nextCompanyId,
+      name: companyName,
+      description,
+      email: companyEmail,
+      country,
+      address,
+      type,
+      phoneCountryCode: document.getElementById('user-create-company-phone-country')?.value || '',
+      phone: document.getElementById('user-create-company-phone')?.value.trim() || '',
+      googleEmail: type === 'PRODUCTION' ? (document.getElementById('user-create-company-google-email')?.value.trim() || '') : '',
+      websiteUrl: document.getElementById('user-create-company-website')?.value.trim() || '',
+      status: 'APPROVED',
+      date: today,
+      users: [nextId]
+    };
+    company = newCompany;
+  } else {
+    const companyId = Number(document.getElementById('user-create-company')?.value);
+    company = companies.find(c => c.id === companyId);
+    if (!company) {
+      alert('회사를 선택해주세요.');
+      return;
+    }
+  }
+
+  const user = {
+    id: nextId,
+    name,
+    email,
+    phoneCountryCode: document.getElementById('user-create-phone-country')?.value || '+82',
+    phone: document.getElementById('user-create-phone')?.value.trim() || '',
+    company: company?.name || '',
+    companyId: company?.id || null,
+    role: document.getElementById('user-create-role')?.value || company?.type || 'PRODUCTION',
+    perm: document.getElementById('user-create-perm')?.value || 'OWNER',
+    status: document.getElementById('user-create-status')?.value || 'APPROVED',
+    date: today,
+    rejectReason: ''
+  };
+
+  if (newCompany) companies.unshift(newCompany);
+  users.unshift(user);
+  if (!newCompany && company && !company.users.includes(nextId)) company.users.unshift(nextId);
+  userPage = 1;
+  companyPage = 1;
+  renderCompanies();
+  document.getElementById('user-create').style.display = 'none';
+  selectUser(nextId);
+}
+
 const companies = [
   { id:1, name:'NextWave Studios', email:'contact@nextwave.io', type:'PRODUCTION', status:'APPROVED', date:'2026.03.01', users:[1,2,9,16,23] },
   { id:2, name:'OneTake Media', email:'hi@onetake.io', type:'PRODUCTION', status:'PENDING', date:'2026.05.07', users:[3,10,17] },
@@ -2328,89 +2921,89 @@ const companies = [
 
 const companyOwnedContents = {
   1: [
-    { id:'cnt-1-1', adminContentId:1, title:'대표님이 내 전남친입니다', year:'2026', poster:'../images/대표님이내전남친입니다.png' },
-    { id:'cnt-1-2', adminContentId:6, title:'우주 택배 기사님', year:'2022', poster:'../images/우주택배기사님.png' },
-    { id:'cnt-1-3', title:'비밀 사내 결혼', year:'2026', poster:'../images/비밀사내결혼.png' },
+    { id:'cnt-1-1', adminContentId:1, title:'대표님이 내 전남친입니다', year:'2026', poster:'../images/posters/대표님이내전남친입니다.png' },
+    { id:'cnt-1-2', adminContentId:6, title:'우주 택배 기사님', year:'2022', poster:'../images/posters/우주택배기사님.png' },
+    { id:'cnt-1-3', title:'비밀 사내 결혼', year:'2026', poster:'../images/posters/비밀사내결혼.png' },
   ],
   2: [
-    { id:'cnt-2-1', adminContentId:2, title:'재벌집 막내 비서', year:'2026', poster:'../images/재벌집막내비서.png' },
-    { id:'cnt-2-2', title:'그녀의 두 번째 엔딩', year:'2026', poster:'../images/그녀의두번째엔딩.png' },
+    { id:'cnt-2-1', adminContentId:2, title:'재벌집 막내 비서', year:'2026', poster:'../images/posters/재벌집막내비서.png' },
+    { id:'cnt-2-2', title:'그녀의 두 번째 엔딩', year:'2026', poster:'../images/posters/그녀의두번째엔딩.png' },
   ],
   5: [
-    { id:'cnt-5-1', title:'남편이 AI입니다', year:'2024', poster:'../images/ai-husband.png' },
-    { id:'cnt-5-2', title:'살인범과 룸메이트가 되었다', year:'2026', poster:'../images/murderer-roommate.png' },
+    { id:'cnt-5-1', title:'남편이 AI입니다', year:'2024', poster:'../images/posters/ai-husband.png' },
+    { id:'cnt-5-2', title:'살인범과 룸메이트가 되었다', year:'2026', poster:'../images/posters/murderer-roommate.png' },
   ],
   6: [
-    { id:'cnt-6-1', title:'오늘부터 악녀 대행합니다', year:'2024', poster:'../images/villainess-agent.png' },
+    { id:'cnt-6-1', title:'오늘부터 악녀 대행합니다', year:'2024', poster:'../images/posters/villainess-agent.png' },
   ],
   8: [
-    { id:'cnt-8-1', title:'퇴사했더니 황제가 됐다', year:'2023', poster:'../images/resigned-emperor.png' },
-    { id:'cnt-8-2', title:'달빛 아래 편의점', year:'2022', poster:'../images/달빛아래편의점.png' },
+    { id:'cnt-8-1', title:'퇴사했더니 황제가 됐다', year:'2023', poster:'../images/posters/resigned-emperor.png' },
+    { id:'cnt-8-2', title:'달빛 아래 편의점', year:'2022', poster:'../images/posters/달빛아래편의점.png' },
   ],
   9: [
-    { id:'cnt-9-1', title:'우리 집에 킬러가 산다', year:'2025', poster:'../images/killer-at-home.png' },
+    { id:'cnt-9-1', title:'우리 집에 킬러가 산다', year:'2025', poster:'../images/posters/우리집에킬러가산다.png' },
   ],
   10: [
-    { id:'cnt-10-1', title:'첫사랑은 계약 종료', year:'2023', poster:'../images/첫사랑은계약종료.png' },
+    { id:'cnt-10-1', title:'첫사랑은 계약 종료', year:'2023', poster:'../images/posters/첫사랑은계약종료.png' },
   ],
   15: [
-    { id:'cnt-15-1', title:'내 남편의 비밀 계정', year:'2025', poster:'../images/내남편의비밀계정.png' },
+    { id:'cnt-15-1', title:'내 남편의 비밀 계정', year:'2025', poster:'../images/posters/내남편의비밀계정.png' },
   ],
   17: [
-    { id:'cnt-17-1', title:'황후의 복수 노트', year:'2026', poster:'../images/황후의복수노트.png' },
+    { id:'cnt-17-1', title:'황후의 복수 노트', year:'2026', poster:'../images/posters/황후의복수노트.png' },
   ],
   19: [
-    { id:'cnt-19-1', title:'나의 위험한 파트너', year:'2025', poster:'../images/나의위험한파트너.png' },
+    { id:'cnt-19-1', title:'나의 위험한 파트너', year:'2025', poster:'../images/posters/나의위험한파트너.png' },
   ],
   20: [
-    { id:'cnt-20-1', adminContentId:1, title:'계약 종료 3일 전', year:'2026', poster:'../images/계약종료3일전.png' },
-    { id:'cnt-20-2', adminContentId:2, title:'첫사랑은 계약 종료', year:'2023', poster:'../images/첫사랑은계약종료.png' },
-    { id:'cnt-20-3', adminContentId:3, title:'나의 위험한 파트너', year:'2025', poster:'../images/나의위험한파트너.png' },
-    { id:'cnt-20-4', adminContentId:4, title:'내 남편의 비밀 계정', year:'2025', poster:'../images/내남편의비밀계정.png' },
-    { id:'cnt-20-5', adminContentId:5, title:'황후의 복수 노트', year:'2026', poster:'../images/황후의복수노트.png' },
-    { id:'cnt-20-6', adminContentId:6, title:'달빛 아래 편의점', year:'2022', poster:'../images/달빛아래편의점.png' },
+    { id:'cnt-20-1', adminContentId:1, title:'계약 종료 3일 전', year:'2026', poster:'../images/posters/계약종료3일전.png' },
+    { id:'cnt-20-2', adminContentId:2, title:'첫사랑은 계약 종료', year:'2023', poster:'../images/posters/첫사랑은계약종료.png' },
+    { id:'cnt-20-3', adminContentId:3, title:'나의 위험한 파트너', year:'2025', poster:'../images/posters/나의위험한파트너.png' },
+    { id:'cnt-20-4', adminContentId:4, title:'내 남편의 비밀 계정', year:'2025', poster:'../images/posters/내남편의비밀계정.png' },
+    { id:'cnt-20-5', adminContentId:5, title:'황후의 복수 노트', year:'2026', poster:'../images/posters/황후의복수노트.png' },
+    { id:'cnt-20-6', adminContentId:6, title:'달빛 아래 편의점', year:'2022', poster:'../images/posters/달빛아래편의점.png' },
   ],
 };
 
 const companyCollaborationPlans = {
   1: [
-    { id:'plan-1-1', title:'글로벌 숏폼 로맨스 공동 제작 제안', poster:'../images/ceo-ex-boyfriend.png' },
-    { id:'plan-1-2', title:'SF 가족 애니메이션 시즌 기획안', poster:'../images/우주택배기사님.png' },
+    { id:'plan-1-1', title:'글로벌 숏폼 로맨스 공동 제작 제안', poster:'../images/posters/ceo-ex-boyfriend.png' },
+    { id:'plan-1-2', title:'SF 가족 애니메이션 시즌 기획안', poster:'../images/posters/우주택배기사님.png' },
   ],
   2: [
-    { id:'plan-2-1', title:'하이틴 판타지 숏드라마 제작협업안', poster:'../images/그녀의두번째엔딩.png' },
+    { id:'plan-2-1', title:'하이틴 판타지 숏드라마 제작협업안', poster:'../images/posters/그녀의두번째엔딩.png' },
   ],
   5: [
-    { id:'plan-5-1', title:'AI 로맨스 콘텐츠 후속 시즌 기획안', poster:'../images/ai-husband.png' },
-    { id:'plan-5-2', title:'스릴러 미니시리즈 공동 제작 제안', poster:'../images/murderer-roommate.png' },
+    { id:'plan-5-1', title:'AI 로맨스 콘텐츠 후속 시즌 기획안', poster:'../images/posters/ai-husband.png' },
+    { id:'plan-5-2', title:'스릴러 미니시리즈 공동 제작 제안', poster:'../images/posters/murderer-roommate.png' },
   ],
   6: [
-    { id:'plan-6-1', title:'여성향 복수극 제작협업 기획안', poster:'../images/villainess-agent.png' },
+    { id:'plan-6-1', title:'여성향 복수극 제작협업 기획안', poster:'../images/posters/villainess-agent.png' },
   ],
   8: [
-    { id:'plan-8-1', title:'판타지 코미디 숏애니 공동 개발안', poster:'../images/resigned-emperor.png' },
+    { id:'plan-8-1', title:'판타지 코미디 숏애니 공동 개발안', poster:'../images/posters/resigned-emperor.png' },
   ],
   15: [
-    { id:'plan-15-1', title:'비밀 계정 스핀오프 기획안', poster:'../images/내남편의비밀계정.png' },
+    { id:'plan-15-1', title:'비밀 계정 스핀오프 기획안', poster:'../images/posters/내남편의비밀계정.png' },
   ],
   17: [
-    { id:'plan-17-1', title:'사극 로맨스 숏폼 시리즈 기획안', poster:'../images/황후의복수노트.png' },
+    { id:'plan-17-1', title:'사극 로맨스 숏폼 시리즈 기획안', poster:'../images/posters/황후의복수노트.png' },
   ],
 };
 
 const distributionContractContents = {
-  'content-101': { title:'대표님이 내 전남친입니다', poster:'../images/대표님이내전남친입니다.png' },
-  'content-102': { title:'재벌집 막내 비서', poster:'../images/재벌집막내비서.png' },
-  'content-103': { title:'죽었다가 회귀한 톱스타', poster:'../images/return-topstar-poster.png' },
-  'content-104': { title:'우리 집에 킬러가 산다', poster:'../images/killer-at-home.png' },
-  'content-105': { title:'연애 계약서', poster:'../images/비밀사내결혼.png' },
-  'content-108': { title:'비밀 상속자', poster:'../images/내남편의비밀계정.png' },
-  'content-110': { title:'첫사랑 리벤지', poster:'../images/첫사랑은계약종료.png' },
-  'content-111': { title:'위험한 이웃', poster:'../images/나의위험한파트너.png' },
-  'content-112': { title:'로열 룸메이트', poster:'../images/우주택배기사님.png' },
-  'content-113': { title:'알고리즘이 정한 사랑', poster:'../images/ai-husband.png' },
-  'content-114': { title:'자정의 결혼식', poster:'../images/황후의복수노트.png' },
-  'content-115': { title:'일주일만 사랑해', poster:'../images/그녀의두번째엔딩.png' },
+  'content-101': { title:'대표님이 내 전남친입니다', poster:'../images/posters/대표님이내전남친입니다.png' },
+  'content-102': { title:'재벌집 막내 비서', poster:'../images/posters/재벌집막내비서.png' },
+  'content-103': { title:'죽었다가 회귀한 톱스타', poster:'../images/posters/return-topstar-poster.png' },
+  'content-104': { title:'우리 집에 킬러가 산다', poster:'../images/posters/우리집에킬러가산다.png' },
+  'content-105': { title:'연애 계약서', poster:'../images/posters/비밀사내결혼.png' },
+  'content-108': { title:'비밀 상속자', poster:'../images/posters/내남편의비밀계정.png' },
+  'content-110': { title:'첫사랑 리벤지', poster:'../images/posters/첫사랑은계약종료.png' },
+  'content-111': { title:'위험한 이웃', poster:'../images/posters/나의위험한파트너.png' },
+  'content-112': { title:'로열 룸메이트', poster:'../images/posters/우주택배기사님.png' },
+  'content-113': { title:'알고리즘이 정한 사랑', poster:'../images/posters/ai-husband.png' },
+  'content-114': { title:'자정의 결혼식', poster:'../images/posters/황후의복수노트.png' },
+  'content-115': { title:'일주일만 사랑해', poster:'../images/posters/그녀의두번째엔딩.png' },
 };
 
 const distributionContracts = [
@@ -2528,9 +3121,9 @@ function escapeHtml(value = '') {
 
 function defaultCompanyRepresentativeWorks(c) {
   const samples = [
-    { image: '../images/대표님이내전남친입니다.png', title: '대표님이 내 전남친입니다', year: '2026' },
-    { image: '../images/return-topstar-poster.png', title: '죽었다가 회귀한 톱스타', year: '2025' },
-    { image: '../images/재벌집막내비서.png', title: '재벌집 막내 비서', year: '2025' }
+    { image: '../images/posters/대표님이내전남친입니다.png', title: '대표님이 내 전남친입니다', year: '2026' },
+    { image: '../images/posters/return-topstar-poster.png', title: '죽었다가 회귀한 톱스타', year: '2025' },
+    { image: '../images/posters/재벌집막내비서.png', title: '재벌집 막내 비서', year: '2025' }
   ];
   return samples.map((work, index) => ({
     id: `company-${c.id}-work-${index + 1}`,
@@ -2661,8 +3254,8 @@ function updateUserDetailAvatar(u) {
   avatar.className = `user-detail-avatar ${isPlatform ? 'platform' : 'production'} has-image`;
   avatar.textContent = '';
   avatar.style.backgroundImage = isPlatform
-    ? "url('../images/icon/플랫폼프로필.png')"
-    : "url('../images/icon/제작사프로필.png')";
+    ? "url('../images/ui/icon/플랫폼프로필.png')"
+    : "url('../images/ui/icon/제작사프로필.png')";
 }
 
 function updateCompanyDetailAvatar(c) {
@@ -2671,8 +3264,8 @@ function updateCompanyDetailAvatar(c) {
   avatar.className = `user-detail-avatar ${isPlatform ? 'platform' : 'production'} has-image`;
   avatar.textContent = '';
   avatar.style.backgroundImage = isPlatform
-    ? "url('../images/icon/플랫폼회사프로필.png')"
-    : "url('../images/icon/제작사회사프로필.png')";
+    ? "url('../images/ui/icon/플랫폼회사프로필.png')"
+    : "url('../images/ui/icon/제작사회사프로필.png')";
 }
 
 function renderUsers() {
@@ -2758,6 +3351,7 @@ function handleUserSearchKey(event) {
 
 function selectUser(id) {
   selectedUserId = id;
+  setUserCreateExpanded(false);
   document.getElementById('user-split')?.classList.add('has-detail');
   document.querySelector('.main')?.classList.remove('company-detail-open');
   document.querySelector('.main')?.classList.add('user-detail-open');
@@ -2797,6 +3391,7 @@ function selectUser(id) {
   renderUserOperations(u);
   resetUserDetailTab();
   document.getElementById('user-empty').style.display = 'none';
+  document.getElementById('user-create').style.display = 'none';
   document.getElementById('user-detail').style.display = 'flex';
 }
 
@@ -3024,11 +3619,13 @@ function confirmRejectUser(id, reason) {
 
 function closeUserDetail() {
   selectedUserId = null;
+  setUserCreateExpanded(false);
   document.getElementById('user-split')?.classList.remove('has-detail');
   document.querySelector('.main')?.classList.remove('user-detail-open');
   renderUsers();
   document.getElementById('user-empty').style.display = '';
   document.getElementById('user-detail').style.display = 'none';
+  document.getElementById('user-create').style.display = 'none';
 }
 
 function resetCompanyDetailTab(company) {
@@ -3714,9 +4311,10 @@ function syncCreditActionState(type) {
 
 function switchTab(tab) {
   const isUsers = tab === 'users';
+  const isUserCreateOpen = document.getElementById('user-create')?.style.display === 'flex';
   document.getElementById('view-users').classList.toggle('active', isUsers);
   document.getElementById('view-companies').classList.toggle('active', !isUsers);
-  document.querySelector('.main')?.classList.toggle('user-detail-open', isUsers && !!selectedUserId);
+  document.querySelector('.main')?.classList.toggle('user-detail-open', isUsers && (!!selectedUserId || isUserCreateOpen));
   document.querySelector('.main')?.classList.toggle('company-detail-open', !isUsers && !!selectedCompanyId);
   document.querySelectorAll('.nav a[href="#users"], .nav a[href="#companies"]').forEach((n,i) => n.classList.toggle('active', isUsers ? i===0 : i===1));
 }

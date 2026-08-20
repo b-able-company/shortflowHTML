@@ -391,14 +391,10 @@
         <table class="workflow-proposal-table workflow-proposal-table-paired">
           <tbody>
             <tr>
-              <th>유통방식</th>
-              <td>${escapeHtml(proposal.distributionType)}</td>
               <th>릴리즈기간</th>
               <td>${escapeHtml(proposal.term)}</td>
-            </tr>
-            <tr>
               <th>릴리즈지역</th>
-              <td colspan="3">${escapeHtml(proposal.region)}</td>
+              <td>${escapeHtml(proposal.region)}</td>
             </tr>
           </tbody>
         </table>
@@ -408,15 +404,9 @@
         <table class="workflow-proposal-table workflow-proposal-table-paired">
           <tbody>
             <tr>
-              <th>정산타입</th>
-              <td>${escapeHtml(proposal.settlementMethod)}</td>
-              <th>RS비율</th>
-              <td>${escapeHtml(proposal.rsRatio || '-')}</td>
-            </tr>
-            <tr>
               <th>통화</th>
               <td>${escapeHtml(priceParts.currency)}</td>
-              <th>금액</th>
+              <th>묶음 가격</th>
               <td>${escapeHtml(priceParts.amount)}</td>
             </tr>
           </tbody>
@@ -571,22 +561,17 @@
     const rows = workflowType === '단일'
       ? [
           { label: '가격', sent: proposal.price, received: condition.single.price },
-          { label: '유통 방식', sent: proposal.distributionType, received: condition.single.distributionType },
-          { label: '정산 방식', sent: proposal.settlementMethod, received: condition.single.settlementMethod },
-          { label: 'RS 비율', sent: proposal.rsRatio || '-', received: condition.single.rsRatio },
           { label: '유통 지역', sent: proposal.region, received: condition.single.region },
           { label: '유통 기간', sent: proposal.term, received: condition.single.term },
         ]
       : [
-          { label: '번들 총액', sent: proposal.price, received: condition.bundle.bundleAmount },
+          { label: '묶음 가격', sent: proposal.price, received: condition.bundle.bundleAmount },
           { label: '유통 지역·기간', sent: `${proposal.region} · ${proposal.term}`, received: condition.bundle.regionTermSummary },
           ...condition.bundle.confirmedContents.flatMap((content, index) => {
             const sentContent = platformSentContentsForItem(item)[index] || {};
             const labelPrefix = content.title;
             return [
               { label: `${labelPrefix} · 가격`, sent: sentContent.price, received: content.price },
-              { label: `${labelPrefix} · 정산 방식`, sent: sentContent.settlementMethod, received: content.settlementMethod },
-              { label: `${labelPrefix} · RS 비율`, sent: sentContent.rsRatio || '-', received: content.rsRatio || '-' },
             ];
           }),
         ];
@@ -615,13 +600,10 @@
     const condition = platformReceivedConditionForItem(item);
     const renderReceivedConditionTable = (single) => {
       const distributionRows = [
-        ['회차수', single.episodes, '러닝타임', single.runningTime],
-        ['유통방식', single.distributionType, '릴리즈기간', single.term],
-        ['릴리즈지역', single.region, '릴리즈 예상 날짜', single.releaseDate],
+        ['릴리즈기간', single.term, '릴리즈지역', single.region],
       ];
       const settlementRows = [
-        ['정산타입', single.settlementMethod, 'RS비율', single.rsRatio],
-        ['통화', single.currency, '금액', single.amount],
+        ['통화', single.currency, '묶음 가격', single.amount],
       ];
       const renderPairedTable = (rows) => `
         <table class="workflow-proposal-table workflow-proposal-table-paired">

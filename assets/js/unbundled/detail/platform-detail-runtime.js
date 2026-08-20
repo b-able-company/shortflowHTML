@@ -113,7 +113,7 @@ function installDetailFieldTweaks() {
       var poster = posterBrand && posterBrand.parentElement;
       if (poster) {
         var image = document.createElement('img');
-        image.src = 'images/비밀사내결혼.png';
+        image.src = 'images/posters/비밀사내결혼.png';
         image.alt = '비밀 사내 결혼 포스터';
         image.dataset.detailPoster = 'true';
         image.style.display = 'block';

@@ -134,14 +134,14 @@
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 225px));
-      justify-content: space-between;
-      gap: 30px 4px;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 28px 6px;
     }
     .card { min-width: 0; position: relative; }
     .poster {
       position: relative;
       width: 96%;
+      max-width: 204px;
       margin: 0 auto;
       height: auto;
       aspect-ratio: 2 / 3;
@@ -289,8 +289,9 @@
     }
     .title {
       width: 96%;
-      margin: 10px auto 0;
-      font-size: 15px;
+      max-width: 204px;
+      margin: 7px auto 0;
+      font-size: 14px;
       font-weight: 500;
       line-height: 1.35;
       white-space: nowrap;
@@ -299,9 +300,10 @@
     }
     .genres {
       width: 96%;
+      max-width: 204px;
       margin: 3px auto 0;
       color: #6b7280;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 400;
       white-space: nowrap;
       overflow: hidden;
@@ -440,7 +442,7 @@
     </section>
 
     <div class="list-meta">
-      <div class="count" id="count">총 0개</div>
+      <div class="count" id="count" aria-live="polite"></div>
     </div>
 
     <section class="grid" id="grid" aria-label="제작협업 콘텐츠 목록"></section>
@@ -450,23 +452,23 @@
 
   <script>
     const collaborations = [
-      { title: '대표님, 계약 연애는 처음이라서요', producer: 'Studio Lune', genres: ['로맨스', '여성향'], stage: '기획', favorite: true, poster: 'p1', image: 'images/ceo-ex-boyfriend.png', href: '#', registeredAt: '2026-07-02' },
-      { title: '재벌집 막내 비서: 프리퀄', producer: 'Mellow Frame', genres: ['로맨스', '가족'], stage: '시놉 확정', favorite: false, poster: 'p2', image: 'images/재벌집막내비서.png', href: '#', registeredAt: '2026-06-28' },
-      { title: '죽었다가 회귀한 톱스타', producer: 'Orbit Pictures', genres: ['타임슬립', '액션'], stage: '파일럿 완료', favorite: true, poster: 'p3', image: 'images/return-topstar-poster.png', href: '#', registeredAt: '2026-06-24' },
-      { title: '우리 집에 킬러가 산다', producer: 'Black Room', genres: ['스릴러', '코미디'], stage: '기획', favorite: false, poster: 'p4', image: 'images/killer-at-home.png', href: '#', registeredAt: '2026-06-18' },
-      { title: '오늘부터 악녀 대행합니다', producer: 'Peach Lab', genres: ['로맨스', '코미디'], stage: '대본 확보', favorite: false, poster: 'p5', image: 'images/villainess-agent.png', href: '#', registeredAt: '2026-06-12' },
-      { title: '남편이 AI입니다: 시즌 제로', producer: 'Neon Script', genres: ['로맨스', 'SF'], stage: '제작 준비완료', favorite: true, poster: 'p6', image: 'images/ai-husband.png', href: '#', registeredAt: '2026-06-05' },
-      { title: '퇴사했더니 황제가 됐다', producer: 'History Pop', genres: ['판타지', '사극'], stage: '시놉 확정', favorite: false, poster: 'p7', image: 'images/resigned-emperor.png', href: '#', registeredAt: '2026-05-30' },
-      { title: '살인범과 룸메이트가 되었다', producer: 'Tension House', genres: ['스릴러', '미스터리'], stage: '캐스팅 확정', favorite: true, poster: 'p8', image: 'images/murderer-roommate.png', href: '#', registeredAt: '2026-05-25' },
-      { title: '비밀 계정의 주인', producer: 'Deep Pink Studio', genres: ['복수', '스릴러'], stage: '기획', favorite: false, poster: 'p9', image: 'images/topstar-still-1.png', href: '#', registeredAt: '2026-05-18' },
-      { title: '계약 종료 3일 전', producer: 'Blue Hour', genres: ['로맨스', '멜로'], stage: '대본 확보', favorite: false, poster: 'p10', image: 'images/계약종료3일전.png', href: '#', registeredAt: '2026-05-10' },
-      { title: '달빛 아래 편의점', producer: 'Daybreak Works', genres: ['청춘', 'SF'], stage: '시놉 확정', favorite: false, poster: 'p11', image: 'images/topstar-still-3.png', href: '#', registeredAt: '2026-05-04' },
-      { title: '그녀의 두 번째 엔딩', producer: 'Ending Note', genres: ['로맨스', '타임슬립'], stage: '파일럿 완료', favorite: true, poster: 'p12', image: 'images/return-topstar-poster.png', href: '#', registeredAt: '2026-04-28' },
-      { title: '새벽 두 시의 고백', producer: 'Moonlit Studio', genres: ['로맨스', '청춘'], stage: '기획', favorite: false, poster: 'p1', image: 'images/ceo-ex-boyfriend.png', href: '#', registeredAt: '2026-04-21' },
-      { title: '상속녀의 가짜 약혼자', producer: 'Velvet Room', genres: ['로맨스', '가족'], stage: '캐스팅 확정', favorite: false, poster: 'p2', image: 'images/chaebol-secretary.png', href: '#', registeredAt: '2026-04-16' },
-      { title: '이번 생은 조연입니다', producer: 'Loop Lab', genres: ['타임슬립', '코미디'], stage: '제작 준비완료', favorite: false, poster: 'p3', image: 'images/villainess-agent.png', href: '#', registeredAt: '2026-04-09' },
-      { title: '대표님의 비밀 계약서', producer: 'Paper Moon', genres: ['로맨스', '복수'], stage: '대본 확보', favorite: false, poster: 'p4', image: 'images/killer-at-home.png', href: '#', registeredAt: '2026-04-02' },
-      { title: '나를 죽인 배우를 찾습니다', producer: 'Frame Zero', genres: ['스릴러', '미스터리'], stage: '캐스팅 확정', favorite: false, poster: 'p5', image: 'images/murderer-roommate.png', href: '#', registeredAt: '2026-03-26' }
+      { title: '대표님, 계약 연애는 처음이라서요', producer: 'Studio Lune', genres: ['로맨스', '여성향'], stage: '기획', favorite: true, poster: 'p1', image: 'images/posters/ceo-ex-boyfriend.png', href: '#', registeredAt: '2026-07-02' },
+      { title: '재벌집 막내 비서: 프리퀄', producer: 'Mellow Frame', genres: ['로맨스', '가족'], stage: '시놉 확정', favorite: false, poster: 'p2', image: 'images/posters/재벌집막내비서.png', href: '#', registeredAt: '2026-06-28' },
+      { title: '죽었다가 회귀한 톱스타', producer: 'Orbit Pictures', genres: ['타임슬립', '액션'], stage: '파일럿 완료', favorite: true, poster: 'p3', image: 'images/posters/return-topstar-poster.png', href: '#', registeredAt: '2026-06-24' },
+      { title: '우리 집에 킬러가 산다', producer: 'Black Room', genres: ['스릴러', '코미디'], stage: '기획', favorite: false, poster: 'p4', image: 'images/posters/우리집에킬러가산다.png', href: '#', registeredAt: '2026-06-18' },
+      { title: '오늘부터 악녀 대행합니다', producer: 'Peach Lab', genres: ['로맨스', '코미디'], stage: '대본 확보', favorite: false, poster: 'p5', image: 'images/posters/villainess-agent.png', href: '#', registeredAt: '2026-06-12' },
+      { title: '남편이 AI입니다: 시즌 제로', producer: 'Neon Script', genres: ['로맨스', 'SF'], stage: '제작 준비완료', favorite: true, poster: 'p6', image: 'images/posters/ai-husband.png', href: '#', registeredAt: '2026-06-05' },
+      { title: '퇴사했더니 황제가 됐다', producer: 'History Pop', genres: ['판타지', '사극'], stage: '시놉 확정', favorite: false, poster: 'p7', image: 'images/posters/resigned-emperor.png', href: '#', registeredAt: '2026-05-30' },
+      { title: '살인범과 룸메이트가 되었다', producer: 'Tension House', genres: ['스릴러', '미스터리'], stage: '캐스팅 확정', favorite: true, poster: 'p8', image: 'images/posters/murderer-roommate.png', href: '#', registeredAt: '2026-05-25' },
+      { title: '비밀 계정의 주인', producer: 'Deep Pink Studio', genres: ['복수', '스릴러'], stage: '기획', favorite: false, poster: 'p9', image: 'images/media/topstar-still-1.png', href: '#', registeredAt: '2026-05-18' },
+      { title: '계약 종료 3일 전', producer: 'Blue Hour', genres: ['로맨스', '멜로'], stage: '대본 확보', favorite: false, poster: 'p10', image: 'images/posters/계약종료3일전.png', href: '#', registeredAt: '2026-05-10' },
+      { title: '달빛 아래 편의점', producer: 'Daybreak Works', genres: ['청춘', 'SF'], stage: '시놉 확정', favorite: false, poster: 'p11', image: 'images/media/topstar-still-3.png', href: '#', registeredAt: '2026-05-04' },
+      { title: '그녀의 두 번째 엔딩', producer: 'Ending Note', genres: ['로맨스', '타임슬립'], stage: '파일럿 완료', favorite: true, poster: 'p12', image: 'images/posters/return-topstar-poster.png', href: '#', registeredAt: '2026-04-28' },
+      { title: '새벽 두 시의 고백', producer: 'Moonlit Studio', genres: ['로맨스', '청춘'], stage: '기획', favorite: false, poster: 'p1', image: 'images/posters/ceo-ex-boyfriend.png', href: '#', registeredAt: '2026-04-21' },
+      { title: '상속녀의 가짜 약혼자', producer: 'Velvet Room', genres: ['로맨스', '가족'], stage: '캐스팅 확정', favorite: false, poster: 'p2', image: 'images/posters/chaebol-secretary.png', href: '#', registeredAt: '2026-04-16' },
+      { title: '이번 생은 조연입니다', producer: 'Loop Lab', genres: ['타임슬립', '코미디'], stage: '제작 준비완료', favorite: false, poster: 'p3', image: 'images/posters/villainess-agent.png', href: '#', registeredAt: '2026-04-09' },
+      { title: '대표님의 비밀 계약서', producer: 'Paper Moon', genres: ['로맨스', '복수'], stage: '대본 확보', favorite: false, poster: 'p4', image: 'images/posters/우리집에킬러가산다.png', href: '#', registeredAt: '2026-04-02' },
+      { title: '나를 죽인 배우를 찾습니다', producer: 'Frame Zero', genres: ['스릴러', '미스터리'], stage: '캐스팅 확정', favorite: false, poster: 'p5', image: 'images/posters/murderer-roommate.png', href: '#', registeredAt: '2026-03-26' }
     ];
 
     const state = {
@@ -475,7 +477,7 @@
       favoriteOnly: false,
       query: '',
       page: 1,
-      pageSize: 15
+      pageSize: 18
     };
 
     const grid = document.getElementById('grid');
@@ -534,7 +536,7 @@
       const start = (state.page - 1) * state.pageSize;
       const pageItems = items.slice(start, start + state.pageSize);
 
-      count.textContent = `총 ${items.length}개`;
+      count.textContent = '';
       emptyState.classList.toggle('is-visible', pageItems.length === 0);
       grid.style.display = pageItems.length ? 'grid' : 'none';
       grid.innerHTML = pageItems.map((item) => `

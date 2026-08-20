@@ -111,7 +111,7 @@
   }
 
   function renderAdminIcon() {
-    return '<img src="images/wlogo.png" alt="">';
+    return '<img src="images/ui/wlogo.png" alt="">';
   }
 
   function renderMessageList(selectedId, activeType, filteredItems) {

@@ -1920,6 +1920,45 @@ td { padding: 9px 12px; vertical-align: middle; }
   line-height: 1;
   letter-spacing: 0.02em;
 }
+.ownership-help {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  margin-left: 6px;
+  border: 0.5px solid #d6d6d6;
+  border-radius: 50%;
+  color: #999;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: help;
+}
+.ownership-help::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  width: 260px;
+  padding: 8px 10px;
+  border: 0.5px solid #e5e5e5;
+  border-radius: 8px;
+  background: #fff;
+  color: #555;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.45;
+  white-space: normal;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transform: translateY(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .12s ease;
+  z-index: 1000;
+}
+.ownership-help:hover::after { opacity: 1; }
 
 /* ── RELEASE HISTORY ── */
 .release-toolbar { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 10px; }
@@ -2661,8 +2700,15 @@ td { padding: 9px 12px; vertical-align: middle; }
 .content-split #tab-trans .form-grid.full .fg:last-child {
   border-bottom: 0;
 }
-.content-split #tab-basic #b-scheduled-release-date-row {
-  border-bottom: 0.5px solid #dedede;
+.content-split #tab-basic #b-scheduled-platforms-row {
+  border-right: 0;
+}
+.content-split #tab-basic #b-scheduled-release-date-row,
+.content-split #tab-basic #b-scheduled-platforms-row {
+  border-bottom: 0;
+}
+.content-split #tab-basic .form-grid.distribution-released #b-distribution-status-row {
+  border-bottom: 0;
 }
 .content-split #tab-trans .form-grid.full {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -4059,14 +4105,14 @@ td { padding: 9px 12px; vertical-align: middle; }
                       </select>
                     </div>
                     <div class="fg"><label>유료 시청 시작 회차</label><input id="b-start-point" type="number" /></div>
-                    <div class="fg"><label>유통 여부</label>
+                    <div class="fg span-2col" id="b-distribution-status-row"><label>유통 여부</label>
                       <select id="b-is-distributed" onchange="syncContentDistributionFields()">
                         <option value="false">미유통</option>
                         <option value="true">기유통</option>
                       </select>
                     </div>
                     <div class="fg" id="b-scheduled-release-date-row"><label>릴리즈 희망 날짜 <span class="req">*</span></label><input id="b-scheduled-release-date" type="text" /></div>
-                    <div class="fg span-2col" id="b-scheduled-platforms-row"><label>예정 플랫폼 <span class="req">*</span></label><input id="b-scheduled-platforms" type="text" /></div>
+                    <div class="fg" id="b-scheduled-platforms-row"><label>예정 플랫폼 <span class="req">*</span></label><input id="b-scheduled-platforms" type="text" /></div>
                   </div>
                 </div>
 
@@ -4376,7 +4422,7 @@ td { padding: 9px 12px; vertical-align: middle; }
                   </div>
                 </div>
                 <div class="sec">
-                  <div class="sec-title operation-section-title">소유 제작사 변경</div>
+                  <div class="sec-title operation-section-title">소유 제작사 변경 <span class="ownership-help" data-tooltip="저장하면 이 콘텐츠의 제작사 표시와 소유 기준이 선택한 제작사로 변경됩니다.">?</span></div>
                   <div class="form-section ownership-transfer-section">
                     <div class="ownership-transfer-grid">
                       <div class="fg">
@@ -4392,10 +4438,6 @@ td { padding: 9px 12px; vertical-align: middle; }
                         <button class="btn btn-ownership-transfer" type="button" onclick="transferContentOwnership()">변경</button>
                       </div>
                     </div>
-                  </div>
-                  <div class="ownership-note">
-                    <span class="ownership-note-label">NOTE</span>
-                    <span>저장하면 이 콘텐츠의 제작사 표시와 소유 기준이 선택한 제작사로 변경됩니다.</span>
                   </div>
                 </div>
               </div>
@@ -4530,7 +4572,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 <div class="admin-confirm-backdrop" id="admin-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="admin-confirm-title" onclick="closeAdminConfirm(event)">
   <div class="admin-confirm-dialog" onclick="event.stopPropagation()">
     <div class="admin-confirm-body">
-      <div class="admin-confirm-icon" aria-hidden="true"><img src="../images/icon/image.png" alt=""></div>
+      <div class="admin-confirm-icon" aria-hidden="true"><img src="../images/ui/icon/image.png" alt=""></div>
       <div class="admin-confirm-title" id="admin-confirm-title">수정요청을 승인할까요?</div>
       <div class="admin-confirm-copy" id="admin-confirm-message">승인 후 수정요청 상태가 APPROVED로 변경됩니다.</div>
     </div>
@@ -4827,21 +4869,21 @@ const materialFolderStatusByContentId = {
 };
 
 const contentPosterImages = [
-  '../images/대표님이내전남친입니다.png',
-  '../images/재벌집막내비서.png',
-  '../images/return-topstar-poster.png',
-  '../images/killer-at-home.png',
-  '../images/villainess-agent.png',
-  '../images/ai-husband.png',
-  '../images/resigned-emperor.png',
-  '../images/murderer-roommate.png',
-  '../images/내남편의비밀계정.png',
-  '../images/첫사랑은계약종료.png',
-  '../images/달빛아래편의점.png',
-  '../images/그녀의두번째엔딩.png',
-  '../images/재벌가입주과외.png',
-  '../images/나의위험한파트너.png',
-  '../images/황후의복수노트.png',
+  '../images/posters/대표님이내전남친입니다.png',
+  '../images/posters/재벌집막내비서.png',
+  '../images/posters/return-topstar-poster.png',
+  '../images/posters/우리집에킬러가산다.png',
+  '../images/posters/villainess-agent.png',
+  '../images/posters/ai-husband.png',
+  '../images/posters/resigned-emperor.png',
+  '../images/posters/murderer-roommate.png',
+  '../images/posters/내남편의비밀계정.png',
+  '../images/posters/첫사랑은계약종료.png',
+  '../images/posters/달빛아래편의점.png',
+  '../images/posters/그녀의두번째엔딩.png',
+  '../images/posters/재벌가입주과외.png',
+  '../images/posters/나의위험한파트너.png',
+  '../images/posters/황후의복수노트.png',
 ];
 
 const contentDisplayOverrides = [
@@ -7459,6 +7501,12 @@ function syncContentDistributionFields() {
   const isDistributed = document.getElementById('b-is-distributed')?.value === 'true';
   const dateInput = document.getElementById('b-scheduled-release-date');
   const platformsInput = document.getElementById('b-scheduled-platforms');
+  const dateRow = document.getElementById('b-scheduled-release-date-row');
+  const platformsRow = document.getElementById('b-scheduled-platforms-row');
+  const grid = document.getElementById('b-distribution-status-row')?.closest('.form-grid');
+  if (grid) grid.classList.toggle('distribution-released', isDistributed);
+  if (dateRow) dateRow.style.display = isDistributed ? 'none' : '';
+  if (platformsRow) platformsRow.style.display = isDistributed ? 'none' : '';
   if (dateInput) dateInput.disabled = isDistributed;
   if (platformsInput) platformsInput.disabled = isDistributed;
 }

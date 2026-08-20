@@ -1,10 +1,10 @@
 function installPerformancePosterImages() {
     const posters = {
-      '대표님이 내 전남친입니다': 'images/대표님이내전남친입니다.png',
-      '재벌집 막내 비서': 'images/재벌집막내비서.png',
-      '죽었다가 회귀한 톱스타': 'images/죽었다가회귀한.png',
-      '우리 집에 킬러가 산다': 'images/우리집에킬러가.png',
-      '오늘부터 악녀 대행합니다': 'images/오늘부터악녀대행.png'
+      '대표님이 내 전남친입니다': 'images/posters/대표님이내전남친입니다.png',
+      '재벌집 막내 비서': 'images/posters/재벌집막내비서.png',
+      '죽었다가 회귀한 톱스타': 'images/posters/죽었다가회귀한.png',
+      '우리 집에 킬러가 산다': 'images/posters/우리집에킬러가산다.png',
+      '오늘부터 악녀 대행합니다': 'images/posters/오늘부터악녀대행.png'
     };
 
     const findPosterSlot = function(titleNode) {

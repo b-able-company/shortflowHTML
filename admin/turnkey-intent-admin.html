@@ -704,7 +704,7 @@ body { background: #fff !important; }
   height: 48px;
   border-radius: 50%;
   flex: 0 0 48px;
-  background: #f2f2f2 url('../images/icon/플랫폼프로필.png') center 38% / 136% no-repeat;
+  background: #f2f2f2 url('../images/ui/icon/플랫폼프로필.png') center 38% / 136% no-repeat;
   box-shadow: inset 0 0 0 0.5px #e6e6e6;
 }
 .intent-detail-copy {
@@ -1056,7 +1056,7 @@ body { background: #fff !important; }
 <div class="review-confirm-backdrop admin-confirm-backdrop" id="review-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="review-confirm-title" onclick="closeAdminConfirm(event)">
   <div class="review-confirm-dialog admin-confirm-dialog" onclick="event.stopPropagation()">
     <div class="review-confirm-body admin-confirm-body">
-      <div class="admin-confirm-icon" aria-hidden="true"><img src="../images/icon/image.png" alt=""></div>
+      <div class="admin-confirm-icon" aria-hidden="true"><img src="../images/ui/icon/image.png" alt=""></div>
       <div class="review-confirm-title admin-confirm-title" id="review-confirm-title">검토 완료 처리할까요?</div>
       <div class="review-confirm-copy admin-confirm-copy" id="admin-confirm-message">이 메시지가 확인 완료 상태로 변경됩니다.</div>
     </div>
@@ -1552,7 +1552,7 @@ function renderComments() {
           <div class="production-chat-value">${escapeHtml(item.producerName || '-')}</div>
         </div>
         <div class="comment-bubble-line">
-          <div class="comment-avatar" style="background-image:url('../images/icon/플랫폼프로필.png')" aria-hidden="true"></div>
+          <div class="comment-avatar" style="background-image:url('../images/ui/icon/플랫폼프로필.png')" aria-hidden="true"></div>
           <div class="comment-text">${escapeHtml(item.message)}</div>
           ${reviewCheckControl(item)}
         </div>
@@ -1563,7 +1563,7 @@ function renderComments() {
     <div class="comment-item sender-user">
       <div class="comment-main">
         <div class="comment-bubble-line">
-          <div class="comment-avatar" style="background-image:url('../images/icon/플랫폼프로필.png')" aria-hidden="true"></div>
+          <div class="comment-avatar" style="background-image:url('../images/ui/icon/플랫폼프로필.png')" aria-hidden="true"></div>
           <div class="comment-text">${escapeHtml(item.message)}</div>
           ${reviewCheckControl(item)}
         </div>

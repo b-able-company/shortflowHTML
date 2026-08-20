@@ -650,7 +650,7 @@ function SubmitModal(_ref6) {
       justifyContent: 'center'
     }
   }, /*#__PURE__*/React.createElement("img", {
-    src: "images/contentAddCheck.png",
+    src: "images/ui/contentAddCheck.png",
     alt: "",
     style: {
       width: 44,

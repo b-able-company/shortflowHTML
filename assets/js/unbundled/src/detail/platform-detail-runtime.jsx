@@ -142,7 +142,7 @@ function installDetailFieldTweaks() {
         const poster = posterBrand && posterBrand.parentElement;
         if (poster) {
           const image = document.createElement('img');
-          image.src = 'images/죽었다가회귀한.png';
+          image.src = 'images/posters/죽었다가회귀한.png';
           image.alt = '죽었다가 회귀한 톱스타 포스터';
           image.dataset.detailPoster = 'true';
           image.style.display = 'block';

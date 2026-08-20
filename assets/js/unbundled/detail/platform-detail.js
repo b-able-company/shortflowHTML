@@ -481,43 +481,43 @@ function PreviewSection(_ref9) {
     title: '예고편',
     duration: '00:48',
     tone: 'linear-gradient(145deg, #151923 0%, #332536 48%, #9f6a55 100%)',
-    thumbnail: 'images/비밀사내예고편.png'
+    thumbnail: 'images/media/비밀사내예고편.png'
   }];
   var freeEpisodes = [{
     type: '무료회차',
     title: '1화',
     duration: '12:04',
-    thumbnail: 'images/비밀사내결혼무료1.png'
+    thumbnail: 'images/media/비밀사내결혼무료1.png'
   }, {
     type: '무료회차',
     title: '2화',
     duration: '11:38',
-    thumbnail: 'images/비밀사내결혼무료2.png'
+    thumbnail: 'images/media/비밀사내결혼무료2.png'
   }, {
     type: '무료회차',
     title: '3화',
     duration: '12:21',
-    thumbnail: 'images/비밀사내결혼무료3.png'
+    thumbnail: 'images/media/비밀사내결혼무료3.png'
   }, {
     type: '무료회차',
     title: '4화',
     duration: '10:57',
-    thumbnail: 'images/비밀사내결혼무료4.png'
+    thumbnail: 'images/media/비밀사내결혼무료4.png'
   }, {
     type: '무료회차',
     title: '5화',
     duration: '11:42',
-    thumbnail: 'images/비밀사내결혼무료5.png'
+    thumbnail: 'images/media/비밀사내결혼무료5.png'
   }, {
     type: '무료회차',
     title: '6화',
     duration: '12:16',
-    thumbnail: 'images/비밀사내결혼무료6.png'
+    thumbnail: 'images/media/비밀사내결혼무료6.png'
   }, {
     type: '무료회차',
     title: '7화',
     duration: '11:29',
-    thumbnail: 'images/비밀사내결혼무료7.png'
+    thumbnail: 'images/media/비밀사내결혼무료7.png'
   }];
   var openPreview = function openPreview(item) {
     return setModalItem(item);
@@ -881,7 +881,7 @@ function PreviewSection(_ref9) {
 }
 function StillsSection(_ref1) {
   var t = _ref1.t;
-  var stills = ['images/비밀사내결혼.png', 'images/비밀사내결혼스틸컷1.png', 'images/비밀사내결혼스틸컷2.png'];
+  var stills = ['images/posters/비밀사내결혼.png', 'images/media/비밀사내결혼스틸컷1.png', 'images/media/비밀사내결혼스틸컷2.png'];
   var _React$useState3 = React.useState(null),
     _React$useState4 = _slicedToArray(_React$useState3, 2),
     selected = _React$useState4[0],

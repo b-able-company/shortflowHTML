@@ -167,7 +167,7 @@ function AIIntroModal({
       lineHeight: 1
     }
   }, "\xD7"), /*#__PURE__*/React.createElement("img", {
-    src: "images/\uAE30\uD68D\uC11C\uD31D\uC5C5.png",
+    src: "images/ui/\uAE30\uD68D\uC11C\uD31D\uC5C5.png",
     alt: "",
     style: {
       width: '100%',

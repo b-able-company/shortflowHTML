@@ -15,31 +15,31 @@ var PERF_MOCK_CONTENT = {
   p1: {
     title: "대표님이 내 전남친입니다",
     subtitle: "80부작 · 로맨스",
-    posterImage: "images/대표님이내전남친입니다.png",
+    posterImage: "images/posters/대표님이내전남친입니다.png",
     platforms: ["NovaShort", "PlayStory", "VeloDrama", "StoryWave"]
   },
   p2: {
     title: "재벌집 막내 비서",
     subtitle: "72부작 · 로맨스 · 여성향",
-    posterImage: "images/재벌집막내비서.png",
+    posterImage: "images/posters/재벌집막내비서.png",
     platforms: ["NovaShort", "PlayStory", "StoryWave"]
   },
   p3: {
     title: "죽었다가 회귀한 톱스타",
     subtitle: "80부작 · 타임슬립 · 액션",
-    posterImage: "images/죽었다가회귀한.png",
+    posterImage: "images/posters/죽었다가회귀한.png",
     platforms: ["NovaShort", "VeloDrama"]
   },
   p4: {
     title: "우리 집에 킬러가 산다",
     subtitle: "64부작 · 스릴러 · 코미디",
-    posterImage: "images/우리집에킬러가.png",
+    posterImage: "images/posters/우리집에킬러가산다.png",
     platforms: ["NovaShort", "PlayStory", "VeloDrama", "StoryWave", "MiniStage"]
   },
   p5: {
     title: "오늘부터 악녀 대행합니다",
     subtitle: "70부작 · 로맨스 · 코미디",
-    posterImage: "images/오늘부터악녀대행.png",
+    posterImage: "images/posters/오늘부터악녀대행.png",
     platforms: ["NovaShort", "PlayStory"]
   }
 };

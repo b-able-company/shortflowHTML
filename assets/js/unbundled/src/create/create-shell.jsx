@@ -261,7 +261,7 @@ function SubmitModal({ form, baseLanguage, onClose, onConfirm, t }) {
         >×</button>
         <div style={{ width: 60, height: 60, margin: '0 auto 18px', borderRadius: 16, background: '#F4F4F1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img
-            src="images/contentAddCheck.png"
+            src="images/ui/contentAddCheck.png"
             alt=""
             style={{ width: 44, height: 44, display: 'block', objectFit: 'contain' }}
           />
