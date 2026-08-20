@@ -476,7 +476,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 }
 .member-user-split #user-create .dh-title {
   color: #1a1a18;
-  font-size: 18px;
+  font-size: 16.5px;
   font-weight: 480;
   line-height: 1.25;
   transform: translateY(3px);
@@ -504,6 +504,9 @@ td { padding: 9px 12px; vertical-align: middle; }
   height: 5px;
   flex-basis: 5px;
   background: #e85d2c;
+}
+.member-user-split #user-create .user-create-step .sec + .sec {
+  margin-top: 42px;
 }
 .member-user-split #user-create .edit-grid {
   grid-template-columns: 1fr 1fr;
@@ -536,6 +539,9 @@ td { padding: 9px 12px; vertical-align: middle; }
 .member-user-split #user-create .fg.form-last-row {
   border-bottom: 0;
 }
+.member-user-split #user-create .fg.has-bottom-line {
+  border-bottom: 0.5px solid #dedede !important;
+}
 .member-user-split #user-create .fg label {
   min-width: 0;
   padding: 0 12px;
@@ -547,6 +553,15 @@ td { padding: 9px 12px; vertical-align: middle; }
   font-size: 11.5px;
   font-weight: 500;
 }
+.member-user-split #user-create .fg label.required::after {
+  content: "*";
+  margin-left: 4px;
+  color: #e85d2c;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  transform: translateY(-1px);
+}
 .member-user-split #user-create .fg input,
 .member-user-split #user-create .fg select {
   height: 100%;
@@ -557,6 +572,16 @@ td { padding: 9px 12px; vertical-align: middle; }
   font-size: 12.5px;
   font-weight: 500;
   transition: background 0.14s ease, box-shadow 0.14s ease;
+}
+.member-user-split #user-create .fg.is-disabled label,
+.member-user-split #user-create .fg.is-disabled input,
+.member-user-split #user-create .fg input:disabled {
+  background-color: #f5f5f5;
+  color: #a8adb5;
+  cursor: not-allowed;
+}
+.member-user-split #user-create .fg.is-disabled label {
+  color: #9aa1aa;
 }
 .member-user-split #user-create .fg textarea {
   min-height: 74px;
@@ -571,13 +596,13 @@ td { padding: 9px 12px; vertical-align: middle; }
   resize: vertical;
   outline: none;
 }
-.member-user-split #user-create .fg input:hover,
-.member-user-split #user-create .fg select:hover,
+.member-user-split #user-create .fg input:not(:disabled):hover,
+.member-user-split #user-create .fg select:not(:disabled):hover,
 .member-user-split #user-create .fg textarea:hover {
   background-color: #fcfcfc;
 }
-.member-user-split #user-create .fg input:focus,
-.member-user-split #user-create .fg select:focus,
+.member-user-split #user-create .fg input:not(:disabled):focus,
+.member-user-split #user-create .fg select:not(:disabled):focus,
 .member-user-split #user-create .fg textarea:focus {
   background-color: #fff;
   box-shadow: inset 0 0 0 1px rgba(232, 93, 44, 0.26);
@@ -585,11 +610,142 @@ td { padding: 9px 12px; vertical-align: middle; }
 .member-user-split #user-create .fg:focus-within label {
   color: #1a1a18;
 }
+.member-user-split #user-create .user-company-combobox {
+  position: relative;
+  min-width: 0;
+}
+.member-user-split #user-create .user-company-select-trigger {
+  width: 100%;
+  height: 100%;
+  min-height: 37px;
+  padding: 0 34px 0 12px;
+  border: 0;
+  border-radius: 0;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+  color: #1a1a18;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  text-align: left;
+  transition: background 0.14s ease, box-shadow 0.14s ease;
+}
+.member-user-split #user-create .user-company-select-trigger:hover {
+  background-color: #fcfcfc;
+}
+.member-user-split #user-create .user-company-select-trigger:focus {
+  background-color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(232, 93, 44, 0.26);
+  outline: none;
+}
+.member-user-split #user-create .user-company-select-trigger.is-placeholder {
+  color: #9aa1aa;
+}
+.member-user-split #user-create .user-company-menu-search {
+  padding: 8px;
+  border-bottom: 0.5px solid #eeeeee;
+  background: #fff;
+}
+.member-user-split #user-create .user-company-combobox input[type="search"] {
+  width: 100%;
+  height: 34px;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 0.5px solid #dedede;
+  padding-right: 34px;
+  border-radius: 6px;
+}
+.member-user-split #user-create .user-company-combobox-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  display: none;
+  max-height: 340px;
+  overflow: hidden;
+  border: 0.5px solid #dedede;
+  border-top: 0;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+.member-user-split #user-create .user-company-combobox.is-open .user-company-combobox-menu {
+  display: block;
+}
+.member-user-split #user-create .user-company-options {
+  max-height: 296px;
+  overflow-y: auto;
+}
+.member-user-split #user-create .user-company-option {
+  width: 100%;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 0;
+  border-bottom: 0.5px solid #eeeeee;
+  background: #fff;
+  color: #1a1a18;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  font-family: inherit;
+  gap: 10px;
+}
+.member-user-split #user-create .user-company-option:last-child {
+  border-bottom: 0;
+}
+.member-user-split #user-create .user-company-option:hover,
+.member-user-split #user-create .user-company-option.is-selected {
+  background: #f8f8f8;
+}
+.member-user-split #user-create .user-company-option-title {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 400;
+}
+.member-user-split #user-create .user-company-option-meta {
+  min-width: 62px;
+  padding: 5px 10px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: #1a1a18;
+  font-size: 13px;
+  font-weight: 400;
+  text-align: center;
+  line-height: 1;
+}
+.member-user-split #user-create .user-company-option-empty {
+  color: #8a9199;
+  font-size: 11.5px;
+  font-weight: 500;
+}
+.member-user-split #user-create .user-company-option-meta {
+  flex: 0 0 auto;
+}
+.member-user-split #user-create .user-company-option-meta.is-production {
+  border-color: #f3dc6a;
+  background: transparent;
+}
+.member-user-split #user-create .user-company-option-meta.is-platform {
+  border-color: #9ed9f5;
+  background: transparent;
+}
+.member-user-split #user-create .user-company-option-empty {
+  padding: 12px;
+}
 .member-user-split #user-create #user-create-phone-country,
 .member-user-split #user-create #user-create-company,
-.member-user-split #user-create #user-create-role,
-.member-user-split #user-create #user-create-perm,
-.member-user-split #user-create #user-create-status,
 .member-user-split #user-create #user-create-company-type,
 .member-user-split #user-create #user-create-company-country,
 .member-user-split #user-create #user-create-company-phone-country {
@@ -615,7 +771,7 @@ td { padding: 9px 12px; vertical-align: middle; }
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 16.5px;
 }
 .member-user-split #user-create .btn-panel-expand:hover {
   background: #f7f7f7;
@@ -630,28 +786,33 @@ td { padding: 9px 12px; vertical-align: middle; }
 .member-user-split #user-create #user-create-step-choice.show {
   min-height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 96px;
 }
 .user-create-choice-section {
   width: 100%;
+  max-width: 920px;
   margin: 0;
 }
 .user-create-choice-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
 }
 .user-create-choice-btn {
-  min-height: 136px;
+  min-height: 360px;
   border: 0.5px solid #dedede;
   border-radius: 8px;
   background: #fff;
   color: #1a1a18;
   font-family: inherit;
-  font-size: 15px;
-  font-weight: 440;
+  font-size: 18px;
+  font-weight: 400;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: background 0.14s ease, border-color 0.14s ease, transform 0.14s ease;
 }
 .user-create-choice-btn:hover {
@@ -665,9 +826,22 @@ td { padding: 9px 12px; vertical-align: middle; }
   color: #fff;
 }
 .member-user-split #user-create #user-create-submit-btn {
-  min-height: 40px;
-  min-width: 104px;
-  padding: 0 20px;
+  height: 46px;
+  min-height: 46px;
+  min-width: 0;
+  padding: 0 36px;
+  border: 0;
+  border-radius: 9px;
+  background: #007aff;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0,122,255,0.22);
+  font-size: 13.5px;
+  font-weight: 560;
+  gap: 8px;
+}
+.member-user-split #user-create #user-create-submit-btn:hover {
+  background: #006ee6;
+  box-shadow: 0 3px 8px rgba(0,122,255,0.26);
 }
 .member-company-split #company-detail .detail-tab {
   font-size: 12.5px;
@@ -1598,6 +1772,9 @@ td { padding: 9px 12px; vertical-align: middle; }
 .admin-confirm-body {
   padding: 24px 22px 20px;
 }
+.admin-confirm-dialog.no-icon .admin-confirm-body {
+  padding-top: 22px;
+}
 .admin-confirm-icon {
   width: 65px;
   height: 65px;
@@ -1612,6 +1789,9 @@ td { padding: 9px 12px; vertical-align: middle; }
   object-fit: contain;
   display: block;
 }
+.admin-confirm-dialog.no-icon .admin-confirm-icon {
+  display: none;
+}
 .admin-confirm-title {
   color: #1a1a18;
   font-size: 15px;
@@ -1623,11 +1803,15 @@ td { padding: 9px 12px; vertical-align: middle; }
   color: #777d86;
   font-size: 12px;
   line-height: 1.5;
+  white-space: pre-line;
 }
 .admin-confirm-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
   border-top: 0.5px solid #e7e7e7;
+}
+.admin-confirm-actions.notice-only {
+  grid-template-columns: 1fr;
 }
 .admin-confirm-btn {
   height: 44px;
@@ -1640,6 +1824,9 @@ td { padding: 9px 12px; vertical-align: middle; }
 }
 .admin-confirm-btn + .admin-confirm-btn {
   border-left: 0.5px solid #e7e7e7;
+}
+.admin-confirm-actions.notice-only .admin-confirm-btn + .admin-confirm-btn {
+  border-left: 0;
 }
 .admin-confirm-btn:hover {
   background: rgba(0, 0, 0, 0.035);
@@ -2200,10 +2387,9 @@ td { padding: 9px 12px; vertical-align: middle; }
           <div class="dh">
             <div class="dh-top">
               <div>
-                <div class="dh-title">새 유저 등록</div>
+                <div class="dh-title">사용자 추가</div>
               </div>
               <div class="user-detail-side-top">
-                <button class="btn-panel-expand" id="user-create-expand-toggle" type="button" aria-label="상세 확장" aria-pressed="false" onclick="toggleUserCreateExpanded()"><i class="ti ti-arrows-maximize"></i></button>
                 <button class="btn-close-panel" type="button" onclick="closeUserCreatePanel()"><i class="ti ti-x"></i></button>
               </div>
             </div>
@@ -2222,16 +2408,31 @@ td { padding: 9px 12px; vertical-align: middle; }
                 <div class="sec" id="user-create-existing-company-section">
                   <div class="sec-title">회사 선택</div>
                   <div class="edit-grid">
-                    <div class="fg full form-last-row"><label>회사명</label><select id="user-create-company" onchange="syncUserCreateCompanyRole()"></select></div>
+                    <div class="fg full form-last-row"><label class="required">회사명</label>
+                      <div class="user-company-combobox" id="user-create-company-combobox">
+                        <button class="user-company-select-trigger is-placeholder" id="user-create-company-display" type="button" aria-expanded="false" onclick="toggleUserCreateCompanyMenu()" onkeydown="handleUserCreateCompanyTriggerKeydown(event)">회사 선택</button>
+                        <input id="user-create-company" type="hidden" />
+                        <div class="user-company-combobox-menu" id="user-create-company-menu">
+                          <div class="user-company-menu-search">
+                            <input id="user-create-company-search" type="search" placeholder="회사명 검색" autocomplete="off" oninput="filterUserCreateCompanies()" onkeydown="handleUserCreateCompanyKeydown(event)" />
+                          </div>
+                          <div class="user-company-options" id="user-create-company-options" role="listbox"></div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="sec" id="user-create-new-company-section">
                   <div class="sec-title">회사 정보</div>
                   <div class="edit-grid">
-                    <div class="fg"><label>회사명</label><input id="user-create-company-name" value="New Partner Studio" /></div>
-                    <div class="fg form-right"><label>회사 이메일</label><input id="user-create-company-email" value="contact@newpartner.io" /></div>
-                    <div class="fg full"><label>회사 설명</label><textarea id="user-create-company-description">글로벌 숏폼 콘텐츠 제작 및 유통 협업을 진행하는 파트너사입니다.</textarea></div>
-                    <div class="fg"><label>국가</label>
+                    <div class="fg"><label class="required">회사 유형</label>
+                      <select id="user-create-company-type" onchange="syncUserCreateCompanyRole()">
+                        <option value="PRODUCTION">제작사</option>
+                        <option value="PLATFORM">플랫폼</option>
+                      </select>
+                    </div>
+                    <div class="fg form-right"><label class="required">회사명</label><input id="user-create-company-name" value="New Partner Studio" /></div>
+                    <div class="fg"><label class="required">국가</label>
                       <select id="user-create-company-country">
                         <option value="KR">KR</option>
                         <option value="US">US</option>
@@ -2241,73 +2442,44 @@ td { padding: 9px 12px; vertical-align: middle; }
                         <option value="SG">SG</option>
                       </select>
                     </div>
-                    <div class="fg form-right"><label>회사 타입</label>
-                      <select id="user-create-company-type" onchange="syncUserCreateCompanyRole()">
-                        <option value="PRODUCTION">제작사</option>
-                        <option value="PLATFORM">플랫폼</option>
-                      </select>
-                    </div>
-                    <div class="fg full"><label>주소</label><input id="user-create-company-address" value="서울시 강남구 테헤란로 123" /></div>
+                    <div class="fg form-right"><label class="required">회사 이메일</label><input id="user-create-company-email" value="contact@newpartner.io" /></div>
+                    <div class="fg full"><label class="required">회사 주소</label><input id="user-create-company-address" value="서울시 강남구 테헤란로 123" /></div>
+                    <div class="fg full"><label class="required">회사 소개</label><textarea id="user-create-company-description">글로벌 숏폼 콘텐츠 제작 및 유통 협업을 진행하는 파트너사입니다.</textarea></div>
+                    <div class="fg full"><label>회사 홈페이지 주소</label><input id="user-create-company-website" value="https://newpartner.io" /></div>
                     <div class="fg"><label>전화 국가 코드</label>
-                      <select id="user-create-company-phone-country">
+                      <select id="user-create-company-phone-country" aria-label="회사 연락처 국가 코드">
                         <option value="">선택 안 함</option>
-                        <option value="+82">+82</option>
-                        <option value="+1">+1</option>
-                        <option value="+81">+81</option>
-                        <option value="+86">+86</option>
-                        <option value="+886">+886</option>
-                        <option value="+65">+65</option>
+                        <option value="+86">China (+86)</option>
+                        <option value="+81">Japan (+81)</option>
+                        <option value="+82">Korea (+82)</option>
+                        <option value="+65">Singapore (+65)</option>
+                        <option value="+886">Taiwan (+886)</option>
+                        <option value="+1">United States (+1)</option>
                       </select>
                     </div>
-                    <div class="fg form-right"><label>전화번호</label><input id="user-create-company-phone" value="" /></div>
-                    <div class="fg full" id="user-create-company-google-row"><label>Google Email</label><input id="user-create-company-google-email" value="drive@newpartner.io" /></div>
-                    <div class="fg full form-last-row"><label>회사 홈페이지</label><input id="user-create-company-website" value="https://newpartner.io" /></div>
+                    <div class="fg form-right has-bottom-line"><label>회사 연락처</label><input id="user-create-company-phone" value="" aria-label="회사 연락처 번호" /></div>
+                    <div class="fg full form-last-row" id="user-create-company-google-row"><label>Google Email</label><input id="user-create-company-google-email" value="drive@newpartner.io" /></div>
                   </div>
                 </div>
               </div>
               <div class="user-create-step" id="user-create-step-user">
                 <div class="sec">
-                  <div class="sec-title">기본 프로필</div>
+                  <div class="sec-title">유저 정보</div>
                   <div class="edit-grid">
-                    <div class="fg"><label>이름</label><input id="user-create-name" value="신규 유저" /></div>
-                    <div class="fg form-right"><label>이메일</label><input id="user-create-email" value="new.user@shortflow.io" /></div>
-                    <div class="fg form-last-row"><label>전화 국가 코드</label>
-                      <select id="user-create-phone-country">
-                        <option value="+82">+82</option>
-                        <option value="+1">+1</option>
-                        <option value="+81">+81</option>
-                        <option value="+86">+86</option>
-                        <option value="+886">+886</option>
-                        <option value="+65">+65</option>
+                    <div class="fg"><label class="required">이름</label><input id="user-create-name" value="신규 유저" /></div>
+                    <div class="fg form-right"><label class="required">이메일</label><input id="user-create-email" value="new.user@shortflow.io" /></div>
+                    <div class="fg"><label>전화 국가 코드</label>
+                      <select id="user-create-phone-country" aria-label="유저 전화번호 국가 코드">
+                        <option value="+86">China (+86)</option>
+                        <option value="+81">Japan (+81)</option>
+                        <option value="+82">Korea (+82)</option>
+                        <option value="+65">Singapore (+65)</option>
+                        <option value="+886">Taiwan (+886)</option>
+                        <option value="+1">United States (+1)</option>
                       </select>
                     </div>
-                    <div class="fg form-right form-last-row"><label>전화번호</label><input id="user-create-phone" value="010-0000-0000" /></div>
-                  </div>
-                </div>
-                <div class="sec">
-                  <div class="sec-title">유저 권한</div>
-                  <div class="edit-grid">
-                    <div class="fg"><label>역할</label>
-                      <select id="user-create-role">
-                        <option value="PRODUCTION">제작사</option>
-                        <option value="PLATFORM">플랫폼</option>
-                      </select>
-                    </div>
-                    <div class="fg form-right"><label>권한 레벨</label>
-                      <select id="user-create-perm">
-                        <option value="OWNER">OWNER</option>
-                        <option value="WRITE">WRITE</option>
-                        <option value="READ">READ</option>
-                      </select>
-                    </div>
-                    <div class="fg full form-last-row"><label>상태</label>
-                      <select id="user-create-status">
-                        <option value="APPROVED">Approved</option>
-                        <option value="PENDING">Pending</option>
-                        <option value="SETUP_REQUIRED">Onboarding</option>
-                        <option value="REJECTED">Rejected</option>
-                      </select>
-                    </div>
+                    <div class="fg form-right"><label>연락처</label><input id="user-create-phone" value="010-0000-0000" aria-label="유저 전화번호" /></div>
+                    <div class="fg full form-last-row"><label class="required">비밀번호</label><input id="user-create-password" type="password" value="" autocomplete="new-password" /></div>
                   </div>
                 </div>
               </div>
@@ -2586,8 +2758,8 @@ td { padding: 9px 12px; vertical-align: middle; }
       <div class="admin-confirm-copy" id="admin-confirm-message"></div>
     </div>
     <div class="admin-confirm-actions">
-      <button class="admin-confirm-btn" type="button" onclick="closeAdminConfirm()">취소</button>
-      <button class="admin-confirm-btn primary" type="button" onclick="submitAdminConfirm()">확인</button>
+      <button class="admin-confirm-btn" id="admin-confirm-cancel-btn" type="button" onclick="closeAdminConfirm()">취소</button>
+      <button class="admin-confirm-btn primary" id="admin-confirm-ok-btn" type="button" onclick="submitAdminConfirm()">확인</button>
     </div>
   </div>
 </div>
@@ -2595,16 +2767,48 @@ td { padding: 9px 12px; vertical-align: middle; }
 <script>
 let adminConfirmHandler = null;
 
-function openAdminConfirm({ title, message, onConfirm }) {
+function openAdminConfirm({ title, message, onConfirm, confirmText = '확인', cancelText = '취소', noticeOnly = false, showIcon = true }) {
+  const dialog = document.querySelector('#admin-confirm-modal .admin-confirm-dialog');
+  const actions = document.querySelector('#admin-confirm-modal .admin-confirm-actions');
+  const cancelButton = document.getElementById('admin-confirm-cancel-btn');
+  const okButton = document.getElementById('admin-confirm-ok-btn');
   document.getElementById('admin-confirm-title').textContent = title || '처리할까요?';
   document.getElementById('admin-confirm-message').textContent = message || '';
+  if (cancelButton) {
+    cancelButton.textContent = cancelText;
+    cancelButton.style.display = noticeOnly ? 'none' : '';
+  }
+  if (okButton) okButton.textContent = confirmText;
+  dialog?.classList.toggle('no-icon', !showIcon);
+  actions?.classList.toggle('notice-only', !!noticeOnly);
   adminConfirmHandler = typeof onConfirm === 'function' ? onConfirm : null;
   document.getElementById('admin-confirm-modal')?.classList.add('show');
+}
+
+function openAdminNotice(title, message = '') {
+  openAdminConfirm({
+    title,
+    message,
+    noticeOnly: true,
+    showIcon: false,
+    onConfirm: () => closeAdminConfirm(),
+  });
 }
 
 function closeAdminConfirm(event) {
   event?.stopPropagation?.();
   adminConfirmHandler = null;
+  const actions = document.querySelector('#admin-confirm-modal .admin-confirm-actions');
+  const dialog = document.querySelector('#admin-confirm-modal .admin-confirm-dialog');
+  const cancelButton = document.getElementById('admin-confirm-cancel-btn');
+  const okButton = document.getElementById('admin-confirm-ok-btn');
+  actions?.classList.remove('notice-only');
+  dialog?.classList.remove('no-icon');
+  if (cancelButton) {
+    cancelButton.style.display = '';
+    cancelButton.textContent = '취소';
+  }
+  if (okButton) okButton.textContent = '확인';
   document.getElementById('admin-confirm-modal')?.classList.remove('show');
 }
 
@@ -2660,10 +2864,116 @@ function openUserCreatePanel() {
 }
 
 function populateUserCreateCompanies() {
-  const select = document.getElementById('user-create-company');
-  if (!select) return;
-  select.innerHTML = companies.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+  renderUserCreateCompanyOptions('');
 }
+
+function getFilteredUserCreateCompanies(query = '') {
+  const keyword = query.trim().toLowerCase();
+  if (!keyword) return companies;
+  return companies.filter(c => {
+    const typeLabel = userRoleLabel[c.type] || c.type || '';
+    return [c.name, c.email, c.type, typeLabel]
+      .some(value => String(value || '').toLowerCase().includes(keyword));
+  });
+}
+
+function setUserCreateCompany(companyId, options = {}) {
+  const hidden = document.getElementById('user-create-company');
+  const display = document.getElementById('user-create-company-display');
+  const search = document.getElementById('user-create-company-search');
+  const company = companies.find(c => c.id === Number(companyId));
+  if (hidden) hidden.value = company ? String(company.id) : '';
+  if (display) {
+    display.textContent = company ? company.name : '회사 선택';
+    display.classList.toggle('is-placeholder', !company);
+  }
+  if (search && options.clearSearch) search.value = '';
+  renderUserCreateCompanyOptions(search?.value || '');
+  if (options.close) closeUserCreateCompanyMenu();
+  syncUserCreateCompanyRole();
+}
+
+function renderUserCreateCompanyOptions(query = '') {
+  const options = document.getElementById('user-create-company-options');
+  if (!options) return;
+  const selectedId = Number(document.getElementById('user-create-company')?.value);
+  const results = getFilteredUserCreateCompanies(query);
+  if (!results.length) {
+    options.innerHTML = '<div class="user-company-option-empty">검색 결과가 없습니다</div>';
+    return;
+  }
+  options.innerHTML = results.map(c => {
+    const typeLabel = userRoleLabel[c.type] || c.type || '';
+    const selectedClass = c.id === selectedId ? ' is-selected' : '';
+    const typeClass = c.type === 'PLATFORM' ? 'is-platform' : 'is-production';
+    return `
+      <button class="user-company-option${selectedClass}" type="button" role="option" onclick="selectUserCreateCompany(${c.id})">
+        <span class="user-company-option-title">${escapeHtml(c.name)}</span>
+        <span class="user-company-option-meta ${typeClass}">${escapeHtml(typeLabel)}</span>
+      </button>
+    `;
+  }).join('');
+}
+
+function openUserCreateCompanyMenu() {
+  const combo = document.getElementById('user-create-company-combobox');
+  const trigger = document.getElementById('user-create-company-display');
+  const search = document.getElementById('user-create-company-search');
+  if (search) search.value = '';
+  renderUserCreateCompanyOptions(search?.value || '');
+  combo?.classList.add('is-open');
+  trigger?.setAttribute('aria-expanded', 'true');
+  setTimeout(() => search?.focus(), 0);
+}
+
+function toggleUserCreateCompanyMenu() {
+  const combo = document.getElementById('user-create-company-combobox');
+  if (combo?.classList.contains('is-open')) {
+    closeUserCreateCompanyMenu();
+    return;
+  }
+  openUserCreateCompanyMenu();
+}
+
+function closeUserCreateCompanyMenu() {
+  document.getElementById('user-create-company-combobox')?.classList.remove('is-open');
+  document.getElementById('user-create-company-display')?.setAttribute('aria-expanded', 'false');
+}
+
+function filterUserCreateCompanies() {
+  const search = document.getElementById('user-create-company-search');
+  renderUserCreateCompanyOptions(search?.value || '');
+  syncUserCreateCompanyRole();
+}
+
+function selectUserCreateCompany(companyId) {
+  setUserCreateCompany(companyId, { clearSearch: true, close: true });
+  document.getElementById('user-create-company-display')?.focus();
+}
+
+function handleUserCreateCompanyKeydown(event) {
+  if (event.key === 'Escape') {
+    closeUserCreateCompanyMenu();
+    return;
+  }
+  if (event.key !== 'Enter') return;
+  const results = getFilteredUserCreateCompanies(event.currentTarget.value);
+  if (!results.length) return;
+  event.preventDefault();
+  selectUserCreateCompany(results[0].id);
+}
+
+function handleUserCreateCompanyTriggerKeydown(event) {
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+  event.preventDefault();
+  toggleUserCreateCompanyMenu();
+}
+
+document.addEventListener('click', event => {
+  const combo = document.getElementById('user-create-company-combobox');
+  if (!combo || combo.contains(event.target)) return;
+  closeUserCreateCompanyMenu();
+});
 
 function resetUserCreateForm() {
   const company = companies[0];
@@ -2673,7 +2983,7 @@ function resetUserCreateForm() {
   document.getElementById('user-create-email').value = 'new.user@shortflow.io';
   document.getElementById('user-create-phone-country').value = '+82';
   document.getElementById('user-create-phone').value = '010-0000-0000';
-  document.getElementById('user-create-company').value = company ? String(company.id) : '';
+  setUserCreateCompany(company?.id || '', { clearSearch: true, close: true });
   document.getElementById('user-create-company-name').value = 'New Partner Studio';
   document.getElementById('user-create-company-description').value = '글로벌 숏폼 콘텐츠 제작 및 유통 협업을 진행하는 파트너사입니다.';
   document.getElementById('user-create-company-email').value = 'contact@newpartner.io';
@@ -2684,9 +2994,7 @@ function resetUserCreateForm() {
   document.getElementById('user-create-company-phone').value = '';
   document.getElementById('user-create-company-google-email').value = 'drive@newpartner.io';
   document.getElementById('user-create-company-website').value = 'https://newpartner.io';
-  document.getElementById('user-create-role').value = company?.type || 'PRODUCTION';
-  document.getElementById('user-create-perm').value = 'OWNER';
-  document.getElementById('user-create-status').value = 'APPROVED';
+  document.getElementById('user-create-password').value = '';
   renderUserCreateFlow();
 }
 
@@ -2699,7 +3007,7 @@ function chooseUserCreateMode(mode) {
   userCreateFlowStep = 'user';
   renderUserCreateFlow();
   syncUserCreateCompanyRole();
-  const focusTarget = userCreateFlowMode === 'new' ? 'user-create-company-name' : 'user-create-company';
+  const focusTarget = userCreateFlowMode === 'new' ? 'user-create-company-name' : 'user-create-company-display';
   document.getElementById(focusTarget)?.focus();
 }
 
@@ -2740,7 +3048,10 @@ function isValidEmail(value) {
 
 function updateUserCreateCompanyTypeFields() {
   const isProduction = document.getElementById('user-create-company-type')?.value === 'PRODUCTION';
-  document.getElementById('user-create-company-google-row').hidden = !isProduction;
+  const googleRow = document.getElementById('user-create-company-google-row');
+  const googleInput = document.getElementById('user-create-company-google-email');
+  googleRow?.classList.toggle('is-disabled', !isProduction);
+  if (googleInput) googleInput.disabled = !isProduction;
 }
 
 function validateUserCreateCompanyStep() {
@@ -2752,15 +3063,15 @@ function validateUserCreateCompanyStep() {
     const address = document.getElementById('user-create-company-address')?.value.trim();
     const type = document.getElementById('user-create-company-type')?.value.trim();
     if (!companyName || !description || !companyEmail || !country || !address || !type) {
-      alert('회사 필수 정보를 모두 입력해주세요.');
+      openAdminNotice('회사 필수 정보를 모두 입력해주세요.');
       return false;
     }
     if (!isValidEmail(companyEmail)) {
-      alert('회사 이메일 형식을 확인해주세요.');
+      openAdminNotice('회사 이메일 형식을 확인해주세요.');
       return false;
     }
     if (companies.some(c => c.name.toLowerCase() === companyName.toLowerCase() || c.email.toLowerCase() === companyEmail.toLowerCase())) {
-      alert('이미 등록된 회사명 또는 회사 이메일입니다.');
+      openAdminNotice('이미 등록된 회사명 또는 회사 이메일입니다.');
       return false;
     }
     return true;
@@ -2768,23 +3079,16 @@ function validateUserCreateCompanyStep() {
   const companyId = Number(document.getElementById('user-create-company')?.value);
   const company = companies.find(c => c.id === companyId);
   if (!company) {
-    alert('회사를 선택해주세요.');
+    openAdminNotice('회사를 선택해주세요.');
     return false;
   }
   return true;
 }
 
 function syncUserCreateCompanyRole() {
-  const roleSelect = document.getElementById('user-create-role');
-  if (!roleSelect) return;
   if (getUserCreateCompanyMode() === 'new') {
-    roleSelect.value = document.getElementById('user-create-company-type')?.value || 'PRODUCTION';
     updateUserCreateCompanyTypeFields();
-    return;
   }
-  const companyId = Number(document.getElementById('user-create-company')?.value);
-  const company = companies.find(c => c.id === companyId);
-  if (company) roleSelect.value = company.type;
 }
 
 function closeUserCreatePanel() {
@@ -2810,12 +3114,53 @@ function createUserFromPanel() {
   if (!validateUserCreateCompanyStep()) return;
   const name = document.getElementById('user-create-name')?.value.trim();
   const email = document.getElementById('user-create-email')?.value.trim();
-  if (!name || !email) {
-    alert('이름과 이메일을 입력해주세요.');
+  const password = document.getElementById('user-create-password')?.value || '';
+  if (!name || !email || !password) {
+    openAdminNotice('유저 정보를 모두 입력해주세요.');
+    return;
+  }
+  if (!isValidEmail(email)) {
+    openAdminNotice('유저 이메일 형식을 확인해주세요.');
     return;
   }
   if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
-    alert('이미 등록된 유저 이메일입니다.');
+    openAdminNotice('이미 등록된 유저 이메일입니다.');
+    return;
+  }
+
+  const companyMode = getUserCreateCompanyMode();
+  const selectedCompanyId = Number(document.getElementById('user-create-company')?.value);
+  const selectedCompany = companies.find(c => c.id === selectedCompanyId);
+  const userType = companyMode === 'new'
+    ? document.getElementById('user-create-company-type')?.value
+    : selectedCompany?.type;
+  const userTypeLabel = userRoleLabel[userType] || userType || '-';
+  openAdminConfirm({
+    title: '이 정보로 유저를 생성할까요?',
+    message: `아이디: ${email}\n비밀번호: ${password}\n유형: ${userTypeLabel}`,
+    confirmText: '생성하기',
+    showIcon: false,
+    onConfirm: confirmCreateUserFromPanel,
+  });
+}
+
+function confirmCreateUserFromPanel() {
+  const name = document.getElementById('user-create-name')?.value.trim();
+  const email = document.getElementById('user-create-email')?.value.trim();
+  const password = document.getElementById('user-create-password')?.value || '';
+  if (!name || !email || !password) {
+    closeAdminConfirm();
+    openAdminNotice('유저 정보를 모두 입력해주세요.');
+    return;
+  }
+  if (!isValidEmail(email)) {
+    closeAdminConfirm();
+    openAdminNotice('유저 이메일 형식을 확인해주세요.');
+    return;
+  }
+  if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+    closeAdminConfirm();
+    openAdminNotice('이미 등록된 유저 이메일입니다.');
     return;
   }
 
@@ -2833,15 +3178,18 @@ function createUserFromPanel() {
     const address = document.getElementById('user-create-company-address')?.value.trim();
     const type = document.getElementById('user-create-company-type')?.value || 'PRODUCTION';
     if (!companyName || !description || !companyEmail || !country || !address || !type) {
-      alert('회사 필수 정보를 모두 입력해주세요.');
+      closeAdminConfirm();
+      openAdminNotice('회사 필수 정보를 모두 입력해주세요.');
       return;
     }
     if (!isValidEmail(companyEmail)) {
-      alert('회사 이메일 형식을 확인해주세요.');
+      closeAdminConfirm();
+      openAdminNotice('회사 이메일 형식을 확인해주세요.');
       return;
     }
     if (companies.some(c => c.name.toLowerCase() === companyName.toLowerCase() || c.email.toLowerCase() === companyEmail.toLowerCase())) {
-      alert('이미 등록된 회사명 또는 회사 이메일입니다.');
+      closeAdminConfirm();
+      openAdminNotice('이미 등록된 회사명 또는 회사 이메일입니다.');
       return;
     }
     const nextCompanyId = Math.max(0, ...companies.map(c => c.id)) + 1;
@@ -2866,7 +3214,8 @@ function createUserFromPanel() {
     const companyId = Number(document.getElementById('user-create-company')?.value);
     company = companies.find(c => c.id === companyId);
     if (!company) {
-      alert('회사를 선택해주세요.');
+      closeAdminConfirm();
+      openAdminNotice('회사를 선택해주세요.');
       return;
     }
   }
@@ -2879,9 +3228,9 @@ function createUserFromPanel() {
     phone: document.getElementById('user-create-phone')?.value.trim() || '',
     company: company?.name || '',
     companyId: company?.id || null,
-    role: document.getElementById('user-create-role')?.value || company?.type || 'PRODUCTION',
-    perm: document.getElementById('user-create-perm')?.value || 'OWNER',
-    status: document.getElementById('user-create-status')?.value || 'APPROVED',
+    role: company?.type || 'PRODUCTION',
+    perm: 'OWNER',
+    status: 'APPROVED',
     date: today,
     rejectReason: ''
   };
@@ -2894,6 +3243,7 @@ function createUserFromPanel() {
   renderCompanies();
   document.getElementById('user-create').style.display = 'none';
   selectUser(nextId);
+  closeAdminConfirm();
 }
 
 const companies = [
@@ -3594,7 +3944,7 @@ function rejectUser() {
   if (!u || u.status !== 'PENDING') return;
   const reason = document.querySelector('#user-rr-box textarea')?.value.trim() || '';
   if (!reason) {
-    alert('거절 사유를 입력해주세요.');
+    openAdminNotice('거절 사유를 입력해주세요.');
     return;
   }
   openAdminConfirm({
@@ -3967,11 +4317,29 @@ function deleteCompanyWork(workId) {
   const works = getCompanyPortfolios(c);
   const index = works.findIndex(item => item.id === workId);
   if (index === -1) return;
-  if (!confirm('이 대표작을 삭제할까요?')) return;
+  openAdminConfirm({
+    title: '이 대표작을 삭제할까요?',
+    message: '삭제 후 목록에서 제거됩니다.',
+    onConfirm: () => confirmDeleteCompanyWork(workId),
+  });
+}
 
+function confirmDeleteCompanyWork(workId) {
+  const c = companies.find(x => x.id === selectedCompanyId);
+  if (!c || c.type !== 'PRODUCTION') {
+    closeAdminConfirm();
+    return;
+  }
+  const works = getCompanyPortfolios(c);
+  const index = works.findIndex(item => item.id === workId);
+  if (index === -1) {
+    closeAdminConfirm();
+    return;
+  }
   works.splice(index, 1);
   if (companyWorkEditor.workId === workId) closeCompanyWorkEditor();
   renderCompanyRepresentativeWorks(c);
+  closeAdminConfirm();
 }
 
 function updateCompanyWorkDraft(field, value) {
@@ -3994,7 +4362,7 @@ function handleCompanyWorkImageChange(input) {
   const file = input.files?.[0];
   if (!file) return;
   if (!file.type.startsWith('image/')) {
-    alert('이미지 파일을 선택해주세요.');
+    openAdminNotice('이미지 파일을 선택해주세요.');
     return;
   }
   const reader = new FileReader();
@@ -4016,15 +4384,15 @@ function saveCompanyWorkEditor() {
   const title = (document.getElementById('company-work-title-input')?.value || companyWorkEditor.draftTitle).trim();
   const year = (document.getElementById('company-work-year-input')?.value || companyWorkEditor.draftYear).trim();
   if (!companyWorkEditor.draftImage) {
-    alert('대표 이미지를 선택해주세요.');
+    openAdminNotice('대표 이미지를 선택해주세요.');
     return;
   }
   if (!title) {
-    alert('대표작 제목을 입력해주세요.');
+    openAdminNotice('대표작 제목을 입력해주세요.');
     return;
   }
   if (!/^\d{4}$/.test(year)) {
-    alert('제작연도는 4자리 숫자로 입력해주세요.');
+    openAdminNotice('제작연도는 4자리 숫자로 입력해주세요.');
     return;
   }
 
@@ -4044,7 +4412,7 @@ function saveCompanyWorks() {
   const c = companies.find(x => x.id === selectedCompanyId);
   if (!c || c.type !== 'PRODUCTION') return;
   getCompanyPortfolios(c);
-  alert('대표작 정보가 저장되었습니다.');
+  openAdminNotice('대표작 정보가 저장되었습니다.');
 }
 
 function renderCompanyWorkEditorModal() {
@@ -4217,22 +4585,35 @@ function saveUserDetail() {
   renderCompanies();
   selectUser(u.id);
   if (selectedCompanyId) selectCompany(selectedCompanyId);
-  alert('유저 정보가 저장되었습니다.');
+  openAdminNotice('유저 정보가 저장되었습니다.');
 }
 
 function deleteUser() {
   if (!selectedUserId) return;
   const u = users.find(x => x.id === selectedUserId);
   if (!u) return;
-  if (!confirm(`${u.name} 유저를 삭제할까요?`)) return;
-  const index = users.findIndex(x => x.id === selectedUserId);
-  if (index >= 0) users.splice(index, 1);
+  openAdminConfirm({
+    title: `${u.name} 유저를 삭제할까요?`,
+    message: '삭제 후 사용자 목록에서 제거됩니다.',
+    onConfirm: () => confirmDeleteUser(u.id),
+  });
+}
+
+function confirmDeleteUser(userId) {
+  const targetUserId = Number(userId);
+  const index = users.findIndex(x => x.id === targetUserId);
+  if (index < 0) {
+    closeAdminConfirm();
+    return;
+  }
+  users.splice(index, 1);
   companies.forEach(c => {
-    c.users = c.users.filter(userId => userId !== selectedUserId);
+    c.users = c.users.filter(id => id !== targetUserId);
   });
   closeUserDetail();
   renderCompanies();
   if (selectedCompanyId) selectCompany(selectedCompanyId);
+  closeAdminConfirm();
 }
 
 function saveCompanyDetail() {
@@ -4257,24 +4638,37 @@ function saveCompanyDetail() {
   });
   renderUsers();
   selectCompany(c.id);
-  alert('회사 정보가 저장되었습니다.');
+  openAdminNotice('회사 정보가 저장되었습니다.');
 }
 
 function deleteCompany() {
   if (!selectedCompanyId) return;
   const c = companies.find(x => x.id === selectedCompanyId);
   if (!c) return;
-  if (!confirm(`${c.name} 회사를 삭제할까요?`)) return;
-  const index = companies.findIndex(x => x.id === selectedCompanyId);
-  if (index >= 0) companies.splice(index, 1);
+  openAdminConfirm({
+    title: `${c.name} 회사를 삭제할까요?`,
+    message: '삭제 후 연결된 유저의 회사 정보가 비워집니다.',
+    onConfirm: () => confirmDeleteCompany(c.id),
+  });
+}
+
+function confirmDeleteCompany(companyId) {
+  const companyNumberId = Number(companyId);
+  const index = companies.findIndex(x => x.id === companyNumberId);
+  if (index < 0) {
+    closeAdminConfirm();
+    return;
+  }
+  companies.splice(index, 1);
   users.forEach(u => {
-    if (u.companyId === selectedCompanyId) {
+    if (u.companyId === companyNumberId) {
       u.companyId = null;
       u.company = '';
     }
   });
   closeCompanyDetail();
   renderUsers();
+  closeAdminConfirm();
 }
 
 function renderCreditHistory() {
