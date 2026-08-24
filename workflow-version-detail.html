@@ -328,7 +328,7 @@
 
     .workflow-detail-split {
       display: grid;
-      grid-template-columns: 360px minmax(0, 1fr);
+      grid-template-columns: 400px minmax(0, 1fr);
       gap: 22px;
       align-items: flex-start;
     }
@@ -819,7 +819,7 @@
     .platform-metric-grid {
       border-top: 0.5px solid #f2f2f2;
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
     .platform-metric-item {
@@ -847,8 +847,8 @@
       color: #171717;
       display: block;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 16px;
-      font-weight: 600;
+      font-size: 15px;
+      font-weight: 550;
       letter-spacing: 0;
       line-height: 1.15;
       white-space: nowrap;
@@ -1125,6 +1125,16 @@
       color: rgb(38, 38, 38);
     }
 
+    .settlement-status.is-review {
+      --settlement-status-bg: rgb(171, 176, 184);
+      color: #fff;
+    }
+
+    .settlement-status.is-pending {
+      --settlement-status-bg: rgb(245, 190, 48);
+      color: rgb(38, 38, 38);
+    }
+
     .settlement-table-label {
       padding: 14px 20px 10px;
       border-bottom: 0.5px dashed #f2f2f2;
@@ -1295,7 +1305,7 @@
 
     .workflow-timeline {
       margin: 0;
-      padding: 0;
+      padding: 0 0 0 10px;
       list-style: none;
     }
 
@@ -1571,12 +1581,20 @@
       detailUrl: 'my-content-detail.html?title=%EB%8C%80%ED%91%9C%EB%8B%98%EC%9D%B4%20%EB%82%B4%20%EC%A0%84%EB%82%A8%EC%B9%9C%EC%9E%85%EB%8B%88%EB%8B%A4',
       timeline: [
         { title: '퍼포먼스 데이터가 업데이트되었습니다.', date: '2026년 7월 15일 14:18', active: true },
-        { title: '대표님이 내 전남친입니다를 NovaShort 외 2개사에 제안 메일로 발송했습니다.', date: '2026년 7월 15일 11:42' },
+        { title: 'NovaShort 외 2개사에 제안 메일을 발송했습니다.', date: '2026년 7월 15일 11:42' },
         { title: '콘텐츠 정보 수정을 신청했습니다.', date: '2026년 7월 14일 16:05' },
         { title: '관리자가 콘텐츠 등록을 승인했습니다.', date: '2026년 7월 13일 16:20' },
         { title: '콘텐츠 등록 신청이 접수되었습니다.', date: '2026년 7월 12일 09:18' },
         { title: '콘텐츠 정보가 저장되었습니다.', date: '2026년 7월 12일 09:12' }
       ]
+    };
+
+    const performanceUpdateDates = {
+      ReelShort: '2026.07.15',
+      DramaBox: '2026.07.14',
+      ShortMax: '2026.07.15',
+      Viki: '2026.07.13',
+      NovaShort: '2026.07.15'
     };
 
     const settlementTypes = ['flat', 'mgrs', 'rs', 'rs', 'mgrs'];
@@ -1880,6 +1898,10 @@
       return `<span class="platform-state-badge ${meta.className}">${escapeHtml(meta.label)}</span>`;
     }
 
+    function performanceUpdateDateFor(platform, index) {
+      return performanceUpdateDates[platform.name] || platform.lastUpdate || workflowDetail.lastUpdatedShort;
+    }
+
     function isPlatformCardCollapsed(mode, index) {
       return Boolean(platformCollapseState[mode]?.[index]);
     }
@@ -1923,6 +1945,7 @@
             ${renderPlatformMetric('조회수', formatNumber(platform.views))}
             ${renderPlatformMetric('팔로우수', formatNumber(platform.follows))}
             ${renderPlatformMetric('좋아요', formatNumber(platform.likes))}
+            ${renderPlatformMetric('업데이트 날짜', performanceUpdateDateFor(settlementPlatform, index))}
           </div>`}
         </article>
       `;
@@ -1981,8 +2004,20 @@
     }
 
     function renderSettlementStatus(status) {
-      const completed = status !== 'upcoming';
-      return `<span class="settlement-status ${completed ? '' : 'is-upcoming'}">${completed ? '완료' : '예정'}</span>`;
+      const statusMap = {
+        review: { label: '검토', className: 'is-review' },
+        pending: { label: '대기', className: 'is-pending' },
+        paid: { label: '완료', className: '' },
+        upcoming: { label: '검토', className: 'is-review' }
+      };
+      const config = statusMap[status] || statusMap.paid;
+      return `<span class="settlement-status ${config.className}">${config.label}</span>`;
+    }
+
+    function settlementStatusForRow(index) {
+      if (index === 0) return 'review';
+      if (index === 1) return 'pending';
+      return 'paid';
     }
 
     function periodSortValue(period) {
@@ -2034,15 +2069,20 @@
               </tr>
             </thead>
             <tbody>
-              ${visibleRows.map(record => `
+              ${visibleRows.map((record, visibleIndex) => {
+                const rowIndex = pageKey && totalPages > 1
+                  ? (currentPage - 1) * settlementPageSize + visibleIndex
+                  : visibleIndex;
+                return `
                 <tr>
                   ${columns.map(column => `
                     <td class="${column.emphasis ? 'producer-pay' : ''}">
-                      ${column.key === 'status' ? renderSettlementStatus(record[column.key]) : formatSettlementCell(column, record[column.key])}
+                      ${column.key === 'status' ? renderSettlementStatus(settlementStatusForRow(rowIndex)) : formatSettlementCell(column, record[column.key])}
                     </td>
                   `).join('')}
                 </tr>
-              `).join('')}
+              `;
+              }).join('')}
             </tbody>
           </table>
         </div>
