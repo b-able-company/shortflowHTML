@@ -334,6 +334,171 @@
       font-size: 16px;
       letter-spacing: -0.2px;
     }
+    .proposal-workflow-card {
+      scroll-margin-top: 92px;
+    }
+    .proposal-workflow-head {
+      margin-bottom: 18px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .proposal-workflow-head h2 {
+      margin: 0;
+    }
+    .proposal-workflow-meta {
+      color: #7b8190;
+      font-size: 12px;
+      font-weight: 520;
+      white-space: nowrap;
+    }
+    .proposal-workflow-list {
+      position: relative;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 0;
+    }
+    .proposal-workflow-item {
+      position: relative;
+      min-height: 67px;
+      padding: 0 0 0 28px;
+    }
+    .proposal-workflow-item::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      bottom: -4px;
+      width: 1px;
+      background: #d8dbe0;
+    }
+    .proposal-workflow-item:last-child::before {
+      display: none;
+    }
+    .proposal-workflow-dot {
+      position: absolute;
+      top: 4px;
+      left: 0;
+      width: 8px;
+      height: 8px;
+      border: 0;
+      border-radius: 999px;
+      background: #c9ccd1;
+      box-shadow: none;
+    }
+    .proposal-workflow-item:first-child .proposal-workflow-dot {
+      background: #f05a28;
+      animation: proposalWorkflowPulse 1.35s ease-in-out infinite;
+    }
+    @keyframes proposalWorkflowPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(240, 90, 40, 0.36);
+      }
+      70% {
+        box-shadow: 0 0 0 8px rgba(240, 90, 40, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(240, 90, 40, 0);
+      }
+    }
+    .proposal-workflow-title {
+      color: #181818;
+      display: -webkit-box;
+      overflow: hidden;
+      font-size: 13px;
+      font-weight: 560;
+      line-height: 1.3;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+    .proposal-workflow-desc {
+      display: none;
+    }
+    .proposal-workflow-date {
+      margin-top: 4px;
+      color: #8a8e96;
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+    .proposal-workflow-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 20060;
+      padding: 24px;
+      background: rgba(17,24,39,0.38);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .proposal-workflow-modal-backdrop.show {
+      display: flex;
+    }
+    .proposal-workflow-modal {
+      width: min(480px, 100%);
+      max-height: min(720px, calc(100vh - 48px));
+      border: 1px solid rgba(255,255,255,0.72);
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 24px 70px rgba(15,23,42,0.22);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .proposal-workflow-modal-head {
+      min-height: 62px;
+      padding: 16px 18px 14px 22px;
+      border-bottom: 1px solid #f0eee9;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .proposal-workflow-modal-title {
+      margin: 0;
+      color: #181818;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      line-height: 32px;
+    }
+    .proposal-workflow-modal-sub {
+      display: none;
+    }
+    .proposal-workflow-modal-close {
+      width: 32px;
+      height: 32px;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: #737780;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+    .proposal-workflow-modal-close:hover {
+      background: #f7f7f5;
+      color: #181818;
+    }
+    .proposal-workflow-modal-close svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+    .proposal-workflow-modal-body {
+      padding: 20px 22px 22px;
+      overflow-y: auto;
+    }
+    .proposal-workflow-event-type {
+      display: none;
+    }
     .synopsis {
       margin: 0;
       color: #3f4652;
@@ -926,6 +1091,21 @@
     </div>
   </div>
 
+  <div class="proposal-workflow-modal-backdrop" id="proposalWorkflowModal" role="dialog" aria-modal="true" aria-labelledby="proposalWorkflowTitle">
+    <section class="proposal-workflow-modal">
+      <div class="proposal-workflow-modal-head">
+        <div>
+          <h2 class="proposal-workflow-modal-title" id="proposalWorkflowTitle">기획안 워크플로우</h2>
+          <p class="proposal-workflow-modal-sub" id="proposalWorkflowSub">기획안 트랙 진행 이벤트</p>
+        </div>
+        <button class="proposal-workflow-modal-close" type="button" id="proposalWorkflowClose" aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="proposal-workflow-modal-body" id="proposalWorkflowBody"></div>
+    </section>
+  </div>
+
   <script>
     const detailItems = [
       {
@@ -944,6 +1124,12 @@
           { title: '우리 집에 킬러가 산다', year: '2025', image: 'images/posters/우리집에킬러가산다.png', fallback: 'images/posters/우리집에킬러가산다.png' },
           { title: '퇴사했더니 황제가 됐다', year: '2024', image: 'images/posters/resigned-emperor.png', fallback: 'images/posters/퇴사했더니황제.png' },
           { title: '살인범과 룸메이트가 되었다', year: '2024', image: 'images/posters/murderer-roommate.png', fallback: 'images/posters/살인범과룸메이트.png' }
+        ],
+        workflowEvents: [
+          { type: 'PRODUCTION_MATERIALS_SUBMITTED', date: '2026.07.18 15:20' },
+          { type: 'PRODUCTION_REVISION_APPROVED', date: '2026.07.17 11:40' },
+          { type: 'PRODUCTION_REVISION_REQUESTED', date: '2026.07.16 16:05' },
+          { type: 'PRODUCTION_CONTENT_SUBMITTED', date: '2026.07.15 18:04' }
         ]
       }
     ];
@@ -961,6 +1147,11 @@
     const inquiryModalClose = document.getElementById('inquiryModalClose');
     const inquiryForm = document.getElementById('inquiryForm');
     const inquiryMessage = document.getElementById('inquiryMessage');
+    const proposalWorkflowModal = document.getElementById('proposalWorkflowModal');
+    const proposalWorkflowTitle = document.getElementById('proposalWorkflowTitle');
+    const proposalWorkflowSub = document.getElementById('proposalWorkflowSub');
+    const proposalWorkflowBody = document.getElementById('proposalWorkflowBody');
+    const proposalWorkflowClose = document.getElementById('proposalWorkflowClose');
     const PRODUCTION_INQUIRY_STORAGE_KEY = 'shortflow-production-inquiries';
     let interested = false;
 
@@ -989,6 +1180,86 @@
 
     function heartIcon(active) {
       return `<svg width="17" height="17" viewBox="0 0 24 24" fill="${active ? '#ff3f4d' : 'none'}" stroke="${active ? '#ff3f4d' : 'currentColor'}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>`;
+    }
+
+    const workflowEventMeta = {
+      PRODUCTION_CONTENT_SUBMITTED: {
+        message: ({ company }) => `${company}이 기획안 등록을 신청했어요.`,
+        trigger: 'CP사가 기획안 제출'
+      },
+      PRODUCTION_CONTENT_APPROVED: {
+        message: () => '관리자가 기획안 등록을 승인했어요.',
+        trigger: '어드민 승인'
+      },
+      PRODUCTION_CONTENT_REJECTED: {
+        message: () => '관리자가 기획안 등록을 거절했어요.',
+        trigger: '어드민 거절'
+      },
+      PRODUCTION_REVISION_REQUESTED: {
+        message: () => '기획안 수정을 신청했어요.',
+        trigger: 'CP사가 수정요청'
+      },
+      PRODUCTION_REVISION_APPROVED: {
+        message: () => '관리자가 수정 신청을 승인했어요.',
+        trigger: '어드민 승인'
+      },
+      PRODUCTION_REVISION_REJECTED: {
+        message: () => '관리자가 수정 신청을 거절했어요.',
+        trigger: '어드민 거절'
+      },
+      PRODUCTION_REVISION_CANCELLED: {
+        message: () => '제작사가 수정 신청을 취소했어요.',
+        trigger: 'CP사가 취소'
+      },
+      PRODUCTION_MATERIALS_SUBMITTED: {
+        message: () => '기획안 자료 업로드를 완료했습니다.',
+        trigger: '구글드라이브 자료 업로드'
+      },
+      PRODUCTION_PROPOSAL_SENT: {
+        message: ({ recipient }) => `기획안을 ${recipient}에 제안 메일을 발송했습니다.`,
+        trigger: '어드민이 플랫폼사에 제안 메일 발송'
+      }
+    };
+
+    function workflowEventMessage(event) {
+      const meta = workflowEventMeta[event.type];
+      if (!meta) return event.type;
+      return meta.message({
+        company: item.producer || '제작사',
+        recipient: event.recipient || '플랫폼사'
+      });
+    }
+
+    function workflowTimelineMarkup() {
+      return `
+        <ol class="proposal-workflow-list">
+          ${(item.workflowEvents || []).map(event => {
+            const meta = workflowEventMeta[event.type] || { trigger: '' };
+            return `
+              <li class="proposal-workflow-item">
+                <span class="proposal-workflow-dot" aria-hidden="true"></span>
+                <span class="proposal-workflow-event-type">${event.type}</span>
+                <strong class="proposal-workflow-title">${workflowEventMessage(event)}</strong>
+                <p class="proposal-workflow-desc">${meta.trigger}</p>
+                <span class="proposal-workflow-date">${event.date}</span>
+              </li>
+            `;
+          }).join('')}
+        </ol>
+      `;
+    }
+
+    function openWorkflowModal() {
+      proposalWorkflowTitle.textContent = item.title;
+      proposalWorkflowSub.textContent = '';
+      proposalWorkflowBody.innerHTML = workflowTimelineMarkup();
+      proposalWorkflowModal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeWorkflowModal() {
+      proposalWorkflowModal.classList.remove('show');
+      document.body.style.overflow = '';
     }
 
     function posterMarkup(work) {
@@ -1150,7 +1421,7 @@
       workflowButton.type = 'button';
       workflowButton.textContent = '워크플로우';
       workflowButton.addEventListener('click', () => {
-        window.location.href = 'producer-dashboard.html?tab=workflow';
+        openWorkflowModal();
       });
 
       actionbar.appendChild(title);
@@ -1285,6 +1556,10 @@
     inquiryModal.addEventListener('click', (event) => {
       if (event.target === inquiryModal) closeInquiryModal();
     });
+    proposalWorkflowClose.addEventListener('click', closeWorkflowModal);
+    proposalWorkflowModal.addEventListener('click', (event) => {
+      if (event.target === proposalWorkflowModal) closeWorkflowModal();
+    });
     inquiryForm.addEventListener('submit', (event) => {
       event.preventDefault();
       if (!inquiryMessage.value.trim()) {
@@ -1297,6 +1572,10 @@
     });
     document.addEventListener('keydown', (event) => {
       if (event.key !== 'Escape') return;
+      if (proposalWorkflowModal.classList.contains('show')) {
+        closeWorkflowModal();
+        return;
+      }
       if (inquiryModal.classList.contains('is-open')) {
         closeInquiryModal();
         return;

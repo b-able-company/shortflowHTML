@@ -306,6 +306,173 @@
       color: #b23b2e;
     }
 
+    .producer-workflow-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 20060;
+      padding: 24px;
+      background: rgba(17, 24, 39, 0.38);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .producer-workflow-modal-backdrop.show {
+      display: flex;
+    }
+
+    .producer-workflow-modal {
+      width: min(480px, 100%);
+      max-height: min(720px, calc(100vh - 48px));
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 24px 70px rgba(15, 23, 42, 0.22);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .producer-workflow-modal-head {
+      min-height: 62px;
+      padding: 16px 18px 14px 22px;
+      border-bottom: 1px solid #f0eee9;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .producer-workflow-modal-title {
+      margin: 0;
+      color: #181818;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      line-height: 32px;
+    }
+
+    .producer-workflow-modal-sub {
+      display: none;
+    }
+
+    .producer-workflow-modal-close {
+      width: 32px;
+      height: 32px;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: #737780;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .producer-workflow-modal-close:hover {
+      background: #f7f7f5;
+      color: #181818;
+    }
+
+    .producer-workflow-modal-close svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+
+    .producer-workflow-modal-body {
+      padding: 20px 22px 22px;
+      overflow-y: auto;
+    }
+
+    .producer-workflow-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .producer-workflow-item {
+      position: relative;
+      min-height: 67px;
+      padding: 0 0 0 28px;
+    }
+
+    .producer-workflow-item::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      bottom: -4px;
+      width: 1px;
+      background: #d8dbe0;
+    }
+
+    .producer-workflow-item:last-child::before {
+      display: none;
+    }
+
+    .producer-workflow-dot {
+      position: absolute;
+      top: 4px;
+      left: 0;
+      width: 8px;
+      height: 8px;
+      border: 0;
+      border-radius: 999px;
+      background: #c9ccd1;
+      box-shadow: none;
+    }
+
+    .producer-workflow-item:first-child .producer-workflow-dot {
+      background: #f05a28;
+      animation: producerWorkflowPulse 1.35s ease-in-out infinite;
+    }
+
+    @keyframes producerWorkflowPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(240, 90, 40, 0.36);
+      }
+
+      70% {
+        box-shadow: 0 0 0 8px rgba(240, 90, 40, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(240, 90, 40, 0);
+      }
+    }
+
+    .producer-workflow-event-type {
+      display: none;
+    }
+
+    .producer-workflow-message {
+      margin: 0;
+      color: #181818;
+      display: -webkit-box;
+      overflow: hidden;
+      font-size: 13px;
+      font-weight: 560;
+      line-height: 1.3;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .producer-workflow-trigger {
+      display: none;
+    }
+
+    .producer-workflow-date {
+      margin-top: 4px;
+      color: #8a8e96;
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
     .producer-collab-empty {
       display: none;
       padding: 56px 20px;
@@ -365,8 +532,29 @@
     document.getElementById('contentManageSubNav').outerHTML = window.ShortflowNav.renderContentManageSubNav('collaboration-plans');
   </script>
   <main class="main producer-collaboration-main" id="producerCollaborationRoot" aria-label="제작협업 기획안"></main>
+  <div class="producer-workflow-modal-backdrop" id="producerWorkflowModal" role="dialog" aria-modal="true" aria-labelledby="producerWorkflowTitle">
+    <section class="producer-workflow-modal">
+      <div class="producer-workflow-modal-head">
+        <div>
+          <h2 class="producer-workflow-modal-title" id="producerWorkflowTitle">기획안 워크플로우</h2>
+          <p class="producer-workflow-modal-sub" id="producerWorkflowSub">기획안 트랙 진행 이벤트</p>
+        </div>
+        <button class="producer-workflow-modal-close" type="button" id="producerWorkflowClose" aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="producer-workflow-modal-body">
+        <ol class="producer-workflow-list" id="producerWorkflowList"></ol>
+      </div>
+    </section>
+  </div>
   <script>
     const producerCollaborationRoot = document.getElementById('producerCollaborationRoot');
+    const producerWorkflowModal = document.getElementById('producerWorkflowModal');
+    const producerWorkflowTitle = document.getElementById('producerWorkflowTitle');
+    const producerWorkflowSub = document.getElementById('producerWorkflowSub');
+    const producerWorkflowList = document.getElementById('producerWorkflowList');
+    const producerWorkflowClose = document.getElementById('producerWorkflowClose');
 
     producerCollaborationRoot.innerHTML = `
         <div class="producer-collab-toolbar">
@@ -383,12 +571,51 @@
       `;
 
     const collaborationPlans = [
-        { title: '대표님이 내 전남친입니다', status: 'approved', statusLabel: '승인됨', tone: 'rose', image: 'images/posters/대표님이내전남친입니다.png' },
-        { title: '죽었다가 회귀한 톱스타', status: 'review', statusLabel: '검토중', tone: 'indigo', image: 'images/posters/return-topstar-poster.png' },
-        { title: '재벌집 막내 비서', status: 'draft', statusLabel: '임시저장', tone: 'teal', image: 'images/posters/재벌집막내비서.png' },
-        { title: '우리 집에 킬러가 산다', status: 'review', statusLabel: '검토중', tone: 'slate', image: 'images/posters/우리집에킬러가산다.png' },
-        { title: '오늘부터 악녀 대행합니다', status: 'approved', statusLabel: '승인됨', tone: 'violet', image: 'images/posters/villainess-agent.png' },
+        { title: '대표님이 내 전남친입니다', company: 'NextWave Studios', status: 'approved', statusLabel: '승인됨', tone: 'rose', image: 'images/posters/대표님이내전남친입니다.png', proposalRecipient: 'NovaShort' },
+        { title: '죽었다가 회귀한 톱스타', company: 'Orbit Pictures', status: 'review', statusLabel: '검토중', tone: 'indigo', image: 'images/posters/return-topstar-poster.png', proposalRecipient: 'DramaBox' },
+        { title: '재벌집 막내 비서', company: 'Blue Frame', status: 'draft', statusLabel: '임시저장', tone: 'teal', image: 'images/posters/재벌집막내비서.png', proposalRecipient: 'ReelShort' },
+        { title: '우리 집에 킬러가 산다', company: 'Orbit Pictures', status: 'review', statusLabel: '검토중', tone: 'slate', image: 'images/posters/우리집에킬러가산다.png', proposalRecipient: 'ShortMax' },
+        { title: '오늘부터 악녀 대행합니다', company: 'Lime Studio', status: 'approved', statusLabel: '승인됨', tone: 'violet', image: 'images/posters/villainess-agent.png', proposalRecipient: 'DramaBox' },
       ];
+
+    const workflowEventMeta = {
+      PRODUCTION_CONTENT_SUBMITTED: {
+        message: ({ company }) => `${company}이 기획안 등록을 신청했어요.`,
+        trigger: 'CP사가 기획안 제출'
+      },
+      PRODUCTION_CONTENT_APPROVED: {
+        message: () => '관리자가 기획안 등록을 승인했어요.',
+        trigger: '어드민 승인'
+      },
+      PRODUCTION_CONTENT_REJECTED: {
+        message: () => '관리자가 기획안 등록을 거절했어요.',
+        trigger: '어드민 거절'
+      },
+      PRODUCTION_REVISION_REQUESTED: {
+        message: () => '기획안 수정을 신청했어요.',
+        trigger: 'CP사가 수정요청'
+      },
+      PRODUCTION_REVISION_APPROVED: {
+        message: () => '관리자가 수정 신청을 승인했어요.',
+        trigger: '어드민 승인'
+      },
+      PRODUCTION_REVISION_REJECTED: {
+        message: () => '관리자가 수정 신청을 거절했어요.',
+        trigger: '어드민 거절'
+      },
+      PRODUCTION_REVISION_CANCELLED: {
+        message: () => '제작사가 수정 신청을 취소했어요.',
+        trigger: 'CP사가 취소'
+      },
+      PRODUCTION_MATERIALS_SUBMITTED: {
+        message: () => '기획안 자료 업로드를 완료했습니다.',
+        trigger: '구글드라이브 자료 업로드'
+      },
+      PRODUCTION_PROPOSAL_SENT: {
+        message: ({ recipient }) => `기획안을 ${recipient}에 제안 메일을 발송했습니다.`,
+        trigger: '어드민이 플랫폼사에 제안 메일 발송'
+      }
+    };
 
     const producerGrid = document.getElementById('producerCollaborationGrid');
     const producerEmpty = document.getElementById('producerCollaborationEmpty');
@@ -430,6 +657,59 @@
         return `producer-collaboration-detail.html?v=20260709-disabled-inquiry&title=${encodeURIComponent(item.title)}`;
       }
 
+      function workflowEventsFor(item) {
+        if (item.status === 'approved') {
+          return [
+            { type: 'PRODUCTION_PROPOSAL_SENT', date: '2026.07.18 15:20' },
+            { type: 'PRODUCTION_MATERIALS_SUBMITTED', date: '2026.07.18 11:04' },
+            { type: 'PRODUCTION_CONTENT_APPROVED', date: '2026.07.17 16:30' },
+            { type: 'PRODUCTION_CONTENT_SUBMITTED', date: '2026.07.16 10:12' }
+          ];
+        }
+        if (item.status === 'review') {
+          return [
+            { type: 'PRODUCTION_REVISION_REQUESTED', date: '2026.07.18 09:42' },
+            { type: 'PRODUCTION_CONTENT_SUBMITTED', date: '2026.07.16 10:12' }
+          ];
+        }
+        return [
+          { type: 'PRODUCTION_CONTENT_SUBMITTED', date: '2026.07.16 10:12' }
+        ];
+      }
+
+      function workflowEventMessage(event, item) {
+        const meta = workflowEventMeta[event.type];
+        if (!meta) return event.type;
+        return meta.message({
+          company: item.company || '제작사',
+          recipient: item.proposalRecipient || '플랫폼사'
+        });
+      }
+
+      function openWorkflowModal(item) {
+        producerWorkflowTitle.textContent = item.title;
+        producerWorkflowSub.textContent = '';
+        producerWorkflowList.innerHTML = workflowEventsFor(item).map(event => {
+          const meta = workflowEventMeta[event.type] || { trigger: '' };
+          return `
+            <li class="producer-workflow-item">
+              <span class="producer-workflow-dot" aria-hidden="true"></span>
+              <span class="producer-workflow-event-type">${escapeAttr(event.type)}</span>
+              <p class="producer-workflow-message">${escapeAttr(workflowEventMessage(event, item))}</p>
+              <p class="producer-workflow-trigger">${escapeAttr(meta.trigger)}</p>
+              <span class="producer-workflow-date">${escapeAttr(event.date)}</span>
+            </li>
+          `;
+        }).join('');
+        producerWorkflowModal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeWorkflowModal() {
+        producerWorkflowModal.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+
       function renderProducerPlans() {
         const rows = filteredPlans();
         producerEmpty.style.display = rows.length ? 'none' : 'block';
@@ -451,7 +731,7 @@
             </div>
             <div class="producer-collab-menu" role="menu">
               ${menuItemsFor(item).map(label => `
-                <button class="producer-collab-menu-item ${label === '삭제' ? 'danger' : ''}" type="button" role="menuitem">
+                <button class="producer-collab-menu-item ${label === '삭제' ? 'danger' : ''}" type="button" role="menuitem" data-menu-label="${escapeAttr(label)}" data-title="${escapeAttr(item.title)}">
                   <span>${label}</span>
                 </button>
               `).join('')}
@@ -490,6 +770,26 @@
 
         if (!event.target.closest('.producer-collab-menu')) {
           document.querySelectorAll('.producer-collab-card.menu-open').forEach(item => item.classList.remove('menu-open'));
+        }
+
+        const workflowButton = event.target.closest('.producer-collab-menu-item[data-menu-label="워크플로우 보기"]');
+        if (workflowButton) {
+          const item = collaborationPlans.find(plan => plan.title === workflowButton.dataset.title);
+          if (item) {
+            document.querySelectorAll('.producer-collab-card.menu-open').forEach(card => card.classList.remove('menu-open'));
+            openWorkflowModal(item);
+          }
+          return;
+        }
+      });
+
+      producerWorkflowClose.addEventListener('click', closeWorkflowModal);
+      producerWorkflowModal.addEventListener('click', event => {
+        if (event.target === producerWorkflowModal) closeWorkflowModal();
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && producerWorkflowModal.classList.contains('show')) {
+          closeWorkflowModal();
         }
       });
 

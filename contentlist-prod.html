@@ -591,11 +591,7 @@
 
       const workflowMenuButton = event.target.closest('.prod-menu-item[data-menu-action="workflow"]');
       if (workflowMenuButton) {
-        const workflowId = workflowMenuButton.dataset.workflowId || '';
-        const nextUrl = workflowId
-          ? `producer-dashboard.html?tab=workflow&workflow=${encodeURIComponent(workflowId)}`
-          : 'producer-dashboard.html?tab=workflow';
-        window.location.href = nextUrl;
+        window.location.href = 'workflow-version-detail.html?id=0&from=distribution-version';
       }
     });
 
