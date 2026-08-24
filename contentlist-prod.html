@@ -127,7 +127,7 @@
 
     .prod-grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 36px 14px;
       overflow: visible;
     }
@@ -372,6 +372,12 @@
       cursor: default;
     }
 
+    @media (max-width: 1280px) {
+      .prod-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+    }
+
     @media (max-width: 1120px) {
       .prod-grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -457,7 +463,7 @@
     const pagination = document.getElementById('prodPagination');
     let activeFilter = 'all';
     let activePage = 1;
-    const pageSize = 15;
+    const pageSize = 18;
 
     function filteredContents() {
       if (activeFilter === 'all') return myContents;

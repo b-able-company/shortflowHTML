@@ -96,10 +96,9 @@
   });
 
   const producerWorkflowStats = [
-    { label: '전체', value: 17, accent: true },
-    { label: '진행중', value: 5 },
-    { label: '완료', value: 6 },
-    { label: '보류', value: 6 },
+    { label: '전체', value: 17, accent: true, filter: 'all' },
+    { label: '콘텐츠', value: 13, filter: 'content' },
+    { label: '기획안', value: 4, filter: 'plan' },
   ];
 
   const PRODUCTION_INQUIRY_STORAGE_KEY = 'shortflow-production-inquiries';

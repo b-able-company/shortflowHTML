@@ -11,7 +11,7 @@
     { id: 'platform-collab', label: '제작협업', href: 'platform-collaboration.html', role: 'platform' },
     { id: 'platform-dashboard', label: '대시보드', href: 'shortflow-dashboard.html', aliases: ['dashboard'], role: 'platform' },
     { id: 'my-content', label: '콘텐츠 관리', href: 'contentlist-prod.html', role: 'producer' },
-    { id: 'producer-dashboard', label: '대시보드', href: 'producer-dashboard.html', role: 'producer' },
+    { id: 'producer-dashboard', label: '대시보드', href: 'distribution-version.html', role: 'producer' },
     { id: 'script-analysis', label: 'AI 대본분석', href: '#', role: 'producer' },
     { id: 'production-collab', label: '제작 협업', href: 'investor-collaboration.html', role: 'investor' },
     { id: 'guide', label: '이용가이드', href: '#', role: 'shared' },
@@ -30,8 +30,10 @@
 
   const producerDashboardTabs = [
     { id: 'workflow', label: '워크플로우', href: 'producer-dashboard.html?tab=workflow' },
+    { id: 'distribution', label: '배급현황', href: 'distribution-status.html' },
     { id: 'settlement', label: '정산', href: 'settlement-list.html' },
     { id: 'performance', label: '퍼포먼스', href: 'performance.html' },
+    { id: 'distribution-version', label: '배급현황버전', href: 'distribution-version.html' },
   ];
 
   const producerContentTabs = [
@@ -165,6 +167,7 @@
   }
 
   function renderDashboardSubNav(activeTab, kind) {
+    if (kind === 'producer') return '';
     const dashboardTabs = dashboardTabsFor(kind);
     return `
       <div class="sub-nav">

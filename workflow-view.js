@@ -20,20 +20,295 @@
     return `<span class="${className}">${content}</span>`;
   }
 
-  function renderStats(stats, isProducer) {
+  function renderStats(stats, isProducer, activeFilter = 'all') {
     return `
       <section class="stats-card">
         <div class="section-label"><span></span>워크플로우 현황</div>
-        <div class="stats-grid">
-          ${stats.map(stat => `
-            <div class="stat ${stat.accent ? 'accent' : ''}">
+        <div class="stats-grid stats-count-${stats.length}">
+          ${stats.map(stat => {
+            const isFilter = isProducer && stat.filter;
+            const active = isFilter && stat.filter === activeFilter;
+            const className = `stat ${stat.accent && (!isFilter || active) ? 'accent' : ''} ${active ? 'active' : ''}`.trim();
+            const content = `
               <strong>${stat.value}</strong>
               <span>${escapeHtml(stat.label)}</span>
+            `;
+            return isFilter
+              ? `<button class="${className}" type="button" data-workflow-stat-filter="${escapeHtml(stat.filter)}" aria-pressed="${active ? 'true' : 'false'}">${content}</button>`
+              : `<div class="${className}">${content}</div>`;
+          }).join('')}
+        </div>
+      </section>
+    `;
+  }
+
+  const workflowVersionSettlementRows = [
+    { content: '대표님이 내 전남친입니다', platform: 'ReelShort', period: '2025-04', platformPay: 6200000, contractAmount: 6200000, whtRate: 10, wht: 620000, wireFee: 35000, fxRate: 1380, fxFee: 8000, krwIn: 5537000, bableRate: 20, bableFee: 1107400, producerPay: 4429600 },
+    { content: '대표님이 내 전남친입니다', platform: 'DramaBox', period: '2025-04', platformPay: 2840000, contractAmount: null, whtRate: 16.5, wht: 468600, wireFee: 35000, fxRate: 1380, fxFee: 8000, krwIn: 2328400, bableRate: 20, bableFee: 465680, producerPay: 1862720 },
+    { content: '대표님이 내 전남친입니다', platform: 'ShortMax', period: '2025-Q1', platformPay: 5120000, contractAmount: null, whtRate: 16.5, wht: 844800, wireFee: 35000, fxRate: 1448, fxFee: 8000, krwIn: 4232200, bableRate: 20, bableFee: 846440, producerPay: 3385760 },
+    { content: '대표님이 내 전남친입니다', platform: 'Viki', period: '2025-04', platformPay: 4500000, contractAmount: 4500000, whtRate: 10, wht: 450000, wireFee: 35000, fxRate: 1402, fxFee: 8000, krwIn: 4007000, bableRate: 20, bableFee: 801400, producerPay: 3205600 },
+    { content: '대표님이 내 전남친입니다', platform: 'NovaShort', period: '2025-04', platformPay: 3920000, contractAmount: null, whtRate: 10, wht: 392000, wireFee: 35000, fxRate: 1402, fxFee: 9000, krwIn: 3484000, bableRate: 20, bableFee: 696800, producerPay: 2787200 },
+  ];
+
+  function formatMoney(value) {
+    if (value == null) return '—';
+    return `₩${Number(value || 0).toLocaleString('ko-KR')}`;
+  }
+
+  function formatUsdFromKrw(value, fxRate) {
+    if (value == null) return '—';
+    if (!fxRate) return `$${Number(value || 0).toLocaleString('en-US')}`;
+    return `$${Number(value / fxRate).toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+  }
+
+  function formatPct(value) {
+    return value == null ? '—' : `${value}%`;
+  }
+
+  function formatFx(value) {
+    return value == null ? '—' : `₩${Number(value).toLocaleString('ko-KR')}`;
+  }
+
+  function workflowVersionSettlementSummary() {
+    return workflowVersionSettlementRows.reduce((summary, row) => {
+      summary.krwIn += row.krwIn || 0;
+      summary.bableFee += row.bableFee || 0;
+      summary.net += row.producerPay || 0;
+      return summary;
+    }, { krwIn: 0, bableFee: 0, net: 0 });
+  }
+
+  function renderWorkflowVersionNotice(state) {
+    const status = state.workflowVersionSettlementStatus || 'SCHEDULED';
+    const confirmed = status === 'CONFIRMED';
+    const summary = workflowVersionSettlementSummary();
+    return `
+      <section class="workflow-version-notice" aria-label="정산 검토 요청">
+        <div class="workflow-version-notice-left">
+          <span class="workflow-version-notice-pill">${confirmed ? '검토 완료' : '검토 필요'}</span>
+          <h2 class="workflow-version-notice-title">${confirmed ? '4월 처리 대기 중' : '4월 정산 검토 요청'}</h2>
+          <p class="workflow-version-notice-desc">${confirmed ? '요청이 접수되었습니다. 지급 완료 후 완료 내역으로 이동합니다.' : '지급액과 공제 내역을 확인한 뒤 요청을 완료해 주세요.'}</p>
+        </div>
+        <div class="workflow-version-notice-right">
+          <div>
+            <p class="workflow-version-notice-label">예상 수령액</p>
+            <p class="workflow-version-notice-amount">${formatMoney(summary.net)}</p>
+          </div>
+          <button class="workflow-version-notice-btn" type="button" data-workflow-version-settlement-open>${confirmed ? '상세보기' : '검토하기'} <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderWorkflowVersionSettlementRows() {
+    const rows = workflowVersionSettlementRows.map((row, index) => `
+      <tr>
+        <td class="text-cell">${index === 0 ? escapeHtml(row.content) : ''}</td>
+        <td class="text-cell">${escapeHtml(row.platform)}</td>
+        <td>${escapeHtml(row.period)}</td>
+        <td>${formatMoney(row.platformPay)}</td>
+        <td>${formatMoney(row.contractAmount)}</td>
+        <td>${formatPct(row.whtRate)}</td>
+        <td>${formatUsdFromKrw(row.wht, row.fxRate)}</td>
+        <td>${formatUsdFromKrw(row.wireFee, row.fxRate)}</td>
+        <td>${formatFx(row.fxRate)}</td>
+        <td>${formatMoney(row.fxFee)}</td>
+        <td>${formatMoney(row.krwIn)}</td>
+        <td>${formatPct(row.bableRate)}</td>
+        <td>${formatMoney(row.bableFee)}</td>
+        <td class="producer-pay">${formatMoney(row.producerPay)}</td>
+      </tr>
+    `).join('');
+    const summary = workflowVersionSettlementSummary();
+    return `${rows}
+      <tr class="subtotal-row">
+        <td colspan="3">전체 합계</td>
+        <td colspan="7"></td>
+        <td>${formatMoney(summary.krwIn)}</td>
+        <td></td>
+        <td>${formatMoney(summary.bableFee)}</td>
+        <td class="producer-pay">${formatMoney(summary.net)}</td>
+      </tr>
+    `;
+  }
+
+  function renderWorkflowVersionSettlementModal(state) {
+    const open = !!state.workflowVersionSettlementModalOpen;
+    const confirmed = state.workflowVersionSettlementStatus === 'CONFIRMED';
+    const summary = workflowVersionSettlementSummary();
+    return `
+      <div class="workflow-settlement-modal-backdrop ${open ? 'show' : ''}" role="dialog" aria-modal="true" aria-labelledby="workflowSettlementModalTitle" data-workflow-version-modal-backdrop>
+        <div class="workflow-settlement-modal-panel">
+          <div class="workflow-settlement-modal-head">
+            <div>
+              <div class="workflow-settlement-title-row">
+                <h3 id="workflowSettlementModalTitle" class="workflow-settlement-modal-title">2025년 4월 정산 처리 내역</h3>
+                ${confirmed ? '<span class="workflow-settlement-modal-badge">검토 완료</span>' : ''}
+              </div>
+              <p class="workflow-settlement-modal-subtitle">콘텐츠 1건 · 플랫폼 정산 ${workflowVersionSettlementRows.length}건</p>
+            </div>
+          </div>
+          <div class="workflow-settlement-modal-body">
+            <div class="workflow-settlement-detail-grid">
+              <div class="workflow-settlement-detail-card">
+                <p class="workflow-settlement-detail-k">실입금액(원)</p>
+                <p class="workflow-settlement-detail-v">${formatMoney(summary.krwIn)}</p>
+              </div>
+              <div class="workflow-settlement-detail-card">
+                <p class="workflow-settlement-detail-k">비에이블 수수료 금액(원)</p>
+                <p class="workflow-settlement-detail-v">${formatMoney(summary.bableFee)}</p>
+              </div>
+              <div class="workflow-settlement-detail-card net">
+                <p class="workflow-settlement-detail-k">최종 정산액(원)</p>
+                <p class="workflow-settlement-detail-v">${formatMoney(summary.net)}</p>
+              </div>
+            </div>
+            <div class="workflow-settlement-section-head">
+              <p class="workflow-settlement-section-title">상세 내역</p>
+              <p class="workflow-settlement-section-meta">플랫폼별 지급 및 공제 기준</p>
+            </div>
+            <div class="workflow-settlement-table-wrap">
+              <table class="workflow-settlement-detail-table">
+                <thead>
+                  <tr class="group-row">
+                    <th colspan="2"></th>
+                    <th colspan="3"><span class="workflow-settlement-table-group platform">플랫폼 지급</span></th>
+                    <th colspan="6"><span class="workflow-settlement-table-group deduct">공제 내역</span></th>
+                    <th colspan="3"><span class="workflow-settlement-table-group settle">정산</span></th>
+                  </tr>
+                  <tr>
+                    <th class="text-cell">콘텐츠</th>
+                    <th class="text-cell">플랫폼</th>
+                    <th>발생월/분기</th>
+                    <th>플랫폼 지급액</th>
+                    <th>계약 금액</th>
+                    <th>원천세 비율</th>
+                    <th>원천세 금액(USD)</th>
+                    <th>송금 수수료(USD)</th>
+                    <th>환율</th>
+                    <th>환전 수수료(원)</th>
+                    <th>실입금액(원)</th>
+                    <th>Bable 수수료율</th>
+                    <th>Bable 수수료 금액(원)</th>
+                    <th>제작사 정산액(원)</th>
+                  </tr>
+                </thead>
+                <tbody>${renderWorkflowVersionSettlementRows()}</tbody>
+              </table>
+            </div>
+          </div>
+          <div class="workflow-settlement-modal-foot">
+            <p class="workflow-settlement-modal-help">${confirmed ? '요청이 접수된 내역입니다. 읽기 전용으로 제공됩니다.' : '검토를 마치면 정산 요청을 진행해 주세요.'}</p>
+            <div class="workflow-settlement-modal-actions">
+              <button type="button" class="workflow-settlement-modal-action" data-workflow-version-settlement-close>닫기</button>
+              ${confirmed ? '' : '<button type="button" class="workflow-settlement-modal-action primary" data-workflow-version-settlement-confirm>정산 요청</button>'}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function workflowVersionDistributionRows() {
+    return window.ShortflowDistributionData?.rows || [];
+  }
+
+  function workflowVersionFormatNumber(value) {
+    return Number(value || 0).toLocaleString('ko-KR');
+  }
+
+  function workflowVersionTotals() {
+    const rows = workflowVersionDistributionRows();
+    return rows.reduce((totals, row) => {
+      const details = row.platformDetails || [];
+      totals.contents += 1;
+      totals.platforms += details.length || (row.platforms || []).length;
+      details.forEach(platform => {
+        totals.views += platform.views || 0;
+        totals.follows += platform.follows || 0;
+        totals.likes += platform.likes || 0;
+      });
+      const counts = row.platformStageCounts || {};
+      totals.scheduled += counts.scheduled || 0;
+      totals.active += counts.active || 0;
+      totals.closed += counts.closed || 0;
+      return totals;
+    }, { contents: 0, platforms: 0, views: 0, follows: 0, likes: 0, scheduled: 0, active: 0, closed: 0 });
+  }
+
+  function renderWorkflowVersionDashboardMetric(label, value, meta = '') {
+    return `
+      <article class="workflow-version-dashboard-metric">
+        <span>${escapeHtml(label)}</span>
+        <strong>${escapeHtml(value)}</strong>
+        ${meta ? `<em>${escapeHtml(meta)}</em>` : ''}
+      </article>
+    `;
+  }
+
+  function renderWorkflowVersionStatusCard(label, value) {
+    return `
+      <div class="workflow-version-status-card">
+        <span>${escapeHtml(label)}</span>
+        <strong>${escapeHtml(value)}</strong>
+      </div>
+    `;
+  }
+
+  function renderWorkflowVersionSettlementHistory() {
+    const history = [
+      { month: '2025년 3월', contents: '1편', amount: '₩17,830,481', status: '완료' },
+      { month: '2025년 2월', contents: '1편', amount: '₩19,037,064', status: '완료' },
+      { month: '2025년 1월', contents: '1편', amount: '₩18,000,808', status: '완료' },
+    ];
+    return `
+      <section class="workflow-version-dashboard-section">
+        <div class="workflow-version-section-head">
+          <h3>이전 정산 내역</h3>
+          <a href="settlement-list.html">전체보기 <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="workflow-version-history-table">
+          ${history.map(item => `
+            <div class="workflow-version-history-row">
+              <span>${escapeHtml(item.month)}</span>
+              <span>${escapeHtml(item.contents)}</span>
+              <strong>${escapeHtml(item.amount)}</strong>
+              <em>${escapeHtml(item.status)}</em>
             </div>
           `).join('')}
         </div>
       </section>
     `;
+  }
+
+  function renderWorkflowVersionDashboard() {
+    const totals = workflowVersionTotals();
+    return `
+      <section class="workflow-version-dashboard">
+        <div class="workflow-version-section-head">
+          <h3>콘텐츠 운영 요약</h3>
+          <span>${workflowVersionFormatNumber(totals.contents)}개 콘텐츠 기준</span>
+        </div>
+        <div class="workflow-version-dashboard-grid">
+          ${renderWorkflowVersionDashboardMetric('조회수', workflowVersionFormatNumber(totals.views), '플랫폼 합산 누적')}
+          ${renderWorkflowVersionDashboardMetric('팔로우수', workflowVersionFormatNumber(totals.follows), '플랫폼 합산 누적')}
+          ${renderWorkflowVersionDashboardMetric('좋아요수', workflowVersionFormatNumber(totals.likes), '플랫폼 합산 누적')}
+          ${renderWorkflowVersionDashboardMetric('계약 플랫폼', `${workflowVersionFormatNumber(totals.platforms)}개`, '전체 콘텐츠 합산')}
+        </div>
+        <div class="workflow-version-status-grid">
+          ${renderWorkflowVersionStatusCard('예정', `${workflowVersionFormatNumber(totals.scheduled)}개`)}
+          ${renderWorkflowVersionStatusCard('유통중', `${workflowVersionFormatNumber(totals.active)}개`)}
+          ${renderWorkflowVersionStatusCard('종료', `${workflowVersionFormatNumber(totals.closed)}개`)}
+        </div>
+      </section>
+      ${renderWorkflowVersionSettlementHistory()}
+    `;
+  }
+
+  function filterProducerWorkflowItems(items, filter = 'all') {
+    if (filter === 'content') return items.filter(item => (item.contentKind || '콘텐츠') !== '기획안');
+    if (filter === 'plan') return items.filter(item => (item.contentKind || '콘텐츠') === '기획안');
+    return items;
   }
 
   function workflowSummary(item, isProducer) {
@@ -836,7 +1111,7 @@
     return timelines[item.status] || producerTimelineByStatus[item.status] || [];
   }
 
-  function renderWorkflowList(items, search, selectedId, isProducer) {
+  function renderWorkflowList(items, search, selectedId, isProducer, options = {}) {
     const keyword = search.trim().toLowerCase();
     const filteredItems = items.filter(item => {
       if (!keyword) return true;
@@ -845,6 +1120,7 @@
 
     return `
       <section class="list-card workflow-list">
+        ${options.title ? `<div class="workflow-list-head"><h2>${escapeHtml(options.title)}</h2></div>` : ''}
         <div class="workflow-search-bar">
           <div class="workflow-search-field">
             <input class="content-search" type="search" placeholder="콘텐츠명으로 검색" value="${escapeHtml(search)}">
@@ -956,19 +1232,25 @@
 
   function renderWorkflowView(state, options) {
     const isProducer = options && options.dashboardKind === 'producer';
-    const items = isProducer ? producerWorkflowItems : workflowItems;
+    const isWorkflowVersion = isProducer && state.tab === 'workflow-version';
+    const allItems = isProducer ? producerWorkflowItems : workflowItems;
+    const activeFilter = isProducer ? (state.workflowKindFilter || 'all') : 'all';
+    const items = isProducer ? filterProducerWorkflowItems(allItems, activeFilter) : allItems;
     const stats = isProducer ? producerWorkflowStats : workflowStats;
-    const selected = items.find(item => item.id === state.selectedWorkflowId);
+    const selected = items.find(item => item.id === state.selectedWorkflowId) || items[0];
     return `
       <div class="dashboard-grid workflow-grid">
         <aside class="left-column">
-          ${renderWorkflowList(items, state.workflowSearch, state.selectedWorkflowId, isProducer)}
+          ${renderWorkflowList(items, state.workflowSearch, selected?.id || '', isProducer, { title: isWorkflowVersion ? '배급 콘텐츠' : '' })}
         </aside>
         <section class="right-column">
-          ${renderStats(stats, isProducer)}
-          ${renderWorkflowDetail(selected, isProducer, state.workflowDetailMode || 'timeline', state)}
+          ${isWorkflowVersion ? renderWorkflowVersionNotice(state) : renderStats(stats, isProducer, activeFilter)}
+          ${isWorkflowVersion
+            ? renderWorkflowVersionDashboard()
+            : renderWorkflowDetail(selected, isProducer, state.workflowDetailMode || 'timeline', state)}
         </section>
       </div>
+      ${isWorkflowVersion ? renderWorkflowVersionSettlementModal(state) : ''}
     `;
   }
 

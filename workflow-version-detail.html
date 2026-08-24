@@ -1,0 +1,2553 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>워크플로우버전 상세 — 제작사</title>
+  <link rel="stylesheet" href="dashboard-common.css">
+  <script src="dashboard-nav.js"></script>
+  <script src="distribution-data.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <style>
+    :root {
+      --dist-line: #e7e5df;
+      --dist-soft: #f7f7f5;
+      --dist-text: #151515;
+      --dist-muted: #737780;
+    }
+
+    html,
+    body {
+      margin: 0;
+      background: #fff;
+    }
+
+    body {
+      color: var(--dist-text);
+      font-family: "Pretendard Variable", "Pretendard", "Geist", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .distribution-detail-wrap {
+      width: min(var(--max), calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 24px 0 140px;
+    }
+
+    .detail-back {
+      width: fit-content;
+      margin-bottom: 12px;
+      border: 0;
+      background: #fff;
+      color: #666a72;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 520;
+      text-decoration: none;
+      transform: translateY(-6px);
+    }
+
+    .detail-back-mark {
+      font-size: 17px;
+      font-weight: 520;
+      line-height: 1;
+      transform: translateY(-0.5px);
+    }
+
+    .detail-back:hover {
+      color: #181818;
+    }
+
+    .detail-hero {
+      display: grid;
+      grid-template-columns: 176px minmax(0, 1fr);
+      gap: 22px;
+      align-items: flex-start;
+      margin-bottom: 30px;
+    }
+
+    .detail-poster-original {
+      width: 176px;
+      height: auto;
+      border-radius: 7px;
+      background: var(--dist-soft);
+      display: block;
+    }
+
+    .detail-copy {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 249px;
+    }
+
+    .detail-title {
+      margin: 6px 0 0;
+      overflow: hidden;
+      color: #171717;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.15;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .detail-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 30px;
+    }
+
+    .detail-title-main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .detail-title-main .detail-external-actions {
+      margin-top: 10px;
+    }
+
+    .detail-view-actions {
+      display: inline-flex;
+      align-items: stretch;
+      gap: 0;
+      flex: 0 0 auto;
+      isolation: isolate;
+    }
+
+    .detail-view-button {
+      position: relative;
+      min-width: 104px;
+      height: 36px;
+      padding: 0 16px;
+      border: 1px solid #f2f2f2;
+      border-radius: 0;
+      background: #f2f2f2;
+      color: #181818;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 550;
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .detail-view-button + .detail-view-button {
+      margin-left: -1px;
+      border-left-color: #e5e5e5;
+    }
+
+    .detail-view-button:first-child {
+      border-radius: 14px 0 0 14px;
+    }
+
+    .detail-view-button:last-child {
+      border-radius: 0 14px 14px 0;
+    }
+
+    .detail-view-button:hover {
+      z-index: 1;
+      background: rgb(221, 221, 221);
+      border-color: rgb(221, 221, 221);
+    }
+
+    .detail-view-button.is-active {
+      z-index: 2;
+      background: rgb(215, 215, 215);
+      border-color: rgb(215, 215, 215);
+      color: #181818;
+    }
+
+    .hero-summary {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .hero-eyebrow {
+      color: var(--dist-muted);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.6px;
+      line-height: 12px;
+    }
+
+    .hero-metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .hero-metric-grid.is-three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .hero-metric-item {
+      min-width: 0;
+      padding: 17px 18px;
+      border: 0.5px solid var(--dist-line);
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .hero-metric-item span {
+      margin-bottom: 10px;
+      color: var(--dist-muted);
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .hero-metric-item strong {
+      color: #171717;
+      display: block;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 21px;
+      font-weight: 650;
+      letter-spacing: 0;
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .platform-panel {
+      margin-top: 0;
+    }
+
+    .panel-head {
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 0.5px solid var(--dist-line);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .panel-title {
+      margin: 6px 0 0;
+      color: #181818;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.15;
+    }
+
+    .panel-title-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-info {
+      position: relative;
+      width: 18px;
+      height: 18px;
+      border: 0.5px solid #d9d9d4;
+      border-radius: 50%;
+      background: #fff;
+      color: #8a8e96;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 11px;
+      font-weight: 650;
+      line-height: 1;
+      cursor: help;
+      transform: translateY(2px);
+    }
+
+    .panel-info::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 9px);
+      width: 300px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #1d1d1f;
+      color: #fff;
+      font-family: "Pretendard Variable", "Pretendard", "Geist", system-ui, sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.45;
+      white-space: normal;
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.16);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 4px);
+      transition: opacity 0.14s ease, transform 0.14s ease;
+      z-index: 20;
+    }
+
+    .panel-info::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 4px);
+      width: 9px;
+      height: 9px;
+      background: #1d1d1f;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 4px) rotate(45deg);
+      transition: opacity 0.14s ease, transform 0.14s ease;
+      z-index: 19;
+    }
+
+    .panel-info:hover::after,
+    .panel-info:hover::before,
+    .panel-info:focus-visible::after,
+    .panel-info:focus-visible::before {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .platform-card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .workflow-detail-split {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 22px;
+      align-items: flex-start;
+    }
+
+    .workflow-detail-split .workflow-material-panel {
+      margin: 0;
+      padding: 32px 26px 16px;
+      border: 0.5px solid var(--dist-line);
+      background: #fff;
+      border-radius: 14px;
+    }
+
+    .workflow-section {
+      position: relative;
+      padding-top: 8px;
+    }
+
+    .workflow-section-title {
+      position: absolute;
+      top: 0;
+      left: 18px;
+      z-index: 1;
+      margin: 0;
+      padding: 0 8px;
+      background: #fff;
+      color: #181818;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.2;
+    }
+
+    .workflow-detail-split .workflow-section > .workflow-card {
+      padding: 32px 26px 22px;
+      border: 0.5px solid var(--dist-line);
+      background: #fff;
+      border-radius: 14px;
+    }
+
+    .workflow-detail-split .workflow-card-head {
+      margin-bottom: 20px;
+    }
+
+    .workflow-detail-split .workflow-material-panel > .workflow-card-head {
+      margin-bottom: 20px;
+    }
+
+    .workflow-detail-split .workflow-timeline,
+    .workflow-detail-split .workflow-material-group {
+      margin-left: 0;
+    }
+
+    .workflow-material-group h4 span {
+      width: 5px;
+      height: 5px;
+      background: #181818;
+    }
+
+    .workflow-material-table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+    }
+
+    .workflow-material-table td:nth-child(odd) {
+      width: 20%;
+      background: #fafafa;
+      font-size: 12px;
+    }
+
+    .workflow-material-table td:nth-child(even) {
+      width: 30%;
+    }
+
+    .workflow-material-table .count-current,
+    .workflow-material-table .count-number {
+      color: #181818;
+      font-size: 14px;
+      font-weight: 620;
+      line-height: 1;
+    }
+
+    .workflow-material-table .count-total,
+    .workflow-material-table .count-unit {
+      font-size: inherit;
+      font-weight: inherit;
+    }
+
+    .drive-loading-state {
+      min-height: 426px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      color: #737780;
+      text-align: center;
+    }
+
+    .drive-loading-cat {
+      width: 220px;
+      height: 100px;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .floppy-cat {
+      width: 100%;
+      height: auto;
+      overflow: visible;
+      shape-rendering: crispEdges;
+      image-rendering: pixelated;
+    }
+
+    .cat-body {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: bodyBounce 760ms steps(1, end) infinite;
+    }
+
+    .cat-head {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: headBounce 760ms steps(1, end) infinite;
+    }
+
+    .front-legs {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: frontLegRun 760ms steps(1, end) infinite;
+    }
+
+    .rear-legs {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: rearLegRun 760ms steps(1, end) infinite;
+    }
+
+    .trail-wave {
+      transform-box: fill-box;
+      transform-origin: right center;
+    }
+
+    .trail-wave-1 {
+      fill: #9ba3ad;
+      animation: trail1 760ms steps(1, end) infinite;
+    }
+
+    .trail-wave-2 {
+      fill: #cdd2d8;
+      animation: trail2 760ms steps(1, end) infinite;
+    }
+
+    .trail-wave-3 {
+      fill: #f2f2f2;
+      animation: trail3 760ms steps(1, end) infinite;
+    }
+
+    @keyframes bodyBounce {
+      0% { transform: translateY(0); }
+      12.5% { transform: translateY(-1px); }
+      25% { transform: translateY(-2px); }
+      37.5% { transform: translateY(-1px); }
+      50% { transform: translateY(0); }
+      62.5% { transform: translateY(1px); }
+      75% { transform: translateY(0); }
+      87.5% { transform: translateY(-1px); }
+      100% { transform: translateY(0); }
+    }
+
+    @keyframes headBounce {
+      0% { transform: translateY(0); }
+      12.5% { transform: translateY(-1px); }
+      25% { transform: translateY(-2px); }
+      37.5% { transform: translateY(-1px); }
+      50% { transform: translateY(0); }
+      62.5% { transform: translateY(1px); }
+      75% { transform: translateY(0); }
+      87.5% { transform: translateY(-1px); }
+      100% { transform: translateY(0); }
+    }
+
+    @keyframes frontLegRun {
+      0% { transform: translateX(2px); }
+      12.5% { transform: translateX(1px) translateY(-1px); }
+      25% { transform: translateX(0) translateY(-2px); }
+      37.5% { transform: translateX(-1px); }
+      50% { transform: translateX(-2px); }
+      62.5% { transform: translateX(-1px) translateY(-1px); }
+      75% { transform: translateX(0) translateY(-2px); }
+      87.5% { transform: translateX(1px); }
+      100% { transform: translateX(2px); }
+    }
+
+    @keyframes rearLegRun {
+      0% { transform: translateX(-2px); }
+      12.5% { transform: translateX(-1px) translateY(-1px); }
+      25% { transform: translateX(0) translateY(-2px); }
+      37.5% { transform: translateX(1px); }
+      50% { transform: translateX(2px); }
+      62.5% { transform: translateX(1px) translateY(-1px); }
+      75% { transform: translateX(0) translateY(-2px); }
+      87.5% { transform: translateX(-1px); }
+      100% { transform: translateX(-2px); }
+    }
+
+    @keyframes trail1 {
+      0% { transform: translateY(0); }
+      12.5% { transform: translateY(-2px); }
+      25% { transform: translateY(-3px); }
+      37.5% { transform: translateY(-1px); }
+      50% { transform: translateY(1px); }
+      62.5% { transform: translateY(2px); }
+      75% { transform: translateY(1px); }
+      87.5% { transform: translateY(0); }
+      100% { transform: translateY(0); }
+    }
+
+    @keyframes trail2 {
+      0% { transform: translateY(2px); }
+      12.5% { transform: translateY(1px); }
+      25% { transform: translateY(0); }
+      37.5% { transform: translateY(-2px); }
+      50% { transform: translateY(-3px); }
+      62.5% { transform: translateY(-1px); }
+      75% { transform: translateY(1px); }
+      87.5% { transform: translateY(2px); }
+      100% { transform: translateY(2px); }
+    }
+
+    @keyframes trail3 {
+      0% { transform: translateY(-1px); }
+      12.5% { transform: translateY(1px); }
+      25% { transform: translateY(2px); }
+      37.5% { transform: translateY(1px); }
+      50% { transform: translateY(0); }
+      62.5% { transform: translateY(-2px); }
+      75% { transform: translateY(-3px); }
+      87.5% { transform: translateY(-2px); }
+      100% { transform: translateY(-1px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cat-body,
+      .cat-head,
+      .front-legs,
+      .rear-legs,
+      .trail-wave {
+        animation: none;
+      }
+    }
+
+    .drive-loading-copy {
+      margin: 0;
+      color: #6f747c;
+      font-size: 12.5px;
+      font-weight: 540;
+      line-height: 1.4;
+    }
+
+    .drive-loading-copy span {
+      display: inline-block;
+      width: 3px;
+      height: 3px;
+      margin: 0 1px;
+      border-radius: 50%;
+      background: currentColor;
+      color: inherit;
+      line-height: 1;
+      vertical-align: middle;
+      text-indent: -999px;
+      overflow: hidden;
+      animation: driveLoadingDot 0.9s ease-in-out infinite;
+    }
+
+    .drive-loading-copy span:nth-child(2) {
+      animation-delay: 0.16s;
+    }
+
+    .drive-loading-copy span:nth-child(3) {
+      animation-delay: 0.32s;
+    }
+
+    @keyframes driveLoadingDot {
+      0%,
+      100% {
+        opacity: 0.36;
+        transform: translateY(0);
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(-4px);
+      }
+    }
+
+    .platform-card {
+      min-width: 0;
+      border: 0.5px solid #f2f2f2;
+      border-radius: 14px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .platform-card-head {
+      min-height: 86px;
+      padding: 19px 20px;
+      background: #f2f2f2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .platform-head-copy {
+      min-width: 0;
+    }
+
+    .platform-name {
+      overflow: hidden;
+      color: #181818;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.2;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .platform-name-row {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .platform-state-badge {
+      height: 25px;
+      padding: 0 11px 0 9px;
+      border: 1px solid #e6e6e6;
+      border-radius: 999px;
+      background: transparent;
+      color: #181818;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      flex: 0 0 auto;
+      font-size: 11px;
+      font-weight: 520;
+      line-height: 25px;
+      white-space: nowrap;
+    }
+
+    .platform-state-badge::before {
+      content: "";
+      width: 6.5px;
+      height: 6.5px;
+      border-radius: 999px;
+      background: currentColor;
+      flex: 0 0 auto;
+    }
+
+    .platform-state-badge.is-active::before {
+      background: #49a963;
+      animation: livePulse 2s ease-in-out infinite;
+    }
+
+    .platform-state-badge.is-scheduled::before {
+      background: #4f94d1;
+    }
+
+    .platform-state-badge.is-closed::before {
+      background: #858585;
+    }
+
+    @keyframes livePulse {
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.42;
+      }
+    }
+
+    .platform-contract-grid {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+    }
+
+    .platform-collapse-button {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: #181818;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      font-family: inherit;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .platform-collapse-button:hover {
+      color: #000;
+      background: transparent;
+    }
+
+    .platform-collapse-button svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 160ms ease;
+    }
+
+    .platform-collapse-button:not(.is-collapsed) svg {
+      transform: rotate(180deg);
+    }
+
+
+    .platform-contract-item {
+      min-width: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #4f535a;
+      font-size: 12px;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .platform-contract-item span {
+      color: #7a7e85;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .platform-contract-item strong {
+      overflow: hidden;
+      color: #2f3338;
+      display: inline-block;
+      max-width: 320px;
+      font-size: 12px;
+      font-weight: 540;
+      text-overflow: ellipsis;
+    }
+
+    .platform-metric-grid {
+      border-top: 0.5px solid #f2f2f2;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .platform-metric-item {
+      min-width: 0;
+      padding: 18px 20px;
+      border-left: 0.5px solid #f2f2f2;
+    }
+
+    .platform-metric-item:first-child {
+      border-left: 0;
+    }
+
+    .platform-metric-item span {
+      margin-bottom: 8px;
+      color: #7a7e85;
+      display: block;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .platform-metric-item strong {
+      color: #171717;
+      display: block;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1.15;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .settlement-pane-head {
+      min-height: 50px;
+      padding: 7px 20px;
+      border-top: 0.5px solid #f2f2f2;
+      border-bottom: 0.5px solid #f2f2f2;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .settlement-pane-title {
+      color: #181818;
+      font-size: 13.5px;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .settlement-record-tabs {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 4px;
+      align-self: flex-end;
+      transform: translateY(7px);
+    }
+
+    .settlement-record-tab {
+      height: 32px;
+      padding: 0 15px;
+      border: 0.5px solid #e4e4e4;
+      border-bottom-color: #f2f2f2;
+      border-radius: 9px 9px 3px 3px;
+      background: #f7f7f7;
+      color: #737780;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      font-size: 11.8px;
+      font-weight: 520;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .settlement-record-tab span {
+      transform: translateY(1px);
+    }
+
+    .settlement-record-tab.is-active {
+      background: #fff;
+      border-color: #d8d8d8;
+      border-bottom-color: #fff;
+      color: #181818;
+    }
+
+    .settlement-pane-actions {
+      position: relative;
+      display: inline-flex;
+      align-items: stretch;
+      gap: 2px;
+      padding: 3px;
+      border-radius: 999px;
+      background: #f4f4f4;
+    }
+
+    .settlement-pane-actions::before {
+      content: "";
+      position: absolute;
+      top: 3px;
+      bottom: 3px;
+      left: 3px;
+      width: calc((100% - 8px) / 2);
+      border-radius: 999px;
+      background: #fff;
+      transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .settlement-pane-actions.is-rs::before {
+      transform: translateX(calc(100% + 2px));
+    }
+
+    .settlement-pane-button {
+      position: relative;
+      z-index: 1;
+      min-width: 98px;
+      height: 30px;
+      padding: 0 16px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: #181818;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      font-size: 11.8px;
+      font-weight: 520;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .settlement-pane-button + .settlement-pane-button {
+      margin-left: 0;
+    }
+
+    .settlement-pane-button.is-active {
+      background: transparent;
+      color: #181818;
+      box-shadow: none;
+      font-weight: 500;
+    }
+
+    .settlement-table-wrap {
+      overflow-x: auto;
+      background: #fff;
+    }
+
+    .settlement-record-table {
+      min-width: 1380px;
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .settlement-record-table th,
+    .settlement-record-table td {
+      padding: 11px 12px;
+      border-bottom: 0.5px solid #f2f2f2;
+      color: #171717;
+      font-size: 12px;
+      text-align: right;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .settlement-record-table thead th {
+      background: #fff;
+      color: #737780;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .settlement-record-table .group-row th {
+      padding: 8px 6px 0;
+      border-bottom: 0;
+      background: #fff;
+      text-align: center;
+    }
+
+    .settlement-record-table tbody td {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 13px;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .settlement-record-table tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .settlement-record-table td:first-child,
+    .settlement-record-table th:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background: #fff;
+    }
+
+    .settlement-record-table thead th:first-child {
+      z-index: 2;
+    }
+
+    .settlement-record-table td:first-child {
+      font-family: inherit;
+      font-weight: 600;
+      letter-spacing: -0.1px;
+    }
+
+    .settlement-record-table td.producer-pay {
+      font-weight: 700;
+    }
+
+    .settlement-pagination {
+      padding: 12px 20px 14px;
+      border-top: 0.5px solid #f2f2f2;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .settlement-page-button {
+      min-width: 30px;
+      height: 28px;
+      padding: 0 9px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #737780;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 520;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .settlement-page-button:hover {
+      background: #f4f4f4;
+      color: #181818;
+    }
+
+    .settlement-page-button.is-active {
+      background: #f4f4f4;
+      color: #181818;
+    }
+
+    .table-group-label {
+      display: block;
+      padding: 7px 10px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .table-group-label.platform {
+      background: #faf6ee;
+      color: #a6813a;
+    }
+
+    .table-group-label.deduct {
+      background: #f3f6f8;
+      color: #72808a;
+    }
+
+    .table-group-label.settle {
+      background: #f2f7f5;
+      color: #5e8a7a;
+    }
+
+    .settlement-status {
+      --settlement-status-bg: rgb(39, 125, 31);
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: var(--settlement-status-bg);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1;
+      box-shadow:
+        0 -1px 0 var(--settlement-status-bg),
+        0 1px 0 var(--settlement-status-bg);
+    }
+
+    .settlement-status.is-upcoming {
+      --settlement-status-bg: rgb(229, 229, 229);
+      color: rgb(38, 38, 38);
+    }
+
+    .settlement-table-label {
+      padding: 14px 20px 10px;
+      border-bottom: 0.5px dashed #f2f2f2;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .settlement-table-label span {
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgb(250, 250, 250);
+      color: #737780;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+
+    .rs-trend-panel {
+      padding: 14px 20px 20px;
+      background: #fff;
+    }
+
+    .rs-chart-box {
+      position: relative;
+      min-height: 268px;
+      margin-bottom: 10px;
+      padding: 10px 12px 0;
+      border: 0.5px solid #f0efe9;
+      border-radius: 10px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .rs-chart-target {
+      min-height: 246px;
+    }
+
+    .rs-chart-loading {
+      height: 246px;
+      color: #737780;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .rs-year-select-wrap {
+      position: absolute;
+      top: 12px;
+      right: 18px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .rs-year-select {
+      height: 30px;
+      min-width: 82px;
+      padding: 0 30px 0 11px;
+      border: 0.5px solid #e7e5df;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.92);
+      color: #181818;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 500;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    .rs-year-select-wrap svg {
+      position: absolute;
+      right: 11px;
+      pointer-events: none;
+    }
+
+    .rs-trend-box {
+      border: 0.5px solid #f0efe9;
+      border-radius: 10px;
+      background: #fff;
+      overflow-x: auto;
+    }
+
+    .rs-trend-table {
+      min-width: 940px;
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .rs-trend-table th,
+    .rs-trend-table td {
+      padding: 9px 12px;
+      border-top: 0.5px solid #f2f2f2;
+      color: #171717;
+      font-size: 12px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .rs-trend-table thead th {
+      border-top: 0;
+      color: #737780;
+      font-weight: 500;
+    }
+
+    .rs-trend-table tfoot th,
+    .rs-trend-table tfoot td {
+      border-bottom: 0;
+    }
+
+    .rs-trend-table tbody th,
+    .rs-trend-table tfoot th {
+      padding-left: 14px;
+      color: #737780;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    .rs-trend-table td {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .rs-trend-table .is-selected {
+      background: #f2f3f4;
+    }
+
+    .rs-trend-table tbody tr[data-rs-trend-year-row] {
+      cursor: pointer;
+    }
+
+    .rs-trend-table tbody tr[data-rs-trend-year-row]:hover {
+      background: #f7f8f8;
+    }
+
+    .workflow-card {
+      min-width: 0;
+      background: #fff;
+    }
+
+    .workflow-card + .workflow-card {
+      margin-top: 12px;
+    }
+
+    .workflow-card-head {
+      margin-bottom: 20px;
+    }
+
+    .workflow-card-title {
+      margin: 0;
+      color: #181818;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.2;
+    }
+
+    .workflow-card-meta {
+      display: none;
+    }
+
+    .workflow-timeline {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .workflow-timeline-item {
+      position: relative;
+      min-height: 67px;
+      padding: 0 0 0 28px;
+    }
+
+    .workflow-timeline-item::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      bottom: 0;
+      width: 1px;
+      background: #d8dbe0;
+    }
+
+    .workflow-timeline-item:last-child::before {
+      display: none;
+    }
+
+    .workflow-timeline-dot {
+      position: absolute;
+      left: 0;
+      top: 4px;
+      width: 8px;
+      height: 8px;
+      border: 0;
+      border-radius: 999px;
+      background: #c9ccd1;
+      box-shadow: none;
+    }
+
+    .workflow-timeline-item.is-active .workflow-timeline-dot {
+      background: #f05a28;
+      animation: timelinePulse 1.35s ease-in-out infinite;
+    }
+
+    @keyframes timelinePulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(240, 90, 40, 0.36);
+      }
+      70% {
+        box-shadow: 0 0 0 8px rgba(240, 90, 40, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(240, 90, 40, 0);
+      }
+    }
+
+    .workflow-timeline-title {
+      color: #181818;
+      display: -webkit-box;
+      overflow: hidden;
+      font-size: 13px;
+      font-weight: 560;
+      line-height: 1.3;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .workflow-timeline-date {
+      margin-top: 4px;
+      color: #8a8e96;
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    .workflow-material-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+    }
+
+    .workflow-material-item {
+      min-width: 0;
+      padding: 18px 20px;
+      border-left: 0.5px solid #f2f2f2;
+    }
+
+    .workflow-material-item:first-child {
+      border-left: 0;
+    }
+
+    .workflow-material-item span {
+      margin-bottom: 8px;
+      color: #737780;
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .workflow-material-item strong,
+    .workflow-material-item a {
+      color: #181818;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 620;
+      line-height: 1.3;
+      text-decoration: none;
+    }
+
+    .detail-note {
+      margin-top: 28px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      background: rgb(250, 250, 250);
+      color: #737780;
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .detail-note-label {
+      height: 18px;
+      padding: 0 7px;
+      border: 0.5px solid #d7d7d2;
+      border-radius: 999px;
+      color: #9a9ea5;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 18px;
+      letter-spacing: 0.4px;
+    }
+
+    .detail-note strong {
+      color: #171717;
+      font-weight: 600;
+    }
+
+    @media (max-width: 920px) {
+      .distribution-detail-wrap {
+        width: calc(100vw - 32px);
+        padding: 20px 0 110px;
+      }
+
+      .detail-hero {
+        grid-template-columns: 136px minmax(0, 1fr);
+        gap: 16px;
+        padding: 0;
+      }
+
+      .detail-poster-original {
+        width: 136px;
+      }
+
+      .detail-copy {
+        min-height: 193px;
+      }
+
+      .detail-title {
+        font-size: 20px;
+        white-space: normal;
+      }
+
+      .detail-title-row {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .detail-title-main .detail-external-actions {
+        margin-top: 8px;
+      }
+
+      .detail-view-actions {
+        flex-wrap: wrap;
+      }
+
+      .detail-view-button {
+        height: 32px;
+      }
+
+      .hero-metric-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .workflow-material-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .workflow-material-item {
+        border-left: 0;
+        border-top: 0.5px solid #f2f2f2;
+      }
+
+      .workflow-material-item:first-child {
+        border-top: 0;
+      }
+
+    }
+
+    @media (max-width: 640px) {
+      .detail-hero {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-poster-original {
+        width: min(180px, 100%);
+      }
+
+      .detail-copy {
+        min-height: 0;
+      }
+
+      .platform-contract-item {
+        white-space: normal;
+      }
+
+      .platform-contract-item strong {
+        max-width: none;
+      }
+
+      .workflow-detail-split {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="distribution-detail-chrome"></div>
+  <main class="distribution-detail-wrap" id="distributionDetailRoot"></main>
+
+  <script>
+    document.getElementById('distribution-detail-chrome').innerHTML =
+      window.ShortflowNav.renderTopNav('producer-dashboard') +
+      window.ShortflowNav.renderDashboardSubNav('distribution-version', 'producer');
+
+    const {
+      escapeHtml,
+      formatNumber,
+      sumPlatforms,
+      findRowById
+    } = window.ShortflowDistributionData;
+
+    const row = findRowById('0');
+    const totalViews = sumPlatforms(row, 'views');
+    const totalFollows = sumPlatforms(row, 'follows');
+    const totalLikes = sumPlatforms(row, 'likes');
+    let detailViewMode = 'workflow';
+    const settlementPaneState = {};
+    const settlementRecordTypeState = {};
+    const settlementPageState = {};
+    const rsTrendYearState = {};
+    const settlementPageSize = 5;
+    let settlementPaneRenderTimer = null;
+    let rsTrendCharts = [];
+    let driveMaterialStatus = 'loading';
+    let driveMaterialTimer = null;
+    const platformCollapseState = {
+      performance: Object.fromEntries(row.platformDetails.map((_, index) => [index, false])),
+      settlement: Object.fromEntries(row.platformDetails.map((_, index) => [index, true]))
+    };
+    const workflowDetail = {
+      type: '콘텐츠 등록',
+      status: '승인완료',
+      statusDescription: '관리자 검토가 완료되어 배급 진행이 가능한 상태입니다.',
+      lastUpdated: '2026년 7월 15일 오후 02:18',
+      lastUpdatedShort: '2026.07.15',
+      driveUploadStatus: '완료',
+      driveUrl: 'https://drive.google.com/drive/my-drive',
+      detailUrl: 'my-content-detail.html?title=%EB%8C%80%ED%91%9C%EB%8B%98%EC%9D%B4%20%EB%82%B4%20%EC%A0%84%EB%82%A8%EC%B9%9C%EC%9E%85%EB%8B%88%EB%8B%A4',
+      timeline: [
+        { title: '퍼포먼스 데이터가 업데이트되었습니다.', date: '2026년 7월 15일 14:18', active: true },
+        { title: '대표님이 내 전남친입니다를 NovaShort 외 2개사에 제안 메일로 발송했습니다.', date: '2026년 7월 15일 11:42' },
+        { title: '콘텐츠 정보 수정을 신청했습니다.', date: '2026년 7월 14일 16:05' },
+        { title: '관리자가 콘텐츠 등록을 승인했습니다.', date: '2026년 7월 13일 16:20' },
+        { title: '콘텐츠 등록 신청이 접수되었습니다.', date: '2026년 7월 12일 09:18' },
+        { title: '콘텐츠 정보가 저장되었습니다.', date: '2026년 7월 12일 09:12' }
+      ]
+    };
+
+    const settlementTypes = ['flat', 'mgrs', 'rs', 'rs', 'mgrs'];
+    const driveMaterialGroups = [
+      {
+        title: '영상',
+        rows: [
+          ['자막O & 음악O', '20/50'],
+          ['자막X & 음악O', '0/50'],
+          ['자막O & 음악X', '0/50'],
+          ['자막X & 음악X', '0/50']
+        ]
+      },
+      {
+        title: '음향트랙',
+        rows: [
+          ['대사', '20/50'],
+          ['음악 & 대사', '20/50']
+        ]
+      },
+      {
+        title: '자막',
+        rows: [
+          ['영어', '20/50'],
+          ['한국어', '0/50'],
+          ['일본어', '20/50'],
+          ['기타언어', '0/50']
+        ]
+      },
+      {
+        title: '예고편',
+        rows: [
+          ['자막O & 음악O', '2 개'],
+          ['자막X & 음악O', '1 개']
+        ]
+      },
+      {
+        title: '기타 자료',
+        rows: [
+          ['심의필증', '1 개'],
+          ['작품소개서', '1 개'],
+          ['포스터', '1 개'],
+          ['홍보자료', '2 개']
+        ]
+      }
+    ];
+    const rsMonthlyTemplate = [
+      ['2024-10', 210], ['2024-11', 290], ['2024-12', 340],
+      ['2025-01', 380], ['2025-02', 310], ['2025-03', 280],
+      ['2025-04', 360], ['2025-05', 370], ['2025-06', 390],
+      ['2025-07', 420], ['2025-08', 450], ['2025-09', 430],
+      ['2025-10', 470], ['2025-11', 500], ['2025-12', 520],
+      ['2026-01', 540], ['2026-02', 560], ['2026-03', 590],
+      ['2026-04', 610], ['2026-05', 630], ['2026-06', 650]
+    ];
+
+    function makeSettlementRecord(period, seed, options = {}) {
+      const platformPay = options.platformPay ?? 5600 + seed * 620;
+      const whtRate = options.whtRate ?? (seed % 2 ? 16.5 : 10);
+      const wht = Math.round(platformPay * (whtRate / 100) * 100) / 100;
+      const wireFee = 35;
+      const fxRate = options.fxRate ?? (1380 + seed * 11);
+      const fxFee = options.fxFee ?? (6000 + seed * 1000);
+      const krwIn = Math.round((platformPay - wht - wireFee) * fxRate - fxFee);
+      const bableRate = 20;
+      const bableFee = Math.round(krwIn * (bableRate / 100));
+      return {
+        period,
+        platformPay,
+        contractAmount: options.contractAmount ?? null,
+        whtRate,
+        wht,
+        wireFee,
+        fxRate,
+        fxFee,
+        krwIn,
+        bableRate,
+        bableFee,
+        producerPay: krwIn - bableFee,
+        settleMonth: options.settleMonth || '2025-05',
+        status: options.status || 'paid'
+      };
+    }
+
+    function makeDramaBoxRsRows() {
+      const periods = [
+        '2023-Q3', '2023-Q4',
+        '2024-Q1', '2024-Q2', '2024-Q3', '2024-Q4',
+        '2025-Q1', '2025-Q2', '2025-Q3', '2025-Q4',
+        '2026-Q1', '2026-Q2'
+      ];
+      return periods.map((period, rowIndex) => makeSettlementRecord(period, rowIndex + 20, {
+        platformPay: 760 + rowIndex * 95,
+        settleMonth: `${Number(period.slice(0, 4))}-${String(((Number(period.slice(-1)) - 1) * 3 + 2)).padStart(2, '0')}`,
+        status: rowIndex === periods.length - 1 ? 'upcoming' : 'paid'
+      }));
+    }
+
+    const settlementPlatforms = row.platformDetails.map((platform, index) => {
+      const type = settlementTypes[index % settlementTypes.length];
+      const base = {
+        ...platform,
+        id: `settlement-${index}`,
+        type,
+        exclusive: platform.contractType === '독점',
+        region: platform.rightsRegion,
+        releaseDate: String(platform.periodStart).replace(/\./g, '-'),
+        expiryDate: String(platform.periodEnd).replace(/\./g, '-'),
+        rsRate: type === 'flat' ? null : 22 + index * 2
+      };
+
+      if (type === 'flat') {
+        return {
+          ...base,
+          rows: [
+            makeSettlementRecord('2025-04', index + 1, { contractAmount: 9200 + index * 500, platformPay: 9200 + index * 500 })
+          ]
+        };
+      }
+
+      if (type === 'mgrs') {
+        return {
+          ...base,
+          rsMonthly: rsMonthlyTemplate.map(([month, amount]) => ({ month, amount: amount + index * 35 })),
+          mgRows: [
+            makeSettlementRecord('2025-04', index + 2, { contractAmount: 7600 + index * 600, platformPay: 7600 + index * 600 })
+          ],
+          rsRows: platform.name === 'DramaBox'
+            ? makeDramaBoxRsRows()
+            : [
+              makeSettlementRecord('2024-Q4', index + 3, { platformPay: 840 + index * 80, settleMonth: '2025-02' }),
+              makeSettlementRecord('2025-Q1', index + 4, { platformPay: 970 + index * 90, settleMonth: '2025-05' }),
+              makeSettlementRecord('2025-Q2', index + 5, { platformPay: 1120 + index * 100, settleMonth: '2025-08', status: 'upcoming' })
+            ]
+        };
+      }
+
+      return {
+        ...base,
+        rsMonthly: rsMonthlyTemplate.map(([month, amount]) => ({ month, amount: amount + index * 28 })),
+        rsRows: [
+          makeSettlementRecord('2024-Q4', index + 6, { platformPay: 320 + index * 70, settleMonth: '2025-02' }),
+          makeSettlementRecord('2025-Q1', index + 7, { platformPay: 480 + index * 75, settleMonth: '2025-05' }),
+          makeSettlementRecord('2025-Q2', index + 8, { platformPay: 540 + index * 85, settleMonth: '2025-08', status: 'upcoming' })
+        ]
+      };
+    });
+
+    function formatSettlementMoney(value) {
+      if (value == null) return '—';
+      return `₩${Number(value || 0).toLocaleString('ko-KR')}`;
+    }
+
+    function settlementContractAmount(platform) {
+      if (platform.type === 'flat') return platform.rows?.[0]?.contractAmount ?? null;
+      if (platform.type === 'mgrs') return platform.mgRows?.[0]?.contractAmount ?? null;
+      return null;
+    }
+
+    function settlementTotals() {
+      return settlementPlatforms.reduce((totals, platform) => {
+        const records = settlementRecordsFor(platform);
+        records.forEach(record => {
+          totals.platformPay += record.platformPay || 0;
+          totals.krwIn += record.krwIn || 0;
+          totals.bableFee += record.bableFee || 0;
+          totals.producerPay += record.producerPay || 0;
+        });
+        return totals;
+      }, { platformPay: 0, krwIn: 0, bableFee: 0, producerPay: 0 });
+    }
+
+    function settlementTypeTotals() {
+      return settlementPlatforms.reduce((totals, platform) => {
+        if (platform.type === 'flat') {
+          (platform.rows || []).forEach(record => {
+            totals.fixed += record.platformPay || 0;
+          });
+        } else if (platform.type === 'mgrs') {
+          (platform.mgRows || []).forEach(record => {
+            totals.fixed += record.platformPay || 0;
+          });
+          (platform.rsRows || []).forEach(record => {
+            totals.rs += record.platformPay || 0;
+          });
+        } else {
+          (platform.rsRows || []).forEach(record => {
+            totals.rs += record.platformPay || 0;
+          });
+        }
+        return totals;
+      }, { fixed: 0, rs: 0 });
+    }
+
+    function renderHeroMetric(label, value) {
+      return `
+        <div class="hero-metric-item">
+          <span>${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
+        </div>
+      `;
+    }
+
+    function renderViewActions() {
+      return `
+        <div class="detail-view-actions" aria-label="상세 보기 전환">
+          <button class="detail-view-button ${detailViewMode === 'workflow' ? 'is-active' : ''}" type="button" data-detail-view="workflow">진행 현황</button>
+          <button class="detail-view-button ${detailViewMode === 'settlement' ? 'is-active' : ''}" type="button" data-detail-view="settlement">정산</button>
+          <button class="detail-view-button ${detailViewMode === 'performance' ? 'is-active' : ''}" type="button" data-detail-view="performance">퍼포먼스</button>
+        </div>
+      `;
+    }
+
+    function renderExternalActions() {
+      return `
+        <div class="detail-external-actions">
+          <a class="detail-external-action" href="${escapeHtml(workflowDetail.detailUrl)}" aria-label="콘텐츠 상세 바로가기">
+            <span>상세보기</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M7 17L17 7"></path>
+              <path d="M9 7h8v8"></path>
+            </svg>
+          </a>
+          <a class="detail-external-action drive-action" href="${escapeHtml(workflowDetail.driveUrl)}" target="_blank" rel="noopener noreferrer" aria-label="구글 드라이브 바로가기">
+            <span>구글 드라이브 바로가기</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M4 6.5h6l2 2h8v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-11Z"></path>
+            </svg>
+          </a>
+        </div>
+      `;
+    }
+
+    function renderHeroSummary() {
+      if (detailViewMode === 'workflow') {
+        return `
+          <div class="hero-summary">
+            <div class="hero-eyebrow">워크플로우 상태</div>
+            <div class="hero-metric-grid is-three" aria-label="워크플로우 요약">
+              ${renderHeroMetric('계약 플랫폼', `${formatNumber(row.platforms.length)}개`)}
+              ${renderHeroMetric('콘텐츠 상태', '공개')}
+              ${renderHeroMetric('드라이브 업로드', workflowDetail.driveUploadStatus)}
+            </div>
+          </div>
+        `;
+      }
+
+      if (detailViewMode === 'settlement') {
+        const totals = settlementTypeTotals();
+        return `
+          <div class="hero-summary">
+            <div class="hero-eyebrow">플랫폼 합산 누적</div>
+            <div class="hero-metric-grid is-three" aria-label="정산 데이터 요약">
+              ${renderHeroMetric('계약 플랫폼', `${formatNumber(row.platforms.length)}개`)}
+              ${renderHeroMetric('MG/Flat Fee', formatUsd(totals.fixed))}
+              ${renderHeroMetric('RS', formatUsd(totals.rs))}
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="hero-summary">
+          <div class="hero-eyebrow">플랫폼 합산 누적</div>
+          <div class="hero-metric-grid" aria-label="배급 성과 요약">
+            ${renderHeroMetric('계약 플랫폼', `${formatNumber(row.platforms.length)}개`)}
+            ${renderHeroMetric('조회수', formatNumber(totalViews))}
+            ${renderHeroMetric('팔로우수', formatNumber(totalFollows))}
+            ${renderHeroMetric('좋아요수', formatNumber(totalLikes))}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPlatformContract(label, value) {
+      return `
+        <span class="platform-contract-item">
+          <span>${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
+        </span>
+      `;
+    }
+
+    function renderPlatformMetric(label, value) {
+      return `
+        <div class="platform-metric-item">
+          <span>${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
+        </div>
+      `;
+    }
+
+    const platformStateMeta = {
+      scheduled: { label: '방영 예정', className: 'is-scheduled' },
+      active: { label: '유통중', className: 'is-active' },
+      closed: { label: '계약 종료', className: 'is-closed' }
+    };
+
+    function renderPlatformStateBadge(stage) {
+      const meta = platformStateMeta[stage] || platformStateMeta.active;
+      return `<span class="platform-state-badge ${meta.className}">${escapeHtml(meta.label)}</span>`;
+    }
+
+    function isPlatformCardCollapsed(mode, index) {
+      return Boolean(platformCollapseState[mode]?.[index]);
+    }
+
+    function renderPlatformCollapseButton(mode, index) {
+      const collapsed = isPlatformCardCollapsed(mode, index);
+      return `
+        <button class="platform-collapse-button ${collapsed ? 'is-collapsed' : ''}" type="button" data-platform-card-toggle="${escapeHtml(mode)}" data-platform-index="${index}" aria-expanded="${collapsed ? 'false' : 'true'}" aria-label="${collapsed ? '펴기' : '접기'}">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 9l6 6 6-6"></path>
+          </svg>
+        </button>
+      `;
+    }
+
+    function renderPlatformCards() {
+      return row.platformDetails.map((platform, index) => {
+        const settlementPlatform = settlementPlatforms[index] || platform;
+        const contractAmount = settlementContractAmount(settlementPlatform);
+        const collapsed = isPlatformCardCollapsed('performance', index);
+        return `
+        <article class="platform-card">
+          <div class="platform-card-head" data-platform-card-toggle="performance" data-platform-index="${index}" role="button" tabindex="0" aria-expanded="${collapsed ? 'false' : 'true'}">
+            <div class="platform-head-copy">
+              <div class="platform-name-row">
+                <div class="platform-name">${escapeHtml(settlementPlatform.name)}</div>
+                ${renderPlatformStateBadge(settlementPlatform.stage)}
+              </div>
+              <div class="platform-contract-grid">
+                ${renderPlatformContract('계약구분', settlementPlatform.exclusive ? '독점' : '비독점')}
+                ${renderPlatformContract('유통권역', settlementPlatform.region)}
+                ${renderPlatformContract('기간', `${settlementPlatform.releaseDate} - ${settlementPlatform.expiryDate}`)}
+                ${renderPlatformContract('계약형태', contractLabel[settlementPlatform.type])}
+                ${settlementPlatform.rsRate ? renderPlatformContract('RS 비율', `${settlementPlatform.rsRate}%`) : ''}
+                ${contractAmount == null ? '' : renderPlatformContract('계약금액', formatUsd(contractAmount))}
+              </div>
+            </div>
+            ${renderPlatformCollapseButton('performance', index)}
+          </div>
+          ${collapsed ? '' : `<div class="platform-metric-grid">
+            ${renderPlatformMetric('조회수', formatNumber(platform.views))}
+            ${renderPlatformMetric('팔로우수', formatNumber(platform.follows))}
+            ${renderPlatformMetric('좋아요', formatNumber(platform.likes))}
+          </div>`}
+        </article>
+      `;
+      }).join('');
+    }
+
+    const contractLabel = {
+      flat: 'Flat Fee',
+      rs: 'RS',
+      mgrs: 'MG + RS'
+    };
+
+    const settlementColumns = [
+      { key: 'period', label: '발생월', group: 'platform' },
+      { key: 'platformPay', label: '플랫폼 지급액', group: 'platform', type: 'usd' },
+      { key: 'contractAmount', label: '계약 금액', group: 'platform', type: 'usd' },
+      { key: 'whtRate', label: '원천세 비율', group: 'deduct', type: 'pct' },
+      { key: 'wht', label: '원천세 금액', group: 'deduct', type: 'usd' },
+      { key: 'wireFee', label: '송금 수수료', group: 'deduct', type: 'usd' },
+      { key: 'fxRate', label: '환율', group: 'deduct', type: 'fx' },
+      { key: 'fxFee', label: '환전 수수료', group: 'deduct', type: 'krw' },
+      { key: 'krwIn', label: '실제 입금액', group: 'deduct', type: 'krw' },
+      { key: 'bableRate', label: 'Bable 수수료율', group: 'settle', type: 'pct' },
+      { key: 'bableFee', label: 'Bable 수수료 금액', group: 'settle', type: 'krw' },
+      { key: 'producerPay', label: '제작사 정산액', group: 'settle', type: 'krw', emphasis: true },
+      { key: 'settleMonth', label: '정산 월', group: 'settle' },
+      { key: 'status', label: '정산 상태', group: 'settle' }
+    ];
+
+    function settlementRecordsFor(platform) {
+      if (platform.type === 'flat') return platform.rows || [];
+      if (platform.type === 'mgrs') return [...(platform.mgRows || []), ...(platform.rsRows || [])];
+      return platform.rsRows || [];
+    }
+
+    function formatUsd(value) {
+      if (value == null || value === '') return '—';
+      return `$${Number(value).toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+    }
+
+    function formatPct(value) {
+      return value == null || value === '' ? '—' : `${value}%`;
+    }
+
+    function formatFx(value) {
+      return value == null || value === '' ? '—' : `₩${Number(value).toLocaleString('ko-KR')}`;
+    }
+
+    function formatSettlementCell(column, value) {
+      if (value == null || value === '') return '—';
+      if (column.type === 'usd') return formatUsd(value);
+      if (column.type === 'krw') return formatSettlementMoney(value);
+      if (column.type === 'pct') return formatPct(value);
+      if (column.type === 'fx') return formatFx(value);
+      return escapeHtml(value);
+    }
+
+    function renderSettlementStatus(status) {
+      const completed = status !== 'upcoming';
+      return `<span class="settlement-status ${completed ? '' : 'is-upcoming'}">${completed ? '완료' : '예정'}</span>`;
+    }
+
+    function periodSortValue(period) {
+      const quarter = String(period).match(/^(\d{4})-Q([1-4])$/);
+      if (quarter) return Number(quarter[1]) * 12 + Number(quarter[2]) * 3;
+      const month = String(period).match(/^(\d{4})-(\d{2})$/);
+      if (month) return Number(month[1]) * 12 + Number(month[2]);
+      return 0;
+    }
+
+    function renderSettlementPagination(pageKey, currentPage, totalPages) {
+      if (!pageKey || totalPages <= 1) return '';
+      return `
+        <div class="settlement-pagination" aria-label="정산 거래 페이지">
+          ${Array.from({ length: totalPages }, (_, index) => {
+            const page = index + 1;
+            return `<button class="settlement-page-button ${page === currentPage ? 'is-active' : ''}" type="button" data-settlement-page-key="${escapeHtml(pageKey)}" data-settlement-page="${page}">${page}</button>`;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function renderSettlementTable(records, periodLabel = '발생월', pageKey = '', options = {}) {
+      const columns = options.omitContractAmount
+        ? settlementColumns.filter(column => column.key !== 'contractAmount')
+        : settlementColumns;
+      const platformColumnCount = columns.filter(column => column.group === 'platform').length;
+      const deductColumnCount = columns.filter(column => column.group === 'deduct').length;
+      const settleColumnCount = columns.filter(column => column.group === 'settle').length;
+      const rows = [...records].sort((a, b) => periodSortValue(b.period) - periodSortValue(a.period));
+      const totalPages = Math.ceil(rows.length / settlementPageSize);
+      const currentPage = pageKey
+        ? Math.min(Math.max(Number(settlementPageState[pageKey] || 1), 1), Math.max(totalPages, 1))
+        : 1;
+      const visibleRows = pageKey && totalPages > 1
+        ? rows.slice((currentPage - 1) * settlementPageSize, currentPage * settlementPageSize)
+        : rows;
+      return `
+        <div class="settlement-table-wrap">
+          <table class="settlement-record-table">
+            <thead>
+              <tr class="group-row">
+                <th colspan="${platformColumnCount}"><span class="table-group-label platform">플랫폼 지급</span></th>
+                <th colspan="${deductColumnCount}"><span class="table-group-label deduct">공제내역</span></th>
+                <th colspan="${settleColumnCount}"><span class="table-group-label settle">정산</span></th>
+              </tr>
+              <tr>
+                ${columns.map(column => `<th>${escapeHtml(column.key === 'period' ? periodLabel : column.label)}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${visibleRows.map(record => `
+                <tr>
+                  ${columns.map(column => `
+                    <td class="${column.emphasis ? 'producer-pay' : ''}">
+                      ${column.key === 'status' ? renderSettlementStatus(record[column.key]) : formatSettlementCell(column, record[column.key])}
+                    </td>
+                  `).join('')}
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+        ${renderSettlementPagination(pageKey, currentPage, totalPages)}
+      `;
+    }
+
+    function renderRecordTypeTabs(platformIndex, recordType) {
+      return `
+        <div class="settlement-record-tabs" role="tablist" aria-label="정산 상세 유형">
+          <button class="settlement-record-tab ${recordType === 'mg' ? 'is-active' : ''}" type="button" data-settlement-record-type="mg" data-platform-index="${platformIndex}"><span>MG 상세</span></button>
+          <button class="settlement-record-tab ${recordType === 'rs' ? 'is-active' : ''}" type="button" data-settlement-record-type="rs" data-platform-index="${platformIndex}"><span>RS 상세</span></button>
+        </div>
+      `;
+    }
+
+    function renderPaneHeader(platform, pane, recordType = 'mg') {
+      const hasRsTrend = platform.type === 'rs' || platform.type === 'mgrs';
+      const showRecordTabs = platform.type === 'mgrs' && pane === 'records';
+      return `
+        <div class="settlement-pane-head">
+          ${showRecordTabs
+            ? renderRecordTypeTabs(platform.index, recordType)
+            : '<div class="settlement-pane-title"></div>'}
+          ${hasRsTrend ? `
+            <div class="settlement-pane-actions ${pane === 'rs' ? 'is-rs' : 'is-records'}">
+              <button class="settlement-pane-button ${pane === 'records' ? 'is-active' : ''}" type="button" data-settlement-pane="records" data-platform-index="${platform.index}">거래 기록</button>
+              <button class="settlement-pane-button ${pane === 'rs' ? 'is-active' : ''}" type="button" data-settlement-pane="rs" data-platform-index="${platform.index}">RS 추이</button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    function renderRSTrendPanel(platform) {
+      const rows = platform.rsMonthly || [];
+      const years = Array.from(new Set(rows.map(item => item.month.slice(0, 4)))).sort().reverse();
+      const months = Array.from({ length: 12 }, (_, index) => ({
+        key: String(index + 1).padStart(2, '0'),
+        label: `${index + 1}월`
+      }));
+      const amountByMonth = new Map(rows.map(item => [item.month, item.amount]));
+      const selectedYear = years.includes(rsTrendYearState[platform.index])
+        ? rsTrendYearState[platform.index]
+        : (years[0] || '2025');
+      const yearlyTotal = year => months.reduce((sum, month) => {
+        const amount = amountByMonth.get(`${year}-${month.key}`);
+        return amount == null ? sum : sum + amount;
+      }, 0);
+      const grandTotal = years.reduce((sum, year) => sum + yearlyTotal(year), 0);
+      const formatRsAmount = value => value ? `$${Math.round(value).toLocaleString('en-US')}` : '-';
+
+      return `
+        <div class="rs-trend-panel">
+          <div class="rs-chart-box">
+            ${years.length ? `
+              <span class="rs-year-select-wrap">
+                <select class="rs-year-select" data-rs-trend-year="${platform.index}" aria-label="RS 추이 연도 선택">
+                  ${years.map(year => `<option value="${escapeHtml(year)}" ${year === selectedYear ? 'selected' : ''}>${escapeHtml(year)}</option>`).join('')}
+                </select>
+                <svg width="9" height="6" viewBox="0 0 9 6" aria-hidden="true">
+                  <path d="M1 1.25L4.5 4.75L8 1.25" stroke="#8f9297" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </span>
+            ` : ''}
+            <div class="rs-chart-target" data-rs-chart-platform="${platform.index}" data-rs-chart-year="${escapeHtml(selectedYear)}">
+              <div class="rs-chart-loading">그래프를 불러오는 중입니다.</div>
+            </div>
+          </div>
+          <div class="rs-trend-box">
+            <table class="rs-trend-table">
+              <thead>
+                <tr>
+                  <th>연도</th>
+                  ${months.map(month => `<th>${escapeHtml(month.label)}</th>`).join('')}
+                  <th>총액</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${years.map(year => `
+                  <tr class="${year === selectedYear ? 'is-selected' : ''}" data-rs-trend-year-row="${platform.index}" data-rs-trend-year-value="${escapeHtml(year)}">
+                    <th>${escapeHtml(year)}</th>
+                    ${months.map(month => `<td>${formatRsAmount(amountByMonth.get(`${year}-${month.key}`))}</td>`).join('')}
+                    <td><strong>${formatRsAmount(yearlyTotal(year))}</strong></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>총액</th>
+                  ${months.map(() => '<td></td>').join('')}
+                  <td><strong>${formatRsAmount(grandTotal)}</strong></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSettlementCards() {
+      return settlementPlatforms.map((platform, index) => {
+        const pane = settlementPaneState[index] || 'records';
+        const recordType = settlementRecordTypeState[index] || 'mg';
+        const platformWithIndex = { ...platform, index };
+        const hasRsTrend = platform.type === 'rs' || platform.type === 'mgrs';
+        const contractAmount = settlementContractAmount(platform);
+        const recordsPageKey = `platform-${index}-${platform.type === 'mgrs' ? recordType : platform.type}`;
+        const omitContractAmount = platform.type === 'rs' || (platform.type === 'mgrs' && recordType === 'rs');
+        const recordsBody = platform.type === 'mgrs'
+          ? renderSettlementTable(recordType === 'rs' ? (platform.rsRows || []) : (platform.mgRows || []), recordType === 'rs' ? '분기' : '발생월', recordsPageKey, { omitContractAmount })
+          : renderSettlementTable(platform.type === 'flat' ? (platform.rows || []) : (platform.rsRows || []), platform.type === 'rs' ? '분기' : '발생월', recordsPageKey, { omitContractAmount });
+
+        const collapsed = isPlatformCardCollapsed('settlement', index);
+        const showPaneHeader = platform.type === 'mgrs' || platform.type === 'rs';
+        return `
+        <article class="platform-card">
+          <div class="platform-card-head" data-platform-card-toggle="settlement" data-platform-index="${index}" role="button" tabindex="0" aria-expanded="${collapsed ? 'false' : 'true'}">
+            <div class="platform-head-copy">
+              <div class="platform-name-row">
+                <div class="platform-name">${escapeHtml(platform.name)}</div>
+                ${renderPlatformStateBadge(platform.stage)}
+              </div>
+              <div class="platform-contract-grid">
+                ${renderPlatformContract('계약구분', platform.exclusive ? '독점' : '비독점')}
+                ${renderPlatformContract('유통권역', platform.region)}
+                ${renderPlatformContract('기간', `${platform.releaseDate} - ${platform.expiryDate}`)}
+                ${renderPlatformContract('계약형태', contractLabel[platform.type])}
+                ${platform.rsRate ? renderPlatformContract('RS 비율', `${platform.rsRate}%`) : ''}
+                ${contractAmount == null ? '' : renderPlatformContract('계약금액', formatUsd(contractAmount))}
+              </div>
+            </div>
+            ${renderPlatformCollapseButton('settlement', index)}
+          </div>
+          ${collapsed ? '' : `
+            ${showPaneHeader ? renderPaneHeader(platformWithIndex, pane, recordType) : ''}
+            ${hasRsTrend && pane === 'rs' ? renderRSTrendPanel(platformWithIndex) : recordsBody}
+          `}
+        </article>
+      `;
+      }).join('');
+    }
+
+    function renderWorkflowTimeline() {
+      return `
+        <div class="workflow-section">
+          <h3 class="workflow-section-title">타임라인</h3>
+          <article class="workflow-card">
+            <ol class="workflow-timeline">
+              ${workflowDetail.timeline.map(step => `
+                <li class="workflow-timeline-item ${step.active ? 'is-active' : ''}">
+                  <span class="workflow-timeline-dot" aria-hidden="true"></span>
+                  <strong class="workflow-timeline-title">${escapeHtml(step.title)}</strong>
+                  <span class="workflow-timeline-date">${escapeHtml(step.date)}</span>
+                </li>
+              `).join('')}
+            </ol>
+          </article>
+        </div>
+      `;
+    }
+
+    function renderWorkflowMaterials() {
+      return `
+        <article class="workflow-card">
+          <div class="workflow-card-head">
+            <h3 class="workflow-card-title">자료 및 연결</h3>
+            <span class="workflow-card-meta">콘텐츠 단위 관리</span>
+          </div>
+          <div class="workflow-material-grid">
+            <div class="workflow-material-item">
+              <span>구글 드라이브</span>
+              <a href="${escapeHtml(workflowDetail.driveUrl)}" target="_blank" rel="noopener noreferrer">바로가기 <span aria-hidden="true">↗</span></a>
+            </div>
+            <div class="workflow-material-item">
+              <span>콘텐츠 상세</span>
+              <a href="${escapeHtml(workflowDetail.detailUrl)}">상세보기 <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderWorkflowContent() {
+      return `
+        ${renderWorkflowTimeline()}
+      `;
+    }
+
+    function renderDriveMaterialCell(entry) {
+      if (!entry) return '<td></td><td></td>';
+      const [label, count] = entry;
+      const isEmpty = count === '0개' || count === '0 개' || count.startsWith('0/');
+      const countHtml = count.includes('/')
+        ? count.replace(/^([^/]+)(\/\d+)$/, '<span class="count-current">$1</span><span class="count-total">$2</span>')
+        : count.replace(/^(\d+)(\s*개)$/, '<span class="count-number">$1</span><span class="count-unit">$2</span>');
+      return `
+        <td class="${isEmpty ? 'is-empty' : ''}">${escapeHtml(label)}</td>
+        <td class="count ${isEmpty ? 'is-empty' : ''}">${countHtml}</td>
+      `;
+    }
+
+    function renderDriveGroupRows(rows) {
+      const pairedRows = [];
+      for (let index = 0; index < rows.length; index += 2) {
+        pairedRows.push([rows[index], rows[index + 1]]);
+      }
+
+      return pairedRows.map(([left, right]) => `
+        <tr>
+          ${renderDriveMaterialCell(left)}
+          ${renderDriveMaterialCell(right)}
+        </tr>
+      `).join('');
+    }
+
+    function renderDriveLoadingContent() {
+      return `
+        <div class="drive-loading-state" aria-live="polite">
+          <div class="drive-loading-cat" aria-hidden="true">
+            <svg class="floppy-cat" viewBox="0 0 180 72" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Loading">
+              <g class="trail">
+                <path class="trail-wave trail-wave-1" d="M4 18 H18 V14 H32 V18 H48 V14 H64 V18 H82 V22 H98 V42 H82 V46 H64 V50 H48 V46 H30 V50 H14 V46 H4 Z" />
+                <path class="trail-wave trail-wave-2" d="M4 26 H20 V22 H36 V26 H52 V22 H68 V26 H86 V30 H100 V46 H84 V50 H68 V54 H50 V50 H32 V54 H16 V50 H4 Z" />
+                <path class="trail-wave trail-wave-3" d="M4 34 H18 V30 H34 V34 H52 V30 H70 V34 H88 V38 H102 V50 H84 V54 H66 V58 H48 V54 H28 V58 H12 V54 H4 Z" />
+              </g>
+              <g class="cat-body">
+                <g class="floppy">
+                  <path fill="#9ca3af" d="M88 10 H132 V14 H138 V54 H88 Z" />
+                  <rect x="88" y="14" width="7" height="40" fill="#c8cdd5" />
+                  <rect x="101" y="14" width="27" height="16" fill="#4b505a" />
+                  <rect x="102" y="14" width="5" height="16" fill="#727986" />
+                  <rect x="128" y="14" width="7" height="18" fill="#6d737d" />
+                  <rect x="98" y="34" width="30" height="20" fill="#6b717b" />
+                  <rect x="102" y="37" width="22" height="4" fill="#353942" />
+                  <rect x="102" y="44" width="22" height="4" fill="#353942" />
+                  <rect x="102" y="51" width="22" height="3" fill="#353942" />
+                </g>
+                <g class="cat-head">
+                  <path fill="#ffffff" d="M124 22 V14 H130 V20 H134 V28 Z" />
+                  <path fill="#ffffff" d="M154 22 V16 H160 V14 H164 V28 Z" />
+                  <path fill="#ffffff" d="M122 25 H128 V21 H160 V25 H166 V48 H160 V54 H128 V50 H122 Z" />
+                  <rect x="133" y="32" width="5" height="5" fill="#282b31" />
+                  <rect x="153" y="32" width="5" height="5" fill="#282b31" />
+                  <rect x="140" y="42" width="12" height="3" fill="#343840" />
+                </g>
+                <g class="rear-legs">
+                  <rect x="93" y="53" width="6" height="8" fill="#eeeeee" />
+                  <rect x="104" y="53" width="6" height="8" fill="#eeeeee" />
+                </g>
+                <g class="front-legs">
+                  <rect x="138" y="52" width="6" height="9" fill="#ffffff" />
+                  <rect x="153" y="52" width="6" height="9" fill="#ffffff" />
+                </g>
+              </g>
+            </svg>
+          </div>
+          <p class="drive-loading-copy">데이터 가져오는중 <span>.</span> <span>.</span> <span>.</span></p>
+        </div>
+      `;
+    }
+
+    function renderDriveContent() {
+      return `
+        <div class="workflow-section">
+          <h3 class="workflow-section-title">구글 드라이브 현황</h3>
+          <div class="workflow-material-panel">
+            ${driveMaterialStatus === 'loaded' ? `
+              ${driveMaterialGroups.map(group => `
+                <section class="workflow-material-group">
+                  <h4><span></span>${escapeHtml(group.title)}</h4>
+                  <table class="workflow-material-table">
+                    <tbody>
+                      ${renderDriveGroupRows(group.rows)}
+                    </tbody>
+                  </table>
+                </section>
+              `).join('')}
+              <div class="workflow-material-submit">
+                <p>자료 업로드를 모두 마쳤다면 완료 상태로 알려주세요.</p>
+                <button type="button" data-material-upload-complete="distribution-detail">
+                  업로드 완료
+                </button>
+              </div>
+            ` : renderDriveLoadingContent()}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDetailContent() {
+      const isSettlement = detailViewMode === 'settlement';
+      const isWorkflow = detailViewMode === 'workflow';
+      const panelTitle = isWorkflow
+        ? '워크플로우'
+        : '플랫폼별 상세';
+      const performanceTooltip = '모든 수치는 출시 이후 누적값이며 시점별 추이는 제공되지 않습니다. 입력되지 않은 항목은 -로 나타냅니다.';
+      const panelBody = isWorkflow
+        ? `
+          <div class="workflow-detail-split">
+            <div>${renderWorkflowContent()}</div>
+            <div>${renderDriveContent()}</div>
+          </div>
+        `
+        : `<div class="platform-card-grid">${isSettlement ? renderSettlementCards() : renderPlatformCards()}</div>`;
+      return `
+        <a class="detail-back" href="distribution-version.html" aria-label="뒤로가기"><span class="detail-back-mark">‹</span> 뒤로가기</a>
+
+        <section class="detail-hero">
+          <img class="detail-poster-original" src="${escapeHtml(row.poster)}" alt="">
+          <div class="detail-copy">
+            <div class="detail-title-row">
+              <div class="detail-title-main">
+                <h1 class="detail-title">${escapeHtml(row.title)}</h1>
+                ${renderExternalActions()}
+              </div>
+              ${renderViewActions()}
+            </div>
+            ${renderHeroSummary()}
+          </div>
+        </section>
+
+        <section class="platform-panel">
+            ${isWorkflow ? '' : `
+              <div class="panel-head">
+                <div class="panel-title-row">
+                  <h2 class="panel-title">${panelTitle}</h2>
+                  ${isSettlement ? '' : `<span class="panel-info" tabindex="0" role="tooltip" data-tooltip="${escapeHtml(performanceTooltip)}" aria-label="${escapeHtml(performanceTooltip)}">i</span>`}
+                </div>
+              </div>
+            `}
+            ${panelBody}
+        </section>
+      `;
+    }
+
+    function rsTrendChartRows(platform, selectedYear) {
+      const amountByMonth = new Map((platform.rsMonthly || []).map(item => [item.month, item.amount]));
+      return Array.from({ length: 12 }, (_, index) => {
+        const month = String(index + 1).padStart(2, '0');
+        const key = `${selectedYear}-${month}`;
+        return {
+          key,
+          label: `${index + 1}월`,
+          amount: amountByMonth.has(key) ? amountByMonth.get(key) : null,
+        };
+      });
+    }
+
+    function destroyRsTrendCharts() {
+      rsTrendCharts.forEach(chart => chart.destroy());
+      rsTrendCharts = [];
+    }
+
+    function renderRsTrendCharts() {
+      destroyRsTrendCharts();
+      document.querySelectorAll('[data-rs-chart-platform]').forEach(target => {
+        const platformIndex = Number(target.dataset.rsChartPlatform);
+        const selectedYear = target.dataset.rsChartYear;
+        const platform = settlementPlatforms[platformIndex];
+        if (!platform || !selectedYear || !window.ApexCharts) return;
+
+        target.innerHTML = '';
+        const yearRows = rsTrendChartRows(platform, selectedYear);
+        const chart = new ApexCharts(target, {
+          series: [{
+            name: 'RS 수익',
+            data: yearRows.map(item => item.amount),
+          }],
+          chart: {
+            type: 'area',
+            height: 246,
+            toolbar: { show: false },
+            zoom: { enabled: false },
+            animations: { enabled: true, speed: 500 },
+            fontFamily: '"Pretendard Variable", "Pretendard", "Geist", system-ui, sans-serif',
+            background: '#fff',
+            offsetY: 12,
+          },
+          colors: ['#4fa987'],
+          stroke: { curve: 'straight', width: 2.5 },
+          fill: {
+            type: 'gradient',
+            gradient: {
+              shadeIntensity: 1,
+              opacityFrom: 0.2,
+              opacityTo: 0.02,
+              stops: [0, 100],
+            },
+          },
+          markers: {
+            size: 4,
+            strokeWidth: 2,
+            strokeColors: ['#4fa987'],
+            fillColor: '#fff',
+            hover: { size: 6 },
+          },
+          xaxis: {
+            categories: yearRows.map(item => item.label),
+            labels: { style: { fontSize: '10px', colors: '#9fa1a5' }, rotate: 0 },
+            axisBorder: { show: false },
+            axisTicks: { show: false },
+            tooltip: { enabled: false },
+          },
+          yaxis: {
+            labels: {
+              style: { fontSize: '10px', colors: '#b2b4b8' },
+              formatter: value => value == null ? '' : `$${Math.round(value).toLocaleString('en-US')}`,
+            },
+          },
+          grid: {
+            borderColor: '#f0efe9',
+            padding: { left: 4, right: 12, top: 0, bottom: -4 },
+          },
+          tooltip: {
+            theme: 'dark',
+            x: {
+              formatter: (_value, opts) => yearRows[opts.dataPointIndex]?.key || '',
+            },
+            y: {
+              formatter: value => value == null ? '데이터 없음' : `$${Math.round(value).toLocaleString('en-US')}`,
+              title: { formatter: () => 'RS 수익' },
+            },
+          },
+          dataLabels: { enabled: false },
+          legend: { show: false },
+        });
+        chart.render();
+        rsTrendCharts.push(chart);
+      });
+    }
+
+    function scheduleDriveMaterialLoad() {
+      if (driveMaterialStatus !== 'loading' || driveMaterialTimer) return;
+      driveMaterialTimer = setTimeout(() => {
+        driveMaterialStatus = 'loaded';
+        driveMaterialTimer = null;
+        if (detailViewMode === 'workflow') renderPage();
+      }, 1400);
+    }
+
+    function renderPage() {
+      destroyRsTrendCharts();
+      document.getElementById('distributionDetailRoot').innerHTML = renderDetailContent();
+      if (detailViewMode === 'workflow') scheduleDriveMaterialLoad();
+      renderRsTrendCharts();
+    }
+
+    document.addEventListener('click', event => {
+      const collapseButton = event.target.closest('[data-platform-card-toggle]');
+      if (collapseButton) {
+        const mode = collapseButton.dataset.platformCardToggle;
+        const index = collapseButton.dataset.platformIndex;
+        if (platformCollapseState[mode]) {
+          platformCollapseState[mode][index] = !platformCollapseState[mode][index];
+          renderPage();
+        }
+        return;
+      }
+
+      const recordTypeButton = event.target.closest('[data-settlement-record-type]');
+      if (recordTypeButton) {
+        const platformIndex = recordTypeButton.dataset.platformIndex;
+        const nextType = recordTypeButton.dataset.settlementRecordType === 'rs' ? 'rs' : 'mg';
+        if ((settlementRecordTypeState[platformIndex] || 'mg') === nextType) return;
+        settlementRecordTypeState[platformIndex] = nextType;
+        settlementPageState[`platform-${platformIndex}-${nextType}`] = 1;
+        renderPage();
+        return;
+      }
+
+      const pageButton = event.target.closest('[data-settlement-page-key]');
+      if (pageButton) {
+        settlementPageState[pageButton.dataset.settlementPageKey] = Number(pageButton.dataset.settlementPage || 1);
+        renderPage();
+        return;
+      }
+
+      const paneButton = event.target.closest('[data-settlement-pane]');
+      if (paneButton) {
+        const nextPane = paneButton.dataset.settlementPane === 'rs' ? 'rs' : 'records';
+        const platformIndex = paneButton.dataset.platformIndex;
+        const currentPane = settlementPaneState[platformIndex] || 'records';
+        if (currentPane === nextPane) return;
+        settlementPaneState[platformIndex] = nextPane;
+
+        const actions = paneButton.closest('.settlement-pane-actions');
+        if (actions) {
+          actions.classList.toggle('is-rs', nextPane === 'rs');
+          actions.classList.toggle('is-records', nextPane === 'records');
+          actions.querySelectorAll('[data-settlement-pane]').forEach(button => {
+            const active = button.dataset.settlementPane === nextPane;
+            button.classList.toggle('is-active', active);
+          });
+        }
+
+        clearTimeout(settlementPaneRenderTimer);
+        settlementPaneRenderTimer = setTimeout(renderPage, 320);
+        return;
+      }
+
+      const yearRow = event.target.closest('[data-rs-trend-year-row]');
+      if (yearRow) {
+        rsTrendYearState[yearRow.dataset.rsTrendYearRow] = yearRow.dataset.rsTrendYearValue;
+        renderPage();
+        return;
+      }
+
+      const button = event.target.closest('[data-detail-view]');
+      if (!button) return;
+      detailViewMode = ['performance', 'settlement', 'workflow'].includes(button.dataset.detailView)
+        ? button.dataset.detailView
+        : 'performance';
+      renderPage();
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      const target = event.target.closest('.platform-card-head[data-platform-card-toggle]');
+      if (!target) return;
+      event.preventDefault();
+      target.click();
+    });
+
+    document.addEventListener('change', event => {
+      const yearSelect = event.target.closest('[data-rs-trend-year]');
+      if (!yearSelect) return;
+      rsTrendYearState[yearSelect.dataset.rsTrendYear] = yearSelect.value;
+      renderPage();
+    });
+
+    renderPage();
+  </script>
+</body>
+</html>

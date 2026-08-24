@@ -433,6 +433,7 @@
 
 <div id="settlement-dashboard-chrome"></div>
 <script src="dashboard-nav.js"></script>
+<script src="distribution-data.js"></script>
 <script>
   document.getElementById('settlement-dashboard-chrome').innerHTML =
     window.ShortflowNav.renderTopNav('producer-dashboard') +
@@ -1292,12 +1293,19 @@ Object.assign(window, { DesktopDashboard, DesktopDetail });
 // 한 콘텐츠가 여러 플랫폼과 각기 다른 계약을 맺는 구조.
 // 계약 유형: 'flat' (Flat Fee 1회성) | 'rs' (RS 분기별) | 'mgrs' (MG 1회성 + RS 분기별)
 
+const settlementParams = new URLSearchParams(window.location.search);
+const settlementContentId = settlementParams.get('content');
+const settlementQueryTitle = settlementParams.get('title') || '';
+const selectedDistributionRow = window.ShortflowDistributionData?.findRowById?.(settlementContentId || '0') || null;
+
 const SETTLE_CONTENT = {
-  id: 'c-detail-1',
-  title: '대표님이 내 전남친입니다',
-  subtitle: '80부작 로맨스 · 2min/ep',
+  id: selectedDistributionRow?.id || 'c-detail-1',
+  title: selectedDistributionRow?.title || settlementQueryTitle || '대표님이 내 전남친입니다',
+  subtitle: selectedDistributionRow
+    ? `${selectedDistributionRow.year}년 · ${selectedDistributionRow.genre}`
+    : '80부작 로맨스 · 2min/ep',
   posterTone: 'rose',
-  posterImage: 'images/posters/대표님이내전남친입니다.png',
+  posterImage: selectedDistributionRow?.poster || 'images/posters/대표님이내전남친입니다.png',
 };
 
 // 단위 메모
@@ -1521,6 +1529,23 @@ const PLATFORMS = [
     ],
   },
 ];
+
+if (selectedDistributionRow?.platformDetails?.length) {
+  const basePlatformTemplates = PLATFORMS.map((platform) => ({ ...platform }));
+  const selectedPlatforms = selectedDistributionRow.platformDetails.map((platform, index) => {
+    const template = basePlatformTemplates[index % basePlatformTemplates.length];
+    return {
+      ...template,
+      id: `distribution-${selectedDistributionRow.id}-${index}`,
+      name: platform.name,
+      exclusive: platform.contractType === '독점',
+      region: platform.rightsRegion,
+      releaseDate: String(platform.periodStart || template.releaseDate).replace(/\./g, '-'),
+      expiryDate: String(platform.periodEnd || template.expiryDate).replace(/\./g, '-'),
+    };
+  });
+  PLATFORMS.splice(0, PLATFORMS.length, ...selectedPlatforms);
+}
 
 // ── 누적 합산 헬퍼 ──────────────────────────────────────────
 function platformFlatTotal(p) {

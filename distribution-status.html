@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>배급현황 — 제작사</title>
+  <link rel="stylesheet" href="dashboard-common.css">
+  <script src="dashboard-nav.js"></script>
+  <script src="distribution-data.js"></script>
+  <style>
+    :root {
+      --dist-line: #e7e5df;
+      --dist-soft: #f7f7f5;
+      --dist-text: #151515;
+      --dist-muted: #737780;
+      --text-primary: #0f1115;
+      --text-secondary: #5c6068;
+      --text-faint: #9ca0a6;
+      --border-color: #e7e5df;
+      --border-strong: #d4d2cb;
+      --bg-light: rgb(250, 250, 250);
+      --bg-white: #fff;
+    }
+
+    html,
+    body {
+      margin: 0;
+      background: #fff;
+    }
+
+    body {
+      color: var(--dist-text);
+      font-family: "Pretendard Variable", "Pretendard", "Geist", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .distribution-wrap {
+      width: min(var(--max), calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 32px 0 120px;
+    }
+
+    .distribution-notice-banner {
+      margin-bottom: 36px;
+      padding: 20px 22px;
+      border: 0.5px solid rgb(30, 30, 30);
+      border-radius: 14px;
+      background: rgb(30, 30, 30);
+      color: #fff;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 260px;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .distribution-notice-left {
+      padding-right: 22px;
+      border-right: 0.5px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .distribution-notice-pill {
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.88);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      transform: translateY(-4px);
+    }
+
+    .distribution-notice-pill::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #f05a28;
+    }
+
+    .distribution-notice-title {
+      margin: 12px 0 6px;
+      color: #fff;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.18;
+    }
+
+    .distribution-notice-desc {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.66);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .distribution-notice-right {
+      min-width: 0;
+      padding-top: 10px;
+    }
+
+    .distribution-notice-label {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+    }
+
+    .distribution-notice-amount {
+      margin: 8px 0 10px;
+      color: #fff;
+      font-family: "Geist", ui-monospace, Menlo, monospace;
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .distribution-notice-meta {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .distribution-notice-btn {
+      width: 100%;
+      margin-top: 14px;
+      padding: 8px 12px;
+      border: 0.5px solid rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .distribution-notice-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .distribution-panel {
+      margin-top: 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .distribution-list-head {
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 0.5px solid var(--dist-line);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .distribution-list-title {
+      margin: 0;
+      color: #181818;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.2;
+    }
+
+    .distribution-tools {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 16px;
+    }
+
+    .history-section {
+      margin-top: 84px;
+      padding-top: 0;
+    }
+
+    .history-head {
+      margin-top: 0;
+      padding-bottom: 12px;
+      border-bottom: 0.5px solid var(--border-color);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .history-title {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .history-table-wrap {
+      margin-top: 16px;
+      border: 0.5px solid var(--border-color);
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--bg-white);
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .history-table thead th {
+      padding: 9px 22px;
+      border-bottom: 0.5px solid var(--border-color);
+      background: var(--bg-light);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .history-row td {
+      padding: 8px 22px;
+      border-bottom: 0.5px solid var(--border-color);
+      background: #fff;
+      vertical-align: middle;
+      text-align: right;
+    }
+
+    .history-table thead th:nth-child(4),
+    .history-row td:nth-child(4) {
+      text-align: center;
+    }
+
+    .history-row:last-child td {
+      border-bottom: 0;
+    }
+
+    .history-month {
+      margin: 0;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.1px;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .history-count {
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .history-amount-value {
+      margin: 0;
+      color: var(--text-primary);
+      font-family: "Geist", ui-monospace, Menlo, monospace;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      line-height: 1.2;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .status-done {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #e6f2e8;
+      color: #1f7d3f;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .status-done::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #1f7d3f;
+    }
+
+    .history-detail-btn {
+      padding: 5px 10px;
+      border: 0.5px solid var(--border-strong);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .history-detail-btn:hover {
+      background: rgb(250, 250, 250);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 1200;
+      padding: 24px;
+      background: rgba(16, 20, 32, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .modal-panel {
+      width: min(1180px, 100%);
+      max-height: calc(100vh - 48px);
+      border: 0.5px solid var(--border-color);
+      border-radius: 14px;
+      background: #fff;
+      overflow: auto;
+      box-shadow: 0 20px 50px rgba(16, 20, 32, 0.18);
+    }
+
+    .modal-head {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 18px 22px 16px;
+      border-bottom: 0.5px solid var(--border-color);
+      background: #fff;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .modal-title-block {
+      min-width: 0;
+    }
+
+    .modal-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      flex-wrap: wrap;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .modal-subtitle {
+      margin: 6px 0 0;
+      color: var(--text-secondary);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .modal-badge {
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: #e6f4e8;
+      color: #176935;
+      display: none;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .modal-badge.show {
+      display: inline-flex;
+    }
+
+    .modal-body {
+      padding: 18px 22px 20px;
+    }
+
+    .detail-done-date {
+      display: none;
+      margin: -4px 0 14px;
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .detail-done-date.show {
+      display: block;
+    }
+
+    .detail-grid {
+      margin-bottom: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .detail-card {
+      padding: 12px 14px;
+      border: 0.5px solid var(--border-color);
+      border-radius: 10px;
+      background: var(--bg-light);
+    }
+
+    .detail-card.net {
+      border-color: rgb(30, 30, 30);
+      background: rgb(30, 30, 30);
+    }
+
+    .detail-k {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .detail-v {
+      margin: 6px 0 0;
+      color: var(--text-primary);
+      font-family: "Geist", ui-monospace, Menlo, monospace;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .detail-card.net .detail-k {
+      color: rgba(255, 255, 255, 0.64);
+    }
+
+    .detail-card.net .detail-v {
+      color: #fff;
+    }
+
+    .detail-section-head {
+      margin: 4px 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .detail-section-title {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -0.1px;
+    }
+
+    .detail-section-meta {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .detail-table-wrap {
+      border: 0.5px solid var(--border-color);
+      border-radius: 10px;
+      background: #fff;
+      overflow: auto;
+    }
+
+    .settlement-detail-table {
+      min-width: 1580px;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .settlement-detail-table th,
+    .settlement-detail-table td {
+      padding: 11px 12px;
+      border-bottom: 0.5px solid var(--border-color);
+      white-space: nowrap;
+      font-size: 12px;
+      vertical-align: middle;
+    }
+
+    .settlement-detail-table thead th {
+      background: var(--bg-light);
+      color: var(--text-secondary);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-align: right;
+    }
+
+    .settlement-detail-table .group-row th {
+      padding: 8px 6px 0;
+      border-bottom: 0;
+      background: #fff;
+      text-align: center;
+    }
+
+    .table-group-label {
+      display: block;
+      padding: 7px 10px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .table-group-label.platform {
+      background: #faf6ee;
+      color: #a6813a;
+    }
+
+    .table-group-label.deduct {
+      background: #f3f6f8;
+      color: #72808a;
+    }
+
+    .table-group-label.settle {
+      background: #f2f7f5;
+      color: #5e8a7a;
+    }
+
+    .settlement-detail-table td {
+      color: var(--text-primary);
+      text-align: right;
+      font-family: "Geist", ui-monospace, Menlo, monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .settlement-detail-table td.text-cell {
+      text-align: right;
+      font-family: "Geist", "Pretendard", system-ui, sans-serif;
+    }
+
+    .detail-content-link {
+      color: inherit;
+      font-weight: inherit;
+      text-decoration: none;
+    }
+
+    .settlement-detail-table td.producer-pay {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .subtotal-row td {
+      background: var(--bg-light);
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .subtotal-row td:first-child {
+      text-align: right;
+      font-family: "Geist", "Pretendard", system-ui, sans-serif;
+    }
+
+    .modal-foot {
+      position: sticky;
+      bottom: 0;
+      padding: 14px 22px;
+      border-top: 0.5px solid var(--border-color);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .modal-help {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .modal-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-action {
+      padding: 8px 13px;
+      border: 0.5px solid var(--border-strong);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .modal-action.primary {
+      border-color: #1d1c1c;
+      background: #1d1c1c;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .status-filter-select {
+      min-width: 128px;
+      height: 38px;
+      padding: 0 34px 0 12px;
+      border: 0.5px solid #dedbd2;
+      border-radius: 8px;
+      background: #fff;
+      color: #25282d;
+      font: inherit;
+      font-size: 13px;
+      line-height: 38px;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .status-filter-select.is-placeholder {
+      color: #a0a4ab;
+    }
+
+    .status-filter-shell {
+      position: relative;
+      display: inline-flex;
+    }
+
+    .status-filter-shell::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      width: 7px;
+      height: 7px;
+      border-right: 1.5px solid #777b83;
+      border-bottom: 1.5px solid #777b83;
+      pointer-events: none;
+      transform: translateY(-65%) rotate(45deg);
+    }
+
+    .status-filter-select:focus {
+      border-color: #bebbb2;
+      box-shadow: 0 1px 4px rgba(18, 20, 24, 0.06);
+    }
+
+    .title-search {
+      width: min(320px, 100%);
+      height: 38px;
+      padding: 0 13px 0 36px;
+      border: 0.5px solid #dedbd2;
+      border-radius: 8px;
+      background: #fff;
+      color: #25282d;
+      font: inherit;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .title-search::placeholder {
+      color: #a0a4ab;
+    }
+
+    .title-search:focus {
+      border-color: #bebbb2;
+      box-shadow: 0 1px 4px rgba(18, 20, 24, 0.06);
+    }
+
+    .title-search-shell {
+      position: relative;
+      display: inline-flex;
+      width: min(320px, 100%);
+    }
+
+    .title-search-shell::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 13px;
+      width: 12px;
+      height: 12px;
+      border: 1.4px solid #a0a4ab;
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translateY(-58%);
+    }
+
+    .title-search-shell::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 24px;
+      width: 6px;
+      height: 1.4px;
+      border-radius: 999px;
+      background: #a0a4ab;
+      pointer-events: none;
+      transform: translateY(5px) rotate(45deg);
+    }
+
+    .title-search-shell .title-search {
+      width: 100%;
+    }
+
+    .distribution-card {
+      min-height: 156px;
+      padding: 12px;
+      border: 0.5px solid var(--dist-line);
+      border-radius: 8px;
+      background: #fff;
+      display: grid;
+      grid-template-columns: 132px minmax(0, 1fr);
+      gap: 12px;
+      cursor: pointer;
+      transition: border-color 0.16s ease, background 0.16s ease;
+    }
+
+    .distribution-card:hover {
+      border-color: #d6d3ca;
+      background: #fbfbfa;
+    }
+
+    .distribution-card:focus-visible {
+      outline: 2px solid rgba(255, 124, 50, 0.35);
+      outline-offset: 2px;
+    }
+
+    .poster-frame {
+      width: 132px;
+      height: 132px;
+      border-radius: 6px;
+      background: var(--dist-soft);
+      overflow: hidden;
+    }
+
+    .content-thumb {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      transform: scale(1.04);
+      transform-origin: center;
+    }
+
+    .card-copy {
+      min-width: 0;
+      min-height: 132px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 6px 0 10px;
+    }
+
+    .card-title-row {
+      min-width: 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .content-name {
+      overflow: hidden;
+      margin-left: 4px;
+      margin-top: 4px;
+      color: #181818;
+      flex: 1 1 auto;
+      font-size: 14.5px;
+      font-weight: 500;
+      line-height: 1.35;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .exclusivity-badge {
+      min-width: 54px;
+      padding: 9px 10px;
+      border: 0;
+      border-radius: 999px;
+      background: #f4f5f7;
+      color: #5d636c;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      font-size: 11.5px;
+      font-weight: 500;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .exclusivity-badge-text {
+      display: inline-block;
+      transform: translateY(1px);
+    }
+
+    .exclusivity-badge.is-exclusive {
+      background: #ff7c32;
+      color: #fff;
+    }
+
+    .stage-counts {
+      min-height: 36px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .stage-count {
+      min-width: 0;
+      border-left: 0.5px solid #eeeeea;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .stage-count:first-child {
+      border-left: 0;
+    }
+
+    .stage-count span {
+      color: #7f838a;
+      font-size: 10.5px;
+      font-weight: 500;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .stage-count strong {
+      color: #25282d;
+      font-size: 14px;
+      font-weight: 560;
+      line-height: 1;
+    }
+
+    .empty-card {
+      min-height: 120px;
+      border: 0.5px solid var(--dist-line);
+      border-radius: 8px;
+      grid-column: 1 / -1;
+      color: #8f939a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .load-more-wrap {
+      margin-top: 60px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .load-more-button {
+      width: 44px;
+      height: 44px;
+      border: 0.5px solid #dedbd2;
+      border-radius: 50%;
+      background: #fff;
+      color: #2f3338;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 360;
+      line-height: 1;
+      cursor: pointer;
+      transition: border-color 0.16s ease, background 0.16s ease, transform 0.16s ease;
+    }
+
+    .load-more-button:hover {
+      border-color: #c9c5bb;
+      background: #fbfbfa;
+      transform: translateY(-1px);
+    }
+
+    .load-more-button:focus-visible {
+      outline: 2px solid rgba(255, 124, 50, 0.35);
+      outline-offset: 3px;
+    }
+
+    .load-more-button[hidden] {
+      display: none;
+    }
+
+    @media (max-width: 920px) {
+      .distribution-wrap {
+        width: calc(100vw - 32px);
+        padding: 24px 0 88px;
+      }
+
+      .distribution-notice-banner {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .distribution-notice-left {
+        padding-right: 0;
+        padding-bottom: 16px;
+        border-right: 0;
+        border-bottom: 0.5px solid rgba(255, 255, 255, 0.14);
+      }
+
+      .distribution-panel {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .history-title {
+        font-size: 18px;
+      }
+
+      .history-table-wrap {
+        overflow-x: auto;
+      }
+
+      .history-table {
+        min-width: 720px;
+      }
+
+      .history-month {
+        font-size: 14px;
+      }
+
+      .history-amount-value {
+        font-size: 16px;
+      }
+
+      .history-detail-btn {
+        padding: 7px 12px;
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .distribution-tools {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .status-filter-shell,
+      .status-filter-select {
+        width: 100%;
+      }
+
+      .title-search-shell,
+      .title-search {
+        width: 100%;
+      }
+
+      .distribution-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="distribution-dashboard-chrome"></div>
+
+  <main class="distribution-wrap">
+    <section id="distributionSettlementNotice" class="distribution-notice-banner" aria-label="정산 검토 요청"></section>
+
+    <div class="distribution-list-head">
+      <h2 class="distribution-list-title">배급 콘텐츠</h2>
+      <div class="distribution-tools">
+        <span class="status-filter-shell">
+          <select class="status-filter-select" id="distributionStatusFilter" aria-label="배급상태">
+            <option value="" disabled selected>배급상태</option>
+            <option value="all">전체</option>
+            <option value="scheduled">예정</option>
+            <option value="active">유통중</option>
+            <option value="closed">종료</option>
+            <option value="no-history">이력없음</option>
+          </select>
+        </span>
+        <span class="title-search-shell">
+          <input class="title-search" id="distributionTitleSearch" type="search" placeholder="제목 검색" aria-label="제목 검색">
+        </span>
+      </div>
+    </div>
+    <section class="distribution-panel" id="distributionBody" aria-label="배급 콘텐츠 목록"></section>
+    <div class="load-more-wrap">
+      <button class="load-more-button" id="distributionLoadMore" type="button" aria-label="배급 콘텐츠 더 보기">+</button>
+    </div>
+
+    <section class="history-section">
+      <div class="history-head">
+        <div>
+          <h2 class="history-title">이전 정산 내역</h2>
+        </div>
+      </div>
+
+      <div class="history-table-wrap">
+        <table class="history-table">
+          <colgroup>
+            <col style="width: 21%;">
+            <col style="width: 21%;">
+            <col style="width: 21%;">
+            <col style="width: 21%;">
+            <col style="width: 16%;">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>정산 월</th>
+              <th>콘텐츠 수</th>
+              <th>총 제작사 정산액(원)</th>
+              <th>상태</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="historyBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div id="settlementModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="settlementModalTitle">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <div class="modal-title-block">
+          <div class="modal-title-row">
+            <h3 id="settlementModalTitle" class="modal-title">2025년 4월 정산 처리 내역</h3>
+            <span id="settlementModalBadge" class="modal-badge">완료</span>
+          </div>
+          <p id="settlementModalSubtitle" class="modal-subtitle">콘텐츠 3건 · 플랫폼 정산 4건</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p id="settlementDoneDate" class="detail-done-date"></p>
+        <div class="detail-grid">
+          <div class="detail-card">
+            <p class="detail-k">실입금액(원)</p>
+            <p id="detailGross" class="detail-v">₩15,820,000</p>
+          </div>
+          <div class="detail-card">
+            <p class="detail-k">비에이블 수수료 금액(원)</p>
+            <p id="detailDeduction" class="detail-v">₩2,486,587</p>
+          </div>
+          <div class="detail-card net">
+            <p class="detail-k">최종 정산액(원)</p>
+            <p id="detailNet" class="detail-v">₩10,733,413</p>
+          </div>
+        </div>
+
+        <div class="detail-section-head">
+          <p class="detail-section-title">상세 내역</p>
+          <p id="detailSectionMeta" class="detail-section-meta">플랫폼별 지급 및 공제 기준</p>
+        </div>
+        <div class="detail-table-wrap">
+          <table class="settlement-detail-table">
+            <thead id="detailHead"></thead>
+            <tbody id="detailRows"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <p id="modalHelp" class="modal-help">완료된 내역입니다. 읽기 전용으로 제공됩니다.</p>
+        <div class="modal-actions">
+          <button type="button" class="modal-action" onclick="closeSettlementNotice()">닫기</button>
+          <button id="modalConfirmBtn" type="button" class="modal-action primary" onclick="confirmSettlementRequest()">정산 요청</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('distribution-dashboard-chrome').innerHTML =
+      window.ShortflowNav.renderTopNav('producer-dashboard') +
+      window.ShortflowNav.renderDashboardSubNav('distribution', 'producer');
+
+    const {
+      rows: distributionRows,
+      escapeHtml,
+      formatNumber
+    } = window.ShortflowDistributionData;
+    const pageSize = 9;
+    let visibleCount = pageSize;
+    let titleQuery = '';
+    let statusFilter = 'all';
+    let currentSettlementStatus = 'SCHEDULED';
+
+    const currentSettlement = {
+      monthLabel: '2025년 4월',
+      monthShort: '4월',
+      doneDate: '2025-05-15',
+      rows: [
+        { content: '대표님이 내 전남친입니다', platform: 'ReelShort', period: '2025-04', platformPay: 6200000, contractAmount: 6200000, whtRate: 10, wht: 620000, wireFee: 35000, fxRate: 1380, fxFee: 8000, krwIn: 5537000, paidDate: '2025-05-10', bableRate: 20, bableFee: 1107400, producerPay: 4429600 },
+        { content: '대표님이 내 전남친입니다', platform: 'DramaBox', period: '2025-04', platformPay: 2840000, contractAmount: null, whtRate: 16.5, wht: 468600, wireFee: 35000, fxRate: 1380, fxFee: 8000, krwIn: 2328400, paidDate: '2025-05-10', bableRate: 20, bableFee: 465680, producerPay: 1862720 },
+        { content: '대표님이 내 전남친입니다', platform: 'ShortMax', period: '2025-Q1', platformPay: 5120000, contractAmount: null, whtRate: 16.5, wht: 844800, wireFee: 35000, fxRate: 1448, fxFee: 8000, krwIn: 4232200, paidDate: '2025-05-12', bableRate: 20, bableFee: 846440, producerPay: 3385760 },
+        { content: '대표님이 내 전남친입니다', platform: 'Viki', period: '2025-04', platformPay: 4500000, contractAmount: 4500000, whtRate: 10, wht: 450000, wireFee: 35000, fxRate: 1402, fxFee: 8000, krwIn: 4007000, paidDate: '2025-05-13', bableRate: 20, bableFee: 801400, producerPay: 3205600 },
+        { content: '대표님이 내 전남친입니다', platform: 'NovaShort', period: '2025-04', platformPay: 3920000, contractAmount: null, whtRate: 10, wht: 392000, wireFee: 35000, fxRate: 1402, fxFee: 9000, krwIn: 3484000, paidDate: '2025-05-14', bableRate: 20, bableFee: 696800, producerPay: 2787200 }
+      ]
+    };
+
+    function filteredDistributionRows() {
+      const normalizedQuery = titleQuery.trim().toLowerCase();
+      return distributionRows.filter(row => {
+        const titleMatched = !normalizedQuery || row.title.toLowerCase().includes(normalizedQuery);
+        return titleMatched && matchesStatusFilter(row);
+      });
+    }
+
+    function stageTotal(row) {
+      const counts = row.platformStageCounts || {};
+      return (counts.scheduled || 0) + (counts.active || 0) + (counts.closed || 0);
+    }
+
+    function matchesStatusFilter(row) {
+      const counts = row.platformStageCounts || {};
+      if (statusFilter === 'all') return true;
+      if (statusFilter === 'no-history') return stageTotal(row) === 0;
+      return (counts[statusFilter] || 0) > 0;
+    }
+
+    function renderSettlementNotice() {
+      const summary = summaryForRows(currentSettlement.rows);
+      const commonRight = `
+        <div>
+          <p class="distribution-notice-label">예상 수령액</p>
+          <p class="distribution-notice-amount">${formatSettlementMoney(summary.net)}</p>
+        </div>
+      `;
+      const states = {
+        SCHEDULED: {
+          pill: '검토 필요',
+          title: `${currentSettlement.monthShort} 정산 검토 요청`,
+          desc: '지급액과 공제 내역을 확인한 뒤 요청을 완료해 주세요.',
+          button: '검토하기',
+          readOnly: false,
+          right: commonRight
+        },
+        CONFIRMED: {
+          pill: '검토 완료',
+          title: `${currentSettlement.monthShort} 처리 대기 중`,
+          desc: '요청이 접수되었습니다. 지급 완료 후 완료 내역으로 이동합니다.',
+          button: '상세보기',
+          readOnly: true,
+          right: commonRight
+        },
+        COMPLETED: {
+          pill: '정산 완료',
+          title: `${currentSettlement.monthShort} 지급 완료`,
+          desc: '완료된 상세 내역을 확인할 수 있습니다.',
+          button: '상세보기',
+          readOnly: true,
+          right: commonRight
+        }
+      };
+      const state = states[currentSettlementStatus] || states.SCHEDULED;
+      const target = document.getElementById('distributionSettlementNotice');
+      target.innerHTML = `
+        <div class="distribution-notice-left">
+          <span class="distribution-notice-pill">${state.pill}</span>
+          <h2 class="distribution-notice-title">${state.title}</h2>
+          <p class="distribution-notice-desc">${state.desc}</p>
+        </div>
+        <div class="distribution-notice-right">
+          ${state.right}
+          <button class="distribution-notice-btn" type="button" data-settlement-action="${state.readOnly ? 'readonly' : 'review'}">${state.button} <span aria-hidden="true">→</span></button>
+        </div>
+      `;
+    }
+
+    const historyItems = [
+      {
+        monthLabel: '2025년 3월',
+        doneDate: '2025-04-15',
+        rows: [
+          { content: '대표님이 내 전남친입니다', platform: 'ReelShort', period: '2025-03', platformPay: 6580000, contractAmount: 6580000, whtRate: 10, wht: 658000, wireFee: 35000, fxRate: 1392, fxFee: 8000, krwIn: 5879000, paidDate: '2025-04-10', bableRate: 20, bableFee: 1175800, producerPay: 4703200 },
+          { content: '대표님이 내 전남친입니다', platform: 'DramaBox', period: '2025-03', platformPay: 5210600, contractAmount: null, whtRate: 16.5, wht: 859749, wireFee: 35000, fxRate: 1448, fxFee: 8000, krwIn: 4305851, paidDate: '2025-04-11', bableRate: 20, bableFee: 861170, producerPay: 3444681 },
+          { content: '대표님이 내 전남친입니다', platform: 'ShortMax', period: '2025-03', platformPay: 3690000, contractAmount: 3690000, whtRate: 10, wht: 369000, wireFee: 35000, fxRate: 1392, fxFee: 8000, krwIn: 3278000, paidDate: '2025-04-12', bableRate: 20, bableFee: 655600, producerPay: 2622400 },
+          { content: '대표님이 내 전남친입니다', platform: 'Viki', period: '2025-03', platformPay: 3370000, contractAmount: null, whtRate: 10, wht: 337000, wireFee: 35000, fxRate: 1392, fxFee: 8000, krwIn: 2990000, paidDate: '2025-04-13', bableRate: 20, bableFee: 598000, producerPay: 2392000 },
+          { content: '대표님이 내 전남친입니다', platform: 'NovaShort', period: '2025-03', platformPay: 2920000, contractAmount: null, whtRate: 10, wht: 292000, wireFee: 35000, fxRate: 1392, fxFee: 8000, krwIn: 2585000, paidDate: '2025-04-14', bableRate: 20, bableFee: 517000, producerPay: 2068000 }
+        ]
+      },
+      {
+        monthLabel: '2025년 2월',
+        doneDate: '2025-03-13',
+        rows: [
+          { content: '대표님이 내 전남친입니다', platform: 'ReelShort', period: '2025-02', platformPay: 7410000, contractAmount: 7410000, whtRate: 10, wht: 741000, wireFee: 35000, fxRate: 1430, fxFee: 9000, krwIn: 6625000, paidDate: '2025-03-10', bableRate: 20, bableFee: 1325000, producerPay: 5300000 },
+          { content: '대표님이 내 전남친입니다', platform: 'DramaBox', period: '2025-02', platformPay: 7415700, contractAmount: null, whtRate: 10, wht: 741570, wireFee: 35000, fxRate: 1430, fxFee: 9000, krwIn: 6630130, paidDate: '2025-03-11', bableRate: 20, bableFee: 1326026, producerPay: 5304104 },
+          { content: '대표님이 내 전남친입니다', platform: 'ShortMax', period: '2025-02', platformPay: 5120000, contractAmount: null, whtRate: 16.5, wht: 844800, wireFee: 35000, fxRate: 1430, fxFee: 9000, krwIn: 4231200, paidDate: '2025-03-12', bableRate: 20, bableFee: 846240, producerPay: 3384960 },
+          { content: '대표님이 내 전남친입니다', platform: 'Viki', period: '2025-02', platformPay: 3860000, contractAmount: 3860000, whtRate: 10, wht: 386000, wireFee: 35000, fxRate: 1430, fxFee: 9000, krwIn: 3430000, paidDate: '2025-03-13', bableRate: 20, bableFee: 686000, producerPay: 2744000 },
+          { content: '대표님이 내 전남친입니다', platform: 'NovaShort', period: '2025-02', platformPay: 3180000, contractAmount: null, whtRate: 10, wht: 318000, wireFee: 35000, fxRate: 1430, fxFee: 9000, krwIn: 2818000, paidDate: '2025-03-14', bableRate: 20, bableFee: 563600, producerPay: 2254400 }
+        ]
+      },
+      {
+        monthLabel: '2025년 1월',
+        doneDate: '2025-02-12',
+        rows: [
+          { content: '대표님이 내 전남친입니다', platform: 'ReelShort', period: '2025-01', platformPay: 6230000, contractAmount: 6230000, whtRate: 10, wht: 623000, wireFee: 35000, fxRate: 1440, fxFee: 8000, krwIn: 5564000, paidDate: '2025-02-10', bableRate: 20, bableFee: 1112800, producerPay: 4451200 },
+          { content: '대표님이 내 전남친입니다', platform: 'DramaBox', period: '2024-Q4', platformPay: 7867850, contractAmount: null, whtRate: 16.5, wht: 1298195, wireFee: 35000, fxRate: 1440, fxFee: 8000, krwIn: 6520655, paidDate: '2025-02-11', bableRate: 20, bableFee: 1304131, producerPay: 5216524 },
+          { content: '대표님이 내 전남친입니다', platform: 'ShortMax', period: '2025-01', platformPay: 4720000, contractAmount: null, whtRate: 10, wht: 472000, wireFee: 35000, fxRate: 1440, fxFee: 8000, krwIn: 4205000, paidDate: '2025-02-12', bableRate: 20, bableFee: 841000, producerPay: 3364000 },
+          { content: '대표님이 내 전남친입니다', platform: 'Viki', period: '2025-01', platformPay: 3540000, contractAmount: 3540000, whtRate: 10, wht: 354000, wireFee: 35000, fxRate: 1440, fxFee: 8000, krwIn: 3143000, paidDate: '2025-02-13', bableRate: 20, bableFee: 628600, producerPay: 2514400 },
+          { content: '대표님이 내 전남친입니다', platform: 'NovaShort', period: '2025-01', platformPay: 2860000, contractAmount: null, whtRate: 10, wht: 286000, wireFee: 35000, fxRate: 1440, fxFee: 8000, krwIn: 2531000, paidDate: '2025-02-14', bableRate: 20, bableFee: 506200, producerPay: 2024800 }
+        ]
+      }
+    ];
+
+    function formatUsd(value) {
+      if (value == null) return '—';
+      return '$' + Number(value).toLocaleString('en-US', { maximumFractionDigits: 2 });
+    }
+
+    function formatSettlementMoney(value) {
+      if (value == null) return '—';
+      return '₩' + Number(value).toLocaleString('ko-KR');
+    }
+
+    function formatUsdFromKrw(value, fxRate) {
+      if (value == null) return '—';
+      if (!fxRate) return formatUsd(value);
+      return formatUsd(value / fxRate);
+    }
+
+    function formatPct(value) {
+      return value == null ? '—' : `${value}%`;
+    }
+
+    function formatFx(value) {
+      return value == null ? '—' : `₩${Number(value).toLocaleString('ko-KR')}`;
+    }
+
+    function summaryForRows(rows) {
+      return rows.reduce((acc, row) => {
+        acc.gross += row.platformPay || 0;
+        acc.deduction += (row.wht || 0) + (row.wireFee || 0) + (row.fxFee || 0) + (row.bableFee || 0);
+        acc.krwIn += row.krwIn || 0;
+        acc.bableFee += row.bableFee || 0;
+        acc.net += row.producerPay || 0;
+        return acc;
+      }, { gross: 0, deduction: 0, krwIn: 0, bableFee: 0, net: 0 });
+    }
+
+    function rowsByContent(rows) {
+      return rows.reduce((groups, row) => {
+        if (!groups[row.content]) groups[row.content] = [];
+        groups[row.content].push(row);
+        return groups;
+      }, {});
+    }
+
+    function renderHistoryRows() {
+      const body = document.getElementById('historyBody');
+      body.innerHTML = historyItems.map((item, idx) => {
+        const summary = summaryForRows(item.rows);
+        return `
+          <tr class="history-row">
+            <td>
+              <p class="history-month">${escapeHtml(item.monthLabel)}</p>
+            </td>
+            <td class="history-count">${formatNumber(Object.keys(rowsByContent(item.rows)).length)}편</td>
+            <td><p class="history-amount-value">${formatSettlementMoney(summary.net)}</p></td>
+            <td class="history-status"><span class="status-done">완료</span></td>
+            <td class="history-action"><button class="history-detail-btn" type="button" onclick="openHistoryDetail(${idx})">상세보기 <span aria-hidden="true">〉</span></button></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderDetailHead() {
+      document.getElementById('detailHead').innerHTML = `
+        <tr class="group-row">
+          <th colspan="2"></th>
+          <th colspan="3"><span class="table-group-label platform">플랫폼 지급</span></th>
+          <th colspan="6"><span class="table-group-label deduct">공제 내역</span></th>
+          <th colspan="3"><span class="table-group-label settle">정산</span></th>
+        </tr>
+        <tr>
+          <th class="text-cell">콘텐츠</th>
+          <th class="text-cell">플랫폼</th>
+          <th>발생월/분기</th>
+          <th>플랫폼 지급액</th>
+          <th>계약 금액</th>
+          <th>원천세 비율</th>
+          <th>원천세 금액(USD)</th>
+          <th>송금 수수료(USD)</th>
+          <th>환율</th>
+          <th>환전 수수료(원)</th>
+          <th>실입금액(원)</th>
+          <th>Bable 수수료율</th>
+          <th>Bable 수수료 금액(원)</th>
+          <th>제작사 정산액(원)</th>
+        </tr>
+      `;
+    }
+
+    function renderDetailRows(rows) {
+      const groups = rowsByContent(rows);
+      const body = Object.entries(groups).map(([content, contentRows]) => {
+        return contentRows.map((item, idx) => `
+          <tr>
+            <td class="text-cell">${idx === 0 ? `<a class="detail-content-link" href="settlement.html">${escapeHtml(content)}</a>` : ''}</td>
+            <td class="text-cell">${escapeHtml(item.platform)}</td>
+            <td>${escapeHtml(item.period)}</td>
+            <td>${formatSettlementMoney(item.platformPay)}</td>
+            <td>${formatSettlementMoney(item.contractAmount)}</td>
+            <td>${formatPct(item.whtRate)}</td>
+            <td>${formatUsdFromKrw(item.wht, item.fxRate)}</td>
+            <td>${formatUsdFromKrw(item.wireFee, item.fxRate)}</td>
+            <td>${formatFx(item.fxRate)}</td>
+            <td>${formatSettlementMoney(item.fxFee)}</td>
+            <td>${formatSettlementMoney(item.krwIn)}</td>
+            <td>${formatPct(item.bableRate)}</td>
+            <td>${formatSettlementMoney(item.bableFee)}</td>
+            <td class="producer-pay">${formatSettlementMoney(item.producerPay)}</td>
+          </tr>
+        `).join('');
+      }).join('');
+      const total = summaryForRows(rows);
+      const totalBable = rows.reduce((sum, row) => sum + row.bableFee, 0);
+      const totalKrwIn = rows.reduce((sum, row) => sum + row.krwIn, 0);
+      document.getElementById('detailRows').innerHTML = `${body}
+        <tr class="subtotal-row">
+          <td colspan="3">전체 합계</td>
+          <td colspan="7"></td>
+          <td>${formatSettlementMoney(totalKrwIn)}</td>
+          <td colspan="1"></td>
+          <td>${formatSettlementMoney(totalBable)}</td>
+          <td class="producer-pay">${formatSettlementMoney(total.net)}</td>
+        </tr>
+      `;
+    }
+
+    function fillModal(detail, options = {}) {
+      const summary = summaryForRows(detail.rows);
+      const readOnly = !!options.readOnly;
+      const completed = !!options.completed;
+      document.getElementById('settlementModalTitle').textContent = `${detail.monthLabel} 정산 처리 내역`;
+      document.getElementById('settlementModalSubtitle').textContent =
+        `콘텐츠 ${Object.keys(rowsByContent(detail.rows)).length}건 · 플랫폼 정산 ${detail.rows.length}건`;
+      document.getElementById('settlementModalBadge').classList.toggle('show', completed);
+      document.getElementById('settlementDoneDate').textContent = completed ? `정산 완료일 ${detail.doneDate}` : '';
+      document.getElementById('settlementDoneDate').classList.toggle('show', completed);
+      document.getElementById('modalConfirmBtn').style.display = readOnly ? 'none' : 'inline-flex';
+      document.getElementById('modalHelp').textContent = readOnly
+        ? '완료된 내역입니다. 읽기 전용으로 제공됩니다.'
+        : '검토를 마치면 정산 요청을 진행해 주세요.';
+      document.getElementById('detailSectionMeta').textContent = completed
+        ? '완료 기준 상세'
+        : '플랫폼별 지급 및 공제 기준';
+      document.getElementById('detailGross').textContent = formatSettlementMoney(summary.krwIn);
+      document.getElementById('detailDeduction').textContent = formatSettlementMoney(summary.bableFee);
+      document.getElementById('detailNet').textContent = formatSettlementMoney(summary.net);
+      renderDetailHead();
+      renderDetailRows(detail.rows);
+    }
+
+    function openHistoryDetail(index) {
+      fillModal(historyItems[index], { readOnly: true, completed: true });
+      document.getElementById('settlementModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function openSettlementNotice(readOnly = false) {
+      const completed = currentSettlementStatus === 'COMPLETED';
+      fillModal(currentSettlement, { readOnly: readOnly || currentSettlementStatus !== 'SCHEDULED', completed });
+      document.getElementById('settlementModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function confirmSettlementRequest() {
+      currentSettlementStatus = 'CONFIRMED';
+      renderSettlementNotice();
+      closeSettlementNotice();
+    }
+
+    function closeSettlementNotice() {
+      document.getElementById('settlementModal').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    function renderDistributionRows() {
+      const rows = filteredDistributionRows();
+      const visibleRows = rows.slice(0, visibleCount);
+      const body = document.getElementById('distributionBody');
+      if (!rows.length) {
+        body.innerHTML = '<div class="empty-card">조건에 맞는 배급 콘텐츠가 없습니다</div>';
+        updateLoadMore(rows.length);
+        return;
+      }
+      body.innerHTML = visibleRows.map(row => {
+        const rowIndex = distributionRows.indexOf(row);
+        return `
+          <article class="distribution-card" role="button" tabindex="0" onclick="goDistributionDetail(${rowIndex})" onkeydown="handleDistributionRowKeydown(event, ${rowIndex})">
+            <div class="poster-frame">
+              <img class="content-thumb" src="${escapeHtml(row.poster)}" alt="">
+            </div>
+            <div class="card-copy">
+              <div class="card-title-row">
+                <div class="content-name">${escapeHtml(row.title)}</div>
+                ${renderExclusivityBadge(row)}
+              </div>
+              ${renderStageCounts(row)}
+            </div>
+          </article>
+        `;
+      }).join('');
+      updateLoadMore(rows.length);
+    }
+
+    function updateLoadMore(totalCount) {
+      const button = document.getElementById('distributionLoadMore');
+      button.hidden = visibleCount >= totalCount;
+    }
+
+    function renderStageCounts(row) {
+      const counts = row.platformStageCounts || {};
+      return `
+        <div class="stage-counts" aria-label="플랫폼 배급 상태">
+          <div class="stage-count">
+            <span>예정</span>
+            <strong>${counts.scheduled || 0}</strong>
+          </div>
+          <div class="stage-count">
+            <span>유통중</span>
+            <strong>${counts.active || 0}</strong>
+          </div>
+          <div class="stage-count">
+            <span>종료</span>
+            <strong>${counts.closed || 0}</strong>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderExclusivityBadge(row) {
+      const counts = row.platformStageCounts || {};
+      const totalStages = (counts.scheduled || 0) + (counts.active || 0) + (counts.closed || 0);
+      if (totalStages === 0) return '';
+      const exclusive = row.exclusivity === 'exclusive';
+      return `<span class="exclusivity-badge ${exclusive ? 'is-exclusive' : ''}"><span class="exclusivity-badge-text">${escapeHtml(row.exclusivityLabel)}</span></span>`;
+    }
+
+    function goDistributionDetail(rowIndex) {
+      window.location.href = 'distribution-detail.html?id=0';
+    }
+
+    function handleDistributionRowKeydown(event, rowIndex) {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      goDistributionDetail(rowIndex);
+    }
+
+    document.getElementById('distributionLoadMore').addEventListener('click', () => {
+      visibleCount += pageSize;
+      renderDistributionRows();
+    });
+
+    document.getElementById('distributionTitleSearch').addEventListener('input', event => {
+      titleQuery = event.target.value || '';
+      visibleCount = pageSize;
+      renderDistributionRows();
+    });
+
+    document.getElementById('distributionStatusFilter').addEventListener('change', event => {
+      statusFilter = event.target.value || 'all';
+      event.target.classList.toggle('is-placeholder', !event.target.value);
+      visibleCount = pageSize;
+      renderDistributionRows();
+    });
+
+    document.getElementById('settlementModal').addEventListener('click', function (event) {
+      if (event.target === this) closeSettlementNotice();
+    });
+
+    document.addEventListener('click', function (event) {
+      const trigger = event.target.closest('[data-settlement-action]');
+      if (!trigger) return;
+      openSettlementNotice(trigger.dataset.settlementAction === 'readonly');
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') closeSettlementNotice();
+    });
+
+    document.getElementById('distributionStatusFilter').classList.add('is-placeholder');
+    renderSettlementNotice();
+    renderDistributionRows();
+    renderHistoryRows();
+  </script>
+</body>
+</html>

@@ -5,7 +5,12 @@
   const { renderWorkflowView } = window.ShortflowWorkflow;
 
   const initialParams = new URLSearchParams(window.location.search);
+  const workflowTabs = new Set(['workflow']);
+  const initialTab = workflowTabs.has(initialParams.get('tab'))
+    ? initialParams.get('tab')
+    : 'workflow';
   const initialWorkflowId = initialParams.get('workflow');
+  appState.tab = initialTab;
 
   if (initialWorkflowId) {
     appState.selectedWorkflowId = initialWorkflowId;
@@ -18,7 +23,7 @@
   function render() {
     root.innerHTML = renderShell(renderWorkflowView(appState, { dashboardKind: 'producer' }), {
       activePage: 'producer-dashboard',
-      activeTab: 'workflow',
+      activeTab: appState.tab,
       dashboardKind: 'producer',
       hideFooter: true,
     });
@@ -40,12 +45,56 @@
     return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 ${period} ${String(displayHours).padStart(2, '0')}:${minutes}`;
   }
 
+  function workflowPageUrl(workflowId) {
+    return workflowId
+      ? `producer-dashboard.html?tab=workflow&workflow=${encodeURIComponent(workflowId)}`
+      : 'producer-dashboard.html?tab=workflow';
+  }
+
   root.addEventListener('click', event => {
-    const tabButton = event.target.closest('[data-tab]');
-    if (tabButton && tabButton.dataset.tab === 'workflow') {
+    const settlementOpenButton = event.target.closest('[data-workflow-version-settlement-open]');
+    if (settlementOpenButton) {
       event.preventDefault();
-      window.history.replaceState(null, '', 'producer-dashboard.html?tab=workflow');
+      appState.workflowVersionSettlementModalOpen = true;
       render();
+      document.body.style.overflow = 'hidden';
+      return;
+    }
+
+    const settlementCloseButton = event.target.closest('[data-workflow-version-settlement-close]');
+    const settlementBackdrop = event.target.matches('[data-workflow-version-modal-backdrop]');
+    if (settlementCloseButton || settlementBackdrop) {
+      appState.workflowVersionSettlementModalOpen = false;
+      render();
+      document.body.style.overflow = '';
+      return;
+    }
+
+    const settlementConfirmButton = event.target.closest('[data-workflow-version-settlement-confirm]');
+    if (settlementConfirmButton) {
+      appState.workflowVersionSettlementStatus = 'CONFIRMED';
+      appState.workflowVersionSettlementModalOpen = false;
+      render();
+      document.body.style.overflow = '';
+      return;
+    }
+
+    const tabButton = event.target.closest('[data-tab]');
+    if (tabButton && workflowTabs.has(tabButton.dataset.tab)) {
+      if (tabButton.dataset.tab !== appState.tab) return;
+      event.preventDefault();
+      appState.tab = tabButton.dataset.tab;
+      window.history.replaceState(null, '', workflowPageUrl());
+      render();
+      return;
+    }
+
+    const statFilterButton = event.target.closest('[data-workflow-stat-filter]');
+    if (statFilterButton) {
+      appState.workflowKindFilter = statFilterButton.dataset.workflowStatFilter || 'all';
+      appState.workflowDetailMode = 'timeline';
+      appState.selectedWorkflowId = '';
+      renderPreservingWorkflowScroll();
       return;
     }
 
@@ -53,7 +102,7 @@
     if (workflowButton) {
       appState.selectedWorkflowId = workflowButton.dataset.workflowId;
       appState.workflowDetailMode = 'timeline';
-      window.history.replaceState(null, '', `producer-dashboard.html?tab=workflow&workflow=${encodeURIComponent(appState.selectedWorkflowId)}`);
+      window.history.replaceState(null, '', workflowPageUrl(appState.selectedWorkflowId));
       renderPreservingWorkflowScroll();
       return;
     }
@@ -129,6 +178,13 @@
         nextInput.setSelectionRange(nextInput.value.length, nextInput.value.length);
       }
     }
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape' || !appState.workflowVersionSettlementModalOpen) return;
+    appState.workflowVersionSettlementModalOpen = false;
+    render();
+    document.body.style.overflow = '';
   });
 
   render();

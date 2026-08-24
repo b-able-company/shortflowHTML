@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>배급현황 상세 — 제작사</title>
+  <link rel="stylesheet" href="dashboard-common.css">
+  <script src="dashboard-nav.js"></script>
+  <script src="distribution-data.js"></script>
+  <style>
+    :root {
+      --dist-line: #e7e5df;
+      --dist-soft: #f7f7f5;
+      --dist-text: #151515;
+      --dist-muted: #737780;
+    }
+
+    html,
+    body {
+      margin: 0;
+      background: #fff;
+    }
+
+    body {
+      color: var(--dist-text);
+      font-family: "Pretendard Variable", "Pretendard", "Geist", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .distribution-detail-wrap {
+      width: min(var(--max), calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 24px 0 140px;
+    }
+
+    .detail-back {
+      width: fit-content;
+      margin-bottom: 12px;
+      border: 0;
+      background: #fafafa;
+      color: #666a72;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 520;
+      text-decoration: none;
+    }
+
+    .detail-back-mark {
+      font-size: 17px;
+      font-weight: 520;
+      line-height: 1;
+      transform: translateY(-0.5px);
+    }
+
+    .detail-back:hover {
+      color: #181818;
+    }
+
+    .detail-hero {
+      display: grid;
+      grid-template-columns: 136px minmax(0, 1fr);
+      gap: 22px;
+      align-items: flex-start;
+      margin-bottom: 30px;
+    }
+
+    .detail-poster-original {
+      width: 136px;
+      height: auto;
+      border-radius: 7px;
+      background: var(--dist-soft);
+      display: block;
+    }
+
+    .detail-copy {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 190px;
+    }
+
+    .detail-title {
+      margin: 6px 0 0;
+      overflow: hidden;
+      color: #171717;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.15;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .detail-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 30px;
+    }
+
+    .detail-view-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .detail-view-button {
+      min-width: 108px;
+      height: 34px;
+      padding: 0 14px;
+      border: 0.5px solid #181818;
+      border-radius: 999px;
+      background: #fff;
+      color: #181818;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 560;
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .detail-view-button:hover {
+      background: #fafafa;
+    }
+
+    .detail-view-button.is-active {
+      background: #2a2a2a;
+      border-color: #2a2a2a;
+      color: #fff;
+    }
+
+    .hero-summary {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .hero-eyebrow {
+      color: var(--dist-muted);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.6px;
+      line-height: 12px;
+    }
+
+    .hero-metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .hero-metric-item {
+      min-width: 0;
+      padding: 17px 18px;
+      border: 0.5px solid var(--dist-line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .hero-metric-item span {
+      margin-bottom: 10px;
+      color: var(--dist-muted);
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .hero-metric-item strong {
+      color: #171717;
+      display: block;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .platform-panel {
+      margin-top: 0;
+    }
+
+    .panel-head {
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 0.5px solid var(--dist-line);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .panel-title {
+      margin: 6px 0 0;
+      color: #181818;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.15;
+    }
+
+    .platform-card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .platform-card {
+      min-width: 0;
+      border: 0.5px solid var(--dist-line);
+      border-radius: 14px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .platform-card-head {
+      min-height: 72px;
+      padding: 14px 20px;
+      background: #fafafa;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .platform-head-copy {
+      min-width: 0;
+    }
+
+    .platform-name {
+      overflow: hidden;
+      color: #181818;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.2;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .platform-contract-grid {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+    }
+
+    .platform-stage-badge {
+      min-width: 62px;
+      padding: 8px 12px;
+      border: 1.9px solid #d8d8d8;
+      border-radius: 999px;
+      background: transparent;
+      color: #181818;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      font-size: 12px;
+      font-weight: 560;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .platform-stage-badge.is-active {
+      border-color: #77c58a;
+      color: #3f7a4e;
+    }
+
+    .platform-stage-badge.is-scheduled {
+      border-color: #7fb5e8;
+      color: #416f9b;
+    }
+
+    .platform-stage-badge.is-closed {
+      border-color: #b8b8b8;
+      color: #686868;
+    }
+
+    .platform-contract-item {
+      min-width: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #4f535a;
+      font-size: 12px;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .platform-contract-item span {
+      color: #7a7e85;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .platform-contract-item strong {
+      overflow: hidden;
+      color: #2f3338;
+      display: inline-block;
+      max-width: 320px;
+      font-size: 12px;
+      font-weight: 540;
+      text-overflow: ellipsis;
+    }
+
+    .platform-metric-grid {
+      border-top: 0.5px solid #eeeeea;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .platform-metric-item {
+      min-width: 0;
+      padding: 18px 20px;
+      border-left: 0.5px solid #eeeeea;
+    }
+
+    .platform-metric-item:first-child {
+      border-left: 0;
+    }
+
+    .platform-metric-item span {
+      margin-bottom: 8px;
+      color: #7a7e85;
+      display: block;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .platform-metric-item strong {
+      color: #171717;
+      display: block;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1.15;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .settlement-pane-head {
+      padding: 13px 20px 12px;
+      border-top: 0.5px solid var(--dist-line);
+      border-bottom: 0.5px solid var(--dist-line);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .settlement-pane-title {
+      color: #181818;
+      font-size: 13.5px;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .settlement-pane-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .settlement-pane-button {
+      min-width: 82px;
+      height: 34px;
+      padding: 0 15px;
+      border: 0.5px solid #d4d2cb;
+      border-radius: 999px;
+      background: #fff;
+      color: #737780;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 500;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .settlement-pane-button.is-active {
+      border-color: #1d1d1f;
+      background: #1d1d1f;
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+      font-weight: 600;
+    }
+
+    .settlement-table-wrap {
+      overflow-x: auto;
+      background: #fff;
+    }
+
+    .settlement-record-table {
+      min-width: 1380px;
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .settlement-record-table th,
+    .settlement-record-table td {
+      padding: 11px 12px;
+      border-bottom: 0.5px solid var(--dist-line);
+      color: #171717;
+      font-size: 12px;
+      text-align: right;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .settlement-record-table thead th {
+      background: #fff;
+      color: #737780;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .settlement-record-table .group-row th {
+      padding: 8px 6px 0;
+      border-bottom: 0;
+      background: #fff;
+      text-align: center;
+    }
+
+    .settlement-record-table tbody td {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 13px;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .settlement-record-table td:first-child,
+    .settlement-record-table th:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background: #fff;
+      box-shadow: inset -0.5px 0 0 var(--dist-line);
+    }
+
+    .settlement-record-table thead th:first-child {
+      z-index: 2;
+    }
+
+    .settlement-record-table td:first-child {
+      font-family: inherit;
+      font-weight: 600;
+      letter-spacing: -0.1px;
+    }
+
+    .settlement-record-table td.producer-pay {
+      font-weight: 700;
+    }
+
+    .table-group-label {
+      display: block;
+      padding: 7px 10px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .table-group-label.platform {
+      background: #faf6ee;
+      color: #a6813a;
+    }
+
+    .table-group-label.deduct {
+      background: #f3f6f8;
+      color: #72808a;
+    }
+
+    .table-group-label.settle {
+      background: #f2f7f5;
+      color: #5e8a7a;
+    }
+
+    .settlement-status {
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: rgb(39, 125, 31);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .settlement-status.is-upcoming {
+      background: #f1f1f1;
+      color: #6b6f76;
+    }
+
+    .settlement-table-label {
+      padding: 14px 20px 10px;
+      border-bottom: 0.5px dashed var(--dist-line);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .settlement-table-label span {
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgb(250, 250, 250);
+      color: #737780;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+
+    .rs-trend-panel {
+      padding: 14px 20px 20px;
+      background: #fff;
+    }
+
+    .rs-trend-box {
+      border: 0.5px solid var(--dist-line);
+      border-radius: 10px;
+      background: #fff;
+      overflow-x: auto;
+    }
+
+    .rs-trend-table {
+      min-width: 940px;
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .rs-trend-table th,
+    .rs-trend-table td {
+      padding: 9px 12px;
+      border-top: 0.5px solid var(--dist-line);
+      color: #171717;
+      font-size: 12px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .rs-trend-table thead th {
+      border-top: 0;
+      color: #737780;
+      font-weight: 500;
+    }
+
+    .rs-trend-table tbody th,
+    .rs-trend-table tfoot th {
+      padding-left: 14px;
+      color: #737780;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    .rs-trend-table td {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .rs-trend-table .is-selected {
+      background: #f2f3f4;
+    }
+
+    .detail-note {
+      margin-top: 28px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      background: rgb(250, 250, 250);
+      color: #737780;
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .detail-note-label {
+      height: 18px;
+      padding: 0 7px;
+      border: 0.5px solid #d7d7d2;
+      border-radius: 999px;
+      color: #9a9ea5;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 18px;
+      letter-spacing: 0.4px;
+    }
+
+    .detail-note strong {
+      color: #171717;
+      font-weight: 600;
+    }
+
+    @media (max-width: 920px) {
+      .distribution-detail-wrap {
+        width: calc(100vw - 32px);
+        padding: 20px 0 110px;
+      }
+
+      .detail-hero {
+        grid-template-columns: 112px minmax(0, 1fr);
+        gap: 16px;
+        padding: 0;
+      }
+
+      .detail-poster-original {
+        width: 112px;
+      }
+
+      .detail-title {
+        font-size: 20px;
+        white-space: normal;
+      }
+
+      .detail-title-row {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .detail-view-actions {
+        flex-wrap: wrap;
+      }
+
+      .detail-view-button {
+        height: 32px;
+      }
+
+      .hero-metric-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+    }
+
+    @media (max-width: 640px) {
+      .detail-hero {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-poster-original {
+        width: min(180px, 100%);
+      }
+
+      .platform-contract-item {
+        white-space: normal;
+      }
+
+      .platform-contract-item strong {
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="distribution-detail-chrome"></div>
+  <main class="distribution-detail-wrap" id="distributionDetailRoot"></main>
+
+  <script>
+    document.getElementById('distribution-detail-chrome').innerHTML =
+      window.ShortflowNav.renderTopNav('producer-dashboard') +
+      window.ShortflowNav.renderDashboardSubNav('distribution', 'producer');
+
+    const {
+      escapeHtml,
+      formatNumber,
+      sumPlatforms,
+      findRowById
+    } = window.ShortflowDistributionData;
+
+    const row = findRowById('0');
+    const totalViews = sumPlatforms(row, 'views');
+    const totalFollows = sumPlatforms(row, 'follows');
+    const totalLikes = sumPlatforms(row, 'likes');
+    let detailViewMode = 'performance';
+    const settlementPaneState = {};
+
+    const settlementTypes = ['flat', 'mgrs', 'rs', 'rs', 'mgrs'];
+    const rsMonthlyTemplate = [
+      ['2024-10', 210], ['2024-11', 290], ['2024-12', 340],
+      ['2025-01', 380], ['2025-02', 310], ['2025-03', 280],
+      ['2025-04', 360], ['2025-05', 370], ['2025-06', 390],
+      ['2025-07', 420], ['2025-08', 450], ['2025-09', 430],
+      ['2025-10', 470], ['2025-11', 500], ['2025-12', 520],
+      ['2026-01', 540], ['2026-02', 560], ['2026-03', 590],
+      ['2026-04', 610], ['2026-05', 630], ['2026-06', 650]
+    ];
+
+    function makeSettlementRecord(period, seed, options = {}) {
+      const platformPay = options.platformPay ?? 5600 + seed * 620;
+      const whtRate = options.whtRate ?? (seed % 2 ? 16.5 : 10);
+      const wht = Math.round(platformPay * (whtRate / 100) * 100) / 100;
+      const wireFee = 35;
+      const fxRate = options.fxRate ?? (1380 + seed * 11);
+      const fxFee = options.fxFee ?? (6000 + seed * 1000);
+      const krwIn = Math.round((platformPay - wht - wireFee) * fxRate - fxFee);
+      const bableRate = 20;
+      const bableFee = Math.round(krwIn * (bableRate / 100));
+      return {
+        period,
+        platformPay,
+        contractAmount: options.contractAmount ?? null,
+        whtRate,
+        wht,
+        wireFee,
+        fxRate,
+        fxFee,
+        krwIn,
+        bableRate,
+        bableFee,
+        producerPay: krwIn - bableFee,
+        settleMonth: options.settleMonth || '2025-05',
+        status: options.status || 'paid'
+      };
+    }
+
+    const settlementPlatforms = row.platformDetails.map((platform, index) => {
+      const type = settlementTypes[index % settlementTypes.length];
+      const base = {
+        ...platform,
+        id: `settlement-${index}`,
+        type,
+        exclusive: platform.contractType === '독점',
+        region: platform.rightsRegion,
+        releaseDate: String(platform.periodStart).replace(/\./g, '-'),
+        expiryDate: String(platform.periodEnd).replace(/\./g, '-'),
+        rsRate: type === 'flat' ? null : 22 + index * 2
+      };
+
+      if (type === 'flat') {
+        return {
+          ...base,
+          rows: [
+            makeSettlementRecord('2025-04', index + 1, { contractAmount: 9200 + index * 500, platformPay: 9200 + index * 500 })
+          ]
+        };
+      }
+
+      if (type === 'mgrs') {
+        return {
+          ...base,
+          rsMonthly: rsMonthlyTemplate.map(([month, amount]) => ({ month, amount: amount + index * 35 })),
+          mgRows: [
+            makeSettlementRecord('2025-04', index + 2, { contractAmount: 7600 + index * 600, platformPay: 7600 + index * 600 })
+          ],
+          rsRows: [
+            makeSettlementRecord('2024-Q4', index + 3, { platformPay: 840 + index * 80, settleMonth: '2025-02' }),
+            makeSettlementRecord('2025-Q1', index + 4, { platformPay: 970 + index * 90, settleMonth: '2025-05' }),
+            makeSettlementRecord('2025-Q2', index + 5, { platformPay: 1120 + index * 100, settleMonth: '2025-08', status: 'upcoming' })
+          ]
+        };
+      }
+
+      return {
+        ...base,
+        rsMonthly: rsMonthlyTemplate.map(([month, amount]) => ({ month, amount: amount + index * 28 })),
+        rsRows: [
+          makeSettlementRecord('2024-Q4', index + 6, { platformPay: 320 + index * 70, settleMonth: '2025-02' }),
+          makeSettlementRecord('2025-Q1', index + 7, { platformPay: 480 + index * 75, settleMonth: '2025-05' }),
+          makeSettlementRecord('2025-Q2', index + 8, { platformPay: 540 + index * 85, settleMonth: '2025-08', status: 'upcoming' })
+        ]
+      };
+    });
+
+    function formatSettlementMoney(value) {
+      if (value == null) return '—';
+      return `₩${Number(value || 0).toLocaleString('ko-KR')}`;
+    }
+
+    function settlementTotals() {
+      return settlementPlatforms.reduce((totals, platform) => {
+        const records = settlementRecordsFor(platform);
+        records.forEach(record => {
+          totals.platformPay += record.platformPay || 0;
+          totals.krwIn += record.krwIn || 0;
+          totals.bableFee += record.bableFee || 0;
+          totals.producerPay += record.producerPay || 0;
+        });
+        return totals;
+      }, { platformPay: 0, krwIn: 0, bableFee: 0, producerPay: 0 });
+    }
+
+    function renderHeroMetric(label, value) {
+      return `
+        <div class="hero-metric-item">
+          <span>${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
+        </div>
+      `;
+    }
+
+    function renderViewActions() {
+      return `
+        <div class="detail-view-actions" aria-label="상세 보기 전환">
+          <button class="detail-view-button ${detailViewMode === 'performance' ? 'is-active' : ''}" type="button" data-detail-view="performance">퍼포먼스 보기</button>
+          <button class="detail-view-button ${detailViewMode === 'settlement' ? 'is-active' : ''}" type="button" data-detail-view="settlement">정산 상세보기</button>
+        </div>
+      `;
+    }
+
+    function renderHeroSummary() {
+      if (detailViewMode === 'settlement') {
+        const totals = settlementTotals();
+        return `
+          <div class="hero-summary">
+            <div class="hero-eyebrow">정산 데이터</div>
+            <div class="hero-metric-grid" aria-label="정산 데이터 요약">
+              ${renderHeroMetric('계약 플랫폼', `${formatNumber(row.platforms.length)}개`)}
+              ${renderHeroMetric('실입금액', formatSettlementMoney(totals.krwIn))}
+              ${renderHeroMetric('Bable 수수료', formatSettlementMoney(totals.bableFee))}
+              ${renderHeroMetric('제작사 정산액', formatSettlementMoney(totals.producerPay))}
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="hero-summary">
+          <div class="hero-eyebrow">플랫폼 합산 누적</div>
+          <div class="hero-metric-grid" aria-label="배급 성과 요약">
+            ${renderHeroMetric('계약 플랫폼', `${formatNumber(row.platforms.length)}개`)}
+            ${renderHeroMetric('조회수', formatNumber(totalViews))}
+            ${renderHeroMetric('팔로우수', formatNumber(totalFollows))}
+            ${renderHeroMetric('좋아요수', formatNumber(totalLikes))}
+          </div>
+        </div>
+      `;
+    }
+
+    const platformStageMeta = {
+      scheduled: { label: '예정', className: 'is-scheduled' },
+      active: { label: '유통중', className: 'is-active' },
+      closed: { label: '종료', className: 'is-closed' }
+    };
+
+    function renderPlatformContract(label, value) {
+      return `
+        <span class="platform-contract-item">
+          <span>${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
+        </span>
+      `;
+    }
+
+    function renderPlatformMetric(label, value) {
+      return `
+        <div class="platform-metric-item">
+          <span>${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
+        </div>
+      `;
+    }
+
+    function renderPlatformCards() {
+      return row.platformDetails.map(platform => `
+        <article class="platform-card">
+          <div class="platform-card-head">
+            <div class="platform-head-copy">
+              <div class="platform-name">${escapeHtml(platform.name)}</div>
+              <div class="platform-contract-grid">
+                ${renderPlatformContract('계약구분', platform.contractType)}
+                ${renderPlatformContract('유통권역', platform.rightsRegion)}
+                ${renderPlatformContract('기간', `${platform.periodStart} - ${platform.periodEnd}`)}
+              </div>
+            </div>
+            ${renderPlatformStageBadge(platform.stage)}
+          </div>
+          <div class="platform-metric-grid">
+            ${renderPlatformMetric('조회수', formatNumber(platform.views))}
+            ${renderPlatformMetric('팔로우수', formatNumber(platform.follows))}
+            ${renderPlatformMetric('좋아요', formatNumber(platform.likes))}
+          </div>
+        </article>
+      `).join('');
+    }
+
+    const contractLabel = {
+      flat: 'Flat Fee',
+      rs: 'RS',
+      mgrs: 'MG + RS'
+    };
+
+    const settlementColumns = [
+      { key: 'period', label: '발생월', group: 'platform' },
+      { key: 'platformPay', label: '플랫폼 지급액', group: 'platform', type: 'usd' },
+      { key: 'contractAmount', label: '계약 금액', group: 'platform', type: 'usd' },
+      { key: 'whtRate', label: '원천세 비율', group: 'deduct', type: 'pct' },
+      { key: 'wht', label: '원천세 금액', group: 'deduct', type: 'usd' },
+      { key: 'wireFee', label: '송금 수수료', group: 'deduct', type: 'usd' },
+      { key: 'fxRate', label: '환율', group: 'deduct', type: 'fx' },
+      { key: 'fxFee', label: '환전 수수료', group: 'deduct', type: 'krw' },
+      { key: 'krwIn', label: '실제 입금액', group: 'deduct', type: 'krw' },
+      { key: 'bableRate', label: 'Bable 수수료율', group: 'settle', type: 'pct' },
+      { key: 'bableFee', label: 'Bable 수수료 금액', group: 'settle', type: 'krw' },
+      { key: 'producerPay', label: '제작사 정산액', group: 'settle', type: 'krw', emphasis: true },
+      { key: 'settleMonth', label: '정산 월', group: 'settle' },
+      { key: 'status', label: '정산 상태', group: 'settle' }
+    ];
+
+    function settlementRecordsFor(platform) {
+      if (platform.type === 'flat') return platform.rows || [];
+      if (platform.type === 'mgrs') return [...(platform.mgRows || []), ...(platform.rsRows || [])];
+      return platform.rsRows || [];
+    }
+
+    function formatUsd(value) {
+      if (value == null || value === '') return '—';
+      return `$${Number(value).toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+    }
+
+    function formatPct(value) {
+      return value == null || value === '' ? '—' : `${value}%`;
+    }
+
+    function formatFx(value) {
+      return value == null || value === '' ? '—' : `₩${Number(value).toLocaleString('ko-KR')}`;
+    }
+
+    function formatSettlementCell(column, value) {
+      if (value == null || value === '') return '—';
+      if (column.type === 'usd') return formatUsd(value);
+      if (column.type === 'krw') return formatSettlementMoney(value);
+      if (column.type === 'pct') return formatPct(value);
+      if (column.type === 'fx') return formatFx(value);
+      return escapeHtml(value);
+    }
+
+    function renderSettlementStatus(status) {
+      const completed = status !== 'upcoming';
+      return `<span class="settlement-status ${completed ? '' : 'is-upcoming'}">${completed ? '완료' : '예정'}</span>`;
+    }
+
+    function periodSortValue(period) {
+      const quarter = String(period).match(/^(\d{4})-Q([1-4])$/);
+      if (quarter) return Number(quarter[1]) * 12 + Number(quarter[2]) * 3;
+      const month = String(period).match(/^(\d{4})-(\d{2})$/);
+      if (month) return Number(month[1]) * 12 + Number(month[2]);
+      return 0;
+    }
+
+    function renderSettlementTable(records, periodLabel = '발생월') {
+      const rows = [...records].sort((a, b) => periodSortValue(b.period) - periodSortValue(a.period));
+      return `
+        <div class="settlement-table-wrap">
+          <table class="settlement-record-table">
+            <thead>
+              <tr class="group-row">
+                <th colspan="3"><span class="table-group-label platform">플랫폼 지급</span></th>
+                <th colspan="6"><span class="table-group-label deduct">공제내역</span></th>
+                <th colspan="5"><span class="table-group-label settle">정산</span></th>
+              </tr>
+              <tr>
+                ${settlementColumns.map(column => `<th>${escapeHtml(column.key === 'period' ? periodLabel : column.label)}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map(record => `
+                <tr>
+                  ${settlementColumns.map(column => `
+                    <td class="${column.emphasis ? 'producer-pay' : ''}">
+                      ${column.key === 'status' ? renderSettlementStatus(record[column.key]) : formatSettlementCell(column, record[column.key])}
+                    </td>
+                  `).join('')}
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderTableLabel(label) {
+      return `<div class="settlement-table-label"><span>${escapeHtml(label)}</span></div>`;
+    }
+
+    function renderPaneHeader(platform, pane) {
+      const hasRsTrend = platform.type === 'rs' || platform.type === 'mgrs';
+      return `
+        <div class="settlement-pane-head">
+          <div class="settlement-pane-title">${pane === 'rs' ? '월별 RS 수익' : '정산 상세'}</div>
+          ${hasRsTrend ? `
+            <div class="settlement-pane-actions">
+              <button class="settlement-pane-button ${pane === 'records' ? 'is-active' : ''}" type="button" data-settlement-pane="records" data-platform-index="${platform.index}">거래 기록</button>
+              <button class="settlement-pane-button ${pane === 'rs' ? 'is-active' : ''}" type="button" data-settlement-pane="rs" data-platform-index="${platform.index}">RS 추이</button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    function renderRSTrendPanel(platform) {
+      const rows = platform.rsMonthly || [];
+      const years = Array.from(new Set(rows.map(item => item.month.slice(0, 4)))).sort().reverse();
+      const months = Array.from({ length: 12 }, (_, index) => ({
+        key: String(index + 1).padStart(2, '0'),
+        label: `${index + 1}월`
+      }));
+      const amountByMonth = new Map(rows.map(item => [item.month, item.amount]));
+      const selectedYear = years[0] || '2025';
+      const yearlyTotal = year => months.reduce((sum, month) => {
+        const amount = amountByMonth.get(`${year}-${month.key}`);
+        return amount == null ? sum : sum + amount;
+      }, 0);
+      const grandTotal = years.reduce((sum, year) => sum + yearlyTotal(year), 0);
+      const formatRsAmount = value => value ? `$${Math.round(value).toLocaleString('en-US')}` : '-';
+
+      return `
+        <div class="rs-trend-panel">
+          <div class="rs-trend-box">
+            <table class="rs-trend-table">
+              <thead>
+                <tr>
+                  <th>연도</th>
+                  ${months.map(month => `<th>${escapeHtml(month.label)}</th>`).join('')}
+                  <th>총액</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${years.map(year => `
+                  <tr class="${year === selectedYear ? 'is-selected' : ''}">
+                    <th>${escapeHtml(year)}</th>
+                    ${months.map(month => `<td>${formatRsAmount(amountByMonth.get(`${year}-${month.key}`))}</td>`).join('')}
+                    <td><strong>${formatRsAmount(yearlyTotal(year))}</strong></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>총액</th>
+                  ${months.map(() => '<td></td>').join('')}
+                  <td><strong>${formatRsAmount(grandTotal)}</strong></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSettlementCards() {
+      return settlementPlatforms.map((platform, index) => {
+        const pane = settlementPaneState[index] || 'records';
+        const platformWithIndex = { ...platform, index };
+        const hasRsTrend = platform.type === 'rs' || platform.type === 'mgrs';
+        const recordsBody = platform.type === 'mgrs'
+          ? `
+            ${renderTableLabel('MG')}
+            ${renderSettlementTable(platform.mgRows || [], '발생월')}
+            ${renderTableLabel('RS')}
+            ${renderSettlementTable(platform.rsRows || [], '분기')}
+          `
+          : renderSettlementTable(platform.type === 'flat' ? (platform.rows || []) : (platform.rsRows || []), platform.type === 'rs' ? '분기' : '발생월');
+
+        return `
+        <article class="platform-card">
+          <div class="platform-card-head">
+            <div class="platform-head-copy">
+              <div class="platform-name">${escapeHtml(platform.name)}</div>
+              <div class="platform-contract-grid">
+                ${renderPlatformContract('계약구분', platform.exclusive ? '독점' : '비독점')}
+                ${renderPlatformContract('계약형태', contractLabel[platform.type])}
+                ${renderPlatformContract('유통권역', platform.region)}
+                ${renderPlatformContract('기간', `${platform.releaseDate} - ${platform.expiryDate}`)}
+                ${platform.rsRate ? renderPlatformContract('RS 비율', `${platform.rsRate}%`) : ''}
+              </div>
+            </div>
+            ${renderPlatformStageBadge(platform.stage)}
+          </div>
+          ${renderPaneHeader(platformWithIndex, pane)}
+          ${hasRsTrend && pane === 'rs' ? renderRSTrendPanel(platform) : recordsBody}
+        </article>
+      `;
+      }).join('');
+    }
+
+    function renderDetailContent() {
+      const isSettlement = detailViewMode === 'settlement';
+      return `
+        <a class="detail-back" href="distribution-status.html" aria-label="뒤로가기"><span class="detail-back-mark">‹</span> 뒤로가기</a>
+
+        <section class="detail-hero">
+          <img class="detail-poster-original" src="${escapeHtml(row.poster)}" alt="">
+          <div class="detail-copy">
+            <div class="detail-title-row">
+              <h1 class="detail-title">${escapeHtml(row.title)}</h1>
+              ${renderViewActions()}
+            </div>
+            ${renderHeroSummary()}
+          </div>
+        </section>
+
+        <section class="platform-panel">
+            <div class="panel-head">
+              <h2 class="panel-title">${escapeHtml(row.platforms.length)}개 플랫폼 ${isSettlement ? '정산 데이터' : '연동'}</h2>
+            </div>
+            <div class="platform-card-grid">${isSettlement ? renderSettlementCards() : renderPlatformCards()}</div>
+            <div class="detail-note">
+              <span class="detail-note-label">NOTE</span>
+              <div>${isSettlement
+                ? '정산 금액은 플랫폼별 입력값 기준이며 입력되지 않은 항목은 -로 나타냅니다.'
+                : '모든 수치는 출시 이후 <strong>누적값</strong>이며 시점별 추이는 제공되지 않습니다. 입력되지 않은 항목은 -로 나타냅니다.'}</div>
+            </div>
+        </section>
+      `;
+    }
+
+    function renderPlatformStageBadge(stage) {
+      const meta = platformStageMeta[stage] || platformStageMeta.active;
+      return `<span class="platform-stage-badge ${meta.className}">${escapeHtml(meta.label)}</span>`;
+    }
+
+    function renderPage() {
+      document.getElementById('distributionDetailRoot').innerHTML = renderDetailContent();
+    }
+
+    document.addEventListener('click', event => {
+      const paneButton = event.target.closest('[data-settlement-pane]');
+      if (paneButton) {
+        settlementPaneState[paneButton.dataset.platformIndex] =
+          paneButton.dataset.settlementPane === 'rs' ? 'rs' : 'records';
+        renderPage();
+        return;
+      }
+
+      const button = event.target.closest('[data-detail-view]');
+      if (!button) return;
+      detailViewMode = button.dataset.detailView === 'settlement' ? 'settlement' : 'performance';
+      renderPage();
+    });
+
+    renderPage();
+  </script>
+</body>
+</html>
