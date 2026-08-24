@@ -1834,15 +1834,47 @@ td { padding: 9px 12px; vertical-align: middle; }
 
 /* ── TIMELINE ── */
 .tl { display: flex; flex-direction: column; }
-.tl-item { display: flex; gap: 10px; padding: 7px 0; position: relative; }
-.tl-item:not(:last-child)::after { content: ''; position: absolute; left: 5px; top: 19px; bottom: -6px; width: 0.5px; background: rgb(242, 242, 242); }
-.tl-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; border: 2px solid rgb(242, 242, 242); }
+.tl-item { display: grid; grid-template-columns: 13px minmax(0, 1fr); align-items: flex-start; column-gap: 12px; padding: 8px 0; position: relative; }
+.tl-item:not(:last-child)::after { content: ''; position: absolute; left: 6px; top: 16px; bottom: -11px; width: 0.5px; background: rgb(242, 242, 242); }
+.tl-dot { position: relative; z-index: 1; width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; border: 2px solid rgb(242, 242, 242); }
 .tl-dot.blue  { background: #378ADD; }
 .tl-dot.green { background: #639922; }
 .tl-dot.red   { background: #E24B4A; }
 .tl-dot.gray  { background: #ccc; }
-.tl-text { font-size: 12px; color: #333; }
-.tl-time { font-size: 10.5px; color: #bbb; margin-top: 1px; }
+.tl-dot.orange { background: #e85d2c; }
+.tl-copy {
+  min-width: 0;
+  margin-top: -3px;
+  padding: 10px 42px 10px 12px;
+  border-radius: 8px;
+  background: #f7f7f7;
+  position: relative;
+}
+.tl-text { font-size: 13px; color: #333; }
+.tl-time { font-size: 11.5px; color: #bbb; margin-top: 2px; }
+.tl-delete {
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #b4b4b4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+.tl-delete:hover {
+  background: #fff1ec;
+  color: #e85d2c;
+}
+.tl-delete i {
+  font-size: 16px;
+}
 
 /* ── MAIL ROWS ── */
 .mrow { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 9px 10px; font-size: 12px; border: 0.5px solid #eeeeea; border-radius: 7px; background: #fff; }
@@ -1866,6 +1898,17 @@ td { padding: 9px 12px; vertical-align: middle; }
 .extra-panel-body .tl-item:first-child { padding-top: 0; }
 .extra-panel-body .tl-item:last-child { padding-bottom: 0; }
 .extra-empty { font-size: 12px; color: #bbb; padding: 4px 0; }
+.timeline-panel {
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+}
+.timeline-panel .extra-panel-head {
+  display: none;
+}
+.timeline-panel .extra-panel-body {
+  padding: 14px 18px 0;
+}
 .operation-settings-body { display: grid; grid-template-columns: 1fr; gap: 10px; padding-top: 0; padding-bottom: 0; }
 .operation-setting-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 72px; padding: 14px 16px; border: 0.5px solid #eeeeea; border-radius: 8px; background: #fff; }
 .operation-setting-copy { min-width: 0; }
@@ -2552,6 +2595,26 @@ td { padding: 9px 12px; vertical-align: middle; }
   padding: 0 14px;
   flex-shrink: 0;
   overflow-x: auto;
+  overflow-y: hidden;
+  position: relative;
+  z-index: 3;
+}
+.content-split #dp-detail .dtabbar {
+  scrollbar-width: thin;
+  scrollbar-color: #d6d6d6 transparent;
+}
+.content-split #dp-detail .dtabbar::-webkit-scrollbar {
+  height: 3px;
+}
+.content-split #dp-detail .dtabbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.content-split #dp-detail .dtabbar::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #d6d6d6;
+}
+.content-split #dp-detail .dtabbar::-webkit-scrollbar-thumb:hover {
+  background: #c4c4c4;
 }
 .content-split #dp-detail .dtab,
 .content-split #plan-detail .dtab {
@@ -4001,6 +4064,7 @@ td { padding: 9px 12px; vertical-align: middle; }
             <div class="dtab" onclick="switchDTab(this,'tab-release')">릴리즈</div>
             <div class="dtab" onclick="switchDTab(this,'tab-operation')">운영 설정</div>
             <div class="dtab" onclick="switchDTab(this,'tab-extra')">부가 정보</div>
+            <div class="dtab" onclick="switchDTab(this,'tab-timeline')">타임라인</div>
           </div>
 
           <div class="dbody">
@@ -4375,19 +4439,23 @@ td { padding: 9px 12px; vertical-align: middle; }
                 </div>
                 <div class="extra-panel">
                   <div class="extra-panel-head">
-                    <div class="extra-panel-title"><i class="ti ti-timeline"></i> 등록 이력</div>
-                    <div class="extra-panel-count" id="extra-timeline-count"></div>
-                  </div>
-                  <div class="extra-panel-body">
-                    <div class="tl" id="extra-timeline"></div>
-                  </div>
-                </div>
-                <div class="extra-panel">
-                  <div class="extra-panel-head">
                     <div class="extra-panel-title"><i class="ti ti-mail-forward"></i> 제안 메일 발송 이력</div>
                     <div class="extra-panel-count" id="extra-mail-count"></div>
                   </div>
                   <div class="extra-panel-body" id="extra-mails"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── 탭: 타임라인 ── -->
+            <div class="dpanel" id="tab-timeline">
+              <div class="extra-panel timeline-panel">
+                <div class="extra-panel-head">
+                  <div class="extra-panel-title"><i class="ti ti-timeline"></i> 타임라인</div>
+                  <div class="extra-panel-count" id="extra-timeline-count"></div>
+                </div>
+                <div class="extra-panel-body">
+                  <div class="tl" id="extra-timeline"></div>
                 </div>
               </div>
             </div>
@@ -5096,6 +5164,7 @@ const contentTabLabels = {
   'tab-release': { key: 'release', label: '릴리즈' },
   'tab-operation': { key: 'operation', label: '운영 설정' },
   'tab-extra': { key: 'extra', label: '부가 정보' },
+  'tab-timeline': { key: 'timeline', label: '타임라인' },
 };
 const planDetailTabLabels = {
   'plan-detail-info': '기본 정보',
@@ -5647,17 +5716,43 @@ function renderExtraInfo(c) {
     ? `<div class="bookmark-grid">${c.bookmarks.map(p=>`<div class="brow"><span class="bplatform">${p}</span></div>`).join('')}</div>`
     : '<div class="extra-empty">북마크 없음</div>';
 
-  document.getElementById('extra-timeline-count').textContent = `${c.timeline.length}건`;
-  tl.innerHTML = c.timeline.map(t=>`
+  const timelineCount = document.getElementById('extra-timeline-count');
+  if (timelineCount) timelineCount.textContent = `${c.timeline.length}건`;
+  tl.innerHTML = c.timeline.map((t, index)=>`
     <div class="tl-item">
-      <div class="tl-dot ${t.dot}"></div>
-      <div><div class="tl-text">${t.text}</div><div class="tl-time">${t.time}</div></div>
+      <div class="tl-dot ${index === 0 ? 'orange' : 'gray'}"></div>
+      <div class="tl-copy">
+        <div class="tl-text">${t.text}</div>
+        <div class="tl-time">${t.time}</div>
+        <button class="tl-delete" type="button" onclick="requestDeleteTimelineEvent(${index})" aria-label="타임라인 이벤트 삭제"><i class="ti ti-trash"></i></button>
+      </div>
     </div>`).join('');
 
   document.getElementById('extra-mail-count').textContent = `${c.mails.length}건`;
   ml.innerHTML = c.mails.length
     ? c.mails.map(m=>{const[p,d]=m.split(' — ');return`<div class="mrow"><span class="mplatform">${p}</span><span class="mdate">${d}</span></div>`;}).join('')
     : '<div class="extra-empty">발송 이력 없음</div>';
+}
+
+function requestDeleteTimelineEvent(index) {
+  const c = contents.find(item => item.id === selId);
+  if (!c || !c.timeline[index]) return;
+  openAdminConfirm({
+    title: '타임라인 이벤트를 삭제할까요?',
+    message: '삭제한 이벤트는 타임라인에서 제거됩니다.',
+    onConfirm: () => confirmDeleteTimelineEvent(index),
+  });
+}
+
+function confirmDeleteTimelineEvent(index) {
+  const c = contents.find(item => item.id === selId);
+  if (!c || !c.timeline[index]) {
+    closeAdminConfirm();
+    return;
+  }
+  c.timeline.splice(index, 1);
+  renderExtraInfo(c);
+  closeAdminConfirm();
 }
 
 function renderContentOperations(c) {
@@ -7439,7 +7534,7 @@ function syncContentSavebar(panelId) {
   const action = document.getElementById('content-save-action');
   const deleteAction = document.getElementById('content-delete-action');
   const tab = contentTabLabels[activePanelId] || contentTabLabels['tab-basic'];
-  detail.classList.toggle('no-savebar', activePanelId === 'tab-release' || activePanelId === 'tab-extra' || activePanelId === 'tab-operation');
+  detail.classList.toggle('no-savebar', activePanelId === 'tab-release' || activePanelId === 'tab-extra' || activePanelId === 'tab-operation' || activePanelId === 'tab-timeline');
   if (action) {
     action.textContent = `${tab.label} 저장`;
   }
