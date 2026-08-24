@@ -310,51 +310,113 @@
       position: fixed;
       inset: 0;
       z-index: 20060;
-      padding: 24px;
-      background: rgba(17, 24, 39, 0.38);
-      display: none;
-      align-items: center;
-      justify-content: center;
+      background: transparent;
+      display: block;
+      pointer-events: none;
+      visibility: hidden;
     }
 
     .producer-workflow-modal-backdrop.show {
-      display: flex;
+      visibility: visible;
     }
 
     .producer-workflow-modal {
-      width: min(480px, 100%);
-      max-height: min(720px, calc(100vh - 48px));
-      border: 1px solid rgba(255, 255, 255, 0.72);
-      border-radius: 14px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: min(420px, calc(100vw - 24px));
+      height: 100vh;
+      max-height: none;
+      border: 0;
+      border-left: 1px solid #eceef2;
+      border-radius: 0;
       background: #fff;
-      box-shadow: 0 24px 70px rgba(15, 23, 42, 0.22);
+      box-shadow: -10px 0 28px rgba(15, 23, 42, 0.07);
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      pointer-events: auto;
+      transform: translateX(100%);
+      transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .producer-workflow-modal-backdrop.show .producer-workflow-modal {
+      transform: translateX(0);
     }
 
     .producer-workflow-modal-head {
-      min-height: 62px;
-      padding: 16px 18px 14px 22px;
+      min-height: 86px;
+      padding: 17px 18px 16px 22px;
       border-bottom: 1px solid #f0eee9;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 18px;
+    }
+
+    .producer-workflow-head-copy {
+      transform: translateY(6px);
     }
 
     .producer-workflow-modal-title {
       margin: 0;
       color: #181818;
-      font-size: 18px;
+      font-size: 19px;
       font-weight: 700;
       letter-spacing: -0.2px;
-      line-height: 32px;
+      line-height: 1.2;
+    }
+
+    .producer-workflow-title-row {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      line-height: 1.2;
     }
 
     .producer-workflow-modal-sub {
-      display: none;
+      margin: 0 0 5px;
+      color: #8a8e96;
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.35;
     }
+
+    .producer-workflow-context-title {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .producer-workflow-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 23px;
+      padding: 0 9px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      background: #f7f7f5;
+      color: var(--ink);
+      flex: 0 0 auto;
+      font-size: 11px;
+      font-weight: 750;
+      transform: translateY(-1px);
+    }
+
+    .status-approved .producer-workflow-status-badge,
+    .producer-workflow-status-badge.status-approved {
+      border-color: #4fa765;
+      background: #fff;
+      color: #176935;
+    }
+    .status-review .producer-workflow-status-badge,
+    .producer-workflow-status-badge.status-review { color: #9a6a0f; }
+    .status-draft .producer-workflow-status-badge,
+    .producer-workflow-status-badge.status-draft { color: #6f7680; }
 
     .producer-workflow-modal-close {
       width: 32px;
@@ -383,27 +445,27 @@
     }
 
     .producer-workflow-modal-body {
-      padding: 20px 22px 22px;
+      padding: 22px 24px 24px;
       overflow-y: auto;
     }
 
     .producer-workflow-list {
       margin: 0;
-      padding: 0;
+      padding: 2px 0 0 2px;
       list-style: none;
     }
 
     .producer-workflow-item {
       position: relative;
-      min-height: 67px;
-      padding: 0 0 0 28px;
+      min-height: 70px;
+      padding: 0 0 0 30px;
     }
 
     .producer-workflow-item::before {
       content: "";
       position: absolute;
       left: 4px;
-      top: 4px;
+      top: 8px;
       bottom: -4px;
       width: 1px;
       background: #d8dbe0;
@@ -532,12 +594,15 @@
     document.getElementById('contentManageSubNav').outerHTML = window.ShortflowNav.renderContentManageSubNav('collaboration-plans');
   </script>
   <main class="main producer-collaboration-main" id="producerCollaborationRoot" aria-label="제작협업 기획안"></main>
-  <div class="producer-workflow-modal-backdrop" id="producerWorkflowModal" role="dialog" aria-modal="true" aria-labelledby="producerWorkflowTitle">
+  <div class="producer-workflow-modal-backdrop" id="producerWorkflowModal" role="dialog" aria-modal="false" aria-hidden="true" aria-labelledby="producerWorkflowTitle">
     <section class="producer-workflow-modal">
       <div class="producer-workflow-modal-head">
-        <div>
-          <h2 class="producer-workflow-modal-title" id="producerWorkflowTitle">기획안 워크플로우</h2>
-          <p class="producer-workflow-modal-sub" id="producerWorkflowSub">기획안 트랙 진행 이벤트</p>
+        <div class="producer-workflow-head-copy">
+          <p class="producer-workflow-modal-sub" id="producerWorkflowSub">워크플로우</p>
+          <div class="producer-workflow-title-row">
+            <h2 class="producer-workflow-modal-title" id="producerWorkflowTitle">기획안 워크플로우</h2>
+            <span class="producer-workflow-status-badge" id="producerWorkflowStatus"><span class="producer-collab-dot"></span>승인됨</span>
+          </div>
         </div>
         <button class="producer-workflow-modal-close" type="button" id="producerWorkflowClose" aria-label="닫기">
           <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
@@ -553,6 +618,7 @@
     const producerWorkflowModal = document.getElementById('producerWorkflowModal');
     const producerWorkflowTitle = document.getElementById('producerWorkflowTitle');
     const producerWorkflowSub = document.getElementById('producerWorkflowSub');
+    const producerWorkflowStatus = document.getElementById('producerWorkflowStatus');
     const producerWorkflowList = document.getElementById('producerWorkflowList');
     const producerWorkflowClose = document.getElementById('producerWorkflowClose');
 
@@ -688,7 +754,10 @@
 
       function openWorkflowModal(item) {
         producerWorkflowTitle.textContent = item.title;
-        producerWorkflowSub.textContent = '';
+        producerWorkflowSub.className = `producer-workflow-modal-sub status-${item.status}`;
+        producerWorkflowSub.textContent = '워크플로우';
+        producerWorkflowStatus.className = `producer-workflow-status-badge status-${item.status}`;
+        producerWorkflowStatus.innerHTML = `<span class="producer-collab-dot"></span>${escapeAttr(item.statusLabel)}`;
         producerWorkflowList.innerHTML = workflowEventsFor(item).map(event => {
           const meta = workflowEventMeta[event.type] || { trigger: '' };
           return `
@@ -702,12 +771,12 @@
           `;
         }).join('');
         producerWorkflowModal.classList.add('show');
-        document.body.style.overflow = 'hidden';
+        producerWorkflowModal.setAttribute('aria-hidden', 'false');
       }
 
       function closeWorkflowModal() {
         producerWorkflowModal.classList.remove('show');
-        document.body.style.overflow = '';
+        producerWorkflowModal.setAttribute('aria-hidden', 'true');
       }
 
       function renderProducerPlans() {
@@ -749,6 +818,9 @@
       });
 
       document.addEventListener('click', event => {
+        const workflowButton = event.target.closest('.producer-collab-menu-item[data-menu-label="워크플로우 보기"]');
+        const workflowPanel = event.target.closest('.producer-workflow-modal');
+
         const detailButton = event.target.closest('.producer-collab-detail');
         if (detailButton) {
           const item = collaborationPlans.find(plan => plan.title === detailButton.dataset.title);
@@ -772,7 +844,6 @@
           document.querySelectorAll('.producer-collab-card.menu-open').forEach(item => item.classList.remove('menu-open'));
         }
 
-        const workflowButton = event.target.closest('.producer-collab-menu-item[data-menu-label="워크플로우 보기"]');
         if (workflowButton) {
           const item = collaborationPlans.find(plan => plan.title === workflowButton.dataset.title);
           if (item) {
@@ -781,12 +852,13 @@
           }
           return;
         }
+
+        if (producerWorkflowModal.classList.contains('show') && !workflowPanel) {
+          closeWorkflowModal();
+        }
       });
 
       producerWorkflowClose.addEventListener('click', closeWorkflowModal);
-      producerWorkflowModal.addEventListener('click', event => {
-        if (event.target === producerWorkflowModal) closeWorkflowModal();
-      });
       document.addEventListener('keydown', event => {
         if (event.key === 'Escape' && producerWorkflowModal.classList.contains('show')) {
           closeWorkflowModal();
