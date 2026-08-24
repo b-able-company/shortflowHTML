@@ -53,7 +53,7 @@ function installMyContentActions() {
     workflowButton.type = 'button';
     workflowButton.textContent = '워크플로우';
     workflowButton.addEventListener('click', function () {
-      window.location.href = 'producer-dashboard.html?tab=workflow';
+      window.location.href = 'workflow-version-detail.html?id=0&from=distribution-version';
     });
     actionbar.appendChild(title);
     actionbar.appendChild(status);
