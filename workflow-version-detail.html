@@ -128,9 +128,9 @@
 
     .detail-view-button {
       position: relative;
-      min-width: 104px;
-      height: 36px;
-      padding: 0 16px;
+      min-width: 110px;
+      height: 38px;
+      padding: 0 18px;
       border: 1px solid #f2f2f2;
       border-radius: 0;
       background: #f2f2f2;
@@ -139,7 +139,7 @@
       align-items: center;
       justify-content: center;
       font-family: inherit;
-      font-size: 11px;
+      font-size: 12.5px;
       font-weight: 550;
       line-height: 1;
       white-space: nowrap;
@@ -355,7 +355,7 @@
       padding: 0 8px;
       background: #fff;
       color: #181818;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 700;
       letter-spacing: 0;
       line-height: 1.2;
@@ -435,6 +435,23 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    .drive-loading-stars {
+      position: relative;
+      width: min(100%, 360px);
+      height: 180px;
+      border-radius: 14px;
+      background: transparent;
+      overflow: hidden;
+    }
+
+    .drive-loading-stars canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
     }
 
     .floppy-cat {
@@ -585,10 +602,19 @@
 
     .drive-loading-copy {
       margin: 0;
-      color: #6f747c;
-      font-size: 12.5px;
-      font-weight: 540;
+      color: #181818;
+      font-size: 15px;
+      font-weight: 650;
       line-height: 1.4;
+    }
+
+    .drive-loading-stars .drive-loading-copy {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
     }
 
     .drive-loading-copy span {
@@ -1529,6 +1555,7 @@
     let rsTrendCharts = [];
     let driveMaterialStatus = 'loading';
     let driveMaterialTimer = null;
+    let driveLoadingAnimationCleanup = null;
     const platformCollapseState = {
       performance: Object.fromEntries(row.platformDetails.map((_, index) => [index, false])),
       settlement: Object.fromEntries(row.platformDetails.map((_, index) => [index, true]))
@@ -2235,47 +2262,106 @@
     function renderDriveLoadingContent() {
       return `
         <div class="drive-loading-state" aria-live="polite">
-          <div class="drive-loading-cat" aria-hidden="true">
-            <svg class="floppy-cat" viewBox="0 0 180 72" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Loading">
-              <g class="trail">
-                <path class="trail-wave trail-wave-1" d="M4 18 H18 V14 H32 V18 H48 V14 H64 V18 H82 V22 H98 V42 H82 V46 H64 V50 H48 V46 H30 V50 H14 V46 H4 Z" />
-                <path class="trail-wave trail-wave-2" d="M4 26 H20 V22 H36 V26 H52 V22 H68 V26 H86 V30 H100 V46 H84 V50 H68 V54 H50 V50 H32 V54 H16 V50 H4 Z" />
-                <path class="trail-wave trail-wave-3" d="M4 34 H18 V30 H34 V34 H52 V30 H70 V34 H88 V38 H102 V50 H84 V54 H66 V58 H48 V54 H28 V58 H12 V54 H4 Z" />
-              </g>
-              <g class="cat-body">
-                <g class="floppy">
-                  <path fill="#9ca3af" d="M88 10 H132 V14 H138 V54 H88 Z" />
-                  <rect x="88" y="14" width="7" height="40" fill="#c8cdd5" />
-                  <rect x="101" y="14" width="27" height="16" fill="#4b505a" />
-                  <rect x="102" y="14" width="5" height="16" fill="#727986" />
-                  <rect x="128" y="14" width="7" height="18" fill="#6d737d" />
-                  <rect x="98" y="34" width="30" height="20" fill="#6b717b" />
-                  <rect x="102" y="37" width="22" height="4" fill="#353942" />
-                  <rect x="102" y="44" width="22" height="4" fill="#353942" />
-                  <rect x="102" y="51" width="22" height="3" fill="#353942" />
-                </g>
-                <g class="cat-head">
-                  <path fill="#ffffff" d="M124 22 V14 H130 V20 H134 V28 Z" />
-                  <path fill="#ffffff" d="M154 22 V16 H160 V14 H164 V28 Z" />
-                  <path fill="#ffffff" d="M122 25 H128 V21 H160 V25 H166 V48 H160 V54 H128 V50 H122 Z" />
-                  <rect x="133" y="32" width="5" height="5" fill="#282b31" />
-                  <rect x="153" y="32" width="5" height="5" fill="#282b31" />
-                  <rect x="140" y="42" width="12" height="3" fill="#343840" />
-                </g>
-                <g class="rear-legs">
-                  <rect x="93" y="53" width="6" height="8" fill="#eeeeee" />
-                  <rect x="104" y="53" width="6" height="8" fill="#eeeeee" />
-                </g>
-                <g class="front-legs">
-                  <rect x="138" y="52" width="6" height="9" fill="#ffffff" />
-                  <rect x="153" y="52" width="6" height="9" fill="#ffffff" />
-                </g>
-              </g>
-            </svg>
+          <div class="drive-loading-stars">
+            <canvas data-drive-loading-stars aria-hidden="true"></canvas>
+            <p class="drive-loading-copy">데이터 가져오는중 <span>.</span> <span>.</span> <span>.</span></p>
           </div>
-          <p class="drive-loading-copy">데이터 가져오는중 <span>.</span> <span>.</span> <span>.</span></p>
         </div>
       `;
+    }
+
+    function initDriveLoadingAnimation() {
+      const canvas = document.querySelector('[data-drive-loading-stars]');
+      if (!canvas) return;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      const colors = ['#e8a4b8', '#c89fd4', '#f4c97a', '#a8c8e8', '#e8c4a4'];
+      const star = [[0,-5],[0,-4],[0,-3],[0,-2],[0,2],[0,3],[0,4],[0,5],[-5,0],[-4,0],[-3,0],[-2,0],[2,0],[3,0],[4,0],[5,0],[-1,-1],[1,-1],[-1,1],[1,1]];
+      let width = 0;
+      let height = 0;
+      let tick = 0;
+      let animationFrame = null;
+      let stopped = false;
+
+      function rgba(hex, alpha) {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
+
+      function createPart(index, total) {
+        return {
+          x: Math.random(),
+          y: Math.random(),
+          size: 0.6 + Math.random() * 0.8,
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.4 + Math.random() * 0.7,
+          color: Math.floor(Math.random() * colors.length),
+          orbitRadius: 0.1 + Math.random() * 0.35,
+          orbitAngle: (index / total) * Math.PI * 2,
+          orbitSpeed: (0.0002 + Math.random() * 0.0004) * (Math.random() < 0.5 ? 1 : -1)
+        };
+      }
+
+      const partCount = 30;
+      const parts = Array.from({ length: partCount }, (_, index) => createPart(index, partCount));
+
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        width = Math.max(1, Math.round(rect.width * dpr));
+        height = Math.max(1, Math.round(rect.height * dpr));
+        canvas.width = width;
+        canvas.height = height;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function drawPart(part, time) {
+        const rect = canvas.getBoundingClientRect();
+        part.orbitAngle += part.orbitSpeed * 0.6 * 8;
+        part.x = 0.5 + Math.cos(part.orbitAngle) * part.orbitRadius * 1.2;
+        part.y = 0.5 + Math.sin(part.orbitAngle) * part.orbitRadius * 0.8;
+
+        const cx = part.x * rect.width;
+        const cy = part.y * rect.height;
+        const px = Math.max(1, Math.round(part.size * 2 * (rect.width / 360)));
+        const pulse = 0.5 + 0.5 * Math.abs(Math.sin(time * 0.0018 * part.speed + part.phase));
+        const alpha = 0.25 + 0.62 * pulse;
+        const color = colors[part.color % colors.length];
+
+        for (const point of star) {
+          ctx.fillStyle = rgba(color, alpha);
+          ctx.fillRect(Math.round(cx + point[0] * px), Math.round(cy + point[1] * px), px, px);
+        }
+
+        ctx.fillStyle = rgba(color, Math.min(1, alpha * 1.3));
+        ctx.fillRect(Math.round(cx), Math.round(cy), px, px);
+      }
+
+      function loop() {
+        if (stopped) return;
+        tick += 1;
+        const rect = canvas.getBoundingClientRect();
+        ctx.clearRect(0, 0, rect.width, rect.height);
+        parts.forEach(part => drawPart(part, tick * 16));
+        animationFrame = requestAnimationFrame(loop);
+      }
+
+      resize();
+      loop();
+
+      const resizeObserver = new ResizeObserver(resize);
+      resizeObserver.observe(canvas);
+
+      driveLoadingAnimationCleanup = () => {
+        stopped = true;
+        resizeObserver.disconnect();
+        if (animationFrame) cancelAnimationFrame(animationFrame);
+        driveLoadingAnimationCleanup = null;
+      };
     }
 
     function renderDriveContent() {
@@ -2458,8 +2544,10 @@
     }
 
     function renderPage() {
+      if (driveLoadingAnimationCleanup) driveLoadingAnimationCleanup();
       destroyRsTrendCharts();
       document.getElementById('distributionDetailRoot').innerHTML = renderDetailContent();
+      if (detailViewMode === 'workflow' && driveMaterialStatus === 'loading') initDriveLoadingAnimation();
       if (detailViewMode === 'workflow') scheduleDriveMaterialLoad();
       renderRsTrendCharts();
     }

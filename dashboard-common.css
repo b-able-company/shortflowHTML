@@ -1299,22 +1299,22 @@ body.onboarding-modal-open {
 }
 
 .workflow-version-notice-pill {
-  padding: 5px 12px;
+  padding: 3px 9px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.88);
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   transform: translateY(-4px);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
 }
 
 .workflow-version-notice-pill::before {
   content: '';
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--orange);
 }

@@ -58,36 +58,56 @@
     }
 
     .distribution-notice-left {
+      position: relative;
+      min-height: 122px;
       padding-right: 22px;
       border-right: 0.5px solid rgba(255, 255, 255, 0.14);
+      display: flex;
+      align-items: center;
     }
 
     .distribution-notice-pill {
-      padding: 3px 9px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 7px 11px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.1);
       color: rgba(255, 255, 255, 0.88);
+      width: fit-content;
+      max-width: 100%;
+      justify-self: start;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      font-size: 11px;
-      font-weight: 550;
-      transform: translateY(-9px);
+      white-space: nowrap;
+      font-size: 13px;
+      font-weight: 600;
+      transform: translateY(0);
+    }
+
+    .distribution-notice-copy {
+      width: 100%;
+      transform: translateY(13px);
     }
 
     .distribution-notice-pill::before {
       content: "";
-      width: 6px;
-      height: 6px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       background: #f05a28;
     }
 
+    .distribution-notice-pill[data-settlement-status="CONFIRMED"]::before {
+      background: #f5c542;
+    }
+
     .distribution-notice-title {
-      margin: 12px 0 6px;
+      margin: 0 0 6px;
       color: #fff;
       font-size: 22px;
-      font-weight: 700;
+      font-weight: 650;
       letter-spacing: 0;
       line-height: 1.18;
     }
@@ -133,13 +153,12 @@
     .distribution-notice-btn {
       position: relative;
       isolation: isolate;
-      overflow: hidden;
       width: 100%;
       margin-top: 14px;
       min-height: 42px;
       padding: 0 16px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
+      border: 1px solid transparent;
+      border-radius: 14px;
       background: rgba(255, 255, 255, 0.1);
       color: #fff;
       display: inline-flex;
@@ -152,45 +171,50 @@
       line-height: 1;
       text-decoration: none;
       cursor: pointer;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 0 21px -8px rgba(255, 255, 255, 0.3);
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-      transition: all 0.2s ease;
     }
 
-    .distribution-notice-btn::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      border-radius: 8px;
-      box-shadow: inset 0 0 4px -8px rgba(255, 255, 255, 0.7);
-      background-color: rgba(255, 255, 255, 0);
-      pointer-events: none;
-    }
-
+    .distribution-notice-btn::before,
     .distribution-notice-btn::after {
       content: "";
       position: absolute;
       inset: 0;
       z-index: -1;
-      border-radius: 8px;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      filter: url(#glass-distortion);
-      -webkit-filter: url(#glass-distortion);
-      isolation: isolate;
+      border-radius: 14px;
       pointer-events: none;
     }
 
+    .distribution-notice-btn::before {
+      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.48);
+      animation: distributionNoticePulse 2.8s ease-out infinite;
+    }
+
+    .distribution-notice-btn::after {
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .distribution-notice-btn[data-settlement-action="readonly"]::before {
+      animation: none;
+      box-shadow: none;
+    }
+
     .distribution-notice-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.16);
     }
 
     .distribution-notice-btn:focus {
       outline: none;
-      box-shadow: 0 0 0 2px rgba(240, 90, 40, 0.38), 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-color: rgba(255, 255, 255, 0.36);
+    }
+
+    @keyframes distributionNoticePulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.48);
+      }
+
+      72%,
+      100% {
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+      }
     }
 
     .distribution-panel {
@@ -1071,31 +1095,6 @@
   </style>
 </head>
 <body>
-  <svg width="0" height="0" style="position: absolute;" aria-hidden="true" focusable="false">
-    <defs>
-      <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%">
-        <feTurbulence
-          type="fractalNoise"
-          baseFrequency="0.018 0.018"
-          numOctaves="2"
-          seed="92"
-          result="noise"
-        />
-        <feGaussianBlur
-          in="noise"
-          stdDeviation="2"
-          result="blurred"
-        />
-        <feDisplacementMap
-          in="SourceGraphic"
-          in2="blurred"
-          scale="120"
-          xChannelSelector="R"
-          yChannelSelector="G"
-        />
-      </filter>
-    </defs>
-  </svg>
   <div id="distribution-dashboard-chrome"></div>
 
   <main class="distribution-wrap">
@@ -1287,8 +1286,8 @@
         },
         CONFIRMED: {
           pill: '검토 완료',
-          title: `${currentSettlement.monthShort} 처리 대기 중`,
-          desc: '요청이 접수되었습니다. 지급 완료 후 완료 내역으로 이동합니다.',
+          title: `${currentSettlement.monthShort} 정산 검토 완료`,
+          desc: '검토가 완료되었으며 정산 지급 예정입니다.',
           button: '상세보기',
           readOnly: true,
           right: commonRight
@@ -1306,9 +1305,11 @@
       const target = document.getElementById('distributionSettlementNotice');
       target.innerHTML = `
         <div class="distribution-notice-left">
-          <span class="distribution-notice-pill">${state.pill}</span>
-          <h2 class="distribution-notice-title">${state.title}</h2>
-          <p class="distribution-notice-desc">${state.desc}</p>
+          <span class="distribution-notice-pill" data-settlement-status="${currentSettlementStatus}">${state.pill}</span>
+          <div class="distribution-notice-copy">
+            <h2 class="distribution-notice-title">${state.title}</h2>
+            <p class="distribution-notice-desc">${state.desc}</p>
+          </div>
         </div>
         <div class="distribution-notice-right">
           ${state.right}
