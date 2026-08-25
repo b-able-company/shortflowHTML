@@ -51,7 +51,10 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
   right: 50%;
 }
 .topbar { height: 46px; background: #fff; border-bottom: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; padding: 0 18px; flex-shrink: 0; }
-.topbar-title { font-size: 14px; font-weight: 600; }
+.topbar-title { font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+.topbar-parent,
+.topbar-separator { color: #8f949c; font-weight: 400; }
+.topbar-current { color: #1a1a18; font-weight: 600; }
 
 /* VIEWS */
 .view { display: none; flex-direction: column; flex: 1; overflow: hidden; }
@@ -293,7 +296,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 .user-detail-meta-row {
   display: block;
   margin-top: 7px;
-  font-size: 11.5px;
+  font-size: 11.8px;
   color: #777;
   line-height: 1.35;
 }
@@ -387,7 +390,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 }
 .member-user-split #user-detail .fg label {
   min-width: 0;
-  padding: 0 12px;
+  padding: 0 12px 1px;
   background: #f7f7f7;
   border-right: 0.5px solid #dedede;
   color: #4f5965;
@@ -831,7 +834,7 @@ td { padding: 9px 12px; vertical-align: middle; }
   min-width: 0;
   padding: 0 36px;
   border: 0;
-  border-radius: 9px;
+  border-radius: 11px;
   background: #007aff;
   color: #fff;
   box-shadow: 0 2px 6px rgba(0,122,255,0.22);
@@ -1361,6 +1364,211 @@ td { padding: 9px 12px; vertical-align: middle; }
 }
 .member-company-split .user-list-search {
   width: 158px;
+}
+.temporary-company-wrap {
+  flex: 1;
+  min-height: 0;
+  padding: 20px 18px 18px 32px;
+  background: #fff;
+  overflow: auto;
+}
+.temporary-company-layout {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 340px);
+  gap: 16px;
+  align-items: stretch;
+}
+.temporary-company-editor {
+  grid-column: 2;
+  grid-row: 1;
+  height: auto;
+  margin-top: 2px;
+  min-height: 0;
+  align-self: start;
+  padding: 16px;
+  border: 0.5px solid #dedede;
+  border-radius: 10px;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.temporary-company-field {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.temporary-company-field span {
+  color: #6c727c;
+  font-size: 11.5px;
+  font-weight: 400;
+}
+.temporary-company-field[hidden] {
+  display: none;
+}
+.temporary-company-list-panel {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+  min-height: 0;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+.temporary-company-toolbar {
+  flex-wrap: nowrap;
+}
+.temporary-company-add {
+  flex: 0 0 auto;
+}
+.temporary-company-add i {
+  font-size: 16px;
+}
+.temporary-company-toolbar .user-list-search {
+  margin-left: auto;
+  width: 240px;
+}
+.temporary-company-editor select,
+.temporary-company-editor input {
+  height: 34px;
+  min-width: 0;
+  padding: 0 10px;
+  border: 0.5px solid #dedede;
+  border-radius: 7px;
+  background: #fff;
+  color: #1a1a18;
+  font-family: inherit;
+  font-size: 12.5px;
+  outline: none;
+}
+.temporary-company-editor select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 34px;
+  cursor: pointer;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='%237b7f87' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: border-color 0.14s ease, box-shadow 0.14s ease, background-color 0.14s ease;
+}
+.temporary-company-editor select:hover {
+  border-color: #cfcfcf;
+}
+.temporary-company-editor select:focus,
+.temporary-company-editor input:focus {
+  border-color: #bdbdbd;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+}
+.temporary-company-editor input[readonly] {
+  background: #f5f5f5;
+  color: #777;
+}
+.temporary-company-action {
+  height: 38px;
+  padding: 0 12px;
+  border: 0.5px solid #dedede;
+  border-radius: 9px;
+  background: #fff;
+  color: #333;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.temporary-company-actions {
+  margin-top: 16px;
+  padding-top: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+.temporary-company-actions.is-editing {
+  grid-template-columns: 1fr 1fr;
+}
+.temporary-company-action[hidden] {
+  display: none;
+}
+.temporary-company-action:hover {
+  background: #f7f7f7;
+}
+.temporary-company-action.primary {
+  border-color: #1a1a18;
+  background: #1a1a18;
+  color: #fff;
+}
+.temporary-company-action.danger {
+  border-color: #e4e4e4;
+  color: #666;
+}
+.temporary-company-action:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+.temporary-company-table {
+  max-height: none;
+  flex: 1;
+  border: 0;
+  border-radius: 0;
+  overflow: auto;
+}
+.user-list-table.temporary-company-table table {
+  min-width: 880px;
+  table-layout: fixed;
+}
+.user-list-table.temporary-company-table td,
+.user-list-table.temporary-company-table th {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 1280px) {
+  .temporary-company-wrap {
+    padding: 18px;
+  }
+  .temporary-company-layout {
+    height: auto;
+    min-height: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+  .temporary-company-list-panel,
+  .temporary-company-editor {
+    grid-column: 1;
+  }
+  .temporary-company-list-panel {
+    grid-row: 1;
+    min-height: 560px;
+  }
+  .temporary-company-editor {
+    grid-row: 2;
+    width: min(100%, 420px);
+    margin-top: 0;
+  }
+}
+@media (max-width: 760px) {
+  .temporary-company-wrap {
+    padding: 14px 12px 16px;
+  }
+  .temporary-company-toolbar {
+    flex-wrap: wrap;
+  }
+  .temporary-company-toolbar .user-list-search {
+    flex: 1 1 220px;
+    width: auto;
+  }
+  .user-list-table.temporary-company-table table {
+    min-width: 820px;
+  }
 }
 .user-list-search i {
   position: absolute;
@@ -2172,6 +2380,7 @@ td { padding: 9px 12px; vertical-align: middle; }
     <div class="sub">
       <a class="ni active" href="#users" onclick="switchTab('users'); return false;">유저</a>
       <a class="ni" href="#companies" onclick="switchTab('companies'); return false;">회사</a>
+      <a class="ni" href="#temporary-companies" onclick="switchTab('temporary-companies'); return false;">임시 회사</a>
     </div>
     <div class="nav-label">콘텐츠</div>
     <a class="ni" href="content-admin-full.html"><i class="ti ti-file-text"></i> 콘텐츠 관리</a>
@@ -2210,7 +2419,11 @@ td { padding: 9px 12px; vertical-align: middle; }
 <!-- MAIN -->
 <div class="main">
   <div class="topbar">
-    <span class="topbar-title">회원 관리</span>
+    <span class="topbar-title">
+      <span class="topbar-parent">회원 관리</span>
+      <span class="topbar-separator">/</span>
+      <span class="topbar-current" id="member-topbar-current">유저</span>
+    </span>
   </div>
 
   <!-- ════ 유저 탭 ════ -->
@@ -2220,6 +2433,7 @@ td { padding: 9px 12px; vertical-align: middle; }
         유저
       </div>
       <div class="tab" onclick="switchTab('companies')">회사</div>
+      <div class="tab" onclick="switchTab('temporary-companies')">임시 회사</div>
     </div>
     <div class="split member-user-split" id="user-split">
       <!-- 유저 목록 -->
@@ -2498,6 +2712,7 @@ td { padding: 9px 12px; vertical-align: middle; }
     <div class="tabbar">
       <div class="tab" onclick="switchTab('users')">유저</div>
       <div class="tab active" onclick="switchTab('companies')">회사</div>
+      <div class="tab" onclick="switchTab('temporary-companies')">임시 회사</div>
     </div>
     <div class="split member-company-split" id="company-split">
       <!-- 회사 목록 -->
@@ -2743,6 +2958,85 @@ td { padding: 9px 12px; vertical-align: middle; }
             <button class="btn btn-save" id="company-works-save-btn" onclick="saveCompanyWorks()">대표작 저장</button>
           </div>
           <div id="company-work-modal"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ 임시 회사 탭 ════ -->
+  <div class="view" id="view-temporary-companies">
+    <div class="tabbar">
+      <div class="tab" onclick="switchTab('users')">유저</div>
+      <div class="tab" onclick="switchTab('companies')">회사</div>
+      <div class="tab active" onclick="switchTab('temporary-companies')">임시 회사</div>
+    </div>
+    <div class="temporary-company-wrap">
+      <div class="temporary-company-layout">
+        <div class="temporary-company-editor" aria-label="임시 회사 등록">
+          <label class="temporary-company-field" id="temp-company-id-field" hidden>
+            <span>ID</span>
+            <input id="temp-company-id" readonly aria-label="임시 회사 ID">
+          </label>
+          <label class="temporary-company-field">
+            <span>타입</span>
+            <select id="temp-company-type" aria-label="임시 회사 타입">
+              <option value="PLATFORM">플랫폼</option>
+              <option value="PRODUCTION">제작사</option>
+            </select>
+          </label>
+          <label class="temporary-company-field">
+            <span>회사명</span>
+            <input id="temp-company-name" placeholder="회사명" aria-label="회사명">
+          </label>
+          <label class="temporary-company-field">
+            <span>대표 유저명</span>
+            <input id="temp-company-rep" placeholder="대표 유저명" aria-label="대표 유저명">
+          </label>
+          <label class="temporary-company-field">
+            <span>이메일</span>
+            <input id="temp-company-email" type="email" placeholder="이메일" aria-label="이메일">
+          </label>
+          <label class="temporary-company-field" id="temp-company-created-field" hidden>
+            <span>유저 생성일</span>
+            <input id="temp-company-created" readonly aria-label="유저 생성일">
+          </label>
+          <div class="temporary-company-actions" id="temp-company-actions">
+            <button class="temporary-company-action danger" id="temp-company-delete-btn" type="button" onclick="deleteTemporaryCompany()" hidden disabled>삭제</button>
+            <button class="temporary-company-action primary" id="temp-company-save-btn" type="button" onclick="saveTemporaryCompany()">등록</button>
+          </div>
+        </div>
+        <div class="temporary-company-list-panel user-list-pane">
+          <div class="toolbar user-list-toolbar temporary-company-toolbar">
+            <button class="list-icon-btn temporary-company-add" type="button" aria-label="임시 회사 추가" title="임시 회사 추가" onclick="resetTemporaryCompanyForm(); document.getElementById('temp-company-name')?.focus();"><i class="ti ti-plus"></i></button>
+            <div class="user-list-search">
+              <i class="ti ti-search"></i>
+              <input id="temp-company-search" placeholder="회사명 검색" aria-label="임시 회사명 검색" oninput="setTemporaryCompanySearch(this.value)">
+            </div>
+          </div>
+          <div class="tscroll user-list-table temporary-company-table">
+            <table>
+              <colgroup>
+                <col style="width:54px">
+                <col style="width:76px">
+                <col>
+                <col style="width:150px">
+                <col style="width:210px">
+                <col style="width:112px">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>타입</th>
+                  <th>회사명</th>
+                  <th>대표 유저명</th>
+                  <th>이메일</th>
+                  <th>유저 생성일</th>
+                </tr>
+              </thead>
+              <tbody id="temporary-company-tbody"></tbody>
+            </table>
+          </div>
+          <div class="list-pagebar" id="temporary-company-pagebar"></div>
         </div>
       </div>
     </div>
@@ -3269,6 +3563,29 @@ const companies = [
   { id:20, name:'Moonrise Content', email:'rights@moonrise.tv', type:'PRODUCTION', status:'REJECTED', date:'2026.01.22', users:[] },
 ];
 
+const temporaryCompanies = [
+  { id:1, type:'PLATFORM', name:'NovaShort', representativeName:'Mia Chen', email:'content@novashort.com', createdAt:'2026.07.12' },
+  { id:2, type:'PLATFORM', name:'MiniStage', representativeName:'Alex Wu', email:'partnerships@ministage.io', createdAt:'2026.07.16' },
+  { id:3, type:'PRODUCTION', name:'Orbit Pictures', representativeName:'김도윤', email:'hello@orbitpictures.kr', createdAt:'2026.07.20' },
+  { id:4, type:'PRODUCTION', name:'Lime Studio', representativeName:'박서연', email:'contact@limestudio.co', createdAt:'2026.07.24' },
+  { id:5, type:'PLATFORM', name:'ShortBox Asia', representativeName:'Hannah Lee', email:'partners@shortbox.asia', createdAt:'2026.07.25' },
+  { id:6, type:'PRODUCTION', name:'Studio Noon', representativeName:'이하윤', email:'hello@studionoon.kr', createdAt:'2026.07.26' },
+  { id:7, type:'PLATFORM', name:'QuickDrama', representativeName:'Ethan Park', email:'content@quickdrama.com', createdAt:'2026.07.27' },
+  { id:8, type:'PRODUCTION', name:'Blue Pine Works', representativeName:'최민재', email:'contact@bluepine.co', createdAt:'2026.07.28' },
+  { id:9, type:'PLATFORM', name:'SnackPlay', representativeName:'Sofia Kim', email:'bd@snackplay.io', createdAt:'2026.07.29' },
+  { id:10, type:'PRODUCTION', name:'Frame Kitchen', representativeName:'정유진', email:'ops@framekitchen.kr', createdAt:'2026.07.30' },
+  { id:11, type:'PLATFORM', name:'NovaByte', representativeName:'Lucas Tan', email:'acq@novabyte.tv', createdAt:'2026.08.01' },
+  { id:12, type:'PRODUCTION', name:'Little Room Studio', representativeName:'강서준', email:'hello@littleroom.studio', createdAt:'2026.08.02' },
+  { id:13, type:'PLATFORM', name:'MicroVibe', representativeName:'Grace Wong', email:'content@microvibe.app', createdAt:'2026.08.03' },
+  { id:14, type:'PRODUCTION', name:'Orbit Nine', representativeName:'문지아', email:'contact@orbitnine.kr', createdAt:'2026.08.04' },
+  { id:15, type:'PLATFORM', name:'Dramini', representativeName:'Noah Chen', email:'partnerships@dramini.com', createdAt:'2026.08.05' },
+  { id:16, type:'PRODUCTION', name:'Studio Pebble', representativeName:'홍다은', email:'hello@studiopebble.co', createdAt:'2026.08.06' },
+  { id:17, type:'PLATFORM', name:'ShortCup', representativeName:'Olivia Lin', email:'bd@shortcup.tv', createdAt:'2026.08.07' },
+  { id:18, type:'PRODUCTION', name:'Mint Script Lab', representativeName:'윤태오', email:'contact@mintscript.kr', createdAt:'2026.08.08' },
+  { id:19, type:'PLATFORM', name:'ClipHouse', representativeName:'Daniel Choi', email:'content@cliphouse.io', createdAt:'2026.08.09' },
+  { id:20, type:'PRODUCTION', name:'Warm Cut Studio', representativeName:'서하린', email:'hello@warmcut.studio', createdAt:'2026.08.10' },
+];
+
 const companyOwnedContents = {
   1: [
     { id:'cnt-1-1', adminContentId:1, title:'대표님이 내 전남친입니다', year:'2026', poster:'../images/posters/대표님이내전남친입니다.png' },
@@ -3438,13 +3755,17 @@ const userRoleLabel = {
 };
 let selectedUserId = null;
 let selectedCompanyId = null;
+let selectedTemporaryCompanyId = null;
+let temporaryCompanySearch = '';
 let userPage = 1;
 let companyPage = 1;
+let temporaryCompanyPage = 1;
 const userFilters = { status: '', role: '', search: '' };
 const companyFilters = { status: '', type: '' };
 let loginHistoryPage = 1;
 const USER_PAGE_SIZE = 15;
 const COMPANY_PAGE_SIZE = 15;
+const TEMPORARY_COMPANY_PAGE_SIZE = 15;
 const LOGIN_HISTORY_PAGE_SIZE = 10;
 const COMPANY_DISTRIBUTION_CONTRACT_PAGE_SIZE = 10;
 const MAX_COMPANY_REPRESENTATIVE_WORKS = 3;
@@ -4079,6 +4400,138 @@ function setCompanyFilter(type, value) {
   updateCompanyFilterToggle();
 }
 
+function renderTemporaryCompanies() {
+  const tbody = document.getElementById('temporary-company-tbody');
+  if (!tbody) return;
+  const keyword = temporaryCompanySearch.trim().toLowerCase();
+  const rows = (keyword
+    ? temporaryCompanies.filter(company => company.name.toLowerCase().includes(keyword))
+    : temporaryCompanies
+  ).slice().sort((a, b) => b.id - a.id);
+  const totalPages = Math.max(1, Math.ceil(rows.length / TEMPORARY_COMPANY_PAGE_SIZE));
+  temporaryCompanyPage = Math.min(Math.max(temporaryCompanyPage, 1), totalPages);
+  const start = (temporaryCompanyPage - 1) * TEMPORARY_COMPANY_PAGE_SIZE;
+  const pageRows = rows.slice(start, start + TEMPORARY_COMPANY_PAGE_SIZE);
+  tbody.innerHTML = pageRows.length ? pageRows.map(company => `
+    <tr class="${company.id === selectedTemporaryCompanyId ? 'sel' : ''}" onclick="selectTemporaryCompany(${company.id})">
+      <td><span class="user-code">${escapeHtml(company.id)}</span></td>
+      <td class="user-muted-cell">${userRoleLabel[company.type] || company.type}</td>
+      <td>
+        <span class="user-cell">
+          <span class="user-avatar avatar-${((company.id - 1) % 5) + 1}">${escapeHtml(company.name[0] || '-')}</span>
+          <span class="user-cell-name">${escapeHtml(company.name)}</span>
+        </span>
+      </td>
+      <td class="user-muted-cell">${escapeHtml(company.representativeName)}</td>
+      <td class="user-muted-cell">${escapeHtml(company.email)}</td>
+      <td><span class="user-date">${escapeHtml(company.createdAt || '-')}</span></td>
+    </tr>
+  `).join('') : '<tr class="user-filter-empty"><td colspan="6">조건에 맞는 임시 회사가 없습니다</td></tr>';
+  renderTemporaryCompanyPagination(totalPages);
+}
+
+function renderTemporaryCompanyPagination(totalPages) {
+  const pagebar = document.getElementById('temporary-company-pagebar');
+  if (!pagebar) return;
+  pagebar.innerHTML = totalPages > 1
+    ? Array.from({ length: totalPages }).map((_, index) => {
+      const page = index + 1;
+      return `<button class="list-page-btn ${page === temporaryCompanyPage ? 'active' : ''}" onclick="setTemporaryCompanyPage(${page})">${page}</button>`;
+    }).join('')
+    : '<button class="list-page-btn active" disabled>1</button>';
+}
+
+function setTemporaryCompanyPage(page) {
+  temporaryCompanyPage = page;
+  renderTemporaryCompanies();
+}
+
+function setTemporaryCompanySearch(value) {
+  temporaryCompanySearch = value || '';
+  temporaryCompanyPage = 1;
+  renderTemporaryCompanies();
+}
+
+function resetTemporaryCompanyForm() {
+  selectedTemporaryCompanyId = null;
+  document.getElementById('temp-company-id').value = '';
+  document.getElementById('temp-company-id-field').hidden = true;
+  document.getElementById('temp-company-type').value = 'PLATFORM';
+  document.getElementById('temp-company-name').value = '';
+  document.getElementById('temp-company-rep').value = '';
+  document.getElementById('temp-company-email').value = '';
+  document.getElementById('temp-company-created').value = '';
+  document.getElementById('temp-company-created-field').hidden = true;
+  document.getElementById('temp-company-save-btn').textContent = '등록';
+  document.getElementById('temp-company-actions')?.classList.remove('is-editing');
+  const deleteButton = document.getElementById('temp-company-delete-btn');
+  deleteButton.hidden = true;
+  deleteButton.disabled = true;
+  renderTemporaryCompanies();
+}
+
+function selectTemporaryCompany(id) {
+  const company = temporaryCompanies.find(item => item.id === Number(id));
+  if (!company) return;
+  selectedTemporaryCompanyId = company.id;
+  document.getElementById('temp-company-id').value = company.id;
+  document.getElementById('temp-company-id-field').hidden = false;
+  document.getElementById('temp-company-type').value = company.type;
+  document.getElementById('temp-company-name').value = company.name;
+  document.getElementById('temp-company-rep').value = company.representativeName;
+  document.getElementById('temp-company-email').value = company.email;
+  document.getElementById('temp-company-created').value = company.createdAt || '-';
+  document.getElementById('temp-company-created-field').hidden = false;
+  document.getElementById('temp-company-save-btn').textContent = '수정';
+  document.getElementById('temp-company-actions')?.classList.add('is-editing');
+  const deleteButton = document.getElementById('temp-company-delete-btn');
+  deleteButton.hidden = false;
+  deleteButton.disabled = false;
+  renderTemporaryCompanies();
+}
+
+function saveTemporaryCompany() {
+  const type = document.getElementById('temp-company-type').value;
+  const name = document.getElementById('temp-company-name').value.trim();
+  const representativeName = document.getElementById('temp-company-rep').value.trim();
+  const email = document.getElementById('temp-company-email').value.trim();
+  if (!name || !representativeName || !email) {
+    openAdminNotice('입력값을 확인해주세요', '회사명, 대표 유저명, 이메일을 모두 입력해야 합니다.');
+    return;
+  }
+
+  const current = temporaryCompanies.find(item => item.id === selectedTemporaryCompanyId);
+  if (current) {
+    Object.assign(current, { type, name, representativeName, email });
+    openAdminNotice('임시 회사가 수정되었습니다.');
+  } else {
+    const nextId = Math.max(0, ...temporaryCompanies.map(item => item.id)) + 1;
+    temporaryCompanies.unshift({ id: nextId, type, name, representativeName, email, createdAt: getTodayDotDate() });
+    selectedTemporaryCompanyId = nextId;
+    temporaryCompanyPage = 1;
+    openAdminNotice('임시 회사가 등록되었습니다.');
+  }
+  selectTemporaryCompany(selectedTemporaryCompanyId);
+}
+
+function deleteTemporaryCompany() {
+  const company = temporaryCompanies.find(item => item.id === selectedTemporaryCompanyId);
+  if (!company) return;
+  openAdminConfirm({
+    title: `${company.name} 임시 회사를 삭제할까요?`,
+    message: '삭제 후 임시 회사 목록에서 제거됩니다.',
+    confirmText: '삭제',
+    onConfirm: () => confirmDeleteTemporaryCompany(company.id),
+  });
+}
+
+function confirmDeleteTemporaryCompany(id) {
+  const index = temporaryCompanies.findIndex(item => item.id === Number(id));
+  if (index >= 0) temporaryCompanies.splice(index, 1);
+  resetTemporaryCompanyForm();
+  closeAdminConfirm();
+}
+
 function renderCompanyWorkImage(image, alt) {
   return image
     ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(alt)}">`
@@ -4705,12 +5158,20 @@ function syncCreditActionState(type) {
 
 function switchTab(tab) {
   const isUsers = tab === 'users';
+  const isCompanies = tab === 'companies';
+  const isTemporaryCompanies = tab === 'temporary-companies';
+  const titleLabel = isTemporaryCompanies ? '임시 회사' : (isCompanies ? '회사' : '유저');
   const isUserCreateOpen = document.getElementById('user-create')?.style.display === 'flex';
+  const topbarCurrent = document.getElementById('member-topbar-current');
+  if (topbarCurrent) topbarCurrent.textContent = titleLabel;
   document.getElementById('view-users').classList.toggle('active', isUsers);
-  document.getElementById('view-companies').classList.toggle('active', !isUsers);
+  document.getElementById('view-companies').classList.toggle('active', isCompanies);
+  document.getElementById('view-temporary-companies').classList.toggle('active', isTemporaryCompanies);
   document.querySelector('.main')?.classList.toggle('user-detail-open', isUsers && (!!selectedUserId || isUserCreateOpen));
-  document.querySelector('.main')?.classList.toggle('company-detail-open', !isUsers && !!selectedCompanyId);
-  document.querySelectorAll('.nav a[href="#users"], .nav a[href="#companies"]').forEach((n,i) => n.classList.toggle('active', isUsers ? i===0 : i===1));
+  document.querySelector('.main')?.classList.toggle('company-detail-open', isCompanies && !!selectedCompanyId);
+  document.querySelectorAll('.nav a[href="#users"], .nav a[href="#companies"], .nav a[href="#temporary-companies"]').forEach(n => {
+    n.classList.toggle('active', n.getAttribute('href') === `#${tab}`);
+  });
 }
 
 function setChip(el) {
@@ -4721,7 +5182,8 @@ function setChip(el) {
 renderUsers();
 updateUserFilterToggle();
 renderCompanies();
-if (['users', 'companies'].includes(location.hash.slice(1))) {
+renderTemporaryCompanies();
+if (['users', 'companies', 'temporary-companies'].includes(location.hash.slice(1))) {
   switchTab(location.hash.slice(1));
 }
 </script>

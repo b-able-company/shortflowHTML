@@ -19,8 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const breadcrumbMap = {
     'dashboard-admin.html': ['대시보드', () => '운영 현황'],
     'kpi-admin.html': ['대시보드', () => 'KPI'],
-    'member-admin.html': ['회원 관리', () =>
-      document.getElementById('view-companies')?.classList.contains('active') ? '회사' : '유저'],
+    'member-admin.html': ['회원 관리', () => {
+      if (document.getElementById('view-temporary-companies')?.classList.contains('active')) return '임시 회사';
+      return document.getElementById('view-companies')?.classList.contains('active') ? '회사' : '유저';
+    }],
     'content-admin-full.html': ['콘텐츠 관리', () => {
       const activeContentTab = document.querySelector('.nav [data-main-tab].active')?.dataset.mainTab || location.hash.slice(1);
       if (activeContentTab === 'plans') return '전체 기획안';

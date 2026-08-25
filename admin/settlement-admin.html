@@ -2532,9 +2532,37 @@ td { padding: 9px 12px; vertical-align: middle; }
   border: 0.5px solid #dedede;
   box-shadow: none;
 }
+.contract-platform-modal {
+  width: min(580px, 100%);
+}
 .contract-content-modal .modal-body {
   padding: 14px 16px;
   overflow: auto;
+}
+.platform-modal-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 12px;
+  border-radius: 9px;
+  background: rgb(242, 242, 242);
+}
+.platform-modal-tab {
+  height: 32px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #777d86;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.platform-modal-tab.active {
+  background: #fff;
+  color: #1a1a18;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
 }
 .contract-content-modal .modal-search {
   display: block;
@@ -2573,6 +2601,17 @@ td { padding: 9px 12px; vertical-align: middle; }
   grid-template-columns: 24px minmax(0, 1.25fr) minmax(0, 1fr);
   align-items: center;
   gap: 10px;
+}
+.contract-platform-result-table .result-head,
+.contract-platform-result-table .result-item {
+  grid-template-columns: 24px minmax(0, 1.05fr) minmax(0, .8fr) minmax(0, 1.2fr);
+}
+.contract-platform-result-table.is-company .result-head,
+.contract-platform-result-table.is-company .result-item {
+  grid-template-columns: 24px minmax(0, 1.25fr) minmax(0, .75fr);
+}
+.contract-platform-result-table .result-list {
+  border-bottom: 0.5px solid #ededed;
 }
 .result-head {
   padding: 8px 10px;
@@ -2840,6 +2879,7 @@ td { padding: 9px 12px; vertical-align: middle; }
     <div class="sub">
       <a class="ni" href="member-admin.html#users">유저</a>
       <a class="ni" href="member-admin.html#companies">회사</a>
+      <a class="ni" href="member-admin.html#temporary-companies">임시 회사</a>
     </div>
     <div class="nav-label">콘텐츠</div>
     <a class="ni" href="content-admin-full.html"><i class="ti ti-file-text"></i> 콘텐츠 관리</a>
@@ -2987,7 +3027,15 @@ td { padding: 9px 12px; vertical-align: middle; }
 	                        <i class="ti ti-search"></i>
 	                      </button>
 	                    </div>
-	                    <div class="fg"><label>플랫폼 이름 *</label><input id="new-platform" type="text" placeholder="예: ShortReel (US)" /></div>
+	                    <div class="fg"><label>플랫폼사 선택 *</label>
+	                      <input id="new-platform" type="hidden" />
+	                      <input id="new-platform-id" type="hidden" />
+	                      <input id="new-platform-source" type="hidden" />
+	                      <button class="contract-content-picker is-empty" id="new-platform-picker" type="button" onclick="openNewPlatformModal()">
+	                        <span id="new-platform-picker-label">플랫폼사를 선택하세요</span>
+	                        <i class="ti ti-search"></i>
+	                      </button>
+	                    </div>
 		                  </div>
 		                </div>
 			                <div class="contract-form-section">
@@ -3512,15 +3560,40 @@ td { padding: 9px 12px; vertical-align: middle; }
         <div class="result-head" aria-hidden="true"><span></span><span>콘텐츠명</span><span>제작사</span></div>
         <div class="result-list" id="new-content-result-list"></div>
         <div class="modal-pagebar" id="new-content-modal-pagebar">
-          <button class="btn modal-page-btn" type="button" id="new-content-modal-prev" onclick="setNewContentModalPage(newContentModalPage - 1)" aria-label="이전 페이지"><i class="ti ti-chevron-left"></i></button>
           <div class="modal-page-numbers" id="new-content-modal-pages"></div>
-          <button class="btn modal-page-btn" type="button" id="new-content-modal-next" onclick="setNewContentModalPage(newContentModalPage + 1)" aria-label="다음 페이지"><i class="ti ti-chevron-right"></i></button>
         </div>
       </div>
     </div>
     <div class="modal-actions">
       <button class="btn modal-cancel-btn" type="button" onclick="closeNewContentModal()">취소</button>
       <button class="btn btn-primary modal-confirm-btn" id="new-content-modal-confirm" type="button" onclick="confirmNewContentSelection()" disabled>확인</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="new-platform-modal" onclick="closeNewPlatformModal(event)">
+  <div class="modal contract-content-modal contract-platform-modal" role="dialog" aria-modal="true" aria-labelledby="new-platform-modal-title">
+    <div class="modal-title" id="new-platform-modal-title" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">플랫폼사 검색</div>
+    <div class="modal-body">
+      <div class="platform-modal-tabs" role="tablist" aria-label="플랫폼사 유형">
+        <button class="platform-modal-tab active" id="new-platform-tab-company" type="button" role="tab" aria-selected="true" onclick="switchNewPlatformSource('company')">기존 회사</button>
+        <button class="platform-modal-tab" id="new-platform-tab-temporary" type="button" role="tab" aria-selected="false" onclick="switchNewPlatformSource('temporary')">임시 회사</button>
+      </div>
+      <div class="modal-search">
+        <i class="ti ti-search"></i>
+        <input id="new-platform-modal-search" placeholder="회사명 검색" oninput="filterNewPlatformModal()" />
+      </div>
+      <div class="result-table contract-platform-result-table is-company" id="new-platform-result-table">
+        <div class="result-head" id="new-platform-result-head" aria-hidden="true"><span></span><span>회사명</span><span>지역</span></div>
+        <div class="result-list" id="new-platform-result-list"></div>
+        <div class="modal-pagebar" id="new-platform-modal-pagebar">
+          <div class="modal-page-numbers" id="new-platform-modal-pages"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn modal-cancel-btn" type="button" onclick="closeNewPlatformModal()">취소</button>
+      <button class="btn btn-primary modal-confirm-btn" id="new-platform-modal-confirm" type="button" onclick="confirmNewPlatformSelection()" disabled>확인</button>
     </div>
   </div>
 </div>
@@ -3618,6 +3691,41 @@ let pendingNewContentSelection = '';
 let newContentModalPage = 1;
 let newContentModalQuery = '';
 const NEW_CONTENT_MODAL_PAGE_SIZE = 10;
+const newPlatformCompanyOptions = [
+  { id: 'platform-003', source: 'company', name: 'ShortReel (US)', country: 'US' },
+  { id: 'platform-004', source: 'company', name: 'Viki', country: 'US' },
+  { id: 'platform-007', source: 'company', name: 'WeTV', country: 'CN' },
+  { id: 'platform-011', source: 'company', name: 'ShortMax', country: 'US' },
+  { id: 'platform-012', source: 'company', name: 'ReelShort', country: 'US' },
+  { id: 'platform-013', source: 'company', name: 'Netflix Korea', country: 'KR' },
+  { id: 'platform-014', source: 'company', name: 'Rakuten Viki', country: 'JP' },
+  { id: 'platform-016', source: 'company', name: 'Mango TV Global', country: 'CN' },
+  { id: 'platform-018', source: 'company', name: 'DramaBox', country: 'US' },
+  { id: 'platform-019', source: 'company', name: 'iQIYI', country: 'CN' },
+  { id: 'platform-020', source: 'company', name: 'FlexTV (JP)', country: 'JP' },
+  { id: 'platform-021', source: 'company', name: 'KuaiKan Drama', country: 'CN' }
+];
+const newTemporaryPlatformCompanyOptions = [
+  { id: 'temp-company-019', source: 'temporary', name: 'ClipHouse', representativeName: 'Daniel Choi', email: 'content@cliphouse.io' },
+  { id: 'temp-company-017', source: 'temporary', name: 'ShortCup', representativeName: 'Olivia Lin', email: 'bd@shortcup.tv' },
+  { id: 'temp-company-015', source: 'temporary', name: 'Dramini', representativeName: 'Noah Chen', email: 'partnerships@dramini.com' },
+  { id: 'temp-company-013', source: 'temporary', name: 'MicroVibe', representativeName: 'Grace Wong', email: 'content@microvibe.app' },
+  { id: 'temp-company-011', source: 'temporary', name: 'NovaByte', representativeName: 'Lucas Tan', email: 'acq@novabyte.tv' },
+  { id: 'temp-company-009', source: 'temporary', name: 'SnackPlay', representativeName: 'Sofia Kim', email: 'bd@snackplay.io' },
+  { id: 'temp-company-007', source: 'temporary', name: 'QuickDrama', representativeName: 'Ethan Park', email: 'content@quickdrama.com' },
+  { id: 'temp-company-005', source: 'temporary', name: 'ShortBox Asia', representativeName: 'Hannah Lee', email: 'partners@shortbox.asia' },
+  { id: 'temp-company-002', source: 'temporary', name: 'MiniStage', representativeName: 'Alex Wu', email: 'partnerships@ministage.io' },
+  { id: 'temp-company-001', source: 'temporary', name: 'NovaShort', representativeName: 'Mia Chen', email: 'content@novashort.com' },
+  { id: 'temp-company-021', source: 'temporary', name: 'EpisodeTap', representativeName: 'Jamie Lee', email: 'partners@episodetap.io' },
+  { id: 'temp-company-022', source: 'temporary', name: 'TinyDrama Hub', representativeName: 'Chris Park', email: 'bd@tinydrama.tv' },
+  { id: 'temp-company-023', source: 'temporary', name: 'ReelPocket', representativeName: 'Nina Cho', email: 'content@reelpocket.app' }
+];
+let pendingNewPlatformSelection = '';
+let pendingNewPlatformSource = 'company';
+let newPlatformModalSource = 'company';
+let newPlatformModalPage = 1;
+let newPlatformModalQuery = '';
+const NEW_PLATFORM_MODAL_PAGE_SIZE = 10;
 
 const opsStudios = ['NextWave Studios', 'BrightFrame', 'OneTake Media', 'ReelHouse Inc.', 'PaperLens', 'Crescendo Pictures'];
 const opsTypes = ['MG+RS', 'RS', 'Flat Fee'];
@@ -3764,8 +3872,6 @@ function renderNewContentModalPage() {
   });
   const pagebar = document.getElementById('new-content-modal-pagebar');
   const pages = document.getElementById('new-content-modal-pages');
-  const prev = document.getElementById('new-content-modal-prev');
-  const next = document.getElementById('new-content-modal-next');
   if (pagebar) pagebar.style.display = totalPages > 1 ? '' : 'none';
   if (pages) {
     pages.innerHTML = Array.from({ length: totalPages }, (_, index) => {
@@ -3773,8 +3879,6 @@ function renderNewContentModalPage() {
       return `<button class="btn modal-page-number ${page === newContentModalPage ? 'active' : ''}" type="button" onclick="setNewContentModalPage(${page})">${page}</button>`;
     }).join('');
   }
-  if (prev) prev.disabled = newContentModalPage <= 1;
-  if (next) next.disabled = newContentModalPage >= totalPages;
 }
 
 function setNewContentModalPage(page) {
@@ -3795,6 +3899,157 @@ function confirmNewContentSelection() {
   document.getElementById('new-company').value = content.companyId;
   syncNewContentPicker();
   document.getElementById('new-content-modal')?.classList.remove('show');
+}
+
+function newPlatformOptionsForSource(source = newPlatformModalSource) {
+  return source === 'temporary' ? newTemporaryPlatformCompanyOptions : newPlatformCompanyOptions;
+}
+
+function findNewPlatformOption(source, id) {
+  return newPlatformOptionsForSource(source).find((item) => item.id === id);
+}
+
+function syncNewPlatformPicker() {
+  const platform = document.getElementById('new-platform')?.value || '';
+  const picker = document.getElementById('new-platform-picker');
+  const label = document.getElementById('new-platform-picker-label');
+  if (label) label.textContent = platform || '플랫폼사를 선택하세요';
+  picker?.classList.toggle('is-empty', !platform);
+}
+
+function syncNewPlatformTabs() {
+  document.querySelectorAll('.platform-modal-tab').forEach((tab) => {
+    const isActive = tab.id === `new-platform-tab-${newPlatformModalSource}`;
+    tab.classList.toggle('active', isActive);
+    tab.setAttribute('aria-selected', String(isActive));
+  });
+}
+
+function newPlatformModalMatchedItems() {
+  const keyword = newPlatformModalQuery.trim().toLowerCase();
+  return newPlatformOptionsForSource().filter((item) => {
+    const haystack = String(item.name || '').toLowerCase();
+    return !keyword || haystack.includes(keyword);
+  });
+}
+
+function syncNewPlatformModalLayout() {
+  const isTemporary = newPlatformModalSource === 'temporary';
+  const table = document.getElementById('new-platform-result-table');
+  const head = document.getElementById('new-platform-result-head');
+  const search = document.getElementById('new-platform-modal-search');
+  table?.classList.toggle('is-company', !isTemporary);
+  if (head) {
+    head.innerHTML = isTemporary
+      ? '<span></span><span>회사명</span><span>대표 유저명</span><span>이메일</span>'
+      : '<span></span><span>회사명</span><span>지역</span>';
+  }
+  if (search) {
+    search.placeholder = '회사명 검색';
+  }
+}
+
+function newPlatformResultRow(item) {
+  const fields = item.source === 'temporary'
+    ? `<div class="result-meta">${escapeHtml(item.representativeName)}</div><div class="result-meta">${escapeHtml(item.email)}</div>`
+    : `<div class="result-meta">${escapeHtml(item.country)}</div>`;
+  return `
+    <div class="result-item" data-id="${escapeHtml(item.id)}" data-source="${escapeHtml(item.source)}" onclick="setPendingNewPlatformSelection('${escapeHtml(item.source)}','${escapeHtml(item.id)}')">
+      <label class="result-check-wrap"><input class="result-check" type="checkbox" aria-label="${escapeHtml(item.name)} 선택" onclick="event.stopPropagation()" onchange="setPendingNewPlatformSelection('${escapeHtml(item.source)}','${escapeHtml(item.id)}')" /></label>
+      <div class="result-name">${escapeHtml(item.name)}</div>
+      ${fields}
+    </div>
+  `;
+}
+
+function renderNewPlatformModalPage() {
+  const list = document.getElementById('new-platform-result-list');
+  if (!list) return;
+  syncNewPlatformModalLayout();
+  const matched = newPlatformModalMatchedItems();
+  const totalPages = Math.max(1, Math.ceil(matched.length / NEW_PLATFORM_MODAL_PAGE_SIZE));
+  newPlatformModalPage = Math.min(Math.max(1, newPlatformModalPage), totalPages);
+  const start = (newPlatformModalPage - 1) * NEW_PLATFORM_MODAL_PAGE_SIZE;
+  const pageItems = matched.slice(start, start + NEW_PLATFORM_MODAL_PAGE_SIZE);
+  list.innerHTML = pageItems.length ? pageItems.map(newPlatformResultRow).join('') : '<div class="ops-empty">검색 결과가 없습니다.</div>';
+  const pagebar = document.getElementById('new-platform-modal-pagebar');
+  const pages = document.getElementById('new-platform-modal-pages');
+  if (pagebar) pagebar.style.display = totalPages > 1 ? '' : 'none';
+  if (pages) {
+    pages.innerHTML = Array.from({ length: totalPages }, (_, index) => {
+      const page = index + 1;
+      return `<button class="btn modal-page-number ${page === newPlatformModalPage ? 'active' : ''}" type="button" onclick="setNewPlatformModalPage(${page})">${page}</button>`;
+    }).join('');
+  }
+  syncNewPlatformModalSelection();
+}
+
+function syncNewPlatformModalSelection() {
+  document.querySelectorAll('#new-platform-modal .result-item').forEach((item) => {
+    const checked = item.dataset.id === pendingNewPlatformSelection && item.dataset.source === pendingNewPlatformSource;
+    const check = item.querySelector('.result-check');
+    if (check) check.checked = checked;
+    item.classList.toggle('sel', checked);
+  });
+  const confirmButton = document.getElementById('new-platform-modal-confirm');
+  if (confirmButton) confirmButton.disabled = !findNewPlatformOption(pendingNewPlatformSource, pendingNewPlatformSelection);
+}
+
+function setPendingNewPlatformSelection(source, platformId) {
+  pendingNewPlatformSource = source;
+  pendingNewPlatformSelection = platformId;
+  syncNewPlatformModalSelection();
+}
+
+function setNewPlatformModalPage(page) {
+  newPlatformModalPage = page;
+  renderNewPlatformModalPage();
+}
+
+function filterNewPlatformModal(query = document.getElementById('new-platform-modal-search')?.value || '') {
+  newPlatformModalQuery = String(query || '');
+  newPlatformModalPage = 1;
+  renderNewPlatformModalPage();
+}
+
+function switchNewPlatformSource(source) {
+  newPlatformModalSource = source === 'temporary' ? 'temporary' : 'company';
+  pendingNewPlatformSource = newPlatformModalSource;
+  pendingNewPlatformSelection = '';
+  newPlatformModalPage = 1;
+  syncNewPlatformTabs();
+  renderNewPlatformModalPage();
+}
+
+function openNewPlatformModal() {
+  const savedSource = document.getElementById('new-platform-source')?.value || 'company';
+  const savedId = document.getElementById('new-platform-id')?.value || '';
+  const search = document.getElementById('new-platform-modal-search');
+  newPlatformModalSource = savedSource === 'temporary' ? 'temporary' : 'company';
+  pendingNewPlatformSource = newPlatformModalSource;
+  pendingNewPlatformSelection = savedId;
+  newPlatformModalQuery = '';
+  newPlatformModalPage = 1;
+  if (search) search.value = '';
+  syncNewPlatformTabs();
+  renderNewPlatformModalPage();
+  document.getElementById('new-platform-modal')?.classList.add('show');
+  setTimeout(() => search?.focus(), 0);
+}
+
+function closeNewPlatformModal(event) {
+  if (event && !event.target.classList.contains('modal-backdrop')) return;
+  document.getElementById('new-platform-modal')?.classList.remove('show');
+}
+
+function confirmNewPlatformSelection() {
+  const platform = findNewPlatformOption(pendingNewPlatformSource, pendingNewPlatformSelection);
+  if (!platform) return;
+  document.getElementById('new-platform').value = platform.name;
+  document.getElementById('new-platform-id').value = platform.id;
+  document.getElementById('new-platform-source').value = platform.source;
+  syncNewPlatformPicker();
+  document.getElementById('new-platform-modal')?.classList.remove('show');
 }
 
 function syncNewContractType() {
@@ -4770,6 +5025,9 @@ function resetNewContractForm() {
   document.getElementById('new-content').value = '';
   syncNewContentPicker();
   document.getElementById('new-platform').value = '';
+  document.getElementById('new-platform-id').value = '';
+  document.getElementById('new-platform-source').value = '';
+  syncNewPlatformPicker();
   document.getElementById('new-region').value = '';
   document.getElementById('new-contract-type').value = 'FLAT_FEE';
   document.getElementById('new-exclusive').value = 'exclusive';
@@ -4787,9 +5045,11 @@ function createContract() {
   const companyId = document.getElementById('new-company').value;
   const contentId = document.getElementById('new-content').value;
   const platform = document.getElementById('new-platform').value.trim();
+  const platformId = document.getElementById('new-platform-id').value;
+  const platformSource = document.getElementById('new-platform-source').value;
   const selectedContent = newContractContentOptions.find((item) => item.id === contentId && String(item.companyId) === String(companyId));
-  if (!companyId || !selectedContent || !platform) {
-    alert('콘텐츠와 플랫폼 이름을 입력해 주세요.');
+  if (!companyId || !selectedContent || !platform || !platformId || !platformSource) {
+    alert('콘텐츠와 플랫폼사를 선택해 주세요.');
     return;
   }
   const type = document.getElementById('new-contract-type').value;
@@ -4805,6 +5065,8 @@ function createContract() {
     poster: `poster-p${(nextId % 6) + 1}`,
     mark: posterInitials(content),
     platform,
+    platformId,
+    platformSource,
     company: selectedContent?.company || '',
     companyId: Number(companyId),
     date: document.getElementById('new-release-date').value,
