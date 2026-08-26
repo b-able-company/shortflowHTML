@@ -10,6 +10,7 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #fff; display: flex; height: 100vh; overflow: hidden; font-size: 13px; color: #1a1a18; }
+body.embed-compose { display: block; }
 
 /* SIDEBAR */
 .sb { width: 210px; min-width: 210px; background: #13130f; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
@@ -82,9 +83,11 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .body.mail-panel-expanded .history-pane { width: 0; min-width: 0; flex: 0 0 0; padding: 0; overflow: hidden; }
 .body.mail-panel-expanded.has-compose .compose-pane,
 .body.mail-panel-expanded.has-detail .mail-detail-pane { flex: 1 1 100%; width: 100%; }
+.body.mail-panel-expanded.has-compose .compose-pane,
+.body.mail-panel-expanded.has-detail .mail-detail-pane { box-shadow: none; }
 .body.mail-panel-expanded.has-compose .compose-flow,
-.body.mail-panel-expanded.has-detail .mail-detail-body { max-width: 1040px; margin-left: auto; margin-right: auto; }
-.body.mail-panel-expanded.has-compose .compose-step-tabs { max-width: 1040px; margin-left: auto; margin-right: auto; }
+.body.mail-panel-expanded.has-detail .mail-detail-body { max-width: 900px; margin-left: auto; margin-right: auto; }
+.body.mail-panel-expanded.has-compose .compose-step-tabs { max-width: 900px; margin-left: auto; margin-right: auto; }
 .body.mail-panel-expanded.has-compose .compose-flow,
 .body.mail-panel-expanded.has-detail .mail-detail-body { padding-left: 0; }
 .compose-panel-head { position: relative; min-height: 108px; padding: 30px 24px 7px; display: flex; align-items: flex-start; justify-content: center; gap: 14px; }
@@ -134,6 +137,60 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
 .btn-ghost { border-color: transparent; background: transparent; color: #777; }
 .btn-ghost:hover { background: #f7f7f7; border-color: transparent; color: #333; }
+
+body.embed-compose .sb,
+body.embed-compose .topbar,
+body.embed-compose .history-pane,
+body.embed-compose .main::before,
+body.embed-compose .body::before {
+  display: none !important;
+}
+body.embed-compose .main,
+body.embed-compose .body {
+  width: 100%;
+  height: 100vh;
+  display: block;
+  overflow: hidden;
+}
+body.embed-compose .body.has-compose .compose-pane {
+  display: block;
+  width: 100%;
+  height: 100vh;
+  margin-top: 0;
+  padding: 0 26px 54px 0;
+  border-left: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+body.embed-compose .body.has-detail .mail-detail-pane {
+  display: block;
+  width: 100%;
+  height: 100vh;
+  margin-top: 0;
+  padding: 0 26px 54px 0;
+  border-left: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+body.embed-compose .compose-panel-head {
+  min-height: 94px;
+  padding-top: 26px;
+  padding-bottom: 4px;
+}
+body.embed-compose .compose-flow {
+  padding-top: 6px;
+}
+body.embed-compose .compose-pane .compose-expand-btn,
+body.embed-compose .mail-detail-pane .compose-expand-btn,
+body.embed-compose .compose-pane .compose-close-btn,
+body.embed-compose .mail-detail-pane .compose-close-btn {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+body.embed-compose .utility-remote {
+  display: none !important;
+}
 
 /* MAIL STEPS */
 .compose-step-tabs { flex: 1 1 auto; min-width: 0; display: flex; align-items: stretch; justify-content: space-between; align-self: stretch; gap: 0; border: 0; border-radius: 0; overflow: visible; background: transparent; }
@@ -408,6 +465,22 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #ff
 .manual-recipient-table .manual-recipient-add:hover { background: #eeeeee; }
 .manual-recipient-form .manual-recipient-input { width: 100%; height: 38px; border: 0; border-right: 0.5px solid rgb(242, 242, 242); border-radius: 0; }
 .manual-recipient-form .manual-recipient-add { width: 38px; height: 38px; border: 0; border-radius: 0; }
+.external-platform-panel { margin-top: 0; padding: 0; border: 0; border-radius: 0; }
+.external-platform-panel .platform-tools #select-all-manual-recipients-btn { height: 34px; min-width: 92px; padding: 0 16px; }
+.external-platform-panel .manual-recipient-selected-table .manual-recipient-table-head,
+.external-platform-panel .manual-recipient-selected-table .manual-recipient-input-row,
+.external-platform-panel .manual-recipient-selected-table .manual-recipient-option-row { grid-template-columns: 42px minmax(130px, 0.95fr) minmax(96px, 0.7fr) minmax(190px, 1.25fr); min-width: 560px; }
+.external-platform-panel .manual-recipient-table-head { min-height: 32px; }
+.external-platform-panel .manual-recipient-input-row { min-height: 42px; background: #f7f7f7; }
+.external-platform-panel .manual-recipient-option-row { min-height: 38px; cursor: pointer; }
+.external-platform-panel .manual-recipient-selected-table .manual-recipient-cell:first-child,
+.external-platform-panel .manual-recipient-selected-table .manual-recipient-input-row .manual-recipient-cell:first-child { justify-content: center; padding: 0; color: inherit; font-weight: inherit; }
+.external-platform-panel .manual-recipient-selected-table .manual-recipient-table-head .manual-recipient-cell:first-child { color: inherit; font-weight: inherit; }
+.external-platform-panel .manual-recipient-selected-table .manual-recipient-option-row .manual-recipient-cell:nth-child(2) { color: #1a1a18; font-weight: 500; }
+.external-platform-panel .manual-recipient-selected-table .manual-recipient-cell:last-child { justify-content: flex-start; padding: 7px 10px; }
+.external-platform-panel .manual-recipient-input-row .manual-recipient-input-cell:last-child { border-right: 0; }
+.external-platform-panel .manual-recipient-add { width: 100%; height: 100%; border: 0; border-radius: 0; background: transparent; font-size: 19px; }
+.external-platform-panel .manual-recipient-add:hover { background: #f5f5f5; }
 .empty-state { padding: 28px 12px; color: #bbb; font-size: 12px; text-align: center; }
 .settlement-message-panel { display: none; min-height: 252px; padding: 18px 4px 0; }
 .settlement-message-panel.show { display: block; }
@@ -585,9 +658,9 @@ table.settlement-content-list tr:last-child td { border-bottom: 1px solid #eeeee
 .history-row.open .history-toggle { color: #333; transform: rotate(180deg); }
 .history-detail-row { border-bottom: 1px solid #eef0f3; background: #fafafa; }
 .history-detail-row td { padding: 0; white-space: normal; }
-.history-inline-detail { background: #fafafa; padding: 0; }
-.mail-detail-body .history-inline-detail { background: #fff; }
-.history-inline-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.history-inline-detail { background: transparent; padding: 0; }
+.mail-detail-body .history-inline-detail { background: transparent; }
+.history-inline-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
 .history-empty-row { height: 96px !important; cursor: default !important; }
 .history-empty-row td { text-align: center; color: #aaa; font-size: 12px; }
 .history-empty-row:hover { background: #fff !important; }
@@ -598,43 +671,49 @@ table.settlement-content-list tr:last-child td { border-bottom: 1px solid #eeeee
 .detail-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
 .detail-platform { min-height: 30px; padding: 7px 9px; border: 0.5px solid #eeeeea; border-radius: 7px; display: flex; align-items: center; justify-content: flex-start; gap: 10px; color: #333; font-size: 11.5px; }
 .history-pane .review-row { align-items: flex-start; justify-content: flex-start; }
-.history-inline-detail .detail-body { border-radius: 0; overflow: visible; }
+.history-inline-detail .detail-body { border: 0.5px solid rgb(242, 242, 242); border-radius: 12px; overflow: hidden; background: #fff; }
 .history-inline-detail .review-row {
-  min-height: 42px;
-  padding: 0;
+  min-height: 38px;
+  padding: 9px 12px;
   border-bottom: 0.5px solid rgb(242, 242, 242);
-  grid-template-columns: 108px minmax(0, 1fr);
-  gap: 0;
-  align-items: stretch;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 12px;
+  align-items: baseline;
   overflow: visible;
 }
 .history-inline-detail .review-row:last-child { border-bottom: 0; }
 .history-inline-detail .review-row.review-row-dual {
-  grid-template-columns: 108px minmax(0, 1fr) 108px minmax(0, 1fr);
+  grid-template-columns: 112px minmax(0, 1fr) 112px minmax(0, 1fr);
 }
 .history-inline-detail .review-key {
-  min-height: 100%;
-  padding: 12px 12px;
-  border-right: 0.5px solid rgb(242, 242, 242);
-  background: #fafafa;
+  min-width: 0;
+  padding: 0;
+  border-right: 0;
+  background: transparent;
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: #777;
-  text-align: center;
+  justify-content: flex-start;
+  color: #aaa;
+  font-size: 11px;
+  text-align: left;
+  white-space: nowrap;
 }
 .history-inline-detail .review-row-dual .review-key:nth-child(3) {
-  border-left: 0.5px solid rgb(242, 242, 242);
+  border-left: 0;
 }
 .history-inline-detail .review-val {
-  min-height: 100%;
-  padding: 11px 12px;
-  white-space: normal;
-  text-align: left;
+  min-height: 0;
+  padding: 0;
+  color: #333;
+  font-size: 12px;
+  white-space: nowrap;
+  text-align: right;
   line-height: 1.4;
-  overflow: visible;
-  text-overflow: clip;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+.history-inline-detail .review-val.multiline,
+.history-inline-detail .history-wide-val { white-space: normal; text-align: left; overflow: visible; text-overflow: clip; }
 .history-pane .review-key { width: auto; }
 .history-pane .review-val { white-space: normal; text-align: left; line-height: 1.4; }
 .history-content-tags { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -740,6 +819,9 @@ table.settlement-content-list tr:last-child td { border-bottom: 1px solid #eeeee
   .manual-recipient-selected-table .manual-recipient-table-head,
   .manual-recipient-selected-table .manual-recipient-input-row,
   .manual-recipient-selected-table .manual-recipient-option-row { grid-template-columns: minmax(120px, 0.9fr) minmax(90px, 0.7fr) minmax(170px, 1.15fr) 38px; }
+  .external-platform-panel .manual-recipient-selected-table .manual-recipient-table-head,
+  .external-platform-panel .manual-recipient-selected-table .manual-recipient-input-row,
+  .external-platform-panel .manual-recipient-selected-table .manual-recipient-option-row { grid-template-columns: 42px minmax(120px, 0.9fr) minmax(90px, 0.7fr) minmax(170px, 1.15fr); min-width: 520px; }
   .preview-target-row { min-width: 560px; }
 }
 
@@ -788,8 +870,8 @@ table.settlement-content-list tr:last-child td { border-bottom: 1px solid #eeeee
     <div class="sub">
       <a class="ni" href="settlement-admin.html#contracts">계약관리</a>
       <a class="ni" href="settlement-admin.html#settlement">정산 진행 관리</a>
+      <a class="ni" href="settlement-admin.html#rs-requests">RS 요청 관리</a>
     </div>
-    <a class="ni active" href="mail-admin.html"><i class="ti ti-mail"></i> 메일 발송</a>
     <a class="ni" href="audit-log.html"><i class="ti ti-shield-check"></i> 관리 이력</a>
   </nav>
   <div class="sb-foot">
@@ -1013,6 +1095,21 @@ table.settlement-content-list tr:last-child td { border-bottom: 1px solid #eeeee
 </div>
 
 <script>
+const isComposeEmbed = new URLSearchParams(location.search).get('embed') === 'compose';
+if (isComposeEmbed) {
+  document.body.classList.add('embed-compose');
+  removeEmbedChrome();
+  new MutationObserver(removeEmbedChrome).observe(document.documentElement, { childList: true, subtree: true });
+}
+
+function removeEmbedChrome() {
+  if (!isComposeEmbed) return;
+  document.querySelectorAll('#mail-compose-expand-toggle, #mail-detail-expand-toggle, .compose-pane .compose-close-btn, .mail-detail-pane .compose-close-btn, .utility-remote')
+    .forEach(element => element.remove());
+}
+
+document.addEventListener('DOMContentLoaded', removeEmbedChrome);
+
 const mailTypes = {
   content: {
     label: '콘텐츠 제안',
@@ -1451,6 +1548,7 @@ let manualRecipientId = 1;
 let manualRecipientDraft = { companyName: '', name: '', email: '' };
 let sourceQuery = '';
 let platformQuery = '';
+let manualRecipientQuery = '';
 let settlementCompanyFilter = '';
 let selectedSettlementCompanyId = null;
 let draftSettlementCompanyId = null;
@@ -1661,6 +1759,13 @@ function previousManualRecipientOptions() {
     ...recipient,
     selected: isManualRecipientSelected(recipient),
   }));
+}
+
+function visibleManualRecipientOptions() {
+  return manualRecipientOptions().filter(recipient => {
+    const keyword = String(recipient.companyName || '').toLowerCase();
+    return !manualRecipientQuery || keyword.includes(manualRecipientQuery);
+  });
 }
 
 function isManualRecipientSelected(recipient) {
@@ -1884,6 +1989,7 @@ function commitDraftSourceSelection() {
   manualRecipients = [];
   manualRecipientDraft = { companyName: '', name: '', email: '' };
   platformQuery = '';
+  manualRecipientQuery = '';
   platformPage = 1;
   manualRecipientPage = 1;
   isPreviousManualRecipientsExpanded = false;
@@ -1920,7 +2026,19 @@ function toggleMailPanelExpanded() {
   if (currentView !== 'compose' && currentView !== 'detail') return;
   isMailPanelExpanded = !isMailPanelExpanded;
   renderView();
+  if (isComposeEmbed) {
+    window.parent?.postMessage({
+      type: 'shortflow-mail-compose-expanded',
+      expanded: isMailPanelExpanded
+    }, '*');
+  }
 }
+
+window.addEventListener('message', event => {
+  if (event.data?.type !== 'shortflow-mail-compose-expanded') return;
+  isMailPanelExpanded = !!event.data.expanded;
+  renderView();
+});
 
 function resetComposeSelection() {
   selectedMailType = null;
@@ -1932,6 +2050,7 @@ function resetComposeSelection() {
   manualRecipientDraft = { companyName: '', name: '', email: '' };
   sourceQuery = '';
   platformQuery = '';
+  manualRecipientQuery = '';
   settlementCompanyFilter = '';
   selectedSettlementCompanyId = null;
   draftSettlementCompanyId = null;
@@ -1953,6 +2072,9 @@ function openComposeView() {
     openHistoryView();
     return;
   }
+  if (location.hash !== '#compose') {
+    window.history.replaceState(null, '', '#compose');
+  }
   currentView = 'compose';
   isMailPanelExpanded = false;
   currentMailStep = 1;
@@ -1962,6 +2084,13 @@ function openComposeView() {
 }
 
 function openHistoryView() {
+  if (isComposeEmbed) {
+    window.parent?.postMessage({ type: 'shortflow-mail-compose-close' }, '*');
+    return;
+  }
+  if (location.hash === '#compose') {
+    window.history.replaceState(null, '', `${location.pathname}${location.search}`);
+  }
   currentView = 'history';
   isMailPanelExpanded = false;
   selectedHistoryId = null;
@@ -1981,6 +2110,7 @@ function setMailType(type) {
   manualRecipientDraft = { companyName: '', name: '', email: '' };
   sourceQuery = '';
   platformQuery = '';
+  manualRecipientQuery = '';
   settlementCompanyFilter = '';
   selectedSettlementCompanyId = null;
   draftSettlementCompanyId = null;
@@ -2011,6 +2141,12 @@ function filterPlatforms(value) {
   renderPlatforms();
 }
 
+function filterManualRecipients(value) {
+  manualRecipientQuery = value.trim().toLowerCase();
+  manualRecipientPage = 1;
+  renderManualRecipients();
+}
+
 function addManualRecipient() {
   if (isSettlementMail() || !hasSelectedSources()) return;
   const companyInput = document.getElementById('manual-company-name');
@@ -2032,6 +2168,7 @@ function addManualRecipient() {
   if (nameInput) nameInput.value = '';
   if (emailInput) emailInput.value = '';
   currentMailStep = 4;
+  manualRecipientPage = 1;
   renderPlatforms();
   renderPreview();
 }
@@ -2044,7 +2181,7 @@ function setManualRecipientDraft(field, value) {
 }
 
 function toggleManualRecipientOption(index) {
-  const recipient = manualRecipientOptions()[index];
+  const recipient = visibleManualRecipientOptions()[index];
   if (!recipient) return;
   const key = manualRecipientKey(recipient);
   if (isManualRecipientSelected(recipient)) {
@@ -2154,7 +2291,9 @@ function selectSource(id) {
   manualRecipients = [];
   manualRecipientDraft = { companyName: '', name: '', email: '' };
   platformQuery = '';
+  manualRecipientQuery = '';
   platformPage = 1;
+  manualRecipientPage = 1;
   currentMailStep = 2;
   document.getElementById('platform-search').value = '';
   renderAll();
@@ -2167,11 +2306,14 @@ function clearSourceSelection() {
   checkedPlatforms.clear();
   manualRecipients = [];
   manualRecipientDraft = { companyName: '', name: '', email: '' };
+  platformQuery = '';
+  manualRecipientQuery = '';
   if (isSettlementMail()) {
     selectedSettlementCompanyId = null;
     draftSettlementCompanyId = null;
   }
   platformPage = 1;
+  manualRecipientPage = 1;
   currentMailStep = 2;
   renderAll();
 }
@@ -2210,6 +2352,22 @@ function selectAllPlatforms() {
   visiblePlatforms().forEach(platform => checkedPlatforms.add(platform.id));
   currentMailStep = 3;
   renderPlatforms();
+  renderPreview();
+}
+
+function selectAllManualRecipients() {
+  if (isSettlementMail() || !hasSelectedSources()) return;
+  visibleManualRecipientOptions().forEach(recipient => {
+    if (isManualRecipientSelected(recipient)) return;
+    manualRecipients.push({
+      id: manualRecipientId++,
+      companyName: recipient.companyName,
+      name: recipient.name,
+      email: recipient.email,
+    });
+  });
+  currentMailStep = 4;
+  renderManualRecipients();
   renderPreview();
 }
 
@@ -2297,7 +2455,7 @@ function renderComposeStep() {
   const settlementContents = selectedSettlementContents();
   document.getElementById('source-section-title').textContent = isSettlementMail() ? '제작사 선택' : (selectedMailType ? proposalSourceStepLabel() : '자료 선택');
   document.getElementById('target-section-title').textContent = isSettlementMail() ? '콘텐츠 선택' : '전송할 플랫폼 선택';
-  document.getElementById('message-section-title').textContent = isSettlementMail() ? '관리자 메시지' : '외부 플랫폼 추가';
+  document.getElementById('message-section-title').textContent = isSettlementMail() ? '관리자 메시지' : '외부 플랫폼 선택';
   document.getElementById('platform-search').placeholder = isSettlementMail() ? '콘텐츠명 검색' : (selectedMailType ? mailTypes[selectedMailType].targetSearchPlaceholder : '플랫폼사명 검색');
   document.getElementById('select-all-targets-btn').textContent = isSettlementMail() ? '전체 선택' : '전체 선택';
   document.getElementById('settlement-admin-message').placeholder = `${noticeLabel} 안내에 추가할 메시지를 입력해주세요.`;
@@ -2708,56 +2866,32 @@ function renderManualRecipients() {
     panel.innerHTML = '';
     return;
   }
-  const selectedRecipients = validManualRecipients();
-  const previousRecipients = previousManualRecipientOptions();
-  const totalPages = Math.max(1, Math.ceil(previousRecipients.length / manualRecipientPageSize));
+  const rows = visibleManualRecipientOptions();
+  const totalPages = Math.max(1, Math.ceil(rows.length / manualRecipientPageSize));
   manualRecipientPage = Math.min(Math.max(1, manualRecipientPage), totalPages);
   const start = (manualRecipientPage - 1) * manualRecipientPageSize;
-  const pageRows = previousRecipients.slice(start, start + manualRecipientPageSize);
-  panel.classList.toggle('has-rows', selectedRecipients.length > 0);
+  const pageRows = rows.slice(start, start + manualRecipientPageSize);
+  panel.classList.toggle('has-rows', validManualRecipients().length > 0);
   panel.innerHTML = `
-    <div class="manual-recipient-block">
-      <div class="manual-recipient-collapse-box">
-        <button class="manual-recipient-toggle ${isPreviousManualRecipientsExpanded ? 'expanded' : ''}" type="button" onclick="togglePreviousManualRecipientPanel()" aria-expanded="${isPreviousManualRecipientsExpanded}">
-          <span>이전 발송 외부 플랫폼</span>
-          <i class="ti ti-chevron-down"></i>
-        </button>
-        ${isPreviousManualRecipientsExpanded ? `
-          <div class="manual-recipient-collapsible">
-            <div class="manual-recipient-table">
-              <div class="manual-recipient-table-head">
-                <div class="manual-recipient-cell"></div>
-                <div class="manual-recipient-cell">회사명</div>
-                <div class="manual-recipient-cell">이름</div>
-                <div class="manual-recipient-cell">이메일</div>
-              </div>
-              ${pageRows.length ? pageRows.map((recipient, index) => `
-                <div class="manual-recipient-option-row manual-recipient-previous-row ${recipient.selected ? 'selected' : ''}" onclick="addPreviousManualRecipient(${start + index})">
-                  <div class="manual-recipient-cell">
-                    <button class="manual-recipient-row-add ${recipient.selected ? 'added' : ''}" type="button" tabindex="-1" aria-label="이전 외부 플랫폼 추가" ${recipient.selected ? 'disabled' : ''}>
-                      ${recipient.selected ? '<i class="ti ti-check"></i>' : '+'}
-                    </button>
-                  </div>
-                  <div class="manual-recipient-cell">${escapeHtml(recipient.companyName)}</div>
-                  <div class="manual-recipient-cell">${escapeHtml(recipient.name)}</div>
-                  <div class="manual-recipient-cell">${escapeHtml(recipient.email)}</div>
-                </div>
-              `).join('') : '<div class="empty-state">이전 발송 외부 플랫폼이 없습니다</div>'}
-            </div>
-            <div class="manual-recipient-pagination">
-              ${previousRecipients.length ? Array.from({ length: totalPages }, (_, index) => {
-                const page = index + 1;
-                return `<button class="page-btn ${manualRecipientPage === page ? 'active' : ''}" type="button" onclick="setManualRecipientPage(${page})">${page}</button>`;
-              }).join('') : ''}
-            </div>
-          </div>
-        ` : ''}
+    <div class="registered-platform-panel external-platform-panel">
+      <div class="platform-tools">
+        <div class="search-wrap" style="flex:1">
+          <i class="ti ti-search"></i>
+          <input class="search-input" id="manual-recipient-search" placeholder="외부 플랫폼 회사명 검색" value="${escapeHtml(manualRecipientQuery)}" oninput="filterManualRecipients(this.value)" />
+        </div>
+        <button class="btn" id="select-all-manual-recipients-btn" type="button" onclick="selectAllManualRecipients()">전체 선택</button>
       </div>
-    </div>
-    <div class="manual-recipient-block">
-      <div class="manual-recipient-subtitle">전송할 외부 플랫폼</div>
       <div class="manual-recipient-table manual-recipient-selected-table">
+        <div class="manual-recipient-table-head">
+          <div class="manual-recipient-cell"></div>
+          <div class="manual-recipient-cell">회사명</div>
+          <div class="manual-recipient-cell">이름</div>
+          <div class="manual-recipient-cell">이메일</div>
+        </div>
         <div class="manual-recipient-input-row">
+          <div class="manual-recipient-cell">
+            <button class="manual-recipient-add" type="button" onclick="addManualRecipient()" aria-label="외부 플랫폼 추가">+</button>
+          </div>
           <div class="manual-recipient-input-cell">
             <input class="manual-recipient-input" id="manual-company-name" placeholder="회사명" value="${escapeHtml(manualRecipientDraft.companyName)}" oninput="setManualRecipientDraft('companyName', this.value)" />
           </div>
@@ -2767,20 +2901,23 @@ function renderManualRecipients() {
           <div class="manual-recipient-input-cell">
             <input class="manual-recipient-input" id="manual-recipient-email" placeholder="이메일주소" value="${escapeHtml(manualRecipientDraft.email)}" oninput="setManualRecipientDraft('email', this.value)" onkeydown="if(event.key === 'Enter') addManualRecipient()" />
           </div>
-          <div class="manual-recipient-cell">
-            <button class="manual-recipient-add" type="button" onclick="addManualRecipient()" aria-label="외부 플랫폼 추가">+</button>
-          </div>
         </div>
-        ${selectedRecipients.length ? selectedRecipients.map(recipient => `
-          <div class="manual-recipient-option-row manual-recipient-selected-row selected">
+        ${pageRows.length ? pageRows.map((recipient, index) => `
+          <div class="manual-recipient-option-row ${recipient.selected ? 'selected' : ''}" onclick="toggleManualRecipientOption(${start + index})">
+            <div class="manual-recipient-cell">
+              <div class="platform-check"><i class="ti ti-check"></i></div>
+            </div>
             <div class="manual-recipient-cell">${escapeHtml(recipient.companyName)}</div>
             <div class="manual-recipient-cell">${escapeHtml(recipient.name)}</div>
             <div class="manual-recipient-cell">${escapeHtml(recipient.email)}</div>
-            <div class="manual-recipient-cell">
-              <button class="manual-recipient-remove" type="button" onclick="removeManualRecipient(${recipient.id})" aria-label="전송 목록에서 제거">×</button>
-            </div>
           </div>
-        `).join('') : '<div class="empty-state">전송할 외부 플랫폼이 없습니다</div>'}
+        `).join('') : '<div class="empty-state">조건에 맞는 외부 플랫폼이 없습니다</div>'}
+      </div>
+      <div class="manual-recipient-pagination">
+        ${rows.length ? Array.from({ length: totalPages }, (_, index) => {
+          const page = index + 1;
+          return `<button class="page-btn ${manualRecipientPage === page ? 'active' : ''}" type="button" onclick="setManualRecipientPage(${page})">${page}</button>`;
+        }).join('') : ''}
       </div>
     </div>
   `;
@@ -2798,7 +2935,7 @@ function renderPlatformPagination(total, totalPages) {
 }
 
 function setManualRecipientPage(page) {
-  const totalPages = Math.max(1, Math.ceil(previousManualRecipientOptions().length / manualRecipientPageSize));
+  const totalPages = Math.max(1, Math.ceil(visibleManualRecipientOptions().length / manualRecipientPageSize));
   manualRecipientPage = Math.min(Math.max(1, page), totalPages);
   renderManualRecipients();
 }
@@ -2958,6 +3095,15 @@ function submitMailConfirm() {
   if (typeof handler === 'function') handler();
 }
 
+function openSentMailDetail(newHistoryId) {
+  selectedHistoryId = newHistoryId;
+  historyQuery = '';
+  historyTypeFilter = '';
+  historyPage = 1;
+  currentView = 'detail';
+  renderAll();
+}
+
 function performSendMail() {
   const sources = selectedSources();
   const source = sources[0];
@@ -3029,6 +3175,7 @@ function performSendMail() {
     checkedPlatforms.clear();
     manualRecipients = [];
     manualRecipientDraft = { companyName: '', name: '', email: '' };
+    manualRecipientQuery = '';
     manualRecipientPage = 1;
     isPreviousManualRecipientsExpanded = false;
     isPreviewTargetsExpanded = false;
@@ -3036,13 +3183,8 @@ function performSendMail() {
     selectedSettlementCompanyId = null;
     draftSettlementCompanyId = null;
     settlementAdminMessage = '';
-    selectedHistoryId = newHistoryId;
-    historyQuery = '';
-    historyTypeFilter = '';
-    historyPage = 1;
-    currentView = 'history';
     document.getElementById('send-success')?.classList.remove('show');
-    renderAll();
+    openSentMailDetail(newHistoryId);
     return;
   }
   history.unshift({
@@ -3110,16 +3252,12 @@ function performSendMail() {
   checkedPlatforms.clear();
   manualRecipients = [];
   manualRecipientDraft = { companyName: '', name: '', email: '' };
+  manualRecipientQuery = '';
   manualRecipientPage = 1;
   isPreviousManualRecipientsExpanded = false;
   isPreviewTargetsExpanded = false;
-  selectedHistoryId = newHistoryId;
-  historyQuery = '';
-  historyTypeFilter = '';
-  historyPage = 1;
-  currentView = 'history';
   document.getElementById('send-success')?.classList.remove('show');
-  renderAll();
+  openSentMailDetail(newHistoryId);
 }
 
 function filteredHistoryRows() {
@@ -3256,6 +3394,7 @@ function renderHistoryInlineDetail(item) {
   const targets = historyTargets(item);
   const adminMessage = (item.type === 'settlement' || item.type === 'performance') ? String(item.adminMessage || '').trim() : '';
   const ownerNotifications = historyOwnerNotifications(item);
+  const subject = item.subject || `${historyTargetLabel(item)} ${historyListTypeLabel(item.type)}`;
   const contentListHtml = contentNames.length
     ? `<div class="history-content-tags">${contentNames.map(name => `<span class="history-content-tag" title="${escapeHtml(name)}">${escapeHtml(name)}</span>`).join('')}</div>`
     : '<span class="muted-copy">발송한 콘텐츠가 없습니다</span>';
@@ -3269,12 +3408,13 @@ function renderHistoryInlineDetail(item) {
     <div class="history-inline-detail">
       <div class="history-inline-grid">
         <div class="detail-body">
-          <div class="review-row"><span class="review-key">메일 유형</span><span class="review-val">${mailTypes[item.type]?.label || historyListTypeLabel(item.type)}</span></div>
-          <div class="review-row"><span class="review-key">콘텐츠명</span><span class="review-val">${contentListHtml}</span></div>
-          <div class="review-row review-row-dual"><span class="review-key">관리자</span><span class="review-val">${escapeHtml(historySenderName(item))}</span><span class="review-key">발송 일시</span><span class="review-val">${escapeHtml(historySentAt(item))}</span></div>
+          <div class="review-row"><span class="review-key">메일 종류</span><span class="review-val">${mailTypes[item.type]?.label || historyListTypeLabel(item.type)}</span></div>
+          <div class="review-row"><span class="review-key">제목</span><span class="review-val multiline">${escapeHtml(subject)}</span></div>
+          <div class="review-row"><span class="review-key">콘텐츠명</span><span class="review-val history-wide-val">${contentListHtml}</span></div>
+          <div class="review-row review-row-dual"><span class="review-key">발송자</span><span class="review-val">${escapeHtml(historySenderName(item))}</span><span class="review-key">발송 일시</span><span class="review-val">${escapeHtml(historySentAt(item))}</span></div>
           ${adminMessage ? `<div class="review-row"><span class="review-key">관리자 메시지</span><span class="review-val multiline">${escapeHtml(adminMessage)}</span></div>` : ''}
-          <div class="review-row"><span class="review-key">수신 상세</span><span class="review-val"><div class="history-target-list">${targetListHtml}</div></span></div>
-          ${ownerNotifications.length ? `<div class="review-row"><span class="review-key with-tooltip">제작사 알림 <span class="review-help" data-tooltip="플랫폼사에 제안 메일이 발송될 때, 해당 콘텐츠의 제작사에게도 자동으로 발송되는 홍보 알림 메일입니다.">?</span></span><span class="review-val"><div class="history-target-list">${ownerNotificationHtml}</div></span></div>` : ''}
+          <div class="review-row"><span class="review-key">수신 상세</span><span class="review-val history-wide-val"><div class="history-target-list">${targetListHtml}</div></span></div>
+          ${ownerNotifications.length ? `<div class="review-row"><span class="review-key with-tooltip">제작사 알림 <span class="review-help" data-tooltip="플랫폼사에 제안 메일이 발송될 때, 해당 콘텐츠의 제작사에게도 자동으로 발송되는 홍보 알림 메일입니다.">?</span></span><span class="review-val history-wide-val"><div class="history-target-list">${ownerNotificationHtml}</div></span></div>` : ''}
         </div>
       </div>
     </div>
@@ -3399,7 +3539,11 @@ function renderAll() {
   renderHistoryDetailPane();
 }
 
-renderAll();
+if (isComposeEmbed || location.hash === '#compose') {
+  openComposeView();
+} else {
+  renderAll();
+}
 </script>
 </body>
 </html>

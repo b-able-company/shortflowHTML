@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>메일 이력 — Shortflow Admin</title>
+<title>메일 관리 — Shortflow Admin</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <link rel="stylesheet" href="admin-common.css?v=logo-left-20260715">
 <script src="admin-common.js?v=settlement-nav-unified-20260731"></script>
@@ -35,19 +35,13 @@ body{font-family:-apple-system,"Helvetica Neue",sans-serif;background:#fff;displ
 .uname{font-size:11px;color:#fff;font-weight:500}
 .uemail{font-size:10px;color:rgba(255,255,255,.28);margin-top:1px}
 
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:#fff}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:#fff;position:relative}
 .topbar{height:48px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;padding:0 24px;flex-shrink:0;overflow:visible!important;z-index:1000!important}
 .topbar-title{font-size:14px;font-weight:500}
-.page-help{position:relative;width:22px;height:22px;margin-left:2px;border:1px solid #d6d9df;border-radius:50%;background:#fff;color:#333;display:inline-flex;align-items:center;justify-content:center;cursor:help;font-size:12px;font-weight:500;line-height:1}
-.page-help:hover,.page-help:focus-visible{background:#f5f6f8;border-color:#bfc4cc;color:#111;outline:none}
-.page-help::after{content:attr(data-tooltip);position:absolute;left:50%;top:calc(100% + 10px);transform:translateX(-50%) translateY(-4px);width:280px;padding:10px 12px;border:1px solid #e1e3e8;border-radius:6px;background:#fff;color:#333;font-size:12px;font-weight:400;line-height:1.5;text-align:left;box-shadow:0 10px 24px rgba(0,0,0,.10);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .12s,transform .12s;z-index:10000}
-.page-help::before{content:"";position:absolute;left:50%;top:calc(100% + 5px);width:9px;height:9px;background:#fff;border-left:1px solid #e1e3e8;border-top:1px solid #e1e3e8;transform:translateX(-50%) rotate(45deg);opacity:0;visibility:hidden;transition:opacity .12s;z-index:10001}
-.page-help:hover::after,.page-help:focus-visible::after,.page-help:hover::before,.page-help:focus-visible::before{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
-.page-help:hover::before,.page-help:focus-visible::before{transform:translateX(-50%) rotate(45deg)}
 .content{flex:1;overflow:auto;padding:24px;background:#fff}
 
 .filter-area{background:var(--panel);border:0;margin:0 0 22px;border-radius:8px;box-shadow:none}
-.filter-head{position:relative;height:56px;display:flex;align-items:center;padding:0 28px}
+.filter-head{position:relative;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 28px}
 .filter-head::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line)}
 .filter-title{font-size:14px;font-weight:400;color:#222}
 .filter-row{display:flex;align-items:center;gap:28px;min-height:72px;padding:17px 28px;background:transparent}
@@ -56,19 +50,62 @@ body{font-family:-apple-system,"Helvetica Neue",sans-serif;background:#fff;displ
 .filter-controls{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
 .date-range{display:flex;align-items:center;gap:28px;background:transparent}
 .date-tilde{margin:0 -18px;color:#8f949e;font-size:12px}
-.date-range input[type=date],
-.native-select,
+.date-field{position:relative;width:158px;flex:0 0 158px}
+.date-range input,
 .search-box input{height:38px;border:0!important;border-radius:2px;background:#fff;padding:0 12px;color:var(--text-primary);font:inherit;font-size:12px;outline:none}
-.date-range input[type=date]{width:158px}
+.date-field input{width:100%;padding-right:40px;cursor:pointer}
+.date-icon-btn{position:absolute;top:50%;transform:translateY(-50%);width:24px;height:24px;border:0;border-radius:50%;background:transparent;color:#9aa0a9;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.date-icon-btn{right:7px}
+.date-icon-btn:hover{background:#f2f2f2;color:#333}
+.date-popover{position:fixed;width:280px;padding:12px;border:1px solid #e1e3e8;border-radius:8px;background:#fff;box-shadow:0 12px 32px rgba(0,0,0,.1);z-index:1400;display:none}
+.date-popover.show{display:block}
+.date-picker-head{height:32px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.date-picker-title{color:#1a1a18;font-size:13px;font-weight:500}
+.date-picker-nav{width:28px;height:28px;border:0;border-radius:6px;background:transparent;color:#777;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.date-picker-nav:hover{background:#f4f4f4;color:#111}
+.date-picker-week,.date-picker-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.date-picker-week span{height:26px;display:flex;align-items:center;justify-content:center;color:#9aa0a9;font-size:10.5px}
+.date-picker-day{height:34px;border:0;border-radius:6px;background:#fff;color:#333;font:inherit;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.date-picker-day:hover{background:#f4f4f4}
+.date-picker-day.is-muted{color:#c2c6cc}
+.date-picker-day.is-today{color:#111;font-weight:600}
+.date-picker-day.is-selected{background:#222;color:#fff;font-weight:500}
 .quick-ranges{display:flex;align-items:center;margin-left:8px;border:0;background:#fff}
 .quick-range{width:64px;height:36px;padding:0 8px;border:0;border-right:1px solid rgb(242, 242, 242);background:#fff;color:#555;font:inherit;font-size:11.5px;cursor:pointer;white-space:nowrap}
 .quick-range:last-child{border-right:0}
 .quick-range:hover{background:#f4f4f4;color:#111}
 .quick-range.active{background:#222;color:#fff}
-.native-select{min-width:170px;padding-right:30px;cursor:pointer;font-weight:400}
-.mail-type-select{min-width:230px}
+.native-select{appearance:none;-webkit-appearance:none;height:40px;min-width:190px;padding:0 38px 0 14px;border:0!important;border-radius:2px;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%239aa0a9' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;color:#1a1a18;font:inherit;font-size:12.5px;font-weight:400;line-height:38px;outline:none;cursor:pointer;box-shadow:none}
+.native-select:hover{background-color:#fff}
+.native-select:focus{box-shadow:none}
+.native-select.hidden-select{display:none}
+.mail-type-select{width:300px;min-width:300px}
 .filter-divider{width:1px;height:24px;background:#d7d9de;margin:0 10px}
-select.native-select:has(option[value=""]:checked){color:#222;font-weight:400}
+select.native-select:has(option[value=""]:checked){color:#777;font-weight:400}
+.filter-select{position:relative;display:inline-block}
+.filter-select-btn{appearance:none;-webkit-appearance:none;height:40px;min-width:190px;padding:0 38px 0 14px;border:0;border-radius:2px;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%239aa0a9' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;color:#1a1a18;font:inherit;font-size:12.5px;font-weight:400;line-height:38px;outline:none;cursor:pointer;text-align:left;box-shadow:none}
+.filter-select-btn.placeholder{color:#777}
+.filter-select-btn.mail-type-select{width:300px;min-width:300px}
+.filter-select-menu{position:absolute;left:0;right:0;top:calc(100% + 4px);max-height:220px;overflow:auto;border:1px solid #e1e3e8;border-radius:6px;background:#fff;box-shadow:0 10px 26px rgba(0,0,0,.08);z-index:40;display:none}
+.filter-select-menu.show{display:block}
+.filter-select-option{appearance:none;-webkit-appearance:none;width:100%;min-height:40px;padding:8px 11px;border:0;background:transparent;display:flex;align-items:center;color:#333;font:inherit;font-size:12.5px;line-height:1.2;text-align:left;cursor:pointer;white-space:nowrap;outline:none}
+.filter-select-option:hover,.filter-select-option.active{background:#fafafa}
+.content-tokenizer{position:relative;width:400px;max-width:100%}
+.content-tokenizer-control{min-height:40px;padding:4px 8px;display:flex;align-items:center;gap:6px;border:0;border-radius:2px;background:#fff}
+.content-tokenizer-control:focus-within{box-shadow:none}
+.content-tokenizer-input{height:30px;min-width:120px;flex:1;border:0;background:transparent;outline:none;color:#1a1a18;font:inherit;font-size:12.5px}
+.content-tokenizer-input::-webkit-search-cancel-button{display:none}
+.content-tokenizer-input::placeholder{color:#777;font-weight:400}
+.content-clear-btn{width:24px;height:24px;border:0;border-radius:50%;background:transparent;color:#222;font:inherit;font-size:15px;line-height:1;cursor:pointer;display:none;align-items:center;justify-content:center;flex:0 0 24px}
+.content-clear-btn.show{display:inline-flex}
+.content-clear-btn:hover{background:#f2f2f2;color:#000}
+.content-suggestions{position:absolute;left:0;right:0;top:calc(100% + 4px);max-height:220px;overflow:auto;border:1px solid #e1e3e8;border-radius:6px;background:#fff;box-shadow:0 10px 26px rgba(0,0,0,.08);z-index:30;display:none}
+.content-suggestions.show{display:block}
+.content-suggestion{min-height:40px;padding:8px 11px;display:grid;grid-template-columns:minmax(150px,1fr) minmax(120px,.8fr);align-items:center;gap:12px;cursor:pointer;color:#333}
+.content-suggestion:hover,.content-suggestion.active{background:#fafafa}
+.content-suggestion-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12.5px;color:#1a1a18}
+.content-suggestion-company{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#777;font-size:11.5px;text-align:right;justify-self:end}
+.content-suggestion-empty{padding:14px 12px;color:#999;font-size:12px;text-align:center}
 .search-box{position:relative;display:block;flex:0 1 480px;max-width:480px}
 .search-box i{display:none}
 .search-box input{width:100%}
@@ -83,41 +120,46 @@ select.native-select:has(option[value=""]:checked){color:#222;font-weight:400}
 .result-bar{display:flex;align-items:center;justify-content:space-between;margin:0 2px 9px}
 .result-meta{font-size:12px;font-weight:300;color:var(--text-muted)}
 .result-meta strong{color:var(--text-primary);font-weight:600}
-.result-guide{font-size:12px;font-weight:300;color:var(--text-muted)}
+.result-actions{display:flex;align-items:center;gap:12px}
+.btn-compose{--compose-edge:16px;height:32px;padding:0 var(--compose-edge);border:0;border-radius:9px;background:#222;color:#fff;font:inherit;font-size:12px;font-weight:400;line-height:1;display:inline-flex;align-items:center;justify-content:center;gap:5px;text-decoration:none;cursor:pointer}
+.btn-compose i{width:12px;font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;transform:translateY(.5px)}
+.btn-compose span{display:block;line-height:1;transform:translateY(-.5px)}
+.btn-compose:hover{background:#000}
+.mail-compose-panel{position:fixed;top:0;right:0;bottom:0;width:calc((100vw - 210px) / 2);padding:0;background:#fff;border-left:1px solid var(--line);box-shadow:-10px 0 32px rgba(0,0,0,.09);z-index:1200;transform:translateX(102%);transition:transform .18s ease;overflow:hidden}
+.mail-compose-panel.show{transform:translateX(0)}
+.mail-compose-panel.expanded{width:calc(100vw - 210px);box-shadow:none}
+.mail-compose-head{position:absolute;top:0;left:0;right:30px;min-height:58px;padding:16px 24px 10px;display:flex;align-items:flex-start;justify-content:flex-end;gap:14px;z-index:3;pointer-events:none}
+.mail-compose-close,.mail-compose-expand{position:absolute;top:12px;width:32px;height:32px;border:0;border-radius:7px;background:transparent;color:#aaa;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex:0 0 32px;pointer-events:auto}
+.mail-compose-expand{right:22px}
+.mail-compose-close{right:-8px;margin-right:-8px}
+.mail-compose-close:hover,.mail-compose-expand:hover{background:#f7f7f7;color:#333}
+.mail-compose-close i,.mail-compose-expand i{font-size:20px}
+.mail-compose-frame{width:100%;height:100%;border:0;background:#fff;display:block}
 
 .table-wrap{background:#fff;border-top:1px solid var(--line);border-bottom:0;overflow:auto}
-table{width:100%;min-width:960px;border-collapse:collapse;table-layout:fixed}
-colgroup .c-no{width:4%}
-colgroup .c-dt{width:12%}
-colgroup .c-recipient{width:25%}
-colgroup .c-type{width:14%}
-colgroup .c-subject{width:29%}
-colgroup .c-status{width:12%}
-colgroup .c-expand{width:4%}
+table{width:100%;min-width:760px;border-collapse:collapse;table-layout:fixed}
+colgroup .c-no{width:5%}
+colgroup .c-category{width:17%}
+colgroup .c-subject{width:49%}
+colgroup .c-sender{width:16%}
+colgroup .c-sent-at{width:13%}
 thead{position:sticky;top:0;z-index:3}
 thead tr{background:#fff}
 th{font-size:12px;font-weight:400;color:#8f96a3;text-align:left;padding:12px 24px;border-bottom:1px solid var(--line);letter-spacing:.025em}
 td{padding:9px 24px;border-bottom:1px solid var(--line-soft);vertical-align:middle;background:#fff;color:#333;font-size:13px;font-weight:400}
 tbody tr{transition:background .12s}
-tbody tr.has-recipients{cursor:pointer}
 tbody tr:hover td{background:#fafafa}
-tbody tr.has-recipients.is-expanded td{border-bottom-color:transparent}
+tbody tr.mail-row{cursor:pointer}
+tbody tr.mail-row.active td{background:rgb(242, 242, 242)}
 .mail-no{color:#9aa0a9;font-size:12px;font-variant-numeric:tabular-nums}
-.dt-date,.dt-time,.recipient,.mail-type,.mail-status,.subject-title,.subject-sub{font-size:13px;font-weight:400;color:#333}
+.dt-date,.dt-time,.recipient,.mail-type,.mail-status,.subject-title,.subject-sub,.mail-category,.mail-sender{font-size:13px;font-weight:400;color:#333}
+.mail-category,.mail-sender{white-space:nowrap}
+.subject{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mail-sent-at{white-space:nowrap;font-variant-numeric:tabular-nums;color:#333}
 .dt-date{display:inline;white-space:nowrap}
 .dt-time{display:inline;margin-left:6px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .subject-sub{margin-left:5px}
 .recipient-count{font-size:13px;font-weight:400;color:#333}
-.recipient-toggle{width:24px;height:24px;margin:0 auto;padding:0;border:0;background:transparent;color:#333;font:inherit;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
-.recipient-toggle i{font-size:18px;color:#9aa0a9;transition:transform .14s}
-.recipient-toggle.is-open i{transform:rotate(180deg)}
-.recipient-detail-row[hidden]{display:none}
-.recipient-detail-row td{padding:0 24px 12px;background:#fff;border-bottom:1px solid var(--line-soft)}
-.recipient-detail-spacer{padding:0!important}
-.recipient-detail-cell{padding-left:24px!important;padding-right:0!important;vertical-align:top}
-.recipient-detail-panel{width:306px;max-width:none;padding:2px 0 0;background:transparent;border-radius:0;display:flex;flex-direction:column;gap:6px}
-.recipient-item{display:grid;grid-template-columns:214px max-content;align-items:center;gap:10px;font-size:12px;color:#555;line-height:1.35}
-.recipient-item span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .recipient-result{min-height:22px;padding:0 9px;border:1px solid currentColor;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;color:#9aa0a9;white-space:nowrap;font-size:11px;line-height:1}
 .mail-status{min-height:26px;padding:0 12px;border:1px solid currentColor;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;line-height:1;white-space:nowrap}
 .mail-status.is-success,
@@ -135,11 +177,86 @@ tbody tr.has-recipients.is-expanded td{border-bottom-color:transparent}
 .pag-btn:disabled{cursor:default;color:#aaa}
 .pag-btn.on{background:rgba(0,0,0,.07);color:#111;border-radius:2px;font-weight:400}
 
+.mail-detail-panel{position:fixed;top:0;right:0;bottom:0;width:calc((100vw - 210px) / 2);padding:0 30px 54px 0;background:#fff;border-left:1px solid #e5e5e5;box-shadow:-10px 0 32px rgba(0,0,0,.09);z-index:1100;transform:translateX(102%);transition:transform .18s ease;overflow-y:auto;overflow-x:hidden}
+.mail-detail-panel.show{transform:translateX(0)}
+.mail-detail-panel.expanded{width:calc(100vw - 210px);box-shadow:none}
+.mail-detail-head{position:relative;min-height:58px;padding:16px 24px 10px;display:flex;align-items:flex-start;justify-content:flex-end;gap:14px}
+.mail-detail-head>div{display:none}
+.mail-detail-title{color:#1a1a18;font-size:16px;font-weight:600;line-height:1.35}
+.mail-detail-sub{margin-top:5px;color:#777;font-size:12px;line-height:1.35}
+.mail-detail-close,.mail-detail-expand{position:absolute;top:12px;width:32px;height:32px;border:0;border-radius:7px;background:transparent;color:#aaa;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex:0 0 32px}
+.mail-detail-expand{right:22px}
+.mail-detail-close{right:-8px;margin-right:-8px}
+.mail-detail-close:hover,.mail-detail-expand:hover{background:#f7f7f7;color:#333}
+.mail-detail-close i,.mail-detail-expand i{font-size:20px}
+.mail-detail-body{padding:10px 0 0 24px;background:#fff}
+.mail-detail-panel.expanded .mail-detail-body{max-width:900px;margin-left:auto;margin-right:auto;padding-left:0}
+.detail-body,.mail-detail-card{border:.5px solid rgb(242, 242, 242);border-radius:4px;background:#fff;overflow:hidden}
+.history-inline-detail{background:transparent;padding:0;min-width:0;max-width:100%}
+.history-inline-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;min-width:0;max-width:100%}
+.detail-section{display:block;min-width:0;max-width:100%}
+.detail-section+.detail-section{margin-top:16px}
+.detail-section-title{margin:0 0 10px 2px;color:#1a1a18;font-size:13.5px;font-weight:500;line-height:1.3}
+.detail-section .history-target-card{border-radius:4px}
+.review-row{min-height:38px;padding:9px 12px;border-bottom:.5px solid rgb(242, 242, 242);display:grid;grid-template-columns:112px minmax(0,1fr);gap:12px;align-items:baseline;overflow:visible}
+.review-row:last-child{border-bottom:0}
+.review-row-dual{grid-template-columns:112px minmax(0,1fr) 112px minmax(0,1fr)}
+.review-key{min-width:0;color:#aaa;font-size:11px;white-space:nowrap;display:flex;align-items:center;justify-content:flex-start}
+.review-val{min-width:0;color:#333;font-size:12px;text-align:right;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.review-val.multiline,.review-val.wide{text-align:left;white-space:normal;overflow:visible;text-overflow:clip}
+.detail-body{border-color:rgb(232, 232, 232);border-radius:4px}
+.detail-body .review-row{min-height:38px;padding:0;border-bottom:.5px solid rgb(232, 232, 232);grid-template-columns:130px minmax(0,1fr);gap:0;align-items:stretch}
+.detail-body .review-row:last-child{border-bottom:0}
+.detail-body .review-row-dual{grid-template-columns:130px minmax(0,1fr) 130px minmax(0,1fr)}
+.detail-body .review-key,
+.detail-body .review-val{min-height:100%;padding:8px 10px;border-right:.5px solid rgb(232, 232, 232);display:flex;align-items:center;text-align:left}
+.detail-body .review-key{background:#fafafa;color:#777;font-size:10.5px;justify-content:center}
+.detail-body .review-val{color:#333;font-size:11.5px;justify-content:flex-start;white-space:normal}
+.detail-body .review-val:last-child{border-right:0}
+.detail-body .review-val.multiline,
+.detail-body .review-val.wide{align-items:flex-start}
+.detail-body .review-val.multiline{align-items:center}
+.history-content-tags{display:flex;flex-wrap:wrap;gap:6px}
+.history-content-tag{min-height:28px;max-width:100%;padding:7px 11px;border:.5px solid #e1e1e1;border-radius:999px;background:#fff;color:#333;font-size:12px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.history-target-list{display:block;margin-top:0;min-width:0;max-width:100%}
+.history-target-card{border:.5px solid rgb(232, 232, 232);border-radius:0;background:#fff;max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+.recipient-table{width:max-content;min-width:100%;overflow:visible}
+.recipient-row{min-width:710px;min-height:38px;display:grid;grid-template-columns:58px 130px minmax(82px,.58fr) minmax(132px,1fr) 74px 128px;align-items:stretch}
+.recipient-row.no-recipient-type{min-width:650px;grid-template-columns:130px minmax(82px,.58fr) minmax(132px,1fr) 74px 128px}
+.recipient-row.head{min-height:32px;background:#fff;color:#777;font-size:10.5px}
+.recipient-cell{min-width:0;padding:8px 10px;border-right:.5px solid rgb(232, 232, 232);border-bottom:.5px solid rgb(232, 232, 232);color:#333;font-size:11.5px;display:flex;align-items:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.recipient-cell:last-child{border-right:0}
+.recipient-row:last-child .recipient-cell{border-bottom:0}
+.recipient-row.head .recipient-cell{color:#777;font-size:10.5px;justify-content:center;text-align:center}
+.recipient-row.head .recipient-cell{background:#fafafa}
+.recipient-status-cell{justify-content:center}
+.recipient-type{justify-content:center;color:#555;border-bottom:0}
+.recipient-type.blank{color:transparent;border-bottom:0}
+.recipient-type.with-company-top-line{border-top:.5px solid rgb(232, 232, 232)}
+.recipient-company{color:#1a1a18;font-weight:600;border-bottom:0}
+.recipient-company.blank{color:transparent;border-bottom:0}
+.recipient-company.with-company-top-line{border-top:.5px solid rgb(232, 232, 232)}
+.owner-notice-row{min-width:650px;min-height:38px;display:grid;grid-template-columns:150px minmax(96px,.62fr) minmax(170px,1fr) 74px 128px;align-items:stretch}
+.owner-notice-row.head{min-height:32px;background:#fff}
+.owner-notice-cell{min-width:0;padding:8px 10px;border-right:.5px solid rgb(232, 232, 232);border-bottom:.5px solid rgb(232, 232, 232);color:#333;font-size:11.5px;display:flex;align-items:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.owner-notice-cell:last-child{border-right:0}
+.owner-notice-row:last-child .owner-notice-cell{border-bottom:0}
+.owner-notice-row.head .owner-notice-cell{color:#777;font-size:10.5px;justify-content:center;text-align:center}
+.owner-notice-row.head .owner-notice-cell{background:#fafafa}
+.open-status{min-height:24px;padding:0 10px;border:.5px solid #d8d8d8;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-size:10.5px;line-height:1;white-space:nowrap}
+.open-status.opened{border-color:#2f8f68;background:#2f8f68;color:#fff}
+.open-status.unopened{background:transparent;color:#999}
+.open-status.is-success{border-color:#2f8f68;color:#2f8f68}
+.open-status.is-partial{border-color:#b7791f;color:#b7791f}
+.open-status.is-fail{border-color:#9a4b4b;color:#9a4b4b}
+
 @media(max-width:980px){
   .filter-row{align-items:flex-start;gap:8px;flex-direction:column;padding:15px 14px}
   .filter-label{width:auto;flex-basis:auto}
   .filter-controls{width:100%;flex-wrap:wrap}
+  .content-tokenizer{width:100%}
   .search-box{width:100%;max-width:none}
+  .mail-detail-panel,.mail-compose-panel,.mail-detail-panel.expanded,.mail-compose-panel.expanded{width:100vw}
 }
 </style>
 </head>
@@ -181,10 +298,10 @@ tbody tr.has-recipients.is-expanded td{border-bottom-color:transparent}
     <div class="sub">
       <a class="ni" href="settlement-admin.html#contracts">계약관리</a>
       <a class="ni" href="settlement-admin.html#settlement">정산 진행 관리</a>
+      <a class="ni" href="settlement-admin.html#rs-requests">RS 요청 관리</a>
     </div>
-    <a class="ni" href="mail-admin.html"><i class="ti ti-mail"></i> 메일 발송</a>
+    <a class="ni active" href="mail-history.html"><i class="ti ti-mail-check"></i> 메일 관리</a>
     <a class="ni" href="audit-log.html"><i class="ti ti-shield-check"></i> 관리 이력</a>
-    <a class="ni active" href="mail-history.html"><i class="ti ti-mail-check"></i> 메일 이력</a>
   </nav>
   <div class="sb-foot">
     <div class="ava"><i class="ti ti-user"></i></div>
@@ -197,23 +314,27 @@ tbody tr.has-recipients.is-expanded td{border-bottom-color:transparent}
 
 <div class="main">
   <div class="topbar">
-    <span class="topbar-title">메일 이력</span>
-    <button class="page-help" type="button" aria-label="메일 이력 페이지 설명" data-tooltip="시스템 자동 메일로 발송된 내역을 확인하는 페이지입니다. 수신자, 메일 종류, 발송 일시와 함께 성공/실패 여부를 조회할 수 있습니다.">
-      i
-    </button>
+    <span class="topbar-title">메일 관리</span>
   </div>
   <div class="content">
     <div class="filter-area">
       <div class="filter-head">
         <span class="filter-title">검색 조건</span>
+        <button class="btn-compose" type="button" onclick="openMailComposePanel()" aria-label="메일 작성"><i class="ti ti-plus"></i><span>메일 작성</span></button>
       </div>
       <div class="filter-row">
         <div class="filter-label">조회 기간</div>
         <div class="filter-controls">
           <div class="date-range">
-            <input type="date" id="date-from" value="2026-05-01" aria-label="조회 시작일">
+            <div class="date-field has-value" id="date-from-field">
+              <input type="text" id="date-from" value="2026-05-01" aria-label="조회 시작일" readonly onclick="openDatePicker('date-from')" onkeydown="handleDateInputKeydown(event,'date-from')">
+              <button class="date-icon-btn" type="button" onclick="openDatePicker('date-from')" aria-label="조회 시작일 달력 열기"><i class="ti ti-calendar"></i></button>
+            </div>
             <span class="date-tilde">~</span>
-            <input type="date" id="date-to" value="2026-05-14" aria-label="조회 종료일">
+            <div class="date-field has-value" id="date-to-field">
+              <input type="text" id="date-to" value="2026-05-14" aria-label="조회 종료일" readonly onclick="openDatePicker('date-to')" onkeydown="handleDateInputKeydown(event,'date-to')">
+              <button class="date-icon-btn" type="button" onclick="openDatePicker('date-to')" aria-label="조회 종료일 달력 열기"><i class="ti ti-calendar"></i></button>
+            </div>
           </div>
           <div class="quick-ranges" aria-label="빠른 조회 기간">
             <button class="quick-range" type="button" data-range="today">오늘</button>
@@ -228,27 +349,41 @@ tbody tr.has-recipients.is-expanded td{border-bottom-color:transparent}
       <div class="filter-row">
         <div class="filter-label">상세 필터</div>
         <div class="filter-controls">
-          <select class="native-select mail-type-select" id="mail-type" aria-label="메일 유형">
+          <select class="native-select hidden-select" id="mail-type" aria-label="메일 유형">
             <option value="">메일 종류</option>
-            <option value="WORKFLOW">WORKFLOW</option>
-            <option value="USER_SIGNUP">USER_SIGNUP</option>
-            <option value="CONTENT_PROPOSAL">CONTENT_PROPOSAL</option>
+            <option value="USER_SIGNUP">회원가입</option>
+            <option value="ADMIN_NOTICE">관리자 알림</option>
+            <option value="WORKFLOW">워크플로우</option>
+            <option value="CONTENT_PROPOSAL">콘텐츠/기획안 제안</option>
+            <option value="SETTLEMENT_PERFORMANCE">정산/퍼포먼스 안내</option>
+            <option value="RS_REQUEST">RS 요청</option>
           </select>
+          <div class="filter-select" data-filter-select="mail-type">
+            <button class="filter-select-btn mail-type-select placeholder" id="mail-type-button" type="button" onclick="toggleFilterSelect('mail-type',event)" aria-haspopup="listbox" aria-expanded="false">메일 종류</button>
+            <div class="filter-select-menu" id="mail-type-menu" role="listbox" aria-label="메일 유형"></div>
+          </div>
           <span class="filter-divider" aria-hidden="true"></span>
-          <select class="native-select" id="mail-status" aria-label="발송 상태">
-            <option value="">발송 상태</option>
-            <option value="성공">성공</option>
-            <option value="실패">실패</option>
+          <select class="native-select hidden-select" id="mail-sender-filter" aria-label="발송자">
+            <option value="">발송자</option>
+            <option value="자동시스템">자동시스템</option>
+            <option value="김관리자">김관리자</option>
           </select>
+          <div class="filter-select" data-filter-select="mail-sender-filter">
+            <button class="filter-select-btn placeholder" id="mail-sender-filter-button" type="button" onclick="toggleFilterSelect('mail-sender-filter',event)" aria-haspopup="listbox" aria-expanded="false">발송자</button>
+            <div class="filter-select-menu" id="mail-sender-filter-menu" role="listbox" aria-label="발송자"></div>
+          </div>
         </div>
       </div>
       <div class="filter-row">
-        <div class="filter-label">내용 검색</div>
+        <div class="filter-label">이름 검색</div>
         <div class="filter-controls">
-          <label class="search-box">
-            <i class="ti ti-search"></i>
-            <input type="search" id="mail-search" placeholder="수신자, 제목에 포함된 키워드를 입력하세요">
-          </label>
+          <div class="content-tokenizer" id="content-tokenizer">
+            <div class="content-tokenizer-control" id="content-tokenizer-control">
+              <input class="content-tokenizer-input" id="content-filter-input" type="search" placeholder="콘텐츠/기획안명 검색" autocomplete="off" aria-label="콘텐츠/기획안명 검색" onfocus="openContentSuggestions()" oninput="setContentFilterQuery(this.value)" onkeydown="handleContentFilterKeydown(event)">
+              <button class="content-clear-btn" id="content-clear-btn" type="button" onclick="clearContentFilter()" aria-label="이름 검색 지우기">×</button>
+            </div>
+            <div class="content-suggestions" id="content-suggestions"></div>
+          </div>
         </div>
       </div>
       <div class="filter-actions">
@@ -258,55 +393,91 @@ tbody tr.has-recipients.is-expanded td{border-bottom-color:transparent}
     </div>
 
     <div class="result-bar">
-      <div class="result-meta">총 <strong id="result-count">20</strong>건</div>
-      <div class="result-guide">최신 발송 순</div>
+      <div class="result-meta">총 <strong id="result-count">22</strong>건</div>
     </div>
 
     <div class="table-wrap">
       <table>
-        <colgroup><col class="c-no"><col class="c-dt"><col class="c-recipient"><col class="c-type"><col class="c-subject"><col class="c-status"><col class="c-expand"></colgroup>
+        <colgroup><col class="c-no"><col class="c-category"><col class="c-subject"><col class="c-sender"><col class="c-sent-at"></colgroup>
         <thead>
-          <tr><th>No</th><th>발송 일시</th><th>수신자</th><th>메일 유형</th><th>제목</th><th>상태</th><th></th></tr>
+          <tr><th>No</th><th>메일 종류</th><th>제목</th><th>발송자</th><th>발송 일시</th></tr>
         </thead>
         <tbody id="mail-body">
-          <tr data-type="USER_SIGNUP" data-status="성공"><td><div class="dt-date">2026-05-14</div><div class="dt-time">10:42</div></td><td><span class="recipient">junhyeok@nextwave.io</span></td><td><span class="mail-type">USER_SIGNUP</span></td><td><span class="mail-status">성공</span></td><td class="subject">Shortflow 가입 승인이 완료되었습니다 — NextWave Studios</td></tr>
-          <tr data-type="WORKFLOW" data-status="성공" data-recipients="bd@viki.com|성공,legal@viki.com|성공,ops@viki.com|성공"><td><div class="dt-date">2026-05-14</div><div class="dt-time">09:28</div></td><td><span class="recipient">bd@viki.com</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">Seven Suns 컨펌 요청이 도착했습니다 — Viki</td></tr>
-          <tr data-type="USER_SIGNUP" data-status="성공"><td><div class="dt-date">2026-05-13</div><div class="dt-time">17:55</div></td><td><span class="recipient">jisu@brightframe.io</span></td><td><span class="mail-type">USER_SIGNUP</span></td><td><span class="mail-status">성공</span></td><td class="subject">Shortflow 가입 검토 결과 안내 — BrightFrame</td></tr>
-          <tr data-type="CONTENT_PROPOSAL" data-status="성공"><td><div class="dt-date">2026-05-13</div><div class="dt-time">16:30</div></td><td><span class="recipient">finance@studiodragon.net</span></td><td><span class="mail-type">CONTENT_PROPOSAL</span></td><td><span class="mail-status">성공</span></td><td class="subject">2026년 4월 정산 자료가 등록되었습니다 — Studio Dragon</td></tr>
-          <tr data-type="CONTENT_PROPOSAL" data-status="성공"><td><div class="dt-date">2026-05-13</div><div class="dt-time">14:32</div></td><td><span class="recipient">ops@brightframe.io</span></td><td><span class="mail-type">CONTENT_PROPOSAL</span></td><td><span class="mail-status">성공</span></td><td class="subject">크레딧 충전 완료 안내 — +$12,000</td></tr>
-          <tr data-type="WORKFLOW" data-status="실패" data-recipients="acquisitions@reelshort.com|성공,legal@reelshort.com|성공,ops@reelshort.com|성공,finance@reelshort.com|성공,content@reelshort.com|성공,bd@reelshort.com|실패,rights@reelshort.com|실패"><td><div class="dt-date">2026-05-13</div><div class="dt-time">12:21</div></td><td><span class="recipient">acquisitions@reelshort.com</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">실패</span></td><td class="subject">Cinderella in Tokyo 거래 종료 안내 — ReelShort</td></tr>
-          <tr data-type="USER_SIGNUP" data-status="성공"><td><div class="dt-date">2026-05-12</div><div class="dt-time">15:12</div></td><td><span class="recipient">seoa@nextwave.io</span></td><td><span class="mail-type">USER_SIGNUP</span></td><td><span class="mail-status">성공</span></td><td class="subject">Shortflow 계정 사용이 가능해졌습니다 — NextWave Studios</td></tr>
-          <tr data-type="WORKFLOW" data-status="실패" data-recipients="partner@shortmax.com|성공,legal@shortmax.com|성공,ops@shortmax.com|실패"><td><div class="dt-date">2026-05-12</div><div class="dt-time">11:31</div></td><td><span class="recipient">partner@shortmax.com</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">실패</span></td><td class="subject">Midnight Tokyo Drift 묶음 거래 컨펌 요청</td></tr>
-          <tr data-type="CONTENT_PROPOSAL" data-status="성공"><td><div class="dt-date">2026-05-11</div><div class="dt-time">18:05</div></td><td><span class="recipient">accounting@bluemoon.io</span></td><td><span class="mail-type">CONTENT_PROPOSAL</span></td><td><span class="mail-status">성공</span></td><td class="subject">Blue Moon Studio 계약 정산 항목 생성 안내</td></tr>
-          <tr data-type="USER_SIGNUP" data-status="성공"><td><div class="dt-date">2026-05-11</div><div class="dt-time">15:14</div></td><td><span class="recipient">apply@paperlens.io</span></td><td><span class="mail-type">USER_SIGNUP</span></td><td><span class="mail-status">성공</span></td><td class="subject">가입 검토 결과 안내 — 사업자등록증 확인 불가</td></tr>
-          <tr data-type="CONTENT_PROPOSAL" data-status="성공"><td><div class="dt-date">2026-05-10</div><div class="dt-time">14:04</div></td><td><span class="recipient">ops@wavepictures.io</span></td><td><span class="mail-type">CONTENT_PROPOSAL</span></td><td><span class="mail-status">성공</span></td><td class="subject">크레딧 충전 완료 안내 — +$8,500</td></tr>
-          <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-09</div><div class="dt-time">09:47</div></td><td><span class="recipient">content@shortmax.com</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">Spring Again 컨펌 요청이 전송되었습니다 — ShortMax</td></tr>
-          <tr data-type="USER_SIGNUP" data-status="성공"><td><div class="dt-date">2026-05-08</div><div class="dt-time">16:22</div></td><td><span class="recipient">harin@wetv.com</span></td><td><span class="mail-type">USER_SIGNUP</span></td><td><span class="mail-status">성공</span></td><td class="subject">Shortflow 플랫폼 계정 승인 안내 — WeTV</td></tr>
-          <tr data-type="CONTENT_PROPOSAL" data-status="실패"><td><div class="dt-date">2026-05-08</div><div class="dt-time">13:16</div></td><td><span class="recipient">finance@onetake.io</span></td><td><span class="mail-type">CONTENT_PROPOSAL</span></td><td><span class="mail-status">실패</span></td><td class="subject">2026년 4월 정산 자료 등록 안내 — OneTake Media</td></tr>
-          <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-07</div><div class="dt-time">17:50</div></td><td><span class="recipient">licensing@netflix.kr</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">메타데이터 권한 부여 안내 — Netflix Korea</td></tr>
-          <tr data-type="USER_SIGNUP" data-status="성공"><td><div class="dt-date">2026-05-07</div><div class="dt-time">11:05</div></td><td><span class="recipient">ian@wetv.com</span></td><td><span class="mail-type">USER_SIGNUP</span></td><td><span class="mail-status">성공</span></td><td class="subject">계정 승인 및 초기 설정 안내 — WeTV</td></tr>
-          <tr data-type="CONTENT_PROPOSAL" data-status="성공"><td><div class="dt-date">2026-05-06</div><div class="dt-time">10:18</div></td><td><span class="recipient">billing@nextwave.io</span></td><td><span class="mail-type">CONTENT_PROPOSAL</span></td><td><span class="mail-status">성공</span></td><td class="subject">크레딧 조정 내역 안내 — NextWave Studios</td></tr>
-          <tr data-type="USER_SIGNUP" data-status="성공"><td><div class="dt-date">2026-05-05</div><div class="dt-time">16:44</div></td><td><span class="recipient">subin@paperlens.io</span></td><td><span class="mail-type">USER_SIGNUP</span></td><td><span class="mail-status">성공</span></td><td class="subject">가입 검토 결과 안내 — 필수 담당자 정보 누락</td></tr>
-          <tr data-type="WORKFLOW" data-status="실패" data-recipients="partner@rakuten-viki.com|성공,legal@rakuten-viki.com|성공,ops@rakuten-viki.com|성공,rights@rakuten-viki.com|실패"><td><div class="dt-date">2026-05-04</div><div class="dt-time">13:20</div></td><td><span class="recipient">partner@rakuten-viki.com</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">실패</span></td><td class="subject">Rakuten Viki 메타데이터 권한 안내</td></tr>
-          <tr data-type="CONTENT_PROPOSAL" data-status="성공"><td><div class="dt-date">2026-05-03</div><div class="dt-time">09:18</div></td><td><span class="recipient">settlement@reelshort.com</span></td><td><span class="mail-type">CONTENT_PROPOSAL</span></td><td><span class="mail-status">성공</span></td><td class="subject">ReelShort 정산 완료 안내 — 2026년 4월</td></tr>
+          <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-14</div><div class="dt-time">18:12</div></td><td><span class="recipient">ops@shortflow.io</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 콘텐츠 등록 신청이 들어왔어요</td></tr>
+          <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-14</div><div class="dt-time">16:44</div></td><td><span class="recipient">content@shortmax.com</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 콘텐츠 자료 업로드가 완료되었습니다</td></tr>
+          <tr data-type="CONTENT_PROPOSAL" data-status="성공" data-sender="김관리자" data-recipients="bd@viki.com|성공|내부|Viki,hannah@viki.com|성공|내부|Viki,jamie@alphastream.example|성공|외부|Alpha Stream,olivia@betamini.example|성공|외부|Beta Mini,licensing@netflix.kr|성공|외부|Netflix"><td><div class="dt-date">2026-05-14</div><div class="dt-time">15:20</div></td><td><span class="recipient">bd@viki.com</span></td><td><span class="mail-type">CONTENT_PROPOSAL</span></td><td><span class="mail-status">성공</span></td><td class="subject">새 콘텐츠 제안 - '오늘의 챌린지' 외 2건</td></tr>
+          <tr data-type="USER_SIGNUP" data-status="성공"><td><div class="dt-date">2026-05-14</div><div class="dt-time">11:35</div></td><td><span class="recipient">junhyeok@nextwave.io</span></td><td><span class="mail-type">USER_SIGNUP</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 회원가입이 승인되었습니다</td></tr>
+          <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-14</div><div class="dt-time">09:28</div></td><td><span class="recipient">ops@onetake.io</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 콘텐츠 등록이 승인되었어요</td></tr>
+          <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-13</div><div class="dt-time">17:55</div></td><td><span class="recipient">jisu@brightframe.io</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 기획안이 승인되었어요</td></tr>
+          <tr data-type="SETTLEMENT" data-status="성공" data-sender="김관리자"><td><div class="dt-date">2026-05-13</div><div class="dt-time">16:30</div></td><td><span class="recipient">finance@studiodragon.net</span></td><td><span class="mail-type">SETTLEMENT</span></td><td><span class="mail-status">성공</span></td><td class="subject">단막극 파일럿 정산 정보 업데이트</td></tr>
+          <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-13</div><div class="dt-time">14:32</div></td><td><span class="recipient">apply@paperlens.io</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 수정 신청이 들어왔어요</td></tr>
+          <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-13</div><div class="dt-time">12:21</div></td><td><span class="recipient">ops@brightframe.io</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 수정 신청이 승인되었어요</td></tr>
+          <tr data-type="WORKFLOW" data-status="실패"><td><div class="dt-date">2026-05-12</div><div class="dt-time">18:06</div></td><td><span class="recipient">partner@rakuten-viki.com</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">실패</span></td><td class="subject">[Shortflow] 수정 신청이 거절되었어요</td></tr>
+          <tr data-type="CONTENT_PROPOSAL" data-status="성공" data-sender="김관리자" data-recipients="content@shortmax.com|성공|내부|ShortMax,noah@shortmax.com|성공|내부|ShortMax,sally@dramora.example|성공|외부|Dramora,chris@episodeone.example|실패|외부|Episode One"><td><div class="dt-date">2026-05-12</div><div class="dt-time">15:12</div></td><td><span class="recipient">content@shortmax.com</span></td><td><span class="mail-type">CONTENT_PROPOSAL</span></td><td><span class="mail-status">성공</span></td><td class="subject">새 콘텐츠 제안 - '단막극 파일럿'</td></tr>
+          <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-12</div><div class="dt-time">11:31</div></td><td><span class="recipient">bd@viki.com</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 구매 문의가 들어왔어요</td></tr>
+          <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-11</div><div class="dt-time">18:05</div></td><td><span class="recipient">legal@shortmax.com</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 컨펌 메시지가 도착했어요</td></tr>
+          <tr data-type="PERFORMANCE" data-status="성공" data-sender="김관리자"><td><div class="dt-date">2026-05-11</div><div class="dt-time">15:14</div></td><td><span class="recipient">ops@wavepictures.io</span></td><td><span class="mail-type">PERFORMANCE</span></td><td><span class="mail-status">성공</span></td><td class="subject">오늘의 챌린지외 3건 퍼포먼스 정보 업데이트</td></tr>
+          <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-10</div><div class="dt-time">14:04</div></td><td><span class="recipient">licensing@netflix.kr</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 메타데이터 접근이 승인됐어요</td></tr>
+          <tr data-type="USER_SIGNUP" data-status="실패"><td><div class="dt-date">2026-05-10</div><div class="dt-time">09:47</div></td><td><span class="recipient">subin@paperlens.io</span></td><td><span class="mail-type">USER_SIGNUP</span></td><td><span class="mail-status">실패</span></td><td class="subject">[Shortflow] 회원가입 신청이 거절되었습니다</td></tr>
+          <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-09</div><div class="dt-time">16:22</div></td><td><span class="recipient">partner@shortmax.com</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 묶음 구매 문의가 들어왔어요</td></tr>
+          <tr data-type="CONTENT_PROPOSAL" data-status="성공" data-sender="김관리자" data-recipients="bd@viki.com|성공|내부|Viki,partner@shortmax.com|성공|내부|ShortMax,partner@rakuten-viki.com|성공|내부|Rakuten Viki,mina@kstoryhub.example|성공|외부|K-Story Hub,victor@streamlet.example|성공|외부|Streamlet"><td><div class="dt-date">2026-05-09</div><div class="dt-time">13:16</div></td><td><span class="recipient">bd@viki.com</span></td><td><span class="mail-type">CONTENT_PROPOSAL</span></td><td><span class="mail-status">성공</span></td><td class="subject">새 기획안 제안 - '연애의 정석' 외 4건</td></tr>
+          <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-08</div><div class="dt-time">17:50</div></td><td><span class="recipient">ops@turnkey.example</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 턴키 구매 의사가 들어왔어요</td></tr>
+          <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-07</div><div class="dt-time">11:05</div></td><td><span class="recipient">sales@turnkey.example</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 턴키 판매 의사가 들어왔어요</td></tr>
+          <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-06</div><div class="dt-time">10:18</div></td><td><span class="recipient">collab@nextwave.io</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 제작협업 문의가 들어왔어요</td></tr>
+          <tr data-type="USER_SIGNUP" data-status="성공"><td><div class="dt-date">2026-05-05</div><div class="dt-time">16:44</div></td><td><span class="recipient">admin@shortflow.io</span></td><td><span class="mail-type">USER_SIGNUP</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 새로운 회원가입 신청이 있습니다</td></tr>
         </tbody>
       </table>
       <div class="empty-state" id="empty-state">
         <i class="ti ti-mail-search"></i>
-        <strong>조건에 맞는 메일 이력이 없습니다</strong>
+        <strong>조건에 맞는 메일 내역이 없습니다</strong>
         검색어나 필터를 변경해 보세요.
       </div>
     </div>
 
     <div class="pag-wrap" id="pagination"></div>
+    <div class="mail-compose-panel" id="mail-compose-panel" aria-label="새 메일 전송 패널">
+      <div class="mail-compose-head">
+        <button class="mail-compose-expand" id="mail-compose-expand" type="button" onclick="toggleMailComposeExpanded()" aria-label="메일 전송 패널 확장" aria-pressed="false">
+          <i class="ti ti-arrows-maximize"></i>
+        </button>
+        <button class="mail-compose-close" type="button" onclick="closeMailComposePanel()" aria-label="새 메일 전송 닫기">
+          <i class="ti ti-x"></i>
+        </button>
+      </div>
+      <iframe class="mail-compose-frame" id="mail-compose-frame" title="새 메일 전송"></iframe>
+    </div>
+    <aside class="mail-detail-panel" id="mail-detail-panel" aria-label="메일 발송 상세">
+      <div class="mail-detail-head">
+        <div>
+          <div class="mail-detail-title" id="mail-detail-title">메일 발송 상세</div>
+          <div class="mail-detail-sub" id="mail-detail-sub">메일 내역을 선택하면 상세 정보가 표시됩니다.</div>
+        </div>
+        <button class="mail-detail-expand" id="mail-detail-expand" type="button" onclick="toggleMailDetailExpanded()" aria-label="메일 발송 상세 패널 확장" aria-pressed="false">
+          <i class="ti ti-arrows-maximize"></i>
+        </button>
+        <button class="mail-detail-close" type="button" onclick="closeMailDetailPanel()" aria-label="메일 발송 상세 닫기">
+          <i class="ti ti-x"></i>
+        </button>
+      </div>
+      <div class="mail-detail-body" id="mail-detail-body"></div>
+    </aside>
   </div>
 </div>
+
+<div class="date-popover" id="date-popover" role="dialog" aria-label="날짜 선택"></div>
 
 <script>
 const PAGE_SIZE=15;
 const defaultDates={from:'2026-05-01',to:'2026-05-14'};
 let currentPage=1;
 let filteredRows=[];
+let selectedMailRowKey=null;
+let selectedContentFilterId='';
+let appliedContentFilterId='';
+let contentFilterQuery='';
+let contentSuggestionIndex=0;
+let activeDateInputId='';
+let datePickerMonth=new Date();
 
 const recipientNames={
   'junhyeok@nextwave.io':'김준혁',
@@ -341,12 +512,75 @@ const recipientNames={
   'legal@rakuten-viki.com':'강소희',
   'ops@rakuten-viki.com':'이지호',
   'rights@rakuten-viki.com':'정예준',
-  'settlement@reelshort.com':'윤서진'
+  'settlement@reelshort.com':'윤서진',
+  'hannah@viki.com':'Hannah Park',
+  'jamie@alphastream.example':'Jamie Park',
+  'olivia@betamini.example':'Olivia Han',
+  'noah@shortmax.com':'Noah Meyer',
+  'sally@dramora.example':'Sally Oh',
+  'chris@episodeone.example':'Chris Moon',
+  'mina@kstoryhub.example':'Mina Jung',
+  'victor@streamlet.example':'Victor Lee'
 };
 
 function formatRecipientLabel(email){
   const name=recipientNames[email];
   return name ? `${name} (${email})` : email;
+}
+
+function escapeHtml(value){
+  return String(value ?? '').replace(/[&<>"']/g,char=>({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
+  }[char]));
+}
+
+function closeFilterSelects(exceptId=''){
+  document.querySelectorAll('.filter-select').forEach(selectWrap=>{
+    const id=selectWrap.dataset.filterSelect;
+    if(id===exceptId) return;
+    document.getElementById(`${id}-menu`)?.classList.remove('show');
+    document.getElementById(`${id}-button`)?.setAttribute('aria-expanded','false');
+  });
+}
+
+function renderFilterSelect(id){
+  const select=document.getElementById(id);
+  const button=document.getElementById(`${id}-button`);
+  const menu=document.getElementById(`${id}-menu`);
+  if(!select || !button || !menu) return;
+  const selectedOption=select.options[select.selectedIndex] || select.options[0];
+  button.textContent=selectedOption?.textContent || '';
+  button.classList.toggle('placeholder',!select.value);
+  menu.innerHTML=[...select.options].map(option=>`
+    <button class="filter-select-option ${option.value===select.value?'active':''}" type="button" role="option" aria-selected="${option.value===select.value}" onclick="pickFilterSelect('${id}','${escapeHtml(option.value)}')">${escapeHtml(option.textContent)}</button>
+  `).join('');
+}
+
+function toggleFilterSelect(id,event){
+  event?.stopPropagation();
+  closeContentSuggestions();
+  const menu=document.getElementById(`${id}-menu`);
+  const button=document.getElementById(`${id}-button`);
+  const isOpen=menu?.classList.contains('show');
+  closeFilterSelects(id);
+  menu?.classList.toggle('show',!isOpen);
+  button?.setAttribute('aria-expanded',String(!isOpen));
+}
+
+function pickFilterSelect(id,value){
+  const select=document.getElementById(id);
+  if(select) select.value=value;
+  renderFilterSelect(id);
+  closeFilterSelects();
+}
+
+function renderFilterSelects(){
+  renderFilterSelect('mail-type');
+  renderFilterSelect('mail-sender-filter');
 }
 
 function parseRecipients(row){
@@ -356,9 +590,15 @@ function parseRecipients(row){
     return [{ email, label: formatRecipientLabel(email), status: row.dataset.status || '성공' }];
   }
   return raw.split(',').map(item=>{
-    const [email,status='성공']=item.split('|');
+    const [email,status='성공',recipientType='',company='']=item.split('|');
     const cleanEmail=email.trim();
-    return { email: cleanEmail, label: formatRecipientLabel(cleanEmail), status: status.trim() };
+    return {
+      email: cleanEmail,
+      label: formatRecipientLabel(cleanEmail),
+      status: status.trim(),
+      recipientType: recipientType.trim(),
+      company: company.trim()
+    };
   }).filter(item=>item.email);
 }
 
@@ -380,113 +620,245 @@ function renderMailStatus(row, cell, recipients){
   cell.innerHTML=`<span class="mail-status ${statusClass}">${statusText}</span>`;
 }
 
-function renderExpandControl(row, recipients){
-  if(row.querySelector('.mail-expand')) return;
-  const cell=document.createElement('td');
-  cell.className='mail-expand';
-  if(recipients.length > 1){
-    const listId=`recipient-detail-${row.dataset.rowIndex}`;
-    row.classList.add('has-recipients');
-    row.setAttribute('tabindex','0');
-    cell.innerHTML=`<button class="recipient-toggle" type="button" onclick="toggleRecipients(this,event)" aria-label="수신자 목록 펼치기" aria-expanded="false" aria-controls="${listId}"><i class="ti ti-chevron-down"></i></button>`;
-  }
-  row.appendChild(cell);
+const mailCategoryLabels={
+  USER_SIGNUP:'회원가입',
+  ADMIN_NOTICE:'관리자 알림',
+  WORKFLOW:'워크플로우',
+  CONTENT_PROPOSAL:'콘텐츠/기획안 제안',
+  SETTLEMENT:'정산/퍼포먼스 안내',
+  PERFORMANCE:'정산/퍼포먼스 안내',
+  RS_REQUEST:'RS 요청'
+};
+
+const contentFilterItems=[
+  {id:'content-today-challenge',label:'오늘의 챌린지',company:'NextWave Studios',type:'콘텐츠'},
+  {id:'content-afterwork-romance',label:'퇴근 후 로맨스',company:'NextWave Studios',type:'콘텐츠'},
+  {id:'content-idol-manager',label:'아이돌 매니저로 살아남기',company:'NextWave Studios',type:'콘텐츠'},
+  {id:'content-night-market-romance',label:'야시장 로맨스',company:'Wave Pictures',type:'콘텐츠'},
+  {id:'content-short-pilot',label:'단막극 파일럿',company:'Blue Moon Studio',type:'콘텐츠'},
+  {id:'proposal-love-standard',label:'연애의 정석',company:'Warm Cut Studio',type:'기획안'},
+  {id:'proposal-office-romance-guide',label:'오피스 로맨스 가이드',company:'Warm Cut Studio',type:'기획안'},
+  {id:'proposal-first-love-reboot',label:'첫사랑 리부트',company:'Warm Cut Studio',type:'기획안'},
+  {id:'proposal-contract-love-report',label:'계약 연애 보고서',company:'Warm Cut Studio',type:'기획안'},
+  {id:'proposal-sweet-lie',label:'달콤한 거짓말',company:'Warm Cut Studio',type:'기획안'}
+];
+
+function inferMailCategory(row, subject){
+  const explicit=row.dataset.category;
+  if(explicit) return explicit;
+  if(subject.includes('새로운 회원가입 신청') || subject.includes('콘텐츠 등록 신청이 들어왔어요')) return 'ADMIN_NOTICE';
+  if(subject.includes('RS 요청')) return 'RS_REQUEST';
+  if(subject.includes('퍼포먼스')) return 'PERFORMANCE';
+  if(subject.includes('정산')) return 'SETTLEMENT';
+  return row.dataset.type || 'CONTENT_PROPOSAL';
 }
 
-function renderRecipientDetailRow(row, recipients){
-  if(recipients.length <= 1 || row.dataset.detailRendered) return;
-  const detailRow=document.createElement('tr');
-  detailRow.className='recipient-detail-row';
-  detailRow.id=`recipient-detail-${row.dataset.rowIndex}`;
-  detailRow.hidden=true;
-  detailRow.innerHTML=`
-    <td class="recipient-detail-spacer"></td>
-    <td class="recipient-detail-spacer"></td>
-    <td class="recipient-detail-cell">
-      <div class="recipient-detail-panel">
-        ${recipients.map(item=>`
-          <div class="recipient-item">
-            <span>${item.label}</span>
-            <span class="recipient-result ${item.status === '성공' ? 'is-success' : 'is-fail'}">${item.status === '성공' ? 'Success' : 'Failed'}</span>
-          </div>
-        `).join('')}
-      </div>
-    </td>
-    <td class="recipient-detail-spacer" colspan="4"></td>`;
-  row.after(detailRow);
-  row.dataset.detailRendered='1';
+function mailSenderForRow(row, category){
+  if(row.dataset.sender) return row.dataset.sender;
+  const autoCategories=new Set(['WORKFLOW','USER_SIGNUP','ADMIN_NOTICE']);
+  return autoCategories.has(category) ? '자동시스템' : '김관리자';
+}
+
+function contentIdsForMailSubject(subject, recipients=[]){
+  const text=String(subject || '');
+  if(text.includes('오늘의 챌린지') && text.includes('퍼포먼스')){
+    return ['content-today-challenge','content-afterwork-romance','content-idol-manager','content-night-market-romance'];
+  }
+  if(text.includes('오늘의 챌린지')){
+    return ['content-today-challenge','content-afterwork-romance','content-idol-manager'];
+  }
+  if(text.includes('단막극 파일럿')) return ['content-short-pilot'];
+  if(text.includes('연애의 정석')){
+    return ['proposal-love-standard','proposal-office-romance-guide','proposal-first-love-reboot','proposal-contract-love-report','proposal-sweet-lie'];
+  }
+  const firstEmail=recipients[0]?.email || '';
+  if(text.includes('기획안') || firstEmail.includes('paperlens')) return ['proposal-love-standard'];
+  if(text.includes('콘텐츠 등록') || text.includes('자료 업로드')) return ['content-today-challenge'];
+  if(text.includes('수정 신청')) return ['content-short-pilot'];
+  if(text.includes('구매 문의') || text.includes('컨펌 메시지') || text.includes('메타데이터') || text.includes('묶음 구매')) return ['content-today-challenge'];
+  if(text.includes('턴키') || text.includes('제작협업')) return ['proposal-office-romance-guide'];
+  return [];
+}
+
+function getContentFilterMatches(){
+  const query=contentFilterQuery.trim().toLowerCase();
+  if(!query) return contentFilterItems;
+  return contentFilterItems.filter(item=>`${item.label} ${item.company} ${item.type}`.toLowerCase().includes(query));
+}
+
+function renderContentSuggestions(show=false){
+  const layer=document.getElementById('content-suggestions');
+  if(!layer) return;
+  const matches=getContentFilterMatches();
+  if(!show){
+    layer.classList.remove('show');
+    return;
+  }
+  if(!matches.length){
+    layer.innerHTML='<div class="content-suggestion-empty">검색 결과가 없습니다</div>';
+    layer.classList.add('show');
+    return;
+  }
+  if(contentSuggestionIndex<0 || contentSuggestionIndex>=matches.length) contentSuggestionIndex=0;
+  layer.innerHTML=matches.map((item,index)=>`
+    <div class="content-suggestion ${index===contentSuggestionIndex?'active':''}" role="button" tabindex="-1" onmousedown="event.preventDefault();selectContentFilter('${escapeHtml(item.id)}')">
+      <span class="content-suggestion-name">${escapeHtml(item.label)}</span>
+      <span class="content-suggestion-company">${escapeHtml(item.company)}</span>
+    </div>
+  `).join('');
+  layer.classList.add('show');
+}
+
+function renderContentFilter(){
+  const selected=contentFilterItems.find(item=>item.id===selectedContentFilterId);
+  const input=document.getElementById('content-filter-input');
+  const clearButton=document.getElementById('content-clear-btn');
+  if(input){
+    input.value=selected ? selected.label : contentFilterQuery;
+    input.placeholder='콘텐츠/기획안명 검색';
+  }
+  clearButton?.classList.toggle('show',!!selected || !!contentFilterQuery);
+}
+
+function setContentFilterQuery(value){
+  contentFilterQuery=value;
+  selectedContentFilterId='';
+  contentSuggestionIndex=0;
+  renderContentFilter();
+  renderContentSuggestions(true);
+}
+
+function openContentSuggestions(){
+  contentSuggestionIndex=0;
+  renderContentSuggestions(true);
+}
+
+function closeContentSuggestions(){
+  renderContentSuggestions(false);
+}
+
+function selectContentFilter(id){
+  selectedContentFilterId=id;
+  contentFilterQuery='';
+  renderContentFilter();
+  closeContentSuggestions();
+}
+
+function clearContentFilter(){
+  selectedContentFilterId='';
+  contentFilterQuery='';
+  renderContentFilter();
+  closeContentSuggestions();
+}
+
+function handleContentFilterKeydown(event){
+  const matches=getContentFilterMatches();
+  if(event.key==='ArrowDown'){
+    event.preventDefault();
+    contentSuggestionIndex=Math.min(matches.length-1,contentSuggestionIndex+1);
+    renderContentSuggestions(true);
+    return;
+  }
+  if(event.key==='ArrowUp'){
+    event.preventDefault();
+    contentSuggestionIndex=Math.max(0,contentSuggestionIndex-1);
+    renderContentSuggestions(true);
+    return;
+  }
+  if(event.key==='Enter' && matches.length){
+    event.preventDefault();
+    selectContentFilter(matches[contentSuggestionIndex]?.id || matches[0].id);
+    return;
+  }
+  if(event.key==='Escape'){
+    closeContentSuggestions();
+    return;
+  }
+  if(event.key==='Backspace' && selectedContentFilterId){
+    clearContentFilter();
+  }
+}
+
+function inferTargetCompany(subject, recipients){
+  const dashMatch=String(subject || '').match(/—\s*([^—]+)$/);
+  if(dashMatch) return dashMatch[1].trim();
+  const email=recipients[0]?.email || '';
+  const domain=email.split('@')[1]?.split('.')[0] || '';
+  return domain ? domain.charAt(0).toUpperCase()+domain.slice(1) : '-';
 }
 
 function enhanceRows(){
   const rows=[...document.querySelectorAll('#mail-body tr')];
   rows.forEach((row,index)=>{
-    if(row.classList.contains('recipient-detail-row')) return;
     row.classList.add('mail-row');
     row.dataset.rowIndex=index+1;
-    if(!row.dataset.statusMoved){
-      const statusCell=row.cells[3];
-      const subjectCell=row.cells[4];
-      if(statusCell&&subjectCell) row.insertBefore(statusCell,subjectCell.nextSibling);
-      row.dataset.statusMoved='1';
-    }
-    row.onclick=()=>toggleRecipientRow(row);
-    row.onkeydown=event=>{
-      if(event.key==='Enter'||event.key===' '){
-        event.preventDefault();
-        toggleRecipientRow(row);
-      }
-    };
-    if(!row.querySelector('.mail-no')){
-      const noCell=document.createElement('td');
-      noCell.className='mail-no';
-      row.insertBefore(noCell,row.firstElementChild);
-    }
-    const cells=row.cells;
-    const date=cells[1].querySelector('.dt-date')?.textContent.trim()||'';
+    const originalCells=[...row.cells];
+    const dateText=originalCells[0]?.querySelector('.dt-date')?.textContent.trim()||'';
+    const timeText=originalCells[0]?.querySelector('.dt-time')?.textContent.trim()||'';
+    const sentAt=[dateText,timeText].filter(Boolean).join(' ');
+    const subject=originalCells[4]?.textContent.trim()||'';
     const recipients=parseRecipients(row);
-    renderRecipients(row,cells[2],recipients);
-    renderMailStatus(row,cells[5],recipients);
-    renderExpandControl(row,recipients);
-    renderRecipientDetailRow(row,recipients);
-    row.dataset.date=date;
-    row.dataset.search=[recipients.map(item=>`${item.label} ${item.email}`).join(' '),cells[3].textContent,cells[4].textContent].join(' ').toLowerCase();
+    const category=inferMailCategory(row,subject);
+    const categoryLabel=mailCategoryLabels[category]||category;
+    const sender=mailSenderForRow(row,category);
+    const contentIds=contentIdsForMailSubject(subject,recipients);
+    const successCount=recipients.filter(item=>item.status==='성공').length;
+    const targetCompany=inferTargetCompany(subject,recipients);
+    row.dataset.category=category;
+    row.dataset.categoryLabel=categoryLabel;
+    row.dataset.sender=sender;
+    row.dataset.contentIds=contentIds.join(',');
+    row.dataset.status=successCount===recipients.length?'성공':(successCount===0?'실패':'부분성공');
+    row.dataset.date=dateText;
+    row.dataset.sentAt=sentAt;
+    row.dataset.subject=subject;
+    row.dataset.targetCompany=targetCompany;
+    row._mailRecipients=recipients;
+    row.dataset.search=[
+      subject,
+      categoryLabel,
+      sender,
+      recipients.map(item=>`${item.label} ${item.email}`).join(' ')
+    ].join(' ').toLowerCase();
+    row.tabIndex=0;
+    row.addEventListener('click',()=>showMailDetailPanel(row.dataset.rowIndex));
+    row.addEventListener('keydown',event=>{
+      if(event.key==='Enter') showMailDetailPanel(row.dataset.rowIndex);
+    });
+    row.innerHTML=`
+      <td class="mail-no"></td>
+      <td><span class="mail-category">${escapeHtml(categoryLabel)}</span></td>
+      <td class="subject">${escapeHtml(subject)}</td>
+      <td><span class="mail-sender">${escapeHtml(sender)}</span></td>
+      <td><span class="mail-sent-at">${escapeHtml(sentAt)}</span></td>
+    `;
   });
 }
 
-function toggleRecipients(button,event){
-  event?.stopPropagation();
-  const row=button.closest('tr');
-  const detail=document.getElementById(button.getAttribute('aria-controls'));
-  const isOpen=button.classList.toggle('is-open');
-  row?.classList.toggle('is-expanded',isOpen);
-  button.setAttribute('aria-expanded',String(isOpen));
-  if(detail) detail.hidden=!isOpen;
-}
-
-function toggleRecipientRow(row){
-  const button=row.querySelector('.recipient-toggle');
-  if(button) toggleRecipients(button);
-}
-
 function filterMails(){
-  const query=document.getElementById('mail-search').value.trim().toLowerCase();
   const type=document.getElementById('mail-type').value;
-  const status=document.getElementById('mail-status').value;
+  const sender=document.getElementById('mail-sender-filter').value;
   const from=document.getElementById('date-from').value;
   const to=document.getElementById('date-to').value;
+  appliedContentFilterId=selectedContentFilterId;
 
   filteredRows=[...document.querySelectorAll('#mail-body tr.mail-row')].filter(row=>{
-    const matchesQuery=!query||row.dataset.search.includes(query);
-    const matchesType=!type||row.dataset.type===type;
-    const matchesStatus=!status||(status==='실패'?row.dataset.status!=='성공':row.dataset.status===status);
+    const matchesType=!type||
+      (type==='SETTLEMENT_PERFORMANCE'&&['SETTLEMENT','PERFORMANCE'].includes(row.dataset.category))||
+      row.dataset.category===type||
+      row.dataset.type===type;
+    const matchesSender=!sender||row.dataset.sender===sender;
     const matchesFrom=!from||row.dataset.date>=from;
     const matchesTo=!to||row.dataset.date<=to;
-    return matchesQuery&&matchesType&&matchesStatus&&matchesFrom&&matchesTo;
+    const rowContentIds=(row.dataset.contentIds || '').split(',').filter(Boolean);
+    const matchesContent=!appliedContentFilterId||rowContentIds.includes(appliedContentFilterId);
+    return matchesType&&matchesSender&&matchesFrom&&matchesTo&&matchesContent;
   });
 
   currentPage=1;
   document.getElementById('result-count').textContent=filteredRows.length;
   renderPage();
+  if(selectedMailRowKey&&!filteredRows.some(row=>row.dataset.rowIndex===selectedMailRowKey)) closeMailDetailPanel();
 }
 
 function renderPage(){
@@ -498,11 +870,8 @@ function renderPage(){
   const visible=filteredRows.slice((currentPage-1)*PAGE_SIZE,currentPage*PAGE_SIZE);
   visible.forEach((row,index)=>{
     row.hidden=false;
+    row.classList.toggle('active',row.dataset.rowIndex===selectedMailRowKey);
     row.querySelector('.mail-no').textContent=filteredRows.length-((currentPage-1)*PAGE_SIZE+index);
-    const button=row.querySelector('.recipient-toggle');
-    const detail=button ? document.getElementById(button.getAttribute('aria-controls')) : null;
-    row.classList.toggle('is-expanded',!!button&&button.classList.contains('is-open'));
-    if(detail) detail.hidden=!button.classList.contains('is-open');
   });
 
   document.getElementById('empty-state').style.display=filteredRows.length?'none':'block';
@@ -521,9 +890,203 @@ function renderPagination(pageCount){
 }
 
 function goPage(page){
+  closeMailDetailPanel();
   currentPage=page;
   renderPage();
   document.querySelector('.table-wrap').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function renderOpenStatus(opened){
+  return `<span class="open-status ${opened ? 'opened' : 'unopened'}">${opened ? '열람' : '미열람'}</span>`;
+}
+
+function addMinutesToMailDate(value, minutes){
+  const match=String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})$/);
+  if(!match) return value || '-';
+  const date=new Date(Number(match[1]),Number(match[2])-1,Number(match[3]),Number(match[4]),Number(match[5])+minutes);
+  const pad=value=>String(value).padStart(2,'0');
+  return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function recipientOpened(item,index){
+  return item.status === '성공' && index % 3 !== 1;
+}
+
+const internalRecipientDomains=new Set(['shortflow.io']);
+
+function recipientTypeForEmail(email){
+  const domain=String(email || '').split('@')[1]?.toLowerCase() || '';
+  return internalRecipientDomains.has(domain) ? '내부' : '외부';
+}
+
+function recipientTypeForItem(item){
+  return item.recipientType || recipientTypeForEmail(item.email);
+}
+
+function renderDetailRecipientTable(row, recipients){
+  const company=row.dataset.targetCompany || '-';
+  const showRecipientType=row.dataset.category === 'CONTENT_PROPOSAL';
+  const rows=recipients.map((item,index)=>{
+    const opened=recipientOpened(item,index);
+    const recipientType=recipientTypeForItem(item);
+    const recipientCompany=item.company || company;
+    const previous=recipients[index - 1];
+    const isTypeGroupStart=!previous || recipientTypeForItem(previous) !== recipientType;
+    const isCompanyGroupStart=!previous || (previous.company || company) !== recipientCompany;
+    const typeTopLineClass=isTypeGroupStart && index > 0 ? 'with-company-top-line' : '';
+    const companyTopLineClass=isCompanyGroupStart && index > 0 ? 'with-company-top-line' : '';
+    return `
+      <div class="recipient-row ${showRecipientType ? '' : 'no-recipient-type'}">
+        ${showRecipientType ? `<div class="recipient-cell recipient-type ${isTypeGroupStart ? typeTopLineClass : 'blank'}">${isTypeGroupStart ? escapeHtml(recipientType) : ''}</div>` : ''}
+        <div class="recipient-cell recipient-company ${isCompanyGroupStart ? companyTopLineClass : 'blank'}">${isCompanyGroupStart ? escapeHtml(recipientCompany) : ''}</div>
+        <div class="recipient-cell">${escapeHtml(item.label.replace(/\s*\(.+\)$/,''))}</div>
+        <div class="recipient-cell" title="${escapeHtml(item.email)}">${escapeHtml(item.email)}</div>
+        <div class="recipient-cell recipient-status-cell">${renderOpenStatus(opened)}</div>
+        <div class="recipient-cell">${opened ? escapeHtml(addMinutesToMailDate(row.dataset.sentAt, (index + 1) * 17)) : '-'}</div>
+      </div>
+    `;
+  }).join('');
+  return `
+    <div class="history-target-card">
+      <div class="recipient-table">
+        <div class="recipient-row head ${showRecipientType ? '' : 'no-recipient-type'}">
+          ${showRecipientType ? '<div class="recipient-cell">구분</div>' : ''}
+          <div class="recipient-cell">수신사</div>
+          <div class="recipient-cell">수신자</div>
+          <div class="recipient-cell">이메일</div>
+          <div class="recipient-cell">열람 여부</div>
+          <div class="recipient-cell">열람 일시</div>
+        </div>
+        ${rows}
+      </div>
+    </div>
+  `;
+}
+
+function shouldShowContentName(category){
+  return ['CONTENT_PROPOSAL','SETTLEMENT','PERFORMANCE'].includes(category);
+}
+
+function detailContentName(row){
+  const subject=row.dataset.subject || '';
+  const quoted=subject.match(/'([^']+)'(?:\s*(외\s*\d+건))?/);
+  if(quoted) return [quoted[1], quoted[2] || ''].filter(Boolean).join(' ');
+  const settlement=subject.match(/^(.+?)\s*정산 정보 업데이트$/);
+  if(settlement) return settlement[1].trim();
+  const performance=subject.match(/^(.+?)\s*퍼포먼스 정보 업데이트$/);
+  if(performance) return performance[1].replace(/외/g,' 외').replace(/\s+/g,' ').trim();
+  return '';
+}
+
+function detailContentNames(row){
+  const subject=row.dataset.subject || '';
+  if(row.dataset.category === 'CONTENT_PROPOSAL'){
+    if(subject.includes('오늘의 챌린지')) return ['오늘의 챌린지', '퇴근 후 로맨스', '아이돌 매니저로 살아남기'];
+    if(subject.includes('연애의 정석')) return ['연애의 정석', '오피스 로맨스 가이드', '첫사랑 리부트', '계약 연애 보고서', '달콤한 거짓말'];
+    if(subject.includes('단막극 파일럿')) return ['단막극 파일럿'];
+  }
+  const contentName=detailContentName(row);
+  return contentName ? [contentName] : [];
+}
+
+function renderContentNameRow(row){
+  if(!shouldShowContentName(row.dataset.category)) return '';
+  const contentNames=detailContentNames(row);
+  if(!contentNames.length) return '';
+  return `<div class="review-row"><span class="review-key">콘텐츠명</span><span class="review-val wide"><div class="history-content-tags">${contentNames.map(name=>`<span class="history-content-tag">${escapeHtml(name)}</span>`).join('')}</div></span></div>`;
+}
+
+function productionCompanyForProposal(row){
+  const subject=row.dataset.subject || '';
+  if(subject.includes('연애의 정석')) return { company:'Warm Cut Studio', name:'서하린', email:'hello@warmcut.studio' };
+  if(subject.includes('단막극 파일럿')) return { company:'Blue Moon Studio', name:'차예린', email:'accounting@bluemoon.io' };
+  return { company:'NextWave Studios', name:'이서연', email:'settlement@nextwave.example' };
+}
+
+function renderProductionNoticeTable(row){
+  const notice=productionCompanyForProposal(row);
+  return `
+    <div class="history-target-card">
+      <div class="recipient-table">
+        <div class="owner-notice-row head">
+          <div class="owner-notice-cell">제작사명</div>
+          <div class="owner-notice-cell">수신자</div>
+          <div class="owner-notice-cell">이메일</div>
+          <div class="owner-notice-cell">열람 여부</div>
+          <div class="owner-notice-cell">열람 일시</div>
+        </div>
+        <div class="owner-notice-row">
+          <div class="owner-notice-cell">${escapeHtml(notice.company)}</div>
+          <div class="owner-notice-cell">${escapeHtml(notice.name)}</div>
+          <div class="owner-notice-cell" title="${escapeHtml(notice.email)}">${escapeHtml(notice.email)}</div>
+          <div class="owner-notice-cell recipient-status-cell">${renderOpenStatus(true)}</div>
+          <div class="owner-notice-cell">${escapeHtml(addMinutesToMailDate(row.dataset.sentAt, 26))}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderProductionNoticeSection(row){
+  if(row.dataset.category !== 'CONTENT_PROPOSAL') return '';
+  return `
+    <div class="detail-section">
+      <div class="detail-section-title">제작사 알림</div>
+      <div class="history-target-list">${renderProductionNoticeTable(row)}</div>
+    </div>
+  `;
+}
+
+function showMailDetailPanel(rowKey){
+  const row=[...document.querySelectorAll('#mail-body tr.mail-row')].find(item=>item.dataset.rowIndex===String(rowKey));
+  if(!row) return;
+  closeMailComposePanel();
+  selectedMailRowKey=String(rowKey);
+  document.querySelectorAll('#mail-body tr.mail-row').forEach(item=>item.classList.toggle('active',item.dataset.rowIndex===selectedMailRowKey));
+  const recipients=row._mailRecipients || [];
+  const panel=document.getElementById('mail-detail-panel');
+  document.getElementById('mail-detail-title').textContent='메일 발송 상세';
+  document.getElementById('mail-detail-sub').textContent=row.dataset.subject || '';
+  document.getElementById('mail-detail-body').innerHTML=`
+    <div class="history-inline-detail">
+      <div class="history-inline-grid">
+        <div class="detail-section">
+          <div class="detail-section-title">기본 정보</div>
+          <div class="detail-body">
+            <div class="review-row"><span class="review-key">메일 종류</span><span class="review-val">${escapeHtml(row.dataset.categoryLabel || '')}</span></div>
+            <div class="review-row"><span class="review-key">제목</span><span class="review-val multiline">${escapeHtml(row.dataset.subject || '')}</span></div>
+            ${renderContentNameRow(row)}
+            <div class="review-row review-row-dual"><span class="review-key">발송자</span><span class="review-val">${escapeHtml(row.dataset.sender || '')}</span><span class="review-key">발송 일시</span><span class="review-val">${escapeHtml(row.dataset.sentAt || '')}</span></div>
+          </div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">수신 상세</div>
+          <div class="history-target-list">${renderDetailRecipientTable(row, recipients)}</div>
+        </div>
+        ${renderProductionNoticeSection(row)}
+      </div>
+    </div>
+  `;
+  panel?.classList.add('show');
+}
+
+function toggleMailDetailExpanded(){
+  const panel=document.getElementById('mail-detail-panel');
+  const button=document.getElementById('mail-detail-expand');
+  const expanded=panel?.classList.toggle('expanded');
+  button?.setAttribute('aria-pressed',String(!!expanded));
+  const icon=button?.querySelector('i');
+  if(icon) icon.className=expanded?'ti ti-arrows-minimize':'ti ti-arrows-maximize';
+}
+
+function closeMailDetailPanel(){
+  selectedMailRowKey=null;
+  document.getElementById('mail-detail-panel')?.classList.remove('show','expanded');
+  const button=document.getElementById('mail-detail-expand');
+  button?.setAttribute('aria-pressed','false');
+  const icon=button?.querySelector('i');
+  if(icon) icon.className='ti ti-arrows-maximize';
+  document.querySelectorAll('#mail-body tr.mail-row').forEach(row=>row.classList.remove('active'));
 }
 
 function formatDate(date){
@@ -531,6 +1094,110 @@ function formatDate(date){
   const month=String(date.getMonth()+1).padStart(2,'0');
   const day=String(date.getDate()).padStart(2,'0');
   return `${year}-${month}-${day}`;
+}
+
+function parseDateValue(value){
+  const match=String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!match) return null;
+  return new Date(Number(match[1]),Number(match[2])-1,Number(match[3]));
+}
+
+function updateDateFieldState(id){
+  const input=document.getElementById(id);
+  document.getElementById(`${id}-field`)?.classList.toggle('has-value',!!input?.value);
+}
+
+function positionDatePicker(){
+  const input=document.getElementById(activeDateInputId);
+  const popover=document.getElementById('date-popover');
+  if(!input || !popover) return;
+  const rect=input.getBoundingClientRect();
+  const top=rect.bottom+6;
+  const left=Math.min(rect.left,window.innerWidth-popover.offsetWidth-12);
+  popover.style.top=`${top}px`;
+  popover.style.left=`${Math.max(12,left)}px`;
+}
+
+function renderDatePicker(){
+  const popover=document.getElementById('date-popover');
+  const input=document.getElementById(activeDateInputId);
+  if(!popover || !input) return;
+  const selected=parseDateValue(input.value);
+  const today=new Date();
+  const viewYear=datePickerMonth.getFullYear();
+  const viewMonth=datePickerMonth.getMonth();
+  const firstDay=new Date(viewYear,viewMonth,1);
+  const gridStart=new Date(viewYear,viewMonth,1-firstDay.getDay());
+  const weeks=['일','월','화','수','목','금','토'];
+  const days=Array.from({length:42},(_,index)=>{
+    const day=new Date(gridStart);
+    day.setDate(gridStart.getDate()+index);
+    const value=formatDate(day);
+    const muted=day.getMonth()!==viewMonth;
+    const isToday=formatDate(day)===formatDate(today);
+    const isSelected=selected && formatDate(day)===formatDate(selected);
+    return `<button class="date-picker-day ${muted?'is-muted':''} ${isToday?'is-today':''} ${isSelected?'is-selected':''}" type="button" onclick="selectDateValue('${value}')">${day.getDate()}</button>`;
+  }).join('');
+  popover.innerHTML=`
+    <div class="date-picker-head">
+      <button class="date-picker-nav" type="button" onclick="moveDatePickerMonth(-1)" aria-label="이전 달"><i class="ti ti-chevron-left"></i></button>
+      <div class="date-picker-title">${viewYear}.${String(viewMonth+1).padStart(2,'0')}</div>
+      <button class="date-picker-nav" type="button" onclick="moveDatePickerMonth(1)" aria-label="다음 달"><i class="ti ti-chevron-right"></i></button>
+    </div>
+    <div class="date-picker-week">${weeks.map(day=>`<span>${day}</span>`).join('')}</div>
+    <div class="date-picker-grid">${days}</div>
+  `;
+  popover.classList.add('show');
+  requestAnimationFrame(positionDatePicker);
+}
+
+function openDatePicker(id){
+  activeDateInputId=id;
+  const selected=parseDateValue(document.getElementById(id)?.value);
+  const base=selected || new Date();
+  datePickerMonth=new Date(base.getFullYear(),base.getMonth(),1);
+  renderDatePicker();
+}
+
+function closeDatePicker(){
+  document.getElementById('date-popover')?.classList.remove('show');
+  activeDateInputId='';
+}
+
+function moveDatePickerMonth(offset){
+  datePickerMonth=new Date(datePickerMonth.getFullYear(),datePickerMonth.getMonth()+offset,1);
+  renderDatePicker();
+}
+
+function selectDateValue(value){
+  const input=document.getElementById(activeDateInputId);
+  if(!input) return;
+  input.value=value;
+  updateDateFieldState(activeDateInputId);
+  clearQuickRange();
+  closeDatePicker();
+}
+
+function selectToday(){
+  selectDateValue(formatDate(new Date()));
+}
+
+function clearDateValue(id,event){
+  event?.stopPropagation();
+  const input=document.getElementById(id);
+  if(!input) return;
+  input.value='';
+  updateDateFieldState(id);
+  clearQuickRange();
+  if(activeDateInputId===id) closeDatePicker();
+}
+
+function handleDateInputKeydown(event,id){
+  if(event.key==='Enter' || event.key===' ' || event.key==='ArrowDown'){
+    event.preventDefault();
+    openDatePicker(id);
+  }
+  if(event.key==='Escape') closeDatePicker();
 }
 
 function clearQuickRange(){
@@ -549,6 +1216,9 @@ function setQuickRange(value,button){
 
   document.getElementById('date-from').value=formatDate(from);
   document.getElementById('date-to').value=formatDate(to);
+  updateDateFieldState('date-from');
+  updateDateFieldState('date-to');
+  closeDatePicker();
   clearQuickRange();
   button.classList.add('active');
 }
@@ -556,37 +1226,80 @@ function setQuickRange(value,button){
 function resetAll(){
   document.getElementById('date-from').value=defaultDates.from;
   document.getElementById('date-to').value=defaultDates.to;
+  updateDateFieldState('date-from');
+  updateDateFieldState('date-to');
   document.getElementById('mail-type').value='';
-  document.getElementById('mail-status').value='';
-  document.getElementById('mail-search').value='';
+  document.getElementById('mail-sender-filter').value='';
+  renderFilterSelects();
+  selectedContentFilterId='';
+  appliedContentFilterId='';
+  contentFilterQuery='';
+  renderContentFilter();
   clearQuickRange();
   filterMails();
 }
 
+function openMailComposePanel(){
+  closeMailDetailPanel();
+  const panel=document.getElementById('mail-compose-panel');
+  const frame=document.getElementById('mail-compose-frame');
+  setMailComposeExpanded(false);
+  if(frame&&!panel?.classList.contains('show')) frame.setAttribute('src','mail-admin.html?embed=compose&v=panel-controls-20260826#compose');
+  panel?.classList.add('show');
+}
+
+function closeMailComposePanel(){
+  setMailComposeExpanded(false);
+  document.getElementById('mail-compose-panel')?.classList.remove('show');
+}
+
+function setMailComposeExpanded(expanded){
+  const panel=document.getElementById('mail-compose-panel');
+  const button=document.getElementById('mail-compose-expand');
+  panel?.classList.toggle('expanded',!!expanded);
+  button?.setAttribute('aria-pressed',String(!!expanded));
+  button?.setAttribute('aria-label',expanded?'메일 전송 패널 축소':'메일 전송 패널 확장');
+  const icon=button?.querySelector('i');
+  if(icon) icon.className=expanded?'ti ti-arrows-minimize':'ti ti-arrows-maximize';
+  document.getElementById('mail-compose-frame')?.contentWindow?.postMessage({
+    type:'shortflow-mail-compose-expanded',
+    expanded:!!expanded
+  },'*');
+}
+
+function toggleMailComposeExpanded(){
+  const panel=document.getElementById('mail-compose-panel');
+  setMailComposeExpanded(!panel?.classList.contains('expanded'));
+}
+
+window.addEventListener('message',event=>{
+  if(event.data?.type==='shortflow-mail-compose-close') closeMailComposePanel();
+  if(event.data?.type==='shortflow-mail-compose-expanded') setMailComposeExpanded(!!event.data.expanded);
+});
+
 document.getElementById('date-from').addEventListener('change',clearQuickRange);
 document.getElementById('date-to').addEventListener('change',clearQuickRange);
+document.addEventListener('click',event=>{
+  closeFilterSelects();
+  if(!event.target.closest('#content-tokenizer')) closeContentSuggestions();
+  if(!event.target.closest('.date-field') && !event.target.closest('#date-popover')) closeDatePicker();
+});
+window.addEventListener('resize',()=>{ if(activeDateInputId) positionDatePicker(); });
+document.querySelector('.content')?.addEventListener('scroll',()=>{ if(activeDateInputId) positionDatePicker(); });
 document.querySelectorAll('.quick-range').forEach(button=>{
   button.addEventListener('click',()=>setQuickRange(button.dataset.range,button));
 });
-document.getElementById('mail-search').addEventListener('keydown',event=>{
-  if(event.key==='Enter')filterMails();
-});
-
-document.addEventListener('DOMContentLoaded',()=>{
-  const topbar=document.querySelector('.main > .topbar');
-  if(!topbar||topbar.querySelector('.page-help')) return;
-  const help=document.createElement('button');
-  help.className='page-help';
-  help.type='button';
-  help.setAttribute('aria-label','메일 이력 페이지 설명');
-  help.dataset.tooltip='시스템 자동 메일로 발송된 내역을 확인하는 페이지입니다. 수신자, 메일 종류, 발송 일시와 함께 성공/실패 여부를 조회할 수 있습니다.';
-  help.textContent='i';
-  const current=topbar.querySelector('.admin-breadcrumb-current')||topbar.querySelector('.topbar-title');
-  if(current) current.insertAdjacentElement('afterend',help);
-  else topbar.appendChild(help);
+document.getElementById('mail-compose-frame').addEventListener('load',()=>{
+  const expanded=document.getElementById('mail-compose-panel')?.classList.contains('expanded');
+  document.getElementById('mail-compose-frame')?.contentWindow?.postMessage({
+    type:'shortflow-mail-compose-expanded',
+    expanded:!!expanded
+  },'*');
 });
 
 enhanceRows();
+renderFilterSelects();
+renderContentFilter();
 filterMails();
 </script>
 </body>

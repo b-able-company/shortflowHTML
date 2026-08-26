@@ -37,17 +37,17 @@ document.addEventListener('DOMContentLoaded', () => {
     'platform-contract-admin.html': ['거래 관리', () => '유통 계약 관리'],
     'settlement-admin.html': ['정산', () => {
       const activeView = document.querySelector('.view.active')?.id;
+      if (activeView === 'view-rs-requests') return 'RS 요청 관리';
       return activeView === 'view-settlement' || activeView === 'view-completed' ? '정산 진행 관리' : '계약관리';
     }],
     'mail-admin.html': ['운영', () => '메일 발송'],
     'audit-log.html': ['운영', () => '관리 이력'],
-    'mail-history.html': ['운영', () => '메일 이력'],
+    'mail-history.html': ['운영', () => '메일 관리'],
     'admin-profile.html': ['관리자', () => '관리자 정보'],
   };
 
   const pageHelpMap = {
     'audit-log.html': '관리자 화면에서 처리된 주요 작업 이력을 확인하는 페이지입니다. 처리자, 작업 유형, 대상, 처리 일시를 기준으로 운영 기록을 조회할 수 있습니다.',
-    'mail-history.html': '시스템 자동 메일로 발송된 내역을 확인하는 페이지입니다. 수신자, 메일 종류, 발송 일시와 함께 성공/실패 여부를 조회할 수 있습니다.',
   };
 
   const renderBreadcrumb = () => {
@@ -214,7 +214,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initResizableSplits();
 
-  if (!document.querySelector('.utility-remote')) {
+  const isEmbeddedAdminView = document.body.classList.contains('embed-compose') || new URLSearchParams(location.search).has('embed');
+  if (!isEmbeddedAdminView && !document.querySelector('.utility-remote')) {
     const remote = document.createElement('div');
     remote.className = 'utility-remote';
     remote.innerHTML = `
@@ -346,25 +347,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const mailHistoryLink = Array.from(nav.children)
       .find((child) => child.matches?.('a[href="mail-history.html"]'));
 
-    if (mailLink || auditLink) {
+    if (mailLink || auditLink || mailHistoryLink) {
       const opsParent = document.createElement('a');
       opsParent.className = 'ni';
-      opsParent.href = 'mail-admin.html';
+      opsParent.href = 'mail-history.html';
       opsParent.dataset.adminOpsParent = 'true';
       opsParent.innerHTML = '<i class="ti ti-settings"></i> 운영';
 
       const opsSub = document.createElement('div');
       opsSub.className = 'sub';
       opsSub.innerHTML = `
-        <a class="ni${currentFile === 'mail-admin.html' ? ' active' : ''}" href="mail-admin.html">메일 발송</a>
+        <a class="ni${currentFile === 'mail-history.html' ? ' active' : ''}" href="mail-history.html">메일 관리</a>
         <a class="ni${currentFile === 'audit-log.html' ? ' active' : ''}" href="audit-log.html">관리 이력</a>
-        <a class="ni${currentFile === 'mail-history.html' ? ' active' : ''}" href="mail-history.html">메일 이력</a>
       `;
 
-      (mailLink || auditLink).insertAdjacentElement('beforebegin', opsParent);
+      (mailLink || auditLink || mailHistoryLink).insertAdjacentElement('beforebegin', opsParent);
       opsParent.insertAdjacentElement('afterend', opsSub);
       mailLink?.remove();
-      auditLink.remove();
+      auditLink?.remove();
       mailHistoryLink?.remove();
     }
   }

@@ -242,7 +242,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 .data-list.data-read-mode .contract-form-section { padding-bottom: 6px; }
 .data-list.data-read-mode .data-grid { gap: 14px 18px; }
 .data-list.data-read-mode .fg {
-  gap: 5px;
+  gap: 6.5px;
   padding-bottom: 10px;
   border-bottom: 0.5px solid #f2f1ed;
 }
@@ -289,7 +289,7 @@ td { padding: 9px 12px; vertical-align: middle; }
   border-color: #d7dce2;
   background: rgba(255, 255, 255, 0.92);
   color: #3f4650;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 400;
   justify-content: center;
   line-height: 29px;
@@ -442,7 +442,7 @@ td { padding: 9px 12px; vertical-align: middle; }
   pointer-events: auto;
 }
 .rs-quarter-card.rs-editing .fg input:read-only {
-  background: rgb(242, 242, 242);
+  background: rgb(250, 250, 250);
   color: #aaa;
   pointer-events: none;
 }
@@ -730,6 +730,12 @@ td { padding: 9px 12px; vertical-align: middle; }
 /* SETTLEMENT OPERATIONS */
 .ops-layout { flex: 1; overflow-y: auto; padding: 20px 24px; background: rgb(242, 242, 242); }
 #view-settlement .ops-layout { background: #fff; }
+#view-rs-requests .ops-layout { background: #fff; }
+#view-rs-requests .ops-table-scroll.has-border-grid {
+  border-radius: 4px;
+  max-height: calc(100vh - 176px);
+  overflow: auto;
+}
 .settlement-pipeline {
   display: grid;
   grid-template-columns: minmax(170px, 1fr) 24px minmax(170px, 1fr) 24px minmax(170px, 1fr) 24px minmax(170px, 1fr);
@@ -887,6 +893,340 @@ td { padding: 9px 12px; vertical-align: middle; }
   min-width: 144px;
   max-width: 144px;
 }
+.rs-request-table thead th:last-child,
+.rs-request-table td:last-child {
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  text-align: center;
+}
+.rs-request-table thead th:last-child {
+  height: 34px;
+}
+.rs-request-table thead th,
+.rs-request-table thead th.right,
+.rs-request-table thead th.center,
+.rs-request-table td,
+.rs-request-table td.right,
+.rs-request-table td.center {
+  text-align: left;
+}
+.rs-request-table thead th {
+  height: 34px;
+  padding-top: 0;
+  padding-bottom: 0;
+  background: rgb(250, 250, 250);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  color: #888;
+  font-size: 11.5px;
+}
+.rs-request-table thead th:first-child,
+.rs-request-table td:first-child {
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  text-align: center;
+  vertical-align: middle;
+}
+.rs-request-table td:nth-child(2) {
+  vertical-align: middle;
+}
+.rs-request-table thead th:nth-child(3),
+.rs-request-table td:nth-child(3) {
+  width: 132px;
+  min-width: 132px;
+  max-width: 132px;
+}
+.rs-request-table thead th:nth-child(5),
+.rs-request-table td:nth-child(5) {
+  width: 220px;
+  min-width: 220px;
+  max-width: 220px;
+}
+.rs-request-table thead th:nth-child(6),
+.rs-request-table td:nth-child(6) {
+  width: 70px;
+  min-width: 70px;
+  max-width: 70px;
+  text-align: center;
+  vertical-align: middle;
+}
+.rs-request-table thead th:nth-child(7),
+.rs-request-table td:nth-child(7) {
+  width: 112px;
+  min-width: 112px;
+  max-width: 112px;
+  vertical-align: middle;
+}
+.rs-request-table thead th:nth-child(6),
+.rs-request-table td:nth-child(6),
+.rs-request-table thead th:nth-child(7),
+.rs-request-table td:nth-child(7),
+.rs-request-table thead th:nth-child(8),
+.rs-request-table td:nth-child(8) {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.rs-request-table tbody tr {
+  height: auto;
+}
+.rs-request-table td {
+  min-height: 44px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  vertical-align: top;
+}
+.rs-request-table .rs-request-content-cell,
+.rs-request-table .rs-request-type-cell,
+.rs-request-table .rs-request-release-cell {
+  padding: 0;
+  white-space: normal;
+}
+.rs-request-content-list,
+.rs-request-type-list,
+.rs-request-release-list {
+  display: grid;
+  gap: 0;
+  justify-items: start;
+  line-height: 1.35;
+}
+.rs-request-content-name,
+.rs-request-type-label,
+.rs-request-release-period {
+  max-width: 100%;
+  width: 100%;
+  min-height: 38px;
+  padding: 7px 14px;
+  font-size: 12.5px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rs-request-content-name {
+  color: #14171c;
+  justify-content: space-between;
+  gap: 5px;
+}
+.rs-request-content-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rs-request-contract-shortcut {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #a3a7ae;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+.rs-request-contract-shortcut:hover {
+  background: #eef0f3;
+  color: #1f2329;
+}
+.rs-request-content-name + .rs-request-content-name,
+.rs-request-type-label + .rs-request-type-label,
+.rs-request-release-period + .rs-request-release-period {
+  border-top: 1px solid #eef0f3;
+}
+.rs-request-type-label {
+  color: #14171c;
+}
+.rs-request-table .ops-check-cell::after {
+  left: 50%;
+  top: 50%;
+}
+.rs-request-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.rs-request-counts {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+}
+.rs-request-count-filter {
+  min-width: 38px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #7f858d;
+  font: inherit;
+  cursor: pointer;
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+}
+.rs-request-count-badge {
+  min-width: 30px;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 999px;
+  border: 0.5px solid transparent;
+  background: #eef0f3;
+  color: #59616d;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.rs-request-count-filter.all .rs-request-count-badge {
+  border-color: #e6e8eb;
+  background: #fff;
+  color: #3f4650;
+}
+.rs-request-count-note {
+  font-size: 10.5px;
+  color: #3f4650;
+}
+.rs-request-count-filter.completed .rs-request-count-badge {
+  background: rgb(39, 125, 31);
+  color: #fff;
+  font-weight: 400;
+}
+.rs-request-count-filter.active .rs-request-count-badge {
+  box-shadow: 0 0 0 2px rgba(31, 35, 41, 0.12);
+}
+.rs-request-toolbar .ops-select {
+  min-width: 116px;
+  height: 34px;
+  border-color: #dedede;
+  background-color: #fff;
+}
+.rs-year-selector {
+  position: relative;
+  width: 230px;
+  flex: 0 0 230px;
+}
+.rs-year-selector .ops-select {
+  display: none;
+}
+.rs-year-selector-button {
+  width: 100%;
+  height: 40px;
+  padding: 0 38px 0 14px;
+  border: 1px solid #d9dce3;
+  border-radius: 8px;
+  background: #fff;
+  color: #17191f;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+.rs-year-selector-button:hover {
+  border-color: #c8ccd5;
+}
+.rs-year-selector-button:focus-visible,
+.rs-year-selector.open .rs-year-selector-button {
+  outline: none;
+  border-color: #aeb4bf;
+  box-shadow: 0 0 0 3px rgba(26,26,24,0.06);
+}
+.rs-year-selector-button i {
+  position: absolute;
+  right: 13px;
+  color: #8f96a3;
+  font-size: 17px;
+  pointer-events: none;
+}
+.rs-year-selector-menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 120;
+  max-height: 220px;
+  padding: 5px;
+  border: 1px solid #d9dce3;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.10);
+  overflow: auto;
+  display: none;
+}
+.rs-year-selector.open .rs-year-selector-menu {
+  display: block;
+}
+.rs-year-selector-option {
+  width: 100%;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #333;
+  font-family: inherit;
+  font-size: 12.5px;
+  text-align: left;
+  cursor: pointer;
+}
+.rs-year-selector-option:hover {
+  background: #f7f7f8;
+}
+.rs-year-selector-option.active {
+  background: #f2f3f5;
+  color: #111;
+  font-weight: 500;
+}
+.rs-request-months {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
+}
+.rs-request-month-btn {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  color: #888;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 400;
+  cursor: pointer;
+}
+.rs-request-month-btn:hover {
+  background: #f5f5f7;
+  color: #333;
+}
+.rs-request-month-btn.active {
+  border-color: transparent;
+  background: rgb(242, 242, 242);
+  color: #1f2329;
+  font-weight: 600;
+}
+.rs-request-summary {
+  margin-left: auto;
+  color: #888;
+  font-size: 12px;
+}
 .ops-check { width: 14px; height: 14px; accent-color: #1a1a18; cursor: pointer; }
 .ops-check:disabled { opacity: 0.35; cursor: not-allowed; }
 .ops-check-cell {
@@ -933,6 +1273,40 @@ td { padding: 9px 12px; vertical-align: middle; }
 }
 .ops-check-cell.is-disabled::after {
   border-color: #c9ccd2;
+}
+.rs-request-table .ops-check-cell {
+  background: #fff;
+}
+.rs-request-table .ops-check-cell:hover {
+  background: #fafafa;
+}
+.rs-request-table .ops-check-cell.is-checked {
+  background: #fff;
+}
+.rs-request-table .ops-check-cell::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #cfd4dc;
+  border-radius: 4px;
+  background: #fff;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.rs-request-table .ops-check-cell.is-checked::before {
+  border-color: #1f2329;
+  background: #1f2329;
+}
+.rs-request-table .ops-check-cell::after {
+  width: 8px;
+  height: 4px;
+  border-left-width: 2px;
+  border-bottom-width: 2px;
+  border-color: #fff;
+  transform: translate(-50%, -65%) rotate(-45deg);
 }
 .ops-check-cell.is-disabled[data-tooltip]:hover::before {
   content: attr(data-tooltip);
@@ -2075,6 +2449,10 @@ td { padding: 9px 12px; vertical-align: middle; }
   border-right: 0.5px solid #dedede;
   border-bottom: 0.5px solid #dedede;
 }
+.contract-split #contract-detail .fg.fg-span-2,
+.contract-split #contract-new .fg.fg-span-2 {
+  border-right: 0;
+}
 .contract-split #contract-detail .form-grid:not(.g3) .fg:nth-child(even),
 .contract-split #contract-new .form-grid:not(.g3) .fg:nth-child(even),
 .contract-split #contract-detail .data-grid .fg:nth-child(3n),
@@ -2339,6 +2717,34 @@ td { padding: 9px 12px; vertical-align: middle; }
 .contract-split #contract-detail .form-grid:not(.g3) .fg:nth-child(odd):last-child {
   border-bottom: 0;
 }
+.contract-split #contract-new #new-rs-quarter-basis-field,
+.contract-split #contract-detail #cd-rs-quarter-basis-field {
+  border-left: 0.5px solid #dedede;
+  border-right: 0;
+}
+.rs-schedule-hint {
+  margin-top: 8px;
+  padding: 0 2px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #333;
+  font-size: 12px;
+  line-height: 1.45;
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+}
+.rs-schedule-hint::before {
+  content: "ⓘ";
+  flex: 0 0 auto;
+  color: #555;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.rs-schedule-hint[hidden] {
+  display: none !important;
+}
 .contract-split #contract-detail .fg label,
 .contract-split #contract-new .fg label {
   min-width: 0;
@@ -2373,6 +2779,9 @@ td { padding: 9px 12px; vertical-align: middle; }
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238d8d8d' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 16px center;
+}
+.contract-split #contract-new .fg select:has(option[value=""]:checked) {
+  color: #9aa0a9;
 }
 .contract-split #contract-detail .fg input[readonly],
 .contract-split #contract-new .fg input[readonly] {
@@ -2902,8 +3311,8 @@ td { padding: 9px 12px; vertical-align: middle; }
     <div class="sub">
       <a class="ni active" href="#contracts" onclick="switchTab('contracts'); return false;">계약관리</a>
       <a class="ni" href="#settlement" onclick="switchTab('settlement'); return false;">정산 진행 관리</a>
+      <a class="ni" href="#rs-requests" onclick="switchTab('rs-requests'); return false;">RS 요청 관리</a>
     </div>
-    <a class="ni" href="mail-admin.html"><i class="ti ti-mail"></i> 메일 발송</a>
     <a class="ni" href="audit-log.html"><i class="ti ti-shield-check"></i> 관리 이력</a>
   </nav>
   <div class="sb-foot">
@@ -2926,6 +3335,7 @@ td { padding: 9px 12px; vertical-align: middle; }
     <div class="tabbar">
       <div class="tab active" onclick="switchTab('contracts')">계약관리</div>
       <div class="tab" onclick="switchTab('settlement')">정산 진행 관리</div>
+      <div class="tab" onclick="switchTab('rs-requests')">RS 요청 관리</div>
     </div>
     <div class="split contract-split" id="contract-split">
       <!-- 계약 목록 -->
@@ -3063,7 +3473,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 		                      </select>
 			                    </div>
 				                    <div class="fg fg-wide"><label>지역</label><input id="new-region" type="text" /></div>
-			                    <div class="fg"><label>출시일</label><input id="new-release-date" type="date" /></div>
+			                    <div class="fg"><label>출시일</label><input id="new-release-date" type="date" onchange="syncNewRsScheduleHint()" /></div>
 			                    <div class="fg"><label>만료일</label><input id="new-release-end-date" type="date" /></div>
 				                    <div class="fg"><label>계약기간</label><input id="new-term-months" type="number" min="1" step="1" /></div>
 				                  </div>
@@ -3073,11 +3483,27 @@ td { padding: 9px 12px; vertical-align: middle; }
 		                  <div class="form-grid">
 		                    <div class="fg fg-span-2"><label>RS 추이 통화</label>
 		                      <select id="new-rs-trend-currency">
+		                        <option value="">통화 선택</option>
 		                        <option value="USD">달러</option>
 		                        <option value="KRW">원</option>
 		                      </select>
 		                    </div>
+		                    <div class="fg"><label>RS 타입</label>
+		                      <select id="new-rs-type" onchange="syncNewRsType();syncNewRsScheduleHint()">
+		                        <option value="">RS 타입 선택</option>
+		                        <option value="QUARTERLY">분기별</option>
+		                        <option value="MONTHLY">월별</option>
+		                      </select>
+		                    </div>
+		                    <div class="fg" id="new-rs-quarter-basis-field"><label>분기기준</label>
+		                      <select id="new-rs-quarter-basis" onchange="syncNewRsScheduleHint()">
+		                        <option value="">분기기준 선택</option>
+		                        <option value="RELEASE_QUARTER">출시일</option>
+		                        <option value="YEAR_QUARTER">연도</option>
+		                      </select>
+		                    </div>
 		                  </div>
+		                  <div class="rs-schedule-hint" id="new-rs-schedule-hint" hidden></div>
 		                </div>
 			                </div>
 	              </div>
@@ -3151,7 +3577,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 	                      </select>
 	                    </div>
 	                    <div class="fg fg-wide"><label>지역</label><input id="cd-region" type="text" /></div>
-	                    <div class="fg"><label>출시일</label><input id="cd-release-date" type="date" /></div>
+	                    <div class="fg"><label>출시일</label><input id="cd-release-date" type="date" onchange="syncDetailRsScheduleHint()" /></div>
 	                    <div class="fg"><label>만료일</label><input id="cd-release-end-date" type="date" /></div>
 	                    <div class="fg"><label>계약기간</label><input id="cd-term-months" type="number" min="1" step="1" /></div>
 	                  </div>
@@ -3161,11 +3587,27 @@ td { padding: 9px 12px; vertical-align: middle; }
 	                  <div class="form-grid">
 	                    <div class="fg fg-span-2"><label>RS 추이 통화</label>
 	                      <select id="cd-rs-trend-currency">
+	                        <option value="">통화 선택</option>
 	                        <option value="USD">달러</option>
 	                        <option value="KRW">원</option>
 	                      </select>
 	                    </div>
+	                    <div class="fg"><label>RS 타입</label>
+	                      <select id="cd-rs-type" onchange="syncDetailRsType();syncDetailRsScheduleHint()">
+	                        <option value="">RS 타입 선택</option>
+	                        <option value="QUARTERLY">분기별</option>
+	                        <option value="MONTHLY">월별</option>
+	                      </select>
+	                    </div>
+	                    <div class="fg" id="cd-rs-quarter-basis-field"><label>분기기준</label>
+	                      <select id="cd-rs-quarter-basis" onchange="syncDetailRsScheduleHint()">
+	                        <option value="">분기기준 선택</option>
+	                        <option value="RELEASE_QUARTER">출시일</option>
+	                        <option value="YEAR_QUARTER">연도</option>
+	                      </select>
+	                    </div>
 	                  </div>
+	                  <div class="rs-schedule-hint" id="cd-rs-schedule-hint" hidden></div>
 	                </div>
               </div>
             </div>
@@ -3341,6 +3783,7 @@ td { padding: 9px 12px; vertical-align: middle; }
     <div class="tabbar">
       <div class="tab" onclick="switchTab('contracts')">계약관리</div>
       <div class="tab active" onclick="switchTab('settlement')">정산 진행 관리</div>
+      <div class="tab" onclick="switchTab('rs-requests')">RS 요청 관리</div>
     </div>
     <div class="ops-layout">
       <div class="settlement-pipeline" aria-label="정산 진행 단계">
@@ -3469,6 +3912,58 @@ td { padding: 9px 12px; vertical-align: middle; }
         <div class="ops-pagebar draft-list-pagebar" id="completed-pagebar"></div>
       </div>
     </div>
+    </div>
+  </div>
+
+  <!-- ════ RS 요청 관리 ════ -->
+  <div class="view" id="view-rs-requests">
+    <div class="tabbar">
+      <div class="tab" onclick="switchTab('contracts')">계약관리</div>
+      <div class="tab" onclick="switchTab('settlement')">정산 진행 관리</div>
+      <div class="tab active" onclick="switchTab('rs-requests')">RS 요청 관리</div>
+    </div>
+    <div class="ops-layout">
+      <div class="rs-request-toolbar">
+        <div class="rs-year-selector" id="rs-request-year-selector">
+          <select class="ops-select" id="rs-request-year" onchange="changeRsRequestYear(this.value)" aria-hidden="true" tabindex="-1"></select>
+          <button class="rs-year-selector-button" id="rs-request-year-button" type="button" aria-haspopup="listbox" aria-expanded="false" onclick="toggleRsRequestYearSelector(event)">
+            <span id="rs-request-year-label"></span>
+            <i class="ti ti-chevron-down"></i>
+          </button>
+          <div class="rs-year-selector-menu" id="rs-request-year-menu" role="listbox" aria-label="연도 선택"></div>
+        </div>
+        <div class="rs-request-months" id="rs-request-months" aria-label="월 선택"></div>
+        <div class="rs-request-counts" id="rs-request-counts" aria-label="회신 상태 요약"></div>
+      </div>
+      <div class="ops-section">
+        <div class="ops-table-scroll has-border-grid standalone-grid">
+          <table class="ops-table grid-table rs-request-table">
+            <colgroup>
+              <col style="width:44px">
+              <col style="width:20%">
+              <col style="width:132px">
+              <col>
+              <col style="width:220px">
+              <col style="width:70px">
+              <col style="width:112px">
+              <col style="width:44px">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>플랫폼사명</th>
+                <th>타입</th>
+                <th>콘텐츠명</th>
+                <th>릴리즈 기간</th>
+                <th>상태</th>
+                <th>발송일</th>
+                <th>회신</th>
+              </tr>
+            </thead>
+            <tbody id="rs-request-tbody"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -3674,6 +4169,12 @@ contracts.forEach((contract) => {
   if ((contract.type === 'RS' || contract.type === 'MG_RS') && !contract.rsTrendCurrency) {
     contract.rsTrendCurrency = 'USD';
   }
+  if ((contract.type === 'RS' || contract.type === 'MG_RS') && !contract.rsType) {
+    contract.rsType = contract.type === 'MG_RS' ? 'MONTHLY' : 'QUARTERLY';
+  }
+  if ((contract.type === 'RS' || contract.type === 'MG_RS') && contract.rsType === 'QUARTERLY' && !contract.rsQuarterBasis) {
+    contract.rsQuarterBasis = Number(contract.id) % 2 === 0 ? 'YEAR_QUARTER' : 'RELEASE_QUARTER';
+  }
 });
 
 const companyContents = {
@@ -3791,6 +4292,32 @@ let completedPage = 1;
 const completedPageSize = 10;
 let progressStudioFilterValue = '';
 let completedStudioFilterValue = '';
+let rsRequestYear = '';
+let rsRequestMonth = '';
+let rsRequestReplyFilter = '';
+const rsRequestReplyState = {};
+const rsRequestMockGroups = [
+  { ym: '2026-08', platform: 'Alpha Stream', contents: ['Neon Doorstep', 'Backup Love', 'Scene Pop Romance'], repliedDefault: true },
+  { ym: '2026-08', platform: 'Beta Mini', contents: ['Cake Shop Prince'], repliedDefault: false },
+  { ym: '2026-08', platform: 'DramaBox (US)', contents: ['Plan B Wedding', 'Office Wife', 'Seven Suns', 'Silent Heir'], repliedDefault: true },
+  { ym: '2026-08', platform: 'Dramora', contents: ['달콤한 거짓말', '계약 연애 보고서'], repliedDefault: false },
+  { ym: '2026-08', platform: 'Episode One', contents: ['The Last Letter'], repliedDefault: false },
+  { ym: '2026-08', platform: 'FlexTV (JP)', contents: ['Midnight Tokyo Drift', 'Twin Brothers Trouble'], repliedDefault: true },
+  { ym: '2026-08', platform: 'GoodShort', contents: ['Love Algorithm'], repliedDefault: false },
+  { ym: '2026-08', platform: 'iQIYI', contents: ['Reverse Cinderella', 'The Tycoon Secret Son', 'First Love Reboot'], repliedDefault: true },
+  { ym: '2026-08', platform: 'K-Story Hub', contents: ['오피스 로맨스 가이드', '연애의 정석'], repliedDefault: false },
+  { ym: '2026-08', platform: 'MiniDrama', contents: ['Echo of Spring', 'Runaway Bride'], repliedDefault: true },
+  { ym: '2026-08', platform: 'MoboReels', contents: ['Boss Next Door', 'My Fake Fiance', 'CEO Pretends to be Poor'], repliedDefault: false },
+  { ym: '2026-08', platform: 'Rakuten Viki', contents: ['Global Romance Package', 'AI Animation Co-Production'], repliedDefault: true },
+  { ym: '2026-08', platform: 'ShortMax', contents: ['Comma Romance'], repliedDefault: false },
+  { ym: '2026-08', platform: 'StoryTap', contents: ['퇴근 후 로맨스', '오늘의 챌린지', '아이돌 매니저로 살아남기'], repliedDefault: true },
+  { ym: '2026-09', platform: 'Alpha Stream', contents: ['Reverse Cinderella', 'Bloom Again'], repliedDefault: false },
+  { ym: '2026-09', platform: 'Doki Channel', contents: ['Cake Shop Prince'], repliedDefault: false },
+  { ym: '2026-09', platform: 'GoodShort', contents: ['Seven Suns', 'Neon Family'], repliedDefault: false },
+  { ym: '2026-09', platform: 'ReelPocket', contents: ['The Last Letter', 'Echo of Spring', 'Runaway Bride'], repliedDefault: false },
+  { ym: '2026-07', platform: 'Viki', contents: ['Boss Next Door', 'Love Algorithm'], repliedDefault: true },
+  { ym: '2026-07', platform: 'WeTV', contents: ['My Fake Fiance'], repliedDefault: true }
+];
 
 function escapeHtml(value) {
   return String(value ?? '')
@@ -4058,17 +4585,154 @@ function syncNewContractType() {
   const contractAmount = document.getElementById('new-contract-amount');
   const contractCurrency = document.getElementById('new-contract-currency');
   const rsTrendCurrency = document.getElementById('new-rs-trend-currency');
+  const rsType = document.getElementById('new-rs-type');
+  const rsQuarterBasis = document.getElementById('new-rs-quarter-basis');
   const hasRs = type === 'RS' || type === 'MG_RS';
   const isFlatOrMg = type === 'FLAT_FEE' || type === 'MG_RS';
   rsRate.disabled = !hasRs;
-  if (rsTrendCurrency) rsTrendCurrency.disabled = false;
-  if (!hasRs) rsRate.value = '';
+  if (rsTrendCurrency) rsTrendCurrency.disabled = !hasRs;
+  if (rsType) rsType.disabled = !hasRs;
+  if (rsQuarterBasis) rsQuarterBasis.disabled = !hasRs;
+  if (!hasRs) {
+    rsRate.value = '';
+    if (rsTrendCurrency) rsTrendCurrency.value = '';
+    if (rsType) rsType.value = '';
+    if (rsQuarterBasis) rsQuarterBasis.value = '';
+  }
   contractAmount.disabled = !isFlatOrMg;
   contractCurrency.disabled = !isFlatOrMg;
   if (!isFlatOrMg) {
     contractAmount.value = '';
     contractCurrency.value = 'USD';
   }
+  syncNewRsType();
+  syncNewRsScheduleHint();
+}
+
+function syncNewRsType() {
+  const type = document.getElementById('new-rs-type')?.value || '';
+  const field = document.getElementById('new-rs-quarter-basis-field');
+  const basis = document.getElementById('new-rs-quarter-basis');
+  const isQuarterly = type === 'QUARTERLY';
+  if (field) field.hidden = !isQuarterly;
+  if (basis) basis.disabled = !isQuarterly || !!document.getElementById('new-rs-type')?.disabled;
+}
+
+function addMonthsFromRelease(releaseDate, offset) {
+  return new Date(releaseDate.getFullYear(), releaseDate.getMonth() + offset, 1);
+}
+
+function formatScheduleMonth(date, baseYear) {
+  const month = date.getMonth() + 1;
+  return date.getFullYear() === baseYear ? `${month}월` : `${date.getFullYear()}년 ${month}월`;
+}
+
+function formatScheduleMonthRange(start, end, baseYear) {
+  if (start.getFullYear() === end.getFullYear() && start.getFullYear() === baseYear) {
+    return `${start.getMonth() + 1}~${end.getMonth() + 1}월`;
+  }
+  return `${formatScheduleMonth(start, baseYear)}~${formatScheduleMonth(end, baseYear)}`;
+}
+
+function syncNewRsScheduleHint() {
+  const hint = document.getElementById('new-rs-schedule-hint');
+  if (!hint) return;
+  const contractType = document.getElementById('new-contract-type')?.value || '';
+  const releaseValue = document.getElementById('new-release-date')?.value || '';
+  const rsType = document.getElementById('new-rs-type')?.value || '';
+  const quarterBasis = document.getElementById('new-rs-quarter-basis')?.value || '';
+  const releaseDate = releaseValue ? new Date(`${releaseValue}T00:00:00`) : null;
+  if (!isRsContractType(contractType) || !releaseDate || Number.isNaN(releaseDate.getTime()) || !rsType) {
+    hint.hidden = true;
+    hint.textContent = '';
+    return;
+  }
+
+  const baseYear = releaseDate.getFullYear();
+  const releaseMonth = formatScheduleMonth(releaseDate, baseYear);
+  if (rsType === 'MONTHLY') {
+    const sendMonth = formatScheduleMonth(addMonthsFromRelease(releaseDate, 2), baseYear);
+    hint.textContent = `월별: 매월 데이터를 2개월 뒤 요청 (예: ${releaseMonth} 데이터 → ${sendMonth} 발송)`;
+    hint.hidden = false;
+    return;
+  }
+
+  if (!quarterBasis) {
+    hint.hidden = true;
+    hint.textContent = '';
+    return;
+  }
+
+  if (quarterBasis === 'RELEASE_QUARTER') {
+    const quarterStart = addMonthsFromRelease(releaseDate, 0);
+    const quarterEnd = addMonthsFromRelease(releaseDate, 2);
+    const sendMonth = formatScheduleMonth(addMonthsFromRelease(releaseDate, 3), baseYear);
+    hint.textContent = `분기별-출시일: 출시월(${releaseMonth}) 포함 3개월(${formatScheduleMonthRange(quarterStart, quarterEnd, baseYear)})이 1분기 → ${sendMonth}에 첫 요청 메일 발송`;
+    hint.hidden = false;
+    return;
+  }
+
+  const quarterNumber = Math.floor(releaseDate.getMonth() / 3) + 1;
+  const quarterStart = new Date(baseYear, (quarterNumber - 1) * 3, 1);
+  const quarterEnd = new Date(baseYear, (quarterNumber * 3) - 1, 1);
+  const sendMonth = formatScheduleMonth(addMonthsFromRelease(quarterEnd, 1), baseYear);
+  hint.textContent = `분기별-연도: ${releaseMonth}은 ${quarterNumber}분기(${formatScheduleMonthRange(quarterStart, quarterEnd, baseYear)}) 소속 → ${sendMonth}에 첫 요청 메일 발송`;
+  hint.hidden = false;
+}
+
+function syncDetailRsType() {
+  const type = document.getElementById('cd-rs-type')?.value || '';
+  const field = document.getElementById('cd-rs-quarter-basis-field');
+  const basis = document.getElementById('cd-rs-quarter-basis');
+  const isQuarterly = type === 'QUARTERLY';
+  if (field) field.hidden = !isQuarterly;
+  if (basis) basis.disabled = !isQuarterly || !!document.getElementById('cd-rs-type')?.disabled;
+}
+
+function syncDetailRsScheduleHint() {
+  const hint = document.getElementById('cd-rs-schedule-hint');
+  if (!hint) return;
+  const contractType = document.getElementById('cd-contract-type')?.value || '';
+  const releaseValue = document.getElementById('cd-release-date')?.value || '';
+  const rsType = document.getElementById('cd-rs-type')?.value || '';
+  const quarterBasis = document.getElementById('cd-rs-quarter-basis')?.value || '';
+  const releaseDate = releaseValue ? new Date(`${releaseValue}T00:00:00`) : null;
+  if (!isRsContractType(contractType) || !releaseDate || Number.isNaN(releaseDate.getTime()) || !rsType) {
+    hint.hidden = true;
+    hint.textContent = '';
+    return;
+  }
+
+  const baseYear = releaseDate.getFullYear();
+  const releaseMonth = formatScheduleMonth(releaseDate, baseYear);
+  if (rsType === 'MONTHLY') {
+    const sendMonth = formatScheduleMonth(addMonthsFromRelease(releaseDate, 2), baseYear);
+    hint.textContent = `월별: 매월 데이터를 2개월 뒤 요청 (예: ${releaseMonth} 데이터 → ${sendMonth} 발송)`;
+    hint.hidden = false;
+    return;
+  }
+
+  if (!quarterBasis) {
+    hint.hidden = true;
+    hint.textContent = '';
+    return;
+  }
+
+  if (quarterBasis === 'RELEASE_QUARTER') {
+    const quarterStart = addMonthsFromRelease(releaseDate, 0);
+    const quarterEnd = addMonthsFromRelease(releaseDate, 2);
+    const sendMonth = formatScheduleMonth(addMonthsFromRelease(releaseDate, 3), baseYear);
+    hint.textContent = `분기별-출시일: 출시월(${releaseMonth}) 포함 3개월(${formatScheduleMonthRange(quarterStart, quarterEnd, baseYear)})이 1분기 → ${sendMonth}에 첫 요청 메일 발송`;
+    hint.hidden = false;
+    return;
+  }
+
+  const quarterNumber = Math.floor(releaseDate.getMonth() / 3) + 1;
+  const quarterStart = new Date(baseYear, (quarterNumber - 1) * 3, 1);
+  const quarterEnd = new Date(baseYear, (quarterNumber * 3) - 1, 1);
+  const sendMonth = formatScheduleMonth(addMonthsFromRelease(quarterEnd, 1), baseYear);
+  hint.textContent = `분기별-연도: ${releaseMonth}은 ${quarterNumber}분기(${formatScheduleMonthRange(quarterStart, quarterEnd, baseYear)}) 소속 → ${sendMonth}에 첫 요청 메일 발송`;
+  hint.hidden = false;
 }
 
 function syncDetailContractType() {
@@ -4077,6 +4741,8 @@ function syncDetailContractType() {
   const contractAmount = document.getElementById('cd-contract-amount');
   const contractCurrency = document.getElementById('cd-contract-currency');
   const rsTrendCurrency = document.getElementById('cd-rs-trend-currency');
+  const rsType = document.getElementById('cd-rs-type');
+  const rsQuarterBasis = document.getElementById('cd-rs-quarter-basis');
   const hasRs = isRsContractType(type);
   rsRate.disabled = !hasRs;
   rsRate.readOnly = false;
@@ -4084,7 +4750,11 @@ function syncDetailContractType() {
   contractAmount.readOnly = false;
   contractCurrency.disabled = false;
   if (rsTrendCurrency) rsTrendCurrency.disabled = !hasRs;
+  if (rsType) rsType.disabled = !hasRs;
+  if (rsQuarterBasis) rsQuarterBasis.disabled = !hasRs;
   if (!hasRs) rsRate.value = '';
+  syncDetailRsType();
+  syncDetailRsScheduleHint();
   configureContractDataTabs(type);
   renderRsTrendPanel();
   if (hasRs) {
@@ -4484,7 +5154,7 @@ function setContractInfoEditMode(isEditing) {
   const panel = document.getElementById('ct-info');
   const button = document.getElementById('contract-info-action');
   const lockedIds = ['cd-contract-id', 'cd-company', 'cd-content-input'];
-  const editableIds = ['cd-platform', 'cd-region', 'cd-contract-type', 'cd-exclusive', 'cd-rs-rate', 'cd-contract-currency', 'cd-contract-amount', 'cd-release-date', 'cd-release-end-date', 'cd-term-months', 'cd-rs-trend-currency'];
+  const editableIds = ['cd-platform', 'cd-region', 'cd-contract-type', 'cd-exclusive', 'cd-rs-rate', 'cd-contract-currency', 'cd-contract-amount', 'cd-release-date', 'cd-release-end-date', 'cd-term-months', 'cd-rs-trend-currency', 'cd-rs-type', 'cd-rs-quarter-basis'];
 
   panel?.classList.toggle('contract-info-read-mode', !isEditing);
   lockedIds.forEach((id) => {
@@ -4517,7 +5187,11 @@ function saveContractInfo() {
   contract.rsRate = isRsContractType(type) ? Number(document.getElementById('cd-rs-rate').value) || null : null;
   contract.contractAmount = Number(document.getElementById('cd-contract-amount').value) || null;
   contract.contractCurrency = document.getElementById('cd-contract-currency').value || 'USD';
-  contract.rsTrendCurrency = isRsContractType(type) ? (document.getElementById('cd-rs-trend-currency').value || 'USD') : '';
+  contract.rsTrendCurrency = isRsContractType(type) ? (document.getElementById('cd-rs-trend-currency').value || '') : '';
+  contract.rsType = isRsContractType(type) ? (document.getElementById('cd-rs-type').value || '') : '';
+  contract.rsQuarterBasis = isRsContractType(type) && contract.rsType === 'QUARTERLY'
+    ? (document.getElementById('cd-rs-quarter-basis').value || '')
+    : '';
   const trendState = rsTrendDataState[String(contract.id)];
   if (trendState) {
     trendState.rsTrendCurrency = contract.rsTrendCurrency;
@@ -4537,6 +5211,7 @@ function saveContractInfo() {
   fillPerformanceForm(contract);
   renderRsTrendPanel();
   renderTable();
+  renderRsRequests();
 }
 
 function handleContractInfoAction() {
@@ -5035,10 +5710,14 @@ function resetNewContractForm() {
   document.getElementById('new-rs-rate').value = '';
   document.getElementById('new-contract-amount').value = '';
   document.getElementById('new-contract-currency').value = 'USD';
-  document.getElementById('new-rs-trend-currency').value = 'USD';
+  document.getElementById('new-rs-trend-currency').value = '';
+  document.getElementById('new-rs-type').value = '';
+  document.getElementById('new-rs-quarter-basis').value = '';
+  syncNewRsType();
   document.getElementById('new-release-date').value = '';
   document.getElementById('new-release-end-date').value = '';
   document.getElementById('new-term-months').value = '';
+  syncNewRsScheduleHint();
 }
 
 function createContract() {
@@ -5055,7 +5734,11 @@ function createContract() {
   const type = document.getElementById('new-contract-type').value;
   const contractAmount = Number(document.getElementById('new-contract-amount').value) || null;
   const contractCurrency = document.getElementById('new-contract-currency').value || 'USD';
-  const rsTrendCurrency = isRsContractType(type) ? (document.getElementById('new-rs-trend-currency').value || 'USD') : '';
+  const rsTrendCurrency = isRsContractType(type) ? (document.getElementById('new-rs-trend-currency').value || '') : '';
+  const rsType = isRsContractType(type) ? (document.getElementById('new-rs-type').value || '') : '';
+  const rsQuarterBasis = isRsContractType(type) && rsType === 'QUARTERLY'
+    ? (document.getElementById('new-rs-quarter-basis').value || '')
+    : '';
   const isFlatOrMg = type === 'FLAT_FEE' || type === 'MG_RS';
   const nextId = Math.max(0, ...contracts.map((item) => Number(item.id) || 0)) + 1;
   const content = selectedContent.title;
@@ -5079,6 +5762,8 @@ function createContract() {
     contractAmount: isFlatOrMg ? contractAmount : null,
     contractCurrency: isFlatOrMg ? contractCurrency : '',
     rsTrendCurrency,
+    rsType,
+    rsQuarterBasis,
     mg: isFlatOrMg ? formatContractMoney(contractAmount, contractCurrency) : '—',
     lastSettlementDate: '',
     progressStatus: 'EMPTY'
@@ -5088,6 +5773,7 @@ function createContract() {
   document.getElementById('contract-new').style.display = 'none';
   refreshContractFilters();
   renderTable();
+  renderRsRequests();
   selectContract(newContract.id);
 }
 
@@ -5417,7 +6103,9 @@ function selectContract(id) {
   document.getElementById('cd-rs-rate').value = c.rsRate ?? '';
   document.getElementById('cd-contract-amount').value = c.contractAmount ?? (c.mg && c.mg !== '—' ? parseMoneyNumber(c.mg) : '');
   document.getElementById('cd-contract-currency').value = c.contractCurrency || currencyFromMoney(c.mg);
-  document.getElementById('cd-rs-trend-currency').value = c.rsTrendCurrency || 'USD';
+  document.getElementById('cd-rs-trend-currency').value = c.rsTrendCurrency || '';
+  document.getElementById('cd-rs-type').value = c.rsType || (isRsContractType(c.type) ? 'MONTHLY' : '');
+  document.getElementById('cd-rs-quarter-basis').value = c.rsQuarterBasis || '';
   document.getElementById('cd-release-date').value = c.date || '';
   document.getElementById('cd-release-end-date').value = c.endDate || '';
   document.getElementById('cd-term-months').value = c.termMonths || '';
@@ -5822,6 +6510,347 @@ function groupIdFor(studio, period) {
 function currentSettlementMonth() {
   const now = new Date();
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function monthIndexFromYm(ym) {
+  const [year, month] = String(ym || '').split('-').map(Number);
+  return Number.isFinite(year) && Number.isFinite(month) ? year * 12 + month - 1 : 0;
+}
+
+function ymFromMonthIndex(index) {
+  const year = Math.floor(index / 12);
+  const month = index % 12 + 1;
+  return `${year}-${String(month).padStart(2, '0')}`;
+}
+
+function formatIsoDate(date) {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) return '';
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+function addMonths(date, months) {
+  const next = new Date(date);
+  const originalDate = next.getDate();
+  next.setMonth(next.getMonth() + months);
+  if (next.getDate() !== originalDate) next.setDate(0);
+  return next;
+}
+
+function releasePeriodFromStart(startDate, termMonths, explicitEndDate = '') {
+  if (!startDate) return '-';
+  const start = new Date(`${startDate}T00:00:00`);
+  if (Number.isNaN(start.getTime())) return '-';
+  if (explicitEndDate) return `${startDate} ~ ${explicitEndDate}`;
+  const months = Number(termMonths) || 12;
+  const end = addMonths(start, months);
+  end.setDate(end.getDate() - 1);
+  return `${startDate} ~ ${formatIsoDate(end)}`;
+}
+
+function rsRequestReleasePeriodForContract(contract) {
+  return releasePeriodFromStart(contract.date, contract.termMonths, contract.endDate);
+}
+
+function rsRequestMockReleasePeriod(mock, content, index) {
+  if (mock.releasePeriods && mock.releasePeriods[content]) return mock.releasePeriods[content];
+  const ymIndex = monthIndexFromYm(mock.ym || currentSettlementMonth());
+  const startIndex = Math.max(0, ymIndex - ((index % 4) + 5));
+  const startDay = String((index % 3) * 7 + 1).padStart(2, '0');
+  const endIndex = startIndex + 11 + (index % 3) * 6;
+  return `${ymFromMonthIndex(startIndex)}-${startDay} ~ ${ymFromMonthIndex(endIndex)}-${startDay}`;
+}
+
+function releaseMonthIndex(contract) {
+  const releaseDate = contract.date ? new Date(`${contract.date}T00:00:00`) : null;
+  if (!releaseDate || Number.isNaN(releaseDate.getTime())) return null;
+  return releaseDate.getFullYear() * 12 + releaseDate.getMonth();
+}
+
+function rsRequestSchedule(contract) {
+  if (!isRsContractType(contract.type)) return null;
+  const releaseIndex = releaseMonthIndex(contract);
+  if (releaseIndex === null) return null;
+  const termMonths = Number(contract.termMonths) || 12;
+  const contractEndIndex = releaseIndex + termMonths - 1;
+  const rsType = contract.rsType || 'MONTHLY';
+  const quarterBasis = contract.rsQuarterBasis || 'RELEASE_QUARTER';
+  if (rsType === 'MONTHLY') {
+    return { firstIndex: releaseIndex + 2, lastIndex: contractEndIndex + 2, interval: 1 };
+  }
+  if (quarterBasis === 'YEAR_QUARTER') {
+    const releaseQuarterEndIndex = releaseIndex + (2 - (releaseIndex % 3));
+    return { firstIndex: releaseQuarterEndIndex + 1, lastIndex: contractEndIndex + 3, interval: 3 };
+  }
+  return { firstIndex: releaseIndex + 3, lastIndex: contractEndIndex + 3, interval: 3 };
+}
+
+function isRsRequestDueForMonth(contract, ym) {
+  const schedule = rsRequestSchedule(contract);
+  if (!schedule) return false;
+  const targetIndex = monthIndexFromYm(ym);
+  const diff = targetIndex - schedule.firstIndex;
+  return diff >= 0 && targetIndex <= schedule.lastIndex && diff % schedule.interval === 0;
+}
+
+function rsRequestMonthsForContract(contract) {
+  const schedule = rsRequestSchedule(contract);
+  if (!schedule) return [];
+  const months = [];
+  for (let index = schedule.firstIndex; index <= schedule.lastIndex; index += schedule.interval) {
+    months.push(ymFromMonthIndex(index));
+  }
+  return months;
+}
+
+function availableRsRequestYears() {
+  const years = new Set([currentSettlementMonth().slice(0, 4)]);
+  contracts.forEach((contract) => {
+    rsRequestMonthsForContract(contract).forEach((ym) => years.add(ym.slice(0, 4)));
+  });
+  rsRequestMockGroups.forEach((group) => years.add(group.ym.slice(0, 4)));
+  return Array.from(years).sort((a, b) => Number(b) - Number(a));
+}
+
+function selectedRsRequestYm() {
+  if (!rsRequestYear || !rsRequestMonth) {
+    const current = currentSettlementMonth();
+    rsRequestYear = current.slice(0, 4);
+    rsRequestMonth = current.slice(5, 7);
+  }
+  return `${rsRequestYear}-${rsRequestMonth}`;
+}
+
+function rsRequestGroupKey(ym, platform) {
+  return `${ym}__${platform}`.replace(/[^a-zA-Z0-9_-]/g, '_');
+}
+
+function rsRequestSendInfo(ym) {
+  const sentAt = `${ym}-10`;
+  const sendDate = new Date(`${sentAt}T00:00:00`);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return {
+    status: sendDate > today ? '발송예정' : '발송완료',
+    sentAt
+  };
+}
+
+function rsSendStatusBadge(status) {
+  return status === '발송완료' ? '완료' : '예정';
+}
+
+function isRsRequestGroupReplied(group) {
+  return Object.prototype.hasOwnProperty.call(rsRequestReplyState, group.key)
+    ? !!rsRequestReplyState[group.key]
+    : !!group.repliedDefault;
+}
+
+function renderRsRequestCounts(groups) {
+  const target = document.getElementById('rs-request-counts');
+  if (!target) return;
+  const completed = groups.filter(isRsRequestGroupReplied).length;
+  const pending = Math.max(0, groups.length - completed);
+  target.innerHTML = `
+    <button class="rs-request-count-filter all ${rsRequestReplyFilter === '' ? 'active' : ''}" type="button" aria-pressed="${rsRequestReplyFilter === ''}" onclick="setRsRequestReplyFilter('')">
+      <span class="rs-request-count-badge">${groups.length}</span>
+      <span class="rs-request-count-note">전체</span>
+    </button>
+    <button class="rs-request-count-filter pending ${rsRequestReplyFilter === 'pending' ? 'active' : ''}" type="button" aria-pressed="${rsRequestReplyFilter === 'pending'}" onclick="setRsRequestReplyFilter('pending')">
+      <span class="rs-request-count-badge">${pending}</span>
+      <span class="rs-request-count-note">미체크</span>
+    </button>
+    <button class="rs-request-count-filter completed ${rsRequestReplyFilter === 'completed' ? 'active' : ''}" type="button" aria-pressed="${rsRequestReplyFilter === 'completed'}" onclick="setRsRequestReplyFilter('completed')">
+      <span class="rs-request-count-badge">${completed}</span>
+      <span class="rs-request-count-note">완료</span>
+    </button>`;
+}
+
+function setRsRequestReplyFilter(filter) {
+  rsRequestReplyFilter = filter && rsRequestReplyFilter === filter ? '' : filter;
+  renderRsRequests();
+}
+
+function rsRequestTypeLabel(contract) {
+  const rsType = contract?.rsType || 'MONTHLY';
+  if (rsType !== 'QUARTERLY') return '월별';
+  return contract?.rsQuarterBasis === 'YEAR_QUARTER' ? '분기별(연도)' : '분기별(출시일)';
+}
+
+function rsRequestMockTypeLabel(mock, content, index) {
+  const explicitType = mock.requestTypes?.[content];
+  if (explicitType) return explicitType;
+  const labels = ['월별', '분기별(연도)', '분기별(출시일)'];
+  return labels[index % labels.length];
+}
+
+function rsRequestGroupsForMonth(ym) {
+  const groups = new Map();
+  contracts
+    .filter((contract) => isRsRequestDueForMonth(contract, ym))
+    .forEach((contract) => {
+      const platform = contract.platform || '-';
+      const key = rsRequestGroupKey(ym, platform);
+      if (!groups.has(key)) {
+        groups.set(key, {
+          key,
+          plannedMonth: ym,
+          platform,
+          contents: new Set(),
+          requestTypes: new Map(),
+          releasePeriods: new Map(),
+          releaseStartDates: new Map(),
+          contracts: []
+        });
+      }
+      const group = groups.get(key);
+      group.contents.add(contract.content);
+      group.requestTypes.set(contract.content, rsRequestTypeLabel(contract));
+      group.releasePeriods.set(contract.content, rsRequestReleasePeriodForContract(contract));
+      group.releaseStartDates.set(contract.content, contract.date || '');
+      group.contracts.push(contract);
+    });
+  rsRequestMockGroups
+    .filter((mock) => mock.ym === ym)
+    .forEach((mock) => {
+      const platform = mock.platform || '-';
+      const key = rsRequestGroupKey(ym, platform);
+      if (!groups.has(key)) {
+        groups.set(key, {
+          key,
+          plannedMonth: ym,
+          platform,
+          contents: new Set(),
+          requestTypes: new Map(),
+          releasePeriods: new Map(),
+          releaseStartDates: new Map(),
+          contracts: [],
+          repliedDefault: !!mock.repliedDefault
+        });
+      }
+      const group = groups.get(key);
+      (mock.contents || []).forEach((content, contentIndex) => {
+        group.contents.add(content);
+        if (!group.requestTypes.has(content)) {
+          group.requestTypes.set(content, rsRequestMockTypeLabel(mock, content, contentIndex));
+        }
+        if (!group.releasePeriods.has(content)) {
+          group.releasePeriods.set(content, rsRequestMockReleasePeriod(mock, content, contentIndex));
+        }
+        if (!group.releaseStartDates.has(content)) {
+          group.releaseStartDates.set(content, String(group.releasePeriods.get(content) || '').split(' ~ ')[0] || '');
+        }
+      });
+      group.repliedDefault = !!group.repliedDefault || !!mock.repliedDefault;
+    });
+  return Array.from(groups.values()).sort((a, b) => a.platform.localeCompare(b.platform));
+}
+
+function renderRsRequestControls() {
+  const yearSelect = document.getElementById('rs-request-year');
+  const yearLabel = document.getElementById('rs-request-year-label');
+  const yearMenu = document.getElementById('rs-request-year-menu');
+  const monthWrap = document.getElementById('rs-request-months');
+  if (!yearSelect || !monthWrap) return;
+  const years = availableRsRequestYears();
+  const currentYear = currentSettlementMonth().slice(0, 4);
+  if (!rsRequestYear || !years.includes(rsRequestYear)) rsRequestYear = years.includes(currentYear) ? currentYear : years[0] || currentYear;
+  if (!rsRequestMonth) rsRequestMonth = currentSettlementMonth().slice(5, 7);
+  yearSelect.innerHTML = years.map((year) => `<option value="${year}">${year}년</option>`).join('');
+  yearSelect.value = rsRequestYear;
+  if (yearLabel) yearLabel.textContent = `${rsRequestYear}년`;
+  if (yearMenu) {
+    yearMenu.innerHTML = years.map((year) => `
+      <button class="rs-year-selector-option ${rsRequestYear === year ? 'active' : ''}" type="button" role="option" aria-selected="${rsRequestYear === year}" onclick="selectRsRequestYear('${year}')">${year}년</button>
+    `).join('');
+  }
+  monthWrap.innerHTML = Array.from({ length: 12 }, (_, index) => {
+    const month = String(index + 1).padStart(2, '0');
+    return `<button class="rs-request-month-btn ${rsRequestMonth === month ? 'active' : ''}" type="button" onclick="changeRsRequestMonth('${month}')">${index + 1}월</button>`;
+  }).join('');
+}
+
+function toggleRsRequestYearSelector(event) {
+  event?.stopPropagation();
+  const selector = document.getElementById('rs-request-year-selector');
+  if (!selector) return;
+  const nextOpen = !selector.classList.contains('open');
+  selector.classList.toggle('open', nextOpen);
+  document.getElementById('rs-request-year-button')?.setAttribute('aria-expanded', String(nextOpen));
+}
+
+function closeRsRequestYearSelector() {
+  document.getElementById('rs-request-year-selector')?.classList.remove('open');
+  document.getElementById('rs-request-year-button')?.setAttribute('aria-expanded', 'false');
+}
+
+function selectRsRequestYear(value) {
+  const yearSelect = document.getElementById('rs-request-year');
+  if (yearSelect) yearSelect.value = value;
+  closeRsRequestYearSelector();
+  changeRsRequestYear(value);
+}
+
+function renderRsRequests() {
+  renderRsRequestControls();
+  const ym = selectedRsRequestYm();
+  const groups = rsRequestGroupsForMonth(ym);
+  const tbody = document.getElementById('rs-request-tbody');
+  const summary = document.getElementById('rs-request-summary');
+  if (summary) summary.textContent = '';
+  if (!tbody) return;
+  renderRsRequestCounts(groups);
+  const visibleGroups = groups.filter((group) => {
+    const replied = isRsRequestGroupReplied(group);
+    if (rsRequestReplyFilter === 'pending') return !replied;
+    if (rsRequestReplyFilter === 'completed') return replied;
+    return true;
+  });
+  tbody.innerHTML = visibleGroups.length ? visibleGroups.map((group, index) => {
+    const sendInfo = rsRequestSendInfo(group.plannedMonth);
+    const replied = isRsRequestGroupReplied(group);
+	    const contentNames = Array.from(group.contents).sort((a, b) => {
+	      const aStart = group.releaseStartDates?.get(a) || '';
+	      const bStart = group.releaseStartDates?.get(b) || '';
+	      return aStart.localeCompare(bStart) || a.localeCompare(b);
+	    });
+	    const requestTypes = contentNames.map((name) => group.requestTypes?.get(name) || '-');
+	    const releasePeriods = contentNames.map((name) => group.releasePeriods?.get(name) || '-');
+	    const rowNo = visibleGroups.length - index;
+	    return `
+	      <tr>
+	        <td class="ops-muted ops-mono">${rowNo}</td>
+	        <td><span class="ops-group-title">${escapeHtml(group.platform)}</span></td>
+	        <td class="rs-request-type-cell"><div class="rs-request-type-list">${requestTypes.map((type) => `<div class="rs-request-type-label">${escapeHtml(type)}</div>`).join('')}</div></td>
+	        <td class="rs-request-content-cell"><div class="rs-request-content-list">${contentNames.map((name) => `<div class="rs-request-content-name"><span class="rs-request-content-label">${escapeHtml(name)}</span><button class="rs-request-contract-shortcut" type="button" aria-label="${escapeHtml(name)} 계약관리 상세로 이동" title="계약관리 상세로 이동" onclick="openRsRequestContractShortcut(event)"><i class="ti ti-arrow-up-right"></i></button></div>`).join('')}</div></td>
+	        <td class="rs-request-release-cell"><div class="rs-request-release-list">${releasePeriods.map((period) => `<div class="rs-request-release-period ops-mono">${escapeHtml(period)}</div>`).join('')}</div></td>
+	        <td>${rsSendStatusBadge(sendInfo.status)}</td>
+	        <td class="ops-muted ops-mono">${sendInfo.sentAt}</td>
+	        <td class="ops-check-cell ${replied ? 'is-checked' : ''}"><input class="ops-check" type="checkbox" aria-label="${escapeHtml(group.platform)} 회신여부" ${replied ? 'checked' : ''} onchange="toggleRsRequestReply('${group.key}', this.checked)" /></td>
+	      </tr>`;
+	  }).join('') : emptyRow(8, '해당 월에 요청할 RS 계약이 없습니다');
+}
+
+function openRsRequestContractShortcut(event) {
+  event?.stopPropagation();
+  const targetContract = contracts[0];
+  if (!targetContract) return;
+  switchTab('contracts');
+  selectContract(targetContract.id);
+}
+
+function changeRsRequestYear(value) {
+  rsRequestYear = value || currentSettlementMonth().slice(0, 4);
+  renderRsRequests();
+}
+
+function changeRsRequestMonth(value) {
+  rsRequestMonth = String(value || '01').padStart(2, '0');
+  renderRsRequests();
+}
+
+function toggleRsRequestReply(key, checked) {
+  rsRequestReplyState[key] = checked;
+  renderRsRequests();
 }
 
 function settlementMonthForRow(row) {
@@ -6365,7 +7394,11 @@ function switchTab(tab) {
     completed: 'completed'
   };
   const stageFromHash = stageHashMap[tab];
-  const nextTab = tab === 'settlement' || stageFromHash ? 'settlement' : tab === 'contracts' ? 'contracts' : 'contracts';
+  const nextTab = tab === 'settlement' || stageFromHash
+    ? 'settlement'
+    : tab === 'rs-requests'
+      ? 'rs-requests'
+      : tab === 'contracts' ? 'contracts' : 'contracts';
   if (stageFromHash) settlementStage = stageFromHash;
   if (nextTab !== 'contracts') {
     setContractDetailOpen(false);
@@ -6380,13 +7413,15 @@ function switchTab(tab) {
   }
   document.getElementById('view-contracts').classList.toggle('active', nextTab === 'contracts');
   document.getElementById('view-settlement').classList.toggle('active', nextTab === 'settlement');
-  document.querySelectorAll('.nav a[href="#contracts"], .nav a[href="#settlement"]').forEach((n) => {
+  document.getElementById('view-rs-requests').classList.toggle('active', nextTab === 'rs-requests');
+  document.querySelectorAll('.nav a[href="#contracts"], .nav a[href="#settlement"], .nav a[href="#rs-requests"]').forEach((n) => {
     n.classList.toggle('active', n.getAttribute('href') === `#${nextTab}`);
   });
   document.querySelectorAll('.tabbar .tab').forEach((t) => {
     t.classList.toggle('active', t.getAttribute('onclick') === `switchTab('${nextTab}')`);
   });
   if (nextTab === 'settlement') switchSettlementStage(settlementStage);
+  if (nextTab === 'rs-requests') renderRsRequests();
   location.hash = nextTab;
 }
 
@@ -6403,14 +7438,18 @@ document.addEventListener('click', (event) => {
   if (!event.target.closest('.settlement-completed-filter')) {
     closeCompletedStudioDropdown();
   }
+  if (!event.target.closest('.rs-year-selector')) {
+    closeRsRequestYearSelector();
+  }
 });
 
 refreshContractFilters();
 renderTable();
 updateContractAddToggle();
 renderSettlementOps();
+renderRsRequests();
 const initialHash = location.hash.slice(1);
-if (['contracts', 'settlement', 'pending', 'draft', 'scheduled', 'progress', 'complete', 'ready', 'completed'].includes(initialHash)) {
+if (['contracts', 'settlement', 'rs-requests', 'pending', 'draft', 'scheduled', 'progress', 'complete', 'ready', 'completed'].includes(initialHash)) {
   switchTab(initialHash);
 }
 </script>
