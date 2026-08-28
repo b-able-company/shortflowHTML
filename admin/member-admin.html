@@ -279,7 +279,7 @@ td { padding: 9px 12px; vertical-align: middle; }
   font-size: 21px;
 }
 .member-user-split #user-detail .dh-title {
-  font-size: 16px;
+  font-size: 15.5px;
 }
 .member-user-split #user-detail .dh-sub {
   font-size: 13px;
@@ -1384,19 +1384,31 @@ td { padding: 9px 12px; vertical-align: middle; }
   grid-column: 2;
   grid-row: 1;
   height: auto;
-  margin-top: 2px;
+  margin-top: 10px;
   min-height: 0;
   align-self: start;
-  padding: 16px;
-  border: 0.5px solid #dedede;
+  padding: 16px 16px 22px;
+  border: 0;
   border-radius: 10px;
-  background: #fafafa;
+  background: rgb(242, 242, 242);
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
+.temporary-company-editor-title {
+  color: #1a1a18;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: center;
+  padding: 8px 0 12px;
+  margin-bottom: 6px;
+}
 .temporary-company-field {
+  width: min(100%, 292px);
   min-width: 0;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -1465,7 +1477,7 @@ td { padding: 9px 12px; vertical-align: middle; }
   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
 }
 .temporary-company-editor input[readonly] {
-  background: #f5f5f5;
+  background: #fbfbfb;
   color: #777;
 }
 .temporary-company-action {
@@ -1481,13 +1493,16 @@ td { padding: 9px 12px; vertical-align: middle; }
   gap: 5px;
   font-family: inherit;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
 }
 .temporary-company-actions {
-  margin-top: 16px;
+  width: min(100%, 292px);
+  margin-top: 22px;
+  margin-left: auto;
+  margin-right: auto;
   padding-top: 0;
   display: grid;
   grid-template-columns: 1fr;
@@ -1503,8 +1518,8 @@ td { padding: 9px 12px; vertical-align: middle; }
   background: #f7f7f7;
 }
 .temporary-company-action.primary {
-  border-color: #1a1a18;
-  background: #1a1a18;
+  border-color: rgb(38, 38, 38);
+  background: rgb(38, 38, 38);
   color: #fff;
 }
 .temporary-company-action.danger {
@@ -2973,6 +2988,7 @@ td { padding: 9px 12px; vertical-align: middle; }
     <div class="temporary-company-wrap">
       <div class="temporary-company-layout">
         <div class="temporary-company-editor" aria-label="임시 회사 등록">
+          <div class="temporary-company-editor-title" id="temp-company-editor-title">임시 회사 생성</div>
           <label class="temporary-company-field" id="temp-company-id-field" hidden>
             <span>ID</span>
             <input id="temp-company-id" readonly aria-label="임시 회사 ID">
@@ -4462,6 +4478,7 @@ function resetTemporaryCompanyForm() {
   document.getElementById('temp-company-email').value = '';
   document.getElementById('temp-company-created').value = '';
   document.getElementById('temp-company-created-field').hidden = true;
+  document.getElementById('temp-company-editor-title').textContent = '임시 회사 생성';
   document.getElementById('temp-company-save-btn').textContent = '등록';
   document.getElementById('temp-company-actions')?.classList.remove('is-editing');
   const deleteButton = document.getElementById('temp-company-delete-btn');
@@ -4482,6 +4499,7 @@ function selectTemporaryCompany(id) {
   document.getElementById('temp-company-email').value = company.email;
   document.getElementById('temp-company-created').value = company.createdAt || '-';
   document.getElementById('temp-company-created-field').hidden = false;
+  document.getElementById('temp-company-editor-title').textContent = '임시 회사 수정';
   document.getElementById('temp-company-save-btn').textContent = '수정';
   document.getElementById('temp-company-actions')?.classList.add('is-editing');
   const deleteButton = document.getElementById('temp-company-delete-btn');

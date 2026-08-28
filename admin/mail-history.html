@@ -196,7 +196,7 @@ tbody tr.mail-row.active td{background:rgb(242, 242, 242)}
 .history-inline-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;min-width:0;max-width:100%}
 .detail-section{display:block;min-width:0;max-width:100%}
 .detail-section+.detail-section{margin-top:16px}
-.detail-section-title{margin:0 0 10px 2px;color:#1a1a18;font-size:13.5px;font-weight:500;line-height:1.3}
+.detail-section-title{display:inline-flex;align-items:center;min-height:26px;margin:0 0 10px 0;padding:0 10px;border-radius:4px;background:rgb(242, 242, 242);color:#1a1a18;font-size:13px;font-weight:500;line-height:1.3}
 .detail-section .history-target-card{border-radius:4px}
 .review-row{min-height:38px;padding:9px 12px;border-bottom:.5px solid rgb(242, 242, 242);display:grid;grid-template-columns:112px minmax(0,1fr);gap:12px;align-items:baseline;overflow:visible}
 .review-row:last-child{border-bottom:0}
@@ -220,9 +220,17 @@ tbody tr.mail-row.active td{background:rgb(242, 242, 242)}
 .history-content-tag{min-height:28px;max-width:100%;padding:7px 11px;border:.5px solid #e1e1e1;border-radius:999px;background:#fff;color:#333;font-size:12px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .history-target-list{display:block;margin-top:0;min-width:0;max-width:100%}
 .history-target-card{border:.5px solid rgb(232, 232, 232);border-radius:0;background:#fff;max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+.rs-request-detail-table{width:max-content;min-width:100%;overflow:visible}
+.rs-request-detail-row{min-width:560px;min-height:38px;display:grid;grid-template-columns:minmax(180px,1fr) 128px 168px;align-items:stretch}
+.rs-request-detail-row.head{min-height:32px;background:#fafafa}
+.rs-request-detail-cell{min-width:0;padding:8px 10px;border-right:.5px solid rgb(232, 232, 232);border-bottom:.5px solid rgb(232, 232, 232);color:#333;font-size:11.5px;display:flex;align-items:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rs-request-detail-cell:last-child{border-right:0}
+.rs-request-detail-row:last-child .rs-request-detail-cell{border-bottom:0}
+.rs-request-detail-row.head .rs-request-detail-cell{color:#777;font-size:10.5px;justify-content:center;text-align:center}
 .recipient-table{width:max-content;min-width:100%;overflow:visible}
 .recipient-row{min-width:710px;min-height:38px;display:grid;grid-template-columns:58px 130px minmax(82px,.58fr) minmax(132px,1fr) 74px 128px;align-items:stretch}
 .recipient-row.no-recipient-type{min-width:650px;grid-template-columns:130px minmax(82px,.58fr) minmax(132px,1fr) 74px 128px}
+.recipient-row.admin-notice{min-width:520px;grid-template-columns:minmax(92px,.58fr) minmax(160px,1fr) 74px 128px}
 .recipient-row.head{min-height:32px;background:#fff;color:#777;font-size:10.5px}
 .recipient-cell{min-width:0;padding:8px 10px;border-right:.5px solid rgb(232, 232, 232);border-bottom:.5px solid rgb(232, 232, 232);color:#333;font-size:11.5px;display:flex;align-items:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .recipient-cell:last-child{border-right:0}
@@ -393,7 +401,7 @@ tbody tr.mail-row.active td{background:rgb(242, 242, 242)}
     </div>
 
     <div class="result-bar">
-      <div class="result-meta">총 <strong id="result-count">22</strong>건</div>
+      <div class="result-meta">총 <strong id="result-count">23</strong>건</div>
     </div>
 
     <div class="table-wrap">
@@ -403,6 +411,7 @@ tbody tr.mail-row.active td{background:rgb(242, 242, 242)}
           <tr><th>No</th><th>메일 종류</th><th>제목</th><th>발송자</th><th>발송 일시</th></tr>
         </thead>
         <tbody id="mail-body">
+          <tr data-type="RS_REQUEST" data-category="RS_REQUEST" data-status="성공" data-sender="자동시스템" data-recipients="bd@viki.com|성공|외부|Viki" data-rs-items="오늘의 챌린지|월별|2026년 7~8월분;퇴근 후 로맨스|월별|2026년 9월분;아이돌 매니저로 살아남기|분기별(연도)|2026년 1~3분기분"><td><div class="dt-date">2026-05-14</div><div class="dt-time">18:40</div></td><td><span class="recipient">bd@viki.com</span></td><td><span class="mail-type">RS_REQUEST</span></td><td><span class="mail-status">성공</span></td><td class="subject">RS 데이터를 요청드립니다 - Viki</td></tr>
           <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-14</div><div class="dt-time">18:12</div></td><td><span class="recipient">ops@shortflow.io</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 콘텐츠 등록 신청이 들어왔어요</td></tr>
           <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-14</div><div class="dt-time">16:44</div></td><td><span class="recipient">content@shortmax.com</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 콘텐츠 자료 업로드가 완료되었습니다</td></tr>
           <tr data-type="CONTENT_PROPOSAL" data-status="성공" data-sender="김관리자" data-recipients="bd@viki.com|성공|내부|Viki,hannah@viki.com|성공|내부|Viki,jamie@alphastream.example|성공|외부|Alpha Stream,olivia@betamini.example|성공|외부|Beta Mini,licensing@netflix.kr|성공|외부|Netflix"><td><div class="dt-date">2026-05-14</div><div class="dt-time">15:20</div></td><td><span class="recipient">bd@viki.com</span></td><td><span class="mail-type">CONTENT_PROPOSAL</span></td><td><span class="mail-status">성공</span></td><td class="subject">새 콘텐츠 제안 - '오늘의 챌린지' 외 2건</td></tr>
@@ -602,6 +611,19 @@ function parseRecipients(row){
   }).filter(item=>item.email);
 }
 
+function parseRsRequestItems(row){
+  const raw=row.dataset.rsItems || '';
+  if(!raw) return [];
+  return raw.split(';').map(item=>{
+    const [content='',type='',period='']=item.split('|');
+    return {
+      content: content.trim(),
+      type: type.trim(),
+      period: period.trim()
+    };
+  }).filter(item=>item.content);
+}
+
 function renderRecipients(row, cell, recipients){
   if(recipients.length <= 1){
     cell.innerHTML=`<span class="recipient">${recipients[0]?.label || ''}</span>`;
@@ -659,8 +681,14 @@ function mailSenderForRow(row, category){
   return autoCategories.has(category) ? '자동시스템' : '김관리자';
 }
 
-function contentIdsForMailSubject(subject, recipients=[]){
+function contentIdsForMailSubject(subject, recipients=[], rsItems=[]){
   const text=String(subject || '');
+  const rsContentIds=rsItems.map(item=>({
+    '오늘의 챌린지':'content-today-challenge',
+    '퇴근 후 로맨스':'content-afterwork-romance',
+    '아이돌 매니저로 살아남기':'content-idol-manager'
+  }[item.content])).filter(Boolean);
+  if(rsContentIds.length) return [...new Set(rsContentIds)];
   if(text.includes('오늘의 챌린지') && text.includes('퍼포먼스')){
     return ['content-today-challenge','content-afterwork-romance','content-idol-manager','content-night-market-romance'];
   }
@@ -798,10 +826,11 @@ function enhanceRows(){
     const sentAt=[dateText,timeText].filter(Boolean).join(' ');
     const subject=originalCells[4]?.textContent.trim()||'';
     const recipients=parseRecipients(row);
+    const rsRequestItems=parseRsRequestItems(row);
     const category=inferMailCategory(row,subject);
     const categoryLabel=mailCategoryLabels[category]||category;
     const sender=mailSenderForRow(row,category);
-    const contentIds=contentIdsForMailSubject(subject,recipients);
+    const contentIds=contentIdsForMailSubject(subject,recipients,rsRequestItems);
     const successCount=recipients.filter(item=>item.status==='성공').length;
     const targetCompany=inferTargetCompany(subject,recipients);
     row.dataset.category=category;
@@ -814,6 +843,7 @@ function enhanceRows(){
     row.dataset.subject=subject;
     row.dataset.targetCompany=targetCompany;
     row._mailRecipients=recipients;
+    row._rsRequestItems=rsRequestItems;
     row.dataset.search=[
       subject,
       categoryLabel,
@@ -926,6 +956,8 @@ function recipientTypeForItem(item){
 function renderDetailRecipientTable(row, recipients){
   const company=row.dataset.targetCompany || '-';
   const showRecipientType=row.dataset.category === 'CONTENT_PROPOSAL';
+  const showRecipientCompany=row.dataset.category !== 'ADMIN_NOTICE';
+  const rowClass=showRecipientType ? '' : (showRecipientCompany ? 'no-recipient-type' : 'admin-notice');
   const rows=recipients.map((item,index)=>{
     const opened=recipientOpened(item,index);
     const recipientType=recipientTypeForItem(item);
@@ -936,9 +968,9 @@ function renderDetailRecipientTable(row, recipients){
     const typeTopLineClass=isTypeGroupStart && index > 0 ? 'with-company-top-line' : '';
     const companyTopLineClass=isCompanyGroupStart && index > 0 ? 'with-company-top-line' : '';
     return `
-      <div class="recipient-row ${showRecipientType ? '' : 'no-recipient-type'}">
+      <div class="recipient-row ${rowClass}">
         ${showRecipientType ? `<div class="recipient-cell recipient-type ${isTypeGroupStart ? typeTopLineClass : 'blank'}">${isTypeGroupStart ? escapeHtml(recipientType) : ''}</div>` : ''}
-        <div class="recipient-cell recipient-company ${isCompanyGroupStart ? companyTopLineClass : 'blank'}">${isCompanyGroupStart ? escapeHtml(recipientCompany) : ''}</div>
+        ${showRecipientCompany ? `<div class="recipient-cell recipient-company ${isCompanyGroupStart ? companyTopLineClass : 'blank'}">${isCompanyGroupStart ? escapeHtml(recipientCompany) : ''}</div>` : ''}
         <div class="recipient-cell">${escapeHtml(item.label.replace(/\s*\(.+\)$/,''))}</div>
         <div class="recipient-cell" title="${escapeHtml(item.email)}">${escapeHtml(item.email)}</div>
         <div class="recipient-cell recipient-status-cell">${renderOpenStatus(opened)}</div>
@@ -949,9 +981,9 @@ function renderDetailRecipientTable(row, recipients){
   return `
     <div class="history-target-card">
       <div class="recipient-table">
-        <div class="recipient-row head ${showRecipientType ? '' : 'no-recipient-type'}">
+        <div class="recipient-row head ${rowClass}">
           ${showRecipientType ? '<div class="recipient-cell">구분</div>' : ''}
-          <div class="recipient-cell">수신사</div>
+          ${showRecipientCompany ? '<div class="recipient-cell">수신사</div>' : ''}
           <div class="recipient-cell">수신자</div>
           <div class="recipient-cell">이메일</div>
           <div class="recipient-cell">열람 여부</div>
@@ -964,7 +996,7 @@ function renderDetailRecipientTable(row, recipients){
 }
 
 function shouldShowContentName(category){
-  return ['CONTENT_PROPOSAL','SETTLEMENT','PERFORMANCE'].includes(category);
+  return ['CONTENT_PROPOSAL','SETTLEMENT','PERFORMANCE','RS_REQUEST'].includes(category);
 }
 
 function detailContentName(row){
@@ -980,6 +1012,11 @@ function detailContentName(row){
 
 function detailContentNames(row){
   const subject=row.dataset.subject || '';
+  if(row.dataset.category === 'RS_REQUEST') return (row._rsRequestItems || parseRsRequestItems(row)).map(item=>item.content);
+  if(['SETTLEMENT','PERFORMANCE'].includes(row.dataset.category)){
+    if(subject.includes('오늘의 챌린지')) return ['오늘의 챌린지', '퇴근 후 로맨스', '아이돌 매니저로 살아남기', '야시장 로맨스'];
+    if(subject.includes('단막극 파일럿')) return ['단막극 파일럿'];
+  }
   if(row.dataset.category === 'CONTENT_PROPOSAL'){
     if(subject.includes('오늘의 챌린지')) return ['오늘의 챌린지', '퇴근 후 로맨스', '아이돌 매니저로 살아남기'];
     if(subject.includes('연애의 정석')) return ['연애의 정석', '오피스 로맨스 가이드', '첫사랑 리부트', '계약 연애 보고서', '달콤한 거짓말'];
@@ -990,10 +1027,41 @@ function detailContentNames(row){
 }
 
 function renderContentNameRow(row){
+  if(row.dataset.category === 'RS_REQUEST') return '';
   if(!shouldShowContentName(row.dataset.category)) return '';
   const contentNames=detailContentNames(row);
   if(!contentNames.length) return '';
   return `<div class="review-row"><span class="review-key">콘텐츠명</span><span class="review-val wide"><div class="history-content-tags">${contentNames.map(name=>`<span class="history-content-tag">${escapeHtml(name)}</span>`).join('')}</div></span></div>`;
+}
+
+function renderRsRequestSection(row){
+  if(row.dataset.category !== 'RS_REQUEST') return '';
+  const items=row._rsRequestItems || parseRsRequestItems(row);
+  if(!items.length) return '';
+  const rows=items.map(item=>`
+    <div class="rs-request-detail-row">
+      <div class="rs-request-detail-cell" title="${escapeHtml(item.content)}">${escapeHtml(item.content)}</div>
+      <div class="rs-request-detail-cell">${escapeHtml(item.type || '-')}</div>
+      <div class="rs-request-detail-cell">${escapeHtml(item.period || '-')}</div>
+    </div>
+  `).join('');
+  return `
+    <div class="detail-section">
+      <div class="detail-section-title">요청 데이터</div>
+      <div class="history-target-list">
+        <div class="history-target-card">
+          <div class="rs-request-detail-table">
+            <div class="rs-request-detail-row head">
+              <div class="rs-request-detail-cell">콘텐츠명</div>
+              <div class="rs-request-detail-cell">타입</div>
+              <div class="rs-request-detail-cell">요청 기간</div>
+            </div>
+            ${rows}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 function productionCompanyForProposal(row){
@@ -1059,6 +1127,7 @@ function showMailDetailPanel(rowKey){
             <div class="review-row review-row-dual"><span class="review-key">발송자</span><span class="review-val">${escapeHtml(row.dataset.sender || '')}</span><span class="review-key">발송 일시</span><span class="review-val">${escapeHtml(row.dataset.sentAt || '')}</span></div>
           </div>
         </div>
+        ${renderRsRequestSection(row)}
         <div class="detail-section">
           <div class="detail-section-title">수신 상세</div>
           <div class="history-target-list">${renderDetailRecipientTable(row, recipients)}</div>

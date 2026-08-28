@@ -600,7 +600,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 .rs-trend-year-table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; border: 0.5px solid #e8e6e0; border-radius: 8px; overflow: hidden; }
 .rs-trend-year-table th,
 .rs-trend-year-table td { height: 46px; padding: 0 16px; border-right: 0; border-bottom: 0.5px solid #e8e6e0; text-align: left; font-size: 13px; white-space: nowrap; vertical-align: middle; font-variant-numeric: tabular-nums; }
-.rs-trend-year-table th { height: 34px; background: #fff; color: #888; font-size: 12px; font-weight: 500; }
+.rs-trend-year-table th { height: 31px; background: #fff; color: #aaa; font-size: 10px; font-weight: 400; }
 .rs-trend-year-table th:last-child,
 .rs-trend-year-table td:last-child { border-right: 0; text-align: center; }
 .rs-trend-year-table tbody tr:last-child td { border-bottom: 0; }
@@ -636,6 +636,66 @@ td { padding: 9px 12px; vertical-align: middle; }
 .rs-inline-form input { font-size: 12px; padding: 5px 8px; border: 0.5px solid rgb(242, 242, 242); border-radius: 5px; background: #fff; color: #1a1a18; outline: none; font-family: inherit; }
 .rs-inline-form input.w-month { width: 90px; }
 .rs-inline-form input.w-amt { width: 100px; }
+
+/* RS REQUEST TRACK */
+.rs-track-panel { background: #fff; overflow: visible; }
+.rs-track-head { min-height: 42px; padding: 0 0 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 0; }
+.rs-track-summary { flex: 1 1 auto; display: flex; align-items: center; gap: 6px; overflow-x: auto; }
+.rs-track-chip { height: 30px; min-width: 58px; padding: 0 12px; border: 0.5px solid #dedede; border-radius: 999px; background: #fff; color: #777; font-size: 11.5px; font-family: inherit; font-weight: 400; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; }
+.rs-track-chip strong { margin-left: 6px; color: #1a1a18; font-weight: 400; }
+.rs-track-message { margin-left: auto; color: #aaa; font-size: 11.5px; white-space: nowrap; }
+.rs-track-table-wrap { padding: 0; background: #fff; }
+.rs-track-table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; border: 0.5px solid #e8e6e0; border-radius: 8px; overflow: hidden; }
+.rs-track-table col.c-no { width: 40px; }
+.rs-track-table col.c-year { width: 76px; }
+.rs-track-table col.c-month { width: 68px; }
+.rs-track-table col.c-target { width: auto; }
+.rs-track-table col.c-sent { width: 112px; }
+.rs-track-table col.c-status { width: 78px; }
+.rs-track-table col.c-reply { width: 52px; }
+.rs-track-table th,
+.rs-track-table td { padding: 0 16px; border-right: 0; border-bottom: 0.5px solid #e8e6e0; text-align: left; font-size: 13px; white-space: nowrap; vertical-align: middle; font-variant-numeric: tabular-nums; }
+.rs-track-table th { height: 31px; background: #fff; color: #aaa; font-size: 10px; font-weight: 400; }
+.rs-track-table td { height: 40px; }
+.rs-track-table th:nth-child(6),
+.rs-track-table th:nth-child(7) { text-align: center; }
+.rs-track-table tbody tr:last-child td { border-bottom: 0; }
+.rs-track-no-cell,
+.rs-track-year-cell,
+.rs-track-status-cell,
+.rs-track-check-cell { text-align: center !important; }
+.rs-track-year-cell,
+.rs-track-month-cell,
+.rs-track-sent-cell,
+.rs-track-period { color: #1a1a18; font-family: monospace; font-size: 12px; font-weight: 400; font-variant-numeric: tabular-nums; }
+.rs-track-check {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 1px solid #cfd4dc;
+  border-radius: 4px;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.rs-track-check.is-checked {
+  border-color: #1f2329;
+  background: #1f2329;
+}
+.rs-track-check.is-checked::after {
+  content: '';
+  width: 8px;
+  height: 4px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: translateY(-1px) rotate(-45deg);
+}
+.rs-track-empty { padding: 28px 14px; color: #aaa !important; font-size: 12px; text-align: center !important; font-family: inherit !important; }
 
 /* PERF FORM */
 .performance-form-section {
@@ -730,7 +790,8 @@ td { padding: 9px 12px; vertical-align: middle; }
 /* SETTLEMENT OPERATIONS */
 .ops-layout { flex: 1; overflow-y: auto; padding: 20px 24px; background: rgb(242, 242, 242); }
 #view-settlement .ops-layout { background: #fff; }
-#view-rs-requests .ops-layout { background: #fff; }
+#view-rs-requests .ops-layout { padding-bottom: 10px; background: #fff; }
+#view-rs-requests .ops-section { margin-bottom: 0; }
 #view-rs-requests .ops-table-scroll.has-border-grid {
   border-radius: 4px;
   max-height: calc(100vh - 176px);
@@ -895,9 +956,9 @@ td { padding: 9px 12px; vertical-align: middle; }
 }
 .rs-request-table thead th:last-child,
 .rs-request-table td:last-child {
-  width: 44px;
-  min-width: 44px;
-  max-width: 44px;
+  width: 60px;
+  min-width: 60px;
+  max-width: 60px;
   text-align: center;
 }
 .rs-request-table thead th:last-child {
@@ -924,9 +985,9 @@ td { padding: 9px 12px; vertical-align: middle; }
 }
 .rs-request-table thead th:first-child,
 .rs-request-table td:first-child {
-  width: 44px;
-  min-width: 44px;
-  max-width: 44px;
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
   text-align: center;
   vertical-align: middle;
 }
@@ -969,6 +1030,11 @@ td { padding: 9px 12px; vertical-align: middle; }
   padding-left: 8px;
   padding-right: 8px;
 }
+.rs-request-table thead th:nth-child(7),
+.rs-request-table td:nth-child(7) {
+  padding-left: 12px;
+  padding-right: 12px;
+}
 .rs-request-table tbody tr {
   height: auto;
 }
@@ -988,6 +1054,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 .rs-request-type-list,
 .rs-request-release-list {
   display: grid;
+  grid-auto-rows: 38px;
   gap: 0;
   justify-items: start;
   line-height: 1.35;
@@ -997,7 +1064,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 .rs-request-release-period {
   max-width: 100%;
   width: 100%;
-  min-height: 38px;
+  height: 38px;
   padding: 7px 14px;
   font-size: 12.5px;
   display: flex;
@@ -1043,67 +1110,115 @@ td { padding: 9px 12px; vertical-align: middle; }
 .rs-request-type-label {
   color: #14171c;
 }
+.rs-send-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+.rs-send-status-badge.is-completed {
+  background: #e8f6eb;
+  color: rgb(39, 125, 31);
+}
+.rs-send-status-badge.is-scheduled {
+  background: rgb(242, 242, 242);
+  color: #555;
+}
 .rs-request-table .ops-check-cell::after {
   left: 50%;
   top: 50%;
+}
+.rs-reply-filter,
+.rs-type-filter {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.rs-reply-filter-btn,
+.rs-type-filter-btn {
+  position: relative;
+  width: 100%;
+  height: 34px;
+  padding: 0 18px 0 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 11.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.rs-reply-filter-btn i,
+.rs-type-filter-btn i {
+  position: absolute;
+  right: 0;
+  font-size: 13px;
+  color: #8f96a3;
+}
+.rs-reply-filter.is-filtered .rs-reply-filter-btn,
+.rs-type-filter.is-filtered .rs-type-filter-btn {
+  color: #1f2329;
+  font-weight: 500;
+}
+.rs-reply-filter-menu,
+.rs-type-filter-menu {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2000;
+  width: 86px;
+  padding: 4px;
+  border: 1px solid #e5e7eb;
+  border-radius: 7px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+  display: none;
+}
+.rs-type-filter-menu {
+  width: 136px;
+}
+.rs-reply-filter.open .rs-reply-filter-menu,
+.rs-type-filter.open .rs-type-filter-menu {
+  display: grid;
+  gap: 2px;
+}
+.rs-reply-filter-option,
+.rs-type-filter-option {
+  width: 100%;
+  height: 30px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: #444;
+  font-family: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+.rs-reply-filter-option:hover,
+.rs-reply-filter-option.active,
+.rs-type-filter-option:hover,
+.rs-type-filter-option.active {
+  background: rgb(242, 242, 242);
+  color: #1f2329;
 }
 .rs-request-toolbar {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 14px;
-}
-.rs-request-counts {
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 5px;
-}
-.rs-request-count-filter {
-  min-width: 38px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: #7f858d;
-  font: inherit;
-  cursor: pointer;
-  display: grid;
-  justify-items: center;
-  gap: 3px;
-}
-.rs-request-count-badge {
-  min-width: 30px;
-  height: 22px;
-  padding: 0 9px;
-  border-radius: 999px;
-  border: 0.5px solid transparent;
-  background: #eef0f3;
-  color: #59616d;
-  font-size: 11.5px;
-  font-weight: 500;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-.rs-request-count-filter.all .rs-request-count-badge {
-  border-color: #e6e8eb;
-  background: #fff;
-  color: #3f4650;
-}
-.rs-request-count-note {
-  font-size: 10.5px;
-  color: #3f4650;
-}
-.rs-request-count-filter.completed .rs-request-count-badge {
-  background: rgb(39, 125, 31);
-  color: #fff;
-  font-weight: 400;
-}
-.rs-request-count-filter.active .rs-request-count-badge {
-  box-shadow: 0 0 0 2px rgba(31, 35, 41, 0.12);
 }
 .rs-request-toolbar .ops-select {
   min-width: 116px;
@@ -1113,15 +1228,15 @@ td { padding: 9px 12px; vertical-align: middle; }
 }
 .rs-year-selector {
   position: relative;
-  width: 230px;
-  flex: 0 0 230px;
+  width: 116px;
+  flex: 0 0 116px;
 }
 .rs-year-selector .ops-select {
   display: none;
 }
 .rs-year-selector-button {
   width: 100%;
-  height: 40px;
+  height: 36px;
   padding: 0 38px 0 14px;
   border: 1px solid #d9dce3;
   border-radius: 8px;
@@ -1204,12 +1319,12 @@ td { padding: 9px 12px; vertical-align: middle; }
   height: 38px;
   padding: 0;
   border: 1px solid transparent;
-  border-radius: 50%;
+  border-radius: 8px;
   background: transparent;
   color: #888;
   font-family: inherit;
   font-size: 13.5px;
-  font-weight: 400;
+  font-weight: 300;
   cursor: pointer;
 }
 .rs-request-month-btn:hover {
@@ -2153,8 +2268,12 @@ td { padding: 9px 12px; vertical-align: middle; }
   border-radius: 0 !important;
 }
 .contract-list-table table {
-  min-width: 1120px;
+  width: 100%;
+  min-width: 0;
   table-layout: fixed;
+}
+.contract-split.has-detail .contract-list-table table {
+  min-width: 900px;
 }
 .contract-list-table thead th {
   height: 40px;
@@ -2164,6 +2283,9 @@ td { padding: 9px 12px; vertical-align: middle; }
   color: #9aa0a9;
   font-size: 11px;
   font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .contract-list-table tbody tr {
   height: 44px;
@@ -2177,6 +2299,8 @@ td { padding: 9px 12px; vertical-align: middle; }
   color: #14171c;
   font-size: 12.5px;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .contract-list-table th:nth-last-child(-n+3),
 .contract-list-table td:nth-last-child(-n+3) {
@@ -2645,7 +2769,8 @@ td { padding: 9px 12px; vertical-align: middle; }
 }
 @media (max-width: 900px) {
   .rs-trend-head,
-  .rs-trend-editor {
+  .rs-trend-editor,
+  .rs-track-head {
     align-items: flex-start;
     flex-direction: column;
   }
@@ -2654,10 +2779,12 @@ td { padding: 9px 12px; vertical-align: middle; }
     justify-content: space-between;
   }
   .rs-trend-summary,
-  .rs-trend-message {
+  .rs-trend-message,
+  .rs-track-message {
     margin-left: 0;
   }
-  .rs-trend-yearbar {
+  .rs-trend-yearbar,
+  .rs-track-summary {
     width: 100%;
   }
   .rs-trend-year-table {
@@ -2890,6 +3017,12 @@ td { padding: 9px 12px; vertical-align: middle; }
 .contract-content-picker.is-empty {
   color: #9aa0a9;
 }
+.contract-content-picker span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .contract-content-picker i {
   color: #9aa0a9;
   font-size: 14px;
@@ -3029,6 +3162,12 @@ td { padding: 9px 12px; vertical-align: middle; }
   color: #5f646d;
   font-size: 11px;
   font-weight: 500;
+}
+.result-head span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .result-list {
   display: flex;
@@ -3178,7 +3317,8 @@ td { padding: 9px 12px; vertical-align: middle; }
 }
 .contract-progress {
   min-height: 26px;
-  width: 120px;
+  width: min(96px, 100%);
+  max-width: 100%;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -3188,6 +3328,9 @@ td { padding: 9px 12px; vertical-align: middle; }
   font-size: 12.5px;
   font-weight: 500;
   line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   cursor: help;
 }
 .contract-progress::before {
@@ -3377,13 +3520,13 @@ td { padding: 9px 12px; vertical-align: middle; }
         <div class="tscroll contract-list-table">
           <table>
             <colgroup>
-              <col style="width:56px" />
-              <col style="width:160px" />
-              <col style="width:260px" />
-              <col style="width:180px" />
-              <col style="width:128px" />
-              <col style="width:140px" />
-              <col style="width:150px" />
+              <col style="width:5%" />
+              <col style="width:16%" />
+              <col style="width:26%" />
+              <col style="width:17%" />
+              <col style="width:12%" />
+              <col style="width:11%" />
+              <col style="width:13%" />
             </colgroup>
             <thead>
               <tr>
@@ -3535,6 +3678,7 @@ td { padding: 9px 12px; vertical-align: middle; }
             <div class="dtab" data-panel="ct-mg" data-type="MG_RS" onclick="switchDTab(this,'ct-mg')">MG 데이터</div>
             <div class="dtab" data-panel="ct-rs" data-type="MG_RS RS" onclick="switchDTab(this,'ct-rs')">RS 데이터</div>
             <div class="dtab" data-panel="ct-rs-trend" data-type="MG_RS RS" onclick="switchDTab(this,'ct-rs-trend')">RS 추이</div>
+            <div class="dtab" data-panel="ct-rs-track" data-type="MG_RS RS" onclick="switchDTab(this,'ct-rs-track')">RS 요청 추적</div>
             <div class="dtab" data-panel="ct-performance" onclick="switchDTab(this,'ct-performance')">퍼포먼스</div>
           </div>
 
@@ -3577,9 +3721,9 @@ td { padding: 9px 12px; vertical-align: middle; }
 	                      </select>
 	                    </div>
 	                    <div class="fg fg-wide"><label>지역</label><input id="cd-region" type="text" /></div>
-	                    <div class="fg"><label>출시일</label><input id="cd-release-date" type="date" onchange="syncDetailRsScheduleHint()" /></div>
-	                    <div class="fg"><label>만료일</label><input id="cd-release-end-date" type="date" /></div>
-	                    <div class="fg"><label>계약기간</label><input id="cd-term-months" type="number" min="1" step="1" /></div>
+	                    <div class="fg"><label>출시일</label><input id="cd-release-date" type="date" onchange="syncDetailRsScheduleHint();renderRsRequestTrackPanel()" /></div>
+	                    <div class="fg"><label>만료일</label><input id="cd-release-end-date" type="date" onchange="renderRsRequestTrackPanel()" /></div>
+	                    <div class="fg"><label>계약기간</label><input id="cd-term-months" type="number" min="1" step="1" onchange="renderRsRequestTrackPanel()" /></div>
 	                  </div>
 	                </div>
 	                <div class="contract-form-section">
@@ -3593,14 +3737,14 @@ td { padding: 9px 12px; vertical-align: middle; }
 	                      </select>
 	                    </div>
 	                    <div class="fg"><label>RS 타입</label>
-	                      <select id="cd-rs-type" onchange="syncDetailRsType();syncDetailRsScheduleHint()">
+	                      <select id="cd-rs-type" onchange="syncDetailRsType();syncDetailRsScheduleHint();renderRsRequestTrackPanel()">
 	                        <option value="">RS 타입 선택</option>
 	                        <option value="QUARTERLY">분기별</option>
 	                        <option value="MONTHLY">월별</option>
 	                      </select>
 	                    </div>
 	                    <div class="fg" id="cd-rs-quarter-basis-field"><label>분기기준</label>
-	                      <select id="cd-rs-quarter-basis" onchange="syncDetailRsScheduleHint()">
+	                      <select id="cd-rs-quarter-basis" onchange="syncDetailRsScheduleHint();renderRsRequestTrackPanel()">
 	                        <option value="">분기기준 선택</option>
 	                        <option value="RELEASE_QUARTER">출시일</option>
 	                        <option value="YEAR_QUARTER">연도</option>
@@ -3748,6 +3892,41 @@ td { padding: 9px 12px; vertical-align: middle; }
                   </div>
                 </div>
                 <div class="rs-trend-table-wrap" id="rs-trend-body"></div>
+              </div>
+            </div>
+
+            <!-- RS 요청 추적 탭 -->
+            <div class="dpanel" id="ct-rs-track">
+              <div class="rs-track-panel">
+                <div class="rs-track-head">
+                  <div class="rs-track-summary" id="rs-track-summary"></div>
+                  <div class="rs-track-message" id="rs-track-message"></div>
+                </div>
+                <div class="rs-track-table-wrap">
+                  <table class="rs-track-table">
+                    <colgroup>
+                      <col class="c-no">
+                      <col class="c-year">
+                      <col class="c-month">
+                      <col class="c-target">
+                      <col class="c-sent">
+                      <col class="c-status">
+                      <col class="c-reply">
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>No</th>
+                        <th>요청연도</th>
+                        <th>요청월</th>
+                        <th>요청 대상</th>
+                        <th>발송일</th>
+                        <th>발송 상태</th>
+                        <th>회신</th>
+                      </tr>
+                    </thead>
+                    <tbody id="rs-track-tbody"></tbody>
+                  </table>
+                </div>
               </div>
             </div>
 
@@ -3933,31 +4112,53 @@ td { padding: 9px 12px; vertical-align: middle; }
           <div class="rs-year-selector-menu" id="rs-request-year-menu" role="listbox" aria-label="연도 선택"></div>
         </div>
         <div class="rs-request-months" id="rs-request-months" aria-label="월 선택"></div>
-        <div class="rs-request-counts" id="rs-request-counts" aria-label="회신 상태 요약"></div>
       </div>
       <div class="ops-section">
         <div class="ops-table-scroll has-border-grid standalone-grid">
           <table class="ops-table grid-table rs-request-table">
             <colgroup>
-              <col style="width:44px">
+              <col style="width:40px">
               <col style="width:20%">
               <col style="width:132px">
               <col>
               <col style="width:220px">
               <col style="width:70px">
               <col style="width:112px">
-              <col style="width:44px">
+              <col style="width:60px">
             </colgroup>
             <thead>
               <tr>
                 <th>No</th>
                 <th>플랫폼사명</th>
-                <th>타입</th>
+                <th>
+                  <div class="rs-type-filter" id="rs-type-filter">
+                    <button class="rs-type-filter-btn" type="button" onclick="toggleRsTypeFilterMenu(event)" aria-haspopup="listbox" aria-expanded="false">
+                      <span>타입</span><i class="ti ti-chevron-down"></i>
+                    </button>
+                    <div class="rs-type-filter-menu" role="listbox" aria-label="타입 필터">
+                      <button class="rs-type-filter-option active" type="button" data-value="" onclick="setRsRequestTypeFilter('')">전체</button>
+                      <button class="rs-type-filter-option" type="button" data-value="월별" onclick="setRsRequestTypeFilter('월별')">월별</button>
+                      <button class="rs-type-filter-option" type="button" data-value="분기별(연도)" onclick="setRsRequestTypeFilter('분기별(연도)')">분기별(연도)</button>
+                      <button class="rs-type-filter-option" type="button" data-value="분기별(출시일)" onclick="setRsRequestTypeFilter('분기별(출시일)')">분기별(출시일)</button>
+                    </div>
+                  </div>
+                </th>
                 <th>콘텐츠명</th>
                 <th>릴리즈 기간</th>
-                <th>상태</th>
+                <th>발송 상태</th>
                 <th>발송일</th>
-                <th>회신</th>
+                <th>
+                  <div class="rs-reply-filter" id="rs-reply-filter">
+                    <button class="rs-reply-filter-btn" type="button" onclick="toggleRsReplyFilterMenu(event)" aria-haspopup="listbox" aria-expanded="false">
+                      <span>회신</span><i class="ti ti-chevron-down"></i>
+                    </button>
+                    <div class="rs-reply-filter-menu" role="listbox" aria-label="회신 필터">
+                      <button class="rs-reply-filter-option active" type="button" data-value="" onclick="setRsRequestReplyFilter('')">전체</button>
+                      <button class="rs-reply-filter-option" type="button" data-value="pending" onclick="setRsRequestReplyFilter('pending')">미회신</button>
+                      <button class="rs-reply-filter-option" type="button" data-value="completed" onclick="setRsRequestReplyFilter('completed')">완료</button>
+                    </div>
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody id="rs-request-tbody"></tbody>
@@ -4295,6 +4496,7 @@ let completedStudioFilterValue = '';
 let rsRequestYear = '';
 let rsRequestMonth = '';
 let rsRequestReplyFilter = '';
+let rsRequestTypeFilter = '';
 const rsRequestReplyState = {};
 const rsRequestMockGroups = [
   { ym: '2026-08', platform: 'Alpha Stream', contents: ['Neon Doorstep', 'Backup Love', 'Scene Pop Romance'], repliedDefault: true },
@@ -4345,7 +4547,9 @@ function syncNewContentPicker() {
   const content = newContractContentOptions.find((item) => item.id === contentId);
   const picker = document.getElementById('new-content-picker');
   const label = document.getElementById('new-content-picker-label');
-  if (label) label.textContent = content ? `${content.title} · ${content.company}` : '콘텐츠를 선택하세요';
+  const text = content ? `${content.title} · ${content.company}` : '콘텐츠를 선택하세요';
+  if (label) label.textContent = text;
+  if (picker) picker.title = text;
   picker?.classList.toggle('is-empty', !content);
 }
 
@@ -4440,7 +4644,9 @@ function syncNewPlatformPicker() {
   const platform = document.getElementById('new-platform')?.value || '';
   const picker = document.getElementById('new-platform-picker');
   const label = document.getElementById('new-platform-picker-label');
-  if (label) label.textContent = platform || '플랫폼사를 선택하세요';
+  const text = platform || '플랫폼사를 선택하세요';
+  if (label) label.textContent = text;
+  if (picker) picker.title = text;
   picker?.classList.toggle('is-empty', !platform);
 }
 
@@ -4757,6 +4963,7 @@ function syncDetailContractType() {
   syncDetailRsScheduleHint();
   configureContractDataTabs(type);
   renderRsTrendPanel();
+  renderRsRequestTrackPanel();
   if (hasRs) {
     ensureRsAddRow();
   }
@@ -5210,6 +5417,7 @@ function saveContractInfo() {
   getPerformanceData(contract);
   fillPerformanceForm(contract);
   renderRsTrendPanel();
+  renderRsRequestTrackPanel();
   renderTable();
   renderRsRequests();
 }
@@ -6117,6 +6325,7 @@ function selectContract(id) {
   renderSettlementDataPanel(c, 'flat');
   renderSettlementDataPanel(c, 'mg');
   fillPerformanceForm(c);
+  renderRsRequestTrackPanel();
   switchDTab(document.querySelector('#contract-data-tabs [data-panel="ct-info"]'), 'ct-info');
 }
 
@@ -6566,12 +6775,30 @@ function releaseMonthIndex(contract) {
   return releaseDate.getFullYear() * 12 + releaseDate.getMonth();
 }
 
+function explicitContractEndMonthIndex(contract, releaseIndex = releaseMonthIndex(contract)) {
+  if (releaseIndex === null) return null;
+  if (contract.endDate) {
+    const endDate = new Date(`${contract.endDate}T00:00:00`);
+    if (!Number.isNaN(endDate.getTime())) {
+      return Math.max(releaseIndex, endDate.getFullYear() * 12 + endDate.getMonth());
+    }
+  }
+  return null;
+}
+
+function contractEndMonthIndex(contract, releaseIndex = releaseMonthIndex(contract)) {
+  if (releaseIndex === null) return null;
+  const explicitEndIndex = explicitContractEndMonthIndex(contract, releaseIndex);
+  if (explicitEndIndex !== null) return explicitEndIndex;
+  const termMonths = Number(contract.termMonths) || 12;
+  return releaseIndex + termMonths - 1;
+}
+
 function rsRequestSchedule(contract) {
   if (!isRsContractType(contract.type)) return null;
   const releaseIndex = releaseMonthIndex(contract);
   if (releaseIndex === null) return null;
-  const termMonths = Number(contract.termMonths) || 12;
-  const contractEndIndex = releaseIndex + termMonths - 1;
+  const contractEndIndex = contractEndMonthIndex(contract, releaseIndex);
   const rsType = contract.rsType || 'MONTHLY';
   const quarterBasis = contract.rsQuarterBasis || 'RELEASE_QUARTER';
   if (rsType === 'MONTHLY') {
@@ -6600,6 +6827,132 @@ function rsRequestMonthsForContract(contract) {
     months.push(ymFromMonthIndex(index));
   }
   return months;
+}
+
+function rsTrackMonthLabel(ym) {
+  const [year, month] = String(ym || '').split('-');
+  return year && month ? `${year}.${month}` : '-';
+}
+
+function rsTrackYearLabel(ym) {
+  const [year] = String(ym || '').split('-');
+  return year || '-';
+}
+
+function rsTrackMonthOnlyLabel(ym) {
+  const [, month] = String(ym || '').split('-');
+  return month ? `${month}월` : '-';
+}
+
+function rsTrackTargetPeriod(contract, ym) {
+  const requestIndex = monthIndexFromYm(ym);
+  const releaseIndex = releaseMonthIndex(contract);
+  const endIndex = contractEndMonthIndex(contract, releaseIndex);
+  if (releaseIndex === null || endIndex === null) return '-';
+  if ((contract.rsType || 'MONTHLY') === 'MONTHLY') {
+    const targetIndex = requestIndex - 2;
+    return rsTrackMonthLabel(ymFromMonthIndex(Math.min(Math.max(targetIndex, releaseIndex), endIndex)));
+  }
+  const startIndex = Math.max(releaseIndex, requestIndex - 3);
+  const finishIndex = Math.min(endIndex, requestIndex - 1);
+  return startIndex === finishIndex
+    ? rsTrackMonthLabel(ymFromMonthIndex(startIndex))
+    : `${rsTrackMonthLabel(ymFromMonthIndex(startIndex))}~${rsTrackMonthLabel(ymFromMonthIndex(finishIndex))}`;
+}
+
+function rsTrackContractFromDetail() {
+  const base = contracts.find((contract) => contract.id === selId) || {};
+  return {
+    ...base,
+    content: document.getElementById('cd-content-input')?.value || base.content || '',
+    platform: document.getElementById('cd-platform')?.value || base.platform || '',
+    type: document.getElementById('cd-contract-type')?.value || base.type || '',
+    date: document.getElementById('cd-release-date')?.value || base.date || '',
+    endDate: document.getElementById('cd-release-end-date')?.value || base.endDate || '',
+    termMonths: document.getElementById('cd-term-months')?.value || base.termMonths || '',
+    rsType: document.getElementById('cd-rs-type')?.value || base.rsType || 'MONTHLY',
+    rsQuarterBasis: document.getElementById('cd-rs-quarter-basis')?.value || base.rsQuarterBasis || 'RELEASE_QUARTER'
+  };
+}
+
+function rsTrackReplyMeta(contract, ym) {
+  const group = rsRequestGroupsForMonth(ym).find((item) =>
+    item.platform === contract.platform && item.contents?.has(contract.content)
+  );
+  return {
+    group,
+    key: group?.key || rsRequestGroupKey(ym, contract.platform || '-')
+  };
+}
+
+function rsTrackReplyState(contract, ym, sentAt, replyMeta = rsTrackReplyMeta(contract, ym)) {
+  if (Object.prototype.hasOwnProperty.call(rsRequestReplyState, replyMeta.key)) {
+    return !!rsRequestReplyState[replyMeta.key];
+  }
+  if (replyMeta.group && Object.prototype.hasOwnProperty.call(replyMeta.group, 'repliedDefault')) {
+    return !!replyMeta.group.repliedDefault;
+  }
+  const sendDate = new Date(`${sentAt}T00:00:00`);
+  const confirmedAfter = addMonths(sendDate, 1);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return confirmedAfter <= today;
+}
+
+function rsTrackRows(contract) {
+  return rsRequestMonthsForContract(contract).map((ym) => {
+    const sendInfo = rsRequestSendInfo(ym);
+    const isSent = sendInfo.status === '발송완료';
+    const replyMeta = rsTrackReplyMeta(contract, ym);
+    const replied = rsTrackReplyState(contract, ym, sendInfo.sentAt, replyMeta);
+    return {
+      ym,
+      replyKey: replyMeta.key,
+      replied,
+      targetPeriod: rsTrackTargetPeriod(contract, ym),
+      sentAt: sendInfo.sentAt,
+      sendStatus: sendInfo.status,
+      replyStatus: replied ? '확인완료' : (isSent ? '미확인' : '확인전')
+    };
+  });
+}
+
+function renderRsRequestTrackPanel() {
+  const summary = document.getElementById('rs-track-summary');
+  const message = document.getElementById('rs-track-message');
+  const tbody = document.getElementById('rs-track-tbody');
+  if (!summary || !tbody) return;
+  const contract = rsTrackContractFromDetail();
+  if (!isRsContractType(contract.type)) {
+    summary.innerHTML = '';
+    if (message) message.textContent = '';
+    tbody.innerHTML = `<tr><td colspan="7"><div class="rs-track-empty">RS 계약에서만 요청 추적을 확인할 수 있습니다.</div></td></tr>`;
+    return;
+  }
+  const rows = rsTrackRows(contract);
+  const requestType = rsRequestTypeLabel(contract);
+  summary.innerHTML = [
+    ['요청 타입', requestType],
+    ['계약 기간', rsRequestReleasePeriodForContract(contract)]
+  ].map(([label, value]) => `
+    <span class="rs-track-chip">${label}<strong>${escapeHtml(value)}</strong></span>
+  `).join('');
+  if (message) message.textContent = '';
+  tbody.innerHTML = rows.length ? rows.map((row, index) => {
+    const year = rsTrackYearLabel(row.ym);
+    const showYear = index === 0 || rsTrackYearLabel(rows[index - 1].ym) !== year;
+    return `
+    <tr>
+      <td class="rs-track-no-cell ops-muted ops-mono">${index + 1}</td>
+      <td class="rs-track-year-cell">${showYear ? year : ''}</td>
+      <td class="rs-track-month-cell">${rsTrackMonthOnlyLabel(row.ym)}</td>
+      <td><span class="rs-track-period">${escapeHtml(row.targetPeriod)}</span></td>
+      <td class="rs-track-sent-cell">${row.sentAt}</td>
+      <td class="rs-track-status-cell">${rsSendStatusBadge(row.sendStatus)}</td>
+      <td class="rs-track-check-cell"><button class="rs-track-check ${row.replied ? 'is-checked' : ''}" type="button" role="checkbox" aria-checked="${row.replied ? 'true' : 'false'}" aria-label="${escapeHtml(row.ym)} 회신 확인" onclick="toggleRsRequestReply('${escapeHtml(row.replyKey)}', ${row.replied ? 'false' : 'true'})"></button></td>
+    </tr>
+  `;
+  }).join('') : `<tr><td colspan="7"><div class="rs-track-empty">요청 일정이 없습니다.</div></td></tr>`;
 }
 
 function availableRsRequestYears() {
@@ -6636,7 +6989,8 @@ function rsRequestSendInfo(ym) {
 }
 
 function rsSendStatusBadge(status) {
-  return status === '발송완료' ? '완료' : '예정';
+  const isCompleted = status === '발송완료';
+  return `<span class="rs-send-status-badge ${isCompleted ? 'is-completed' : 'is-scheduled'}">${isCompleted ? '완료' : '예정'}</span>`;
 }
 
 function isRsRequestGroupReplied(group) {
@@ -6645,28 +6999,93 @@ function isRsRequestGroupReplied(group) {
     : !!group.repliedDefault;
 }
 
-function renderRsRequestCounts(groups) {
-  const target = document.getElementById('rs-request-counts');
-  if (!target) return;
-  const completed = groups.filter(isRsRequestGroupReplied).length;
-  const pending = Math.max(0, groups.length - completed);
-  target.innerHTML = `
-    <button class="rs-request-count-filter all ${rsRequestReplyFilter === '' ? 'active' : ''}" type="button" aria-pressed="${rsRequestReplyFilter === ''}" onclick="setRsRequestReplyFilter('')">
-      <span class="rs-request-count-badge">${groups.length}</span>
-      <span class="rs-request-count-note">전체</span>
-    </button>
-    <button class="rs-request-count-filter pending ${rsRequestReplyFilter === 'pending' ? 'active' : ''}" type="button" aria-pressed="${rsRequestReplyFilter === 'pending'}" onclick="setRsRequestReplyFilter('pending')">
-      <span class="rs-request-count-badge">${pending}</span>
-      <span class="rs-request-count-note">미체크</span>
-    </button>
-    <button class="rs-request-count-filter completed ${rsRequestReplyFilter === 'completed' ? 'active' : ''}" type="button" aria-pressed="${rsRequestReplyFilter === 'completed'}" onclick="setRsRequestReplyFilter('completed')">
-      <span class="rs-request-count-badge">${completed}</span>
-      <span class="rs-request-count-note">완료</span>
-    </button>`;
+function toggleRsReplyFilterMenu(event) {
+  event?.stopPropagation();
+  const filter = document.getElementById('rs-reply-filter');
+  if (!filter) return;
+  const nextOpen = !filter.classList.contains('open');
+  filter.classList.toggle('open', nextOpen);
+  filter.querySelector('.rs-reply-filter-btn')?.setAttribute('aria-expanded', String(nextOpen));
+  if (nextOpen) {
+    closeRsTypeFilterMenu();
+    positionRsReplyFilterMenu();
+  }
+}
+
+function closeRsReplyFilterMenu() {
+  const filter = document.getElementById('rs-reply-filter');
+  filter?.classList.remove('open');
+  filter?.querySelector('.rs-reply-filter-btn')?.setAttribute('aria-expanded', 'false');
+}
+
+function positionRsReplyFilterMenu() {
+  const button = document.querySelector('#rs-reply-filter .rs-reply-filter-btn');
+  const menu = document.querySelector('#rs-reply-filter .rs-reply-filter-menu');
+  if (!button || !menu) return;
+  const rect = button.getBoundingClientRect();
+  const width = menu.offsetWidth || 86;
+  const left = Math.min(window.innerWidth - width - 8, Math.max(8, rect.left + (rect.width - width) / 2));
+  menu.style.left = `${left}px`;
+  menu.style.top = `${rect.bottom + 6}px`;
+}
+
+function syncRsReplyFilterMenu() {
+  const filter = document.getElementById('rs-reply-filter');
+  if (!filter) return;
+  filter.classList.toggle('is-filtered', !!rsRequestReplyFilter);
+  filter.querySelectorAll('.rs-reply-filter-option').forEach((option) => {
+    option.classList.toggle('active', option.dataset.value === rsRequestReplyFilter);
+  });
 }
 
 function setRsRequestReplyFilter(filter) {
-  rsRequestReplyFilter = filter && rsRequestReplyFilter === filter ? '' : filter;
+  rsRequestReplyFilter = filter || '';
+  closeRsReplyFilterMenu();
+  renderRsRequests();
+}
+
+function toggleRsTypeFilterMenu(event) {
+  event?.stopPropagation();
+  const filter = document.getElementById('rs-type-filter');
+  if (!filter) return;
+  const nextOpen = !filter.classList.contains('open');
+  filter.classList.toggle('open', nextOpen);
+  filter.querySelector('.rs-type-filter-btn')?.setAttribute('aria-expanded', String(nextOpen));
+  if (nextOpen) {
+    closeRsReplyFilterMenu();
+    positionRsTypeFilterMenu();
+  }
+}
+
+function closeRsTypeFilterMenu() {
+  const filter = document.getElementById('rs-type-filter');
+  filter?.classList.remove('open');
+  filter?.querySelector('.rs-type-filter-btn')?.setAttribute('aria-expanded', 'false');
+}
+
+function positionRsTypeFilterMenu() {
+  const button = document.querySelector('#rs-type-filter .rs-type-filter-btn');
+  const menu = document.querySelector('#rs-type-filter .rs-type-filter-menu');
+  if (!button || !menu) return;
+  const rect = button.getBoundingClientRect();
+  const width = menu.offsetWidth || 136;
+  const left = Math.min(window.innerWidth - width - 8, Math.max(8, rect.left + (rect.width - width) / 2));
+  menu.style.left = `${left}px`;
+  menu.style.top = `${rect.bottom + 6}px`;
+}
+
+function syncRsTypeFilterMenu() {
+  const filter = document.getElementById('rs-type-filter');
+  if (!filter) return;
+  filter.classList.toggle('is-filtered', !!rsRequestTypeFilter);
+  filter.querySelectorAll('.rs-type-filter-option').forEach((option) => {
+    option.classList.toggle('active', option.dataset.value === rsRequestTypeFilter);
+  });
+}
+
+function setRsRequestTypeFilter(filter) {
+  rsRequestTypeFilter = filter || '';
+  closeRsTypeFilterMenu();
   renderRsRequests();
 }
 
@@ -6797,37 +7216,43 @@ function renderRsRequests() {
   const tbody = document.getElementById('rs-request-tbody');
   const summary = document.getElementById('rs-request-summary');
   if (summary) summary.textContent = '';
+  syncRsReplyFilterMenu();
+  syncRsTypeFilterMenu();
   if (!tbody) return;
-  renderRsRequestCounts(groups);
-  const visibleGroups = groups.filter((group) => {
+  const visibleGroups = groups.map((group) => {
     const replied = isRsRequestGroupReplied(group);
-    if (rsRequestReplyFilter === 'pending') return !replied;
-    if (rsRequestReplyFilter === 'completed') return replied;
-    return true;
-  });
-  tbody.innerHTML = visibleGroups.length ? visibleGroups.map((group, index) => {
+    const matchesReply =
+      !rsRequestReplyFilter ||
+      (rsRequestReplyFilter === 'pending' && !replied) ||
+      (rsRequestReplyFilter === 'completed' && replied);
+    const contentNames = Array.from(group.contents)
+      .sort((a, b) => {
+        const aStart = group.releaseStartDates?.get(a) || '';
+        const bStart = group.releaseStartDates?.get(b) || '';
+        return aStart.localeCompare(bStart) || a.localeCompare(b);
+      })
+      .filter((name) => !rsRequestTypeFilter || group.requestTypes?.get(name) === rsRequestTypeFilter);
+    return { group, contentNames, replied, matchesReply };
+  }).filter((item) => item.matchesReply && item.contentNames.length);
+  tbody.innerHTML = visibleGroups.length ? visibleGroups.map((item, index) => {
+    const { group, contentNames, replied } = item;
     const sendInfo = rsRequestSendInfo(group.plannedMonth);
-    const replied = isRsRequestGroupReplied(group);
-	    const contentNames = Array.from(group.contents).sort((a, b) => {
-	      const aStart = group.releaseStartDates?.get(a) || '';
-	      const bStart = group.releaseStartDates?.get(b) || '';
-	      return aStart.localeCompare(bStart) || a.localeCompare(b);
-	    });
-	    const requestTypes = contentNames.map((name) => group.requestTypes?.get(name) || '-');
-	    const releasePeriods = contentNames.map((name) => group.releasePeriods?.get(name) || '-');
-	    const rowNo = visibleGroups.length - index;
-	    return `
-	      <tr>
-	        <td class="ops-muted ops-mono">${rowNo}</td>
-	        <td><span class="ops-group-title">${escapeHtml(group.platform)}</span></td>
-	        <td class="rs-request-type-cell"><div class="rs-request-type-list">${requestTypes.map((type) => `<div class="rs-request-type-label">${escapeHtml(type)}</div>`).join('')}</div></td>
-	        <td class="rs-request-content-cell"><div class="rs-request-content-list">${contentNames.map((name) => `<div class="rs-request-content-name"><span class="rs-request-content-label">${escapeHtml(name)}</span><button class="rs-request-contract-shortcut" type="button" aria-label="${escapeHtml(name)} 계약관리 상세로 이동" title="계약관리 상세로 이동" onclick="openRsRequestContractShortcut(event)"><i class="ti ti-arrow-up-right"></i></button></div>`).join('')}</div></td>
-	        <td class="rs-request-release-cell"><div class="rs-request-release-list">${releasePeriods.map((period) => `<div class="rs-request-release-period ops-mono">${escapeHtml(period)}</div>`).join('')}</div></td>
-	        <td>${rsSendStatusBadge(sendInfo.status)}</td>
-	        <td class="ops-muted ops-mono">${sendInfo.sentAt}</td>
-	        <td class="ops-check-cell ${replied ? 'is-checked' : ''}"><input class="ops-check" type="checkbox" aria-label="${escapeHtml(group.platform)} 회신여부" ${replied ? 'checked' : ''} onchange="toggleRsRequestReply('${group.key}', this.checked)" /></td>
-	      </tr>`;
-	  }).join('') : emptyRow(8, '해당 월에 요청할 RS 계약이 없습니다');
+    const sentAtDisplay = sendInfo.status === '발송완료' ? sendInfo.sentAt : '-';
+    const requestTypes = contentNames.map((name) => group.requestTypes?.get(name) || '-');
+    const releasePeriods = contentNames.map((name) => group.releasePeriods?.get(name) || '-');
+    const rowNo = visibleGroups.length - index;
+    return `
+      <tr>
+        <td class="ops-muted ops-mono">${rowNo}</td>
+        <td><span class="ops-group-title">${escapeHtml(group.platform)}</span></td>
+        <td class="rs-request-type-cell"><div class="rs-request-type-list">${requestTypes.map((type) => `<div class="rs-request-type-label">${escapeHtml(type)}</div>`).join('')}</div></td>
+        <td class="rs-request-content-cell"><div class="rs-request-content-list">${contentNames.map((name) => `<div class="rs-request-content-name"><span class="rs-request-content-label">${escapeHtml(name)}</span><button class="rs-request-contract-shortcut" type="button" aria-label="${escapeHtml(name)} 계약관리 상세로 이동" title="계약관리 상세로 이동" onclick="openRsRequestContractShortcut(event)"><i class="ti ti-arrow-up-right"></i></button></div>`).join('')}</div></td>
+        <td class="rs-request-release-cell"><div class="rs-request-release-list">${releasePeriods.map((period) => `<div class="rs-request-release-period ops-mono">${escapeHtml(period)}</div>`).join('')}</div></td>
+        <td>${rsSendStatusBadge(sendInfo.status)}</td>
+        <td class="ops-muted ops-mono">${sentAtDisplay}</td>
+        <td class="ops-check-cell ${replied ? 'is-checked' : ''}"><input class="ops-check" type="checkbox" aria-label="${escapeHtml(group.platform)} 회신여부" ${replied ? 'checked' : ''} onchange="toggleRsRequestReply('${group.key}', this.checked)" /></td>
+      </tr>`;
+  }).join('') : emptyRow(8, '해당 월에 요청할 RS 계약이 없습니다');
 }
 
 function openRsRequestContractShortcut(event) {
@@ -6851,6 +7276,7 @@ function changeRsRequestMonth(value) {
 function toggleRsRequestReply(key, checked) {
   rsRequestReplyState[key] = checked;
   renderRsRequests();
+  renderRsRequestTrackPanel();
 }
 
 function settlementMonthForRow(row) {
@@ -7381,6 +7807,7 @@ function switchDTab(el, panelId) {
   el.classList.add('active');
   document.getElementById(panelId).classList.add('active');
   if (savebar) savebar.style.display = panelId === 'ct-info' ? '' : 'none';
+  if (panelId === 'ct-rs-track') renderRsRequestTrackPanel();
 }
 
 function switchTab(tab) {
@@ -7441,7 +7868,16 @@ document.addEventListener('click', (event) => {
   if (!event.target.closest('.rs-year-selector')) {
     closeRsRequestYearSelector();
   }
+  if (!event.target.closest('.rs-reply-filter')) {
+    closeRsReplyFilterMenu();
+  }
+  if (!event.target.closest('.rs-type-filter')) {
+    closeRsTypeFilterMenu();
+  }
 });
+
+window.addEventListener('resize', closeRsReplyFilterMenu);
+window.addEventListener('resize', closeRsTypeFilterMenu);
 
 refreshContractFilters();
 renderTable();
