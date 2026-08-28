@@ -32,37 +32,37 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
 
 /* MAIN */
 .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-.topbar { position: relative; height: 62px; background: rgb(242, 242, 242); display: flex; align-items: center; padding: 7px 32px 0; flex-shrink: 0; }
-.topbar::after { content: ""; position: absolute; left: 30px; right: 30px; bottom: 0; height: 0.5px; background: #d6d4cd; }
+.topbar { position: relative; height: 62px; background: rgb(242, 242, 242); display: flex; align-items: center; padding: 7px 30px 0; flex-shrink: 0; }
+.topbar::after { content: ""; position: absolute; left: 30px; right: 30px; bottom: 0; height: 0.5px; background: #d9d9d9; }
 .topbar-title { display: flex; align-items: center; gap: 9px; font-size: 19px; font-weight: 550; }
 .topbar-separator { color: #bbb; font-weight: 400; }
 .topbar-current { color: #777; font-size: 16px; font-weight: 500; }
 
-.body { flex: 1; overflow-y: auto; padding: 20px 30px 30px; width: 100%; }
-.section { margin-bottom: 30px; }
+.body { flex: 1; overflow-y: auto; padding: 24px 30px 30px; width: 100%; }
+.section { margin-bottom: 20px; }
 .section:last-child { margin-bottom: 0; }
 
 /* SUMMARY */
-.summary-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.summary-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
 .summary-label { color: #777; font-size: 12px; font-weight: 550; }
 .summary-period { color: #777; font-size: 11px; font-weight: 550; }
-.summary-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; }
-.metric-card { position: relative; min-height: 132px; padding: 22px 25px 20px; background: #fff; border-radius: 11px; display: flex; flex-direction: column; }
-.metric-top { display: block; padding-right: 48px; }
-.metric-name { font-size: 13.5px; color: #777; font-weight: 500; }
+.summary-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+.metric-card { position: relative; min-height: 108px; padding: 17px 19px 15px; background: #fff; border-radius: 10px; display: flex; flex-direction: column; }
+.metric-top { display: block; padding-right: 38px; }
+.metric-name { font-size: 12.5px; color: #777; font-weight: 500; }
 .metric-name-with-help { display: inline-flex; align-items: center; gap: 5px; position: relative; }
-.metric-help { width: 15px; height: 15px; border: 0.5px solid #d5d2ca; border-radius: 50%; background: #fff; color: #aaa; font-family: inherit; font-size: 9px; font-weight: 650; line-height: 14px; text-align: center; cursor: help; }
-.metric-help-popover { position: absolute; top: 22px; left: 0; z-index: 20; display: none; width: 340px; padding: 12px 13px; border: 0.5px solid #e3e1db; border-radius: 8px; background: #fff; color: #555; font-size: 11.5px; font-weight: 500; line-height: 1.55; white-space: normal; }
+.metric-help { width: 15px; height: 15px; border: 0.5px solid #d9d9d9; border-radius: 50%; background: #fff; color: #aaa; font-family: inherit; font-size: 9px; font-weight: 650; line-height: 14px; text-align: center; cursor: help; }
+.metric-help-popover { position: absolute; top: 22px; left: 0; z-index: 20; display: none; width: 340px; padding: 12px 13px; border: 0.5px solid #e5e5e5; border-radius: 8px; background: #fff; color: #555; font-size: 11.5px; font-weight: 500; line-height: 1.55; white-space: normal; }
 .metric-help-popover strong { display: block; margin-bottom: 6px; color: #1a1a18; font-size: 12.5px; font-weight: 650; }
 .metric-help-popover p { margin: 0 0 8px; color: #666; }
 .metric-help-popover em { display: block; margin: 9px 0 5px; color: #888; font-size: 11px; font-style: normal; font-weight: 650; }
 .metric-help-popover span { display: block; color: #555; line-height: 1.6; }
 .metric-help:hover + .metric-help-popover,
 .metric-help:focus + .metric-help-popover { display: block; }
-.metric-icon { position: absolute; top: 22px; right: 25px; width: 52px; height: 52px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 25px; }
-.metric-value { margin-top: 14px; padding-right: 48px; font-size: 31px; line-height: 1; font-weight: 650; letter-spacing: -0.04em; white-space: nowrap; }
-.metric-value span { font-size: 15px !important; }
-.metric-change { margin-top: auto; padding-top: 15px; font-size: 12.5px; color: #999; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.metric-icon { position: absolute; top: 17px; right: 19px; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.metric-value { margin-top: 10px; padding-right: 38px; font-size: 26px; line-height: 1; font-weight: 650; letter-spacing: 0; white-space: nowrap; }
+.metric-value span { font-size: 13px !important; }
+.metric-change { margin-top: auto; padding-top: 11px; font-size: 11.5px; color: #999; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
 .metric-change strong { color: #23845d; font-weight: 600; }
 .metric-change i { color: #23845d; font-size: 15px; }
 .metric-change.down strong, .metric-change.down i { color: #c65f55; }
@@ -71,52 +71,52 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
 .tone-blue { background: #edf5ff; color: #3979b9; }
 .tone-violet { background: #f1efff; color: #6b62b8; }
 .tone-green { background: #eaf7f1; color: #23845d; }
-.tone-orange { background: #fff3e9; color: #bd6a2f; }
-.tone-yellow { background: #fff8dc; color: #9a7716; }
+.tone-orange { background: #f0f0f0; color: #555; }
+.tone-yellow { background: #f5f5f5; color: #666; }
 
 /* CHARTS */
-.analysis-section { padding-top: 2px; }
+.analysis-section { padding-top: 0; }
 .analysis-card { background: #fff; border-radius: 10px; overflow-x: auto; }
-.analysis-head { min-height: 58px; padding: 0 20px; border-bottom: 1px solid #eceae5; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.analysis-head { min-height: 48px; padding: 0 18px; border-bottom: 1px solid #e5e5e5; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
 .analysis-period { display: flex; align-items: center; gap: 10px; }
 .analysis-period-label { color: #999; font-size: 11px; }
 .analysis-tabs { display: flex; align-items: center; gap: 4px; }
-.analysis-tabs { gap: 6px; }
-.analysis-tab { height: 31px; padding: 0 13px; border: 0; border-radius: 7px; background: transparent; color: #777; font-family: inherit; font-size: 13.5px; cursor: pointer; white-space: nowrap; }
+.analysis-tabs { gap: 4px; }
+.analysis-tab { height: 28px; padding: 0 11px; border: 0; border-radius: 6px; background: transparent; color: #777; font-family: inherit; font-size: 12.5px; cursor: pointer; white-space: nowrap; }
 .analysis-tab:hover { color: #333; }
 .analysis-tab.active { background: #1a1a18; color: #fff; font-weight: 600; }
 .analysis-period { position: relative; }
 .analysis-period::after { content: ""; position: absolute; right: 12px; top: 50%; width: 6px; height: 6px; border-right: 1.5px solid #777; border-bottom: 1.5px solid #777; transform: translateY(-68%) rotate(45deg); pointer-events: none; }
-.analysis-period-select { width: 94px; height: 32px; padding: 0 28px 0 8px; border: 1px solid #dcdad4; border-radius: 7px; background: #fff; color: #444; font-family: inherit; font-size: 12.5px; font-weight: 550; text-align: center; text-align-last: center; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; }
-.analysis-period-select:focus { border-color: #99968e; }
-.growth-mode-toggle { display: flex; align-items: center; border: 1px solid #dcdad4; border-radius: 7px; overflow: hidden; }
-.growth-mode-btn { width: 58px; height: 30px; padding: 0 16px; border: 0; background: transparent; color: #777; font-family: inherit; font-size: 12.5px; font-weight: 550; cursor: pointer; white-space: nowrap; }
+.analysis-period-select { width: 88px; height: 29px; padding: 0 26px 0 8px; border: 1px solid #d9d9d9; border-radius: 6px; background: #fff; color: #444; font-family: inherit; font-size: 12px; font-weight: 550; text-align: center; text-align-last: center; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; }
+.analysis-period-select:focus { border-color: #888; }
+.growth-mode-toggle { display: flex; align-items: center; border: 1px solid #d9d9d9; border-radius: 7px; overflow: hidden; }
+.growth-mode-btn { width: 54px; height: 27px; padding: 0 12px; border: 0; background: transparent; color: #777; font-family: inherit; font-size: 12px; font-weight: 550; cursor: pointer; white-space: nowrap; }
 .growth-mode-btn:hover { color: #333; }
 .growth-mode-btn.active { background: #1a1a18; color: #fff; }
-.chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; padding: 28px; align-items: start; min-width: 860px; }
+.chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; padding: 18px; align-items: start; min-width: 860px; }
 .chart-grid.chart-table-grid { grid-template-columns: 1fr; }
 .legacy-chart-grid { display: none; }
-.chart-card { background: #fff; border: 1px solid #e5e3dd; border-radius: 10px; min-height: 270px; overflow: hidden; }
+.chart-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 9px; min-height: 236px; overflow: hidden; }
 .chart-card.chart-wide { grid-column: 1 / -1; }
-.chart-head { height: 50px; padding: 0 30px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.chart-title { font-size: 15px; font-weight: 600; color: #333; }
+.chart-head { height: 42px; padding: 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.chart-title { font-size: 13.5px; font-weight: 600; color: #333; }
 .legend { display: flex; align-items: center; gap: 11px; font-size: 10px; color: #888; white-space: nowrap; }
 .legend-item { display: inline-flex; align-items: center; gap: 4px; }
 .legend-dot { width: 7px; height: 7px; border-radius: 2px; }
 .chart-content { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr); }
 .chart-main { min-width: 0; }
-.chart-body { height: 232px; padding: 16px 48px 18px; }
-.chart-body-line { height: 232px; padding: 8px 16px 0; }
-.chart-values { height: 282px; background: #faf9f6; overflow-y: auto; }
+.chart-body { height: 196px; padding: 12px 32px 14px; }
+.chart-body-line { height: 196px; padding: 6px 12px 0; }
+.chart-values { height: 238px; background: #fff; overflow-y: auto; }
 .chart-values table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-.chart-values th { position: sticky; top: 0; z-index: 1; height: 34px; padding: 0 18px; background: #f2f1ed; color: #999; font-size: 11px; font-weight: 500; text-align: right; }
+.chart-values th { position: sticky; top: 0; z-index: 1; height: 34px; padding: 0 18px; background: rgb(250, 250, 250); color: #888; font-size: 11px; font-weight: 500; text-align: right; }
 .chart-values th:first-child, .chart-values td:first-child { width: 72px; text-align: left; }
-.chart-values td { height: 32px; padding: 0 18px; color: #555; font-size: 11.5px; text-align: right; white-space: nowrap; }
-.chart-values tbody tr:nth-child(even) { background: rgba(235,233,227,.42); }
-.chart-values tbody tr:hover { background: #fcfbf8; }
+.chart-values td { height: 28px; padding: 0 18px; color: #555; font-size: 11.5px; text-align: right; white-space: nowrap; }
+.chart-values tbody tr:nth-child(even) { background: rgb(250, 250, 250); }
+.chart-values tbody tr:hover { background: rgb(242, 242, 242); }
 .bar-chart { height: 100%; display: grid; grid-template-columns: 30px 1fr; grid-template-rows: 1fr 22px; }
 .y-axis { grid-row: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 1px 8px 0 0; font-size: 9px; color: #bbb; text-align: right; }
-.bar-plot { grid-column: 2; position: relative; display: flex; align-items: flex-end; justify-content: space-around; border-bottom: 0.5px solid #dddcd6; background: repeating-linear-gradient(to bottom, #fff 0, #fff calc(25% - 1px), rgb(242, 242, 242) 25%); }
+.bar-plot { grid-column: 2; position: relative; display: flex; align-items: flex-end; justify-content: space-around; border-bottom: 0.5px solid #ddd; background: repeating-linear-gradient(to bottom, #fff 0, #fff calc(25% - 1px), rgb(242, 242, 242) 25%); }
 .bar-group { position: relative; width: 14%; height: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 4px; cursor: help; }
 .bar-group::after { content: attr(data-tooltip); position: absolute; z-index: 10; left: 50%; top: 8px; width: max-content; max-width: 210px; padding: 8px 10px; border-radius: 6px; background: #292925; color: #fff; font-size: 10.5px; line-height: 1.5; white-space: pre-line; text-align: left; opacity: 0; visibility: hidden; transform: translate(-50%, 4px); transition: 120ms ease; pointer-events: none; box-shadow: 0 5px 16px rgba(0,0,0,.12); }
 .bar-group:hover::after { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
@@ -141,8 +141,8 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
 .dynamic-line-svg { width: 100%; height: 100%; display: block; overflow: visible; }
 .dynamic-line-point { cursor: help; }
 .dynamic-line-point.drilldown-point { cursor: pointer; }
-.drilldown-head { display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 18px; background: #f2f1ed; border-bottom: 1px solid #e5e3dd; position: sticky; top: 0; z-index: 1; }
-.drilldown-back { display: flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border: 1px solid #d6d4cd; border-radius: 5px; background: #fff; color: #555; font-family: inherit; font-size: 11px; cursor: pointer; white-space: nowrap; }
+.drilldown-head { display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 18px; background: rgb(250, 250, 250); border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 1; }
+.drilldown-back { display: flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border: 1px solid #e5e7eb; border-radius: 5px; background: #fff; color: #555; font-family: inherit; font-size: 11px; cursor: pointer; white-space: nowrap; }
 .drilldown-back:hover { background: rgb(242, 242, 242); }
 .rs-drilldown-row { cursor: pointer; }
 .rs-drilldown-row:hover td { background: rgb(242, 242, 242); }
@@ -166,19 +166,19 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
 .pipeline-board-title { color: #333; font-size: 15px; font-weight: 600; }
 .pipeline-board-meta { color: #aaa; font-size: 11px; }
 .pipeline-stages { display: grid; grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1fr) 48px minmax(0, 1fr) 48px minmax(0, 1fr); align-items: center; margin-bottom: 22px; }
-.pipeline-stage { min-height: 84px; padding: 15px 17px; border: 1px solid #e3e1db; border-radius: 10px; background: #fff; cursor: pointer; font-family: inherit; text-align: left; }
-.pipeline-stage:hover { border-color: #aaa79f; }
-.pipeline-stage.active { border-color: #8e8b84; background: rgb(242, 242, 242); }
+.pipeline-stage { min-height: 84px; padding: 15px 17px; border: 1px solid #e5e5e5; border-radius: 10px; background: #fff; cursor: pointer; font-family: inherit; text-align: left; }
+.pipeline-stage:hover { border-color: #b8b8b8; }
+.pipeline-stage.active { border-color: #8a8a8a; background: rgb(242, 242, 242); }
 .pipeline-stage-name { display: flex; align-items: center; gap: 7px; color: #444; font-size: 11.5px; font-weight: 600; }
 .pipeline-stage-dot { width: 7px; height: 7px; border-radius: 2px; }
 .pipeline-stage-value { margin-top: 11px; color: #111; font-size: 26px; line-height: 1; font-weight: 650; }
 .pipeline-stage-value small { margin-left: 3px; color: #777; font-size: 11px; font-weight: 500; }
 .pipeline-rate { display: flex; align-items: center; justify-content: center; color: #aaa; }
 .pipeline-rate i { color: #aaa; font-size: 13px; }
-.pipeline-table-wrap { border: 1px solid #e3e1db; border-radius: 10px; overflow: hidden; }
+.pipeline-table-wrap { border: 1px solid #e5e5e5; border-radius: 10px; overflow: hidden; }
 .pipeline-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .pipeline-table th { height: 34px; padding: 0 16px; background: rgb(242, 242, 242); color: #aaa; font-size: 11px; font-weight: 500; text-align: left; }
-.pipeline-table td { height: 40px; padding: 0 16px; border-top: 1px solid #eceae5; color: #555; font-size: 12.5px; }
+.pipeline-table td { height: 40px; padding: 0 16px; border-top: 1px solid #e5e5e5; color: #555; font-size: 12.5px; }
 .pipeline-table td:first-child { color: #222; font-weight: 550; }
 .pipeline-table th, .pipeline-table td { width: 20%; }
 .pipeline-table.deal-detail-table th,
@@ -206,8 +206,8 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
 .pipeline-table.metadata-table th:nth-child(4),
 .pipeline-table.metadata-table td:nth-child(4) { width: 20%; }
 .pipeline-deal-type { display: inline-flex; align-items: center; min-height: 22px; padding: 0 8px; border-radius: 5px; background: rgb(242, 242, 242); color: #555; font-size: 11px; font-weight: 550; }
-.pipeline-deal-type.bundle { background: #eeeaf8; color: #6256a6; }
-.pipeline-deal-type.turnkey { background: #faedd8; color: #916214; }
+.pipeline-deal-type.bundle { background: #f0f0f0; color: #555; }
+.pipeline-deal-type.turnkey { background: #f5f5f5; color: #666; }
 .pipeline-deal-content { color: #222; font-weight: 550; }
 .pipeline-budget { color: #444; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .pipeline-region { color: #666; font-size: 11.5px; white-space: normal; line-height: 1.4; }
@@ -216,27 +216,27 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
 
 /* TABLE */
 .table-card { background: #fff; border-radius: 10px; overflow: hidden; }
-.analysis-section .table-card { margin-top: 24px; }
-.table-head { height: 60px; padding: 0 22px; border-bottom: 1px solid #e3e1db; display: flex; align-items: center; justify-content: space-between; }
-.table-title { color: #333; font-size: 15px; font-weight: 600; }
+.analysis-section .table-card { margin-top: 18px; }
+.table-head { height: 48px; padding: 0 18px; border-bottom: 1px solid #e5e5e5; display: flex; align-items: center; justify-content: space-between; }
+.table-title { color: #333; font-size: 13.5px; font-weight: 600; }
 .table-period-control { position: relative; display: flex; align-items: center; }
 .table-period-control::after { content: ""; position: absolute; right: 12px; top: 50%; width: 6px; height: 6px; border-right: 1.5px solid #777; border-bottom: 1.5px solid #777; transform: translateY(-68%) rotate(45deg); pointer-events: none; }
-.table-year-select { width: 92px; height: 32px; padding: 0 32px 0 12px; border: 1px solid #dcdad4; border-radius: 7px; background: #fff; color: #444; font-family: inherit; font-size: 12.5px; font-weight: 550; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; }
-.table-year-select:focus { border-color: #99968e; }
+.table-year-select { width: 86px; height: 29px; padding: 0 30px 0 10px; border: 1px solid #d9d9d9; border-radius: 6px; background: #fff; color: #444; font-family: inherit; font-size: 12px; font-weight: 550; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; }
+.table-year-select:focus { border-color: #888; }
 .table-wrap { margin: 0; border: 0; border-radius: 0; overflow-x: auto; }
 .data-table { width: 100%; min-width: 1320px; table-layout: fixed; border-collapse: collapse; white-space: nowrap; }
-.data-table th { height: 42px; padding: 0 20px; background: rgb(242, 242, 242); border: 0; border-bottom: 1px solid #e3e1db; color: #888; font-size: 12px; font-weight: 500; text-align: right; }
+.data-table th { height: 36px; padding: 0 18px; background: rgb(242, 242, 242); border: 0; border-bottom: 1px solid #e5e5e5; color: #888; font-size: 11.5px; font-weight: 500; text-align: right; }
 .data-table th, .data-table td { width: 10%; }
-.data-table th:first-child, .data-table td:first-child { text-align: left; padding-left: 28px; width: 6%; }
-.data-table th:last-child, .data-table td:last-child { padding-right: 28px; }
-.data-table td { height: 46px; padding: 0 20px; border: 0; border-bottom: 1px solid #e3e1db; color: #555; font-size: 13.5px; text-align: right; }
-.data-table tbody tr:hover { background: #fcfbf8; }
+.data-table th:first-child, .data-table td:first-child { text-align: left; padding-left: 22px; width: 6%; }
+.data-table th:last-child, .data-table td:last-child { padding-right: 22px; }
+.data-table td { height: 40px; padding: 0 18px; border: 0; border-bottom: 1px solid #e5e5e5; color: #555; font-size: 12.5px; text-align: right; }
+.data-table tbody tr:hover { background: rgb(242, 242, 242); }
 .data-table tfoot td { border-bottom: 0; background: #fff; color: #222; font-weight: 650; }
 .up { color: #23845d !important; font-weight: 600; }
 .down { color: #c65f55 !important; font-weight: 600; }
 .th-label { position: relative; padding-right: 20px; }
 .th-label .help-tip { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
-.help-tip { position: relative; width: 15px; height: 15px; border: 1px solid #c9c7c0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #999; font-size: 9px; font-weight: 650; line-height: 1; cursor: help; }
+.help-tip { position: relative; width: 15px; height: 15px; border: 1px solid #d0d0d0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #999; font-size: 9px; font-weight: 650; line-height: 1; cursor: help; }
 .help-tip::after { content: attr(data-tooltip); position: absolute; z-index: 10; right: -8px; top: calc(100% + 8px); width: max-content; max-width: 300px; padding: 8px 10px; border-radius: 7px; background: #292925; color: #fff; font-size: 11px; font-weight: 400; line-height: 1.45; text-align: left; white-space: normal; opacity: 0; visibility: hidden; transform: translateY(-3px); transition: 120ms ease; pointer-events: none; box-shadow: 0 5px 16px rgba(0,0,0,.12); }
 .help-tip:hover::after, .help-tip:focus::after { opacity: 1; visibility: visible; transform: translateY(0); }
 
@@ -280,6 +280,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
     <div class="sub">
       <a class="ni" href="member-admin.html#users">유저</a>
       <a class="ni" href="member-admin.html#companies">회사</a>
+      <a class="ni" href="member-admin.html#temporary-companies">임시 회사</a>
     </div>
     <div class="nav-label">콘텐츠</div>
     <a class="ni" href="content-admin-full.html"><i class="ti ti-file-text"></i> 콘텐츠 관리</a>
@@ -302,8 +303,8 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
     <div class="sub">
       <a class="ni" href="settlement-admin.html#contracts">계약관리</a>
       <a class="ni" href="settlement-admin.html#settlement">정산 진행 관리</a>
+      <a class="ni" href="settlement-admin.html#rs-requests">RS 요청 관리</a>
     </div>
-    <a class="ni" href="mail-admin.html"><i class="ti ti-mail"></i> 메일 발송</a>
     <a class="ni" href="audit-log.html"><i class="ti ti-shield-check"></i> 관리 이력</a>
   </nav>
   <div class="sb-foot">
@@ -504,7 +505,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
             <div class="legend">
               <span class="legend-item"><i class="legend-dot" style="background:#5b8fd9"></i>단일</span>
               <span class="legend-item"><i class="legend-dot" style="background:#8d83d8"></i>묶음</span>
-              <span class="legend-item"><i class="legend-dot" style="background:#e8b15b"></i>턴키</span>
+              <span class="legend-item"><i class="legend-dot" style="background:#9ca3af"></i>턴키</span>
             </div>
           </div>
           <div class="chart-body">
@@ -515,42 +516,42 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
                   <div class="stacked-bar" style="height:45%">
                     <i class="stack-segment" style="height:55.6%;background:#5b8fd9"></i>
                     <i class="stack-segment" style="height:22.2%;background:#8d83d8"></i>
-                    <i class="stack-segment" style="height:22.2%;background:#e8b15b"></i>
+                    <i class="stack-segment" style="height:22.2%;background:#9ca3af"></i>
                   </div>
                 </div>
                 <div class="stacked-group" data-tooltip="단일 6 · 묶음 3 · 턴키 2 · 총 11건">
                   <div class="stacked-bar" style="height:55%">
                     <i class="stack-segment" style="height:54.5%;background:#5b8fd9"></i>
                     <i class="stack-segment" style="height:27.3%;background:#8d83d8"></i>
-                    <i class="stack-segment" style="height:18.2%;background:#e8b15b"></i>
+                    <i class="stack-segment" style="height:18.2%;background:#9ca3af"></i>
                   </div>
                 </div>
                 <div class="stacked-group" data-tooltip="단일 6 · 묶음 2 · 턴키 2 · 총 10건">
                   <div class="stacked-bar" style="height:50%">
                     <i class="stack-segment" style="height:60%;background:#5b8fd9"></i>
                     <i class="stack-segment" style="height:20%;background:#8d83d8"></i>
-                    <i class="stack-segment" style="height:20%;background:#e8b15b"></i>
+                    <i class="stack-segment" style="height:20%;background:#9ca3af"></i>
                   </div>
                 </div>
                 <div class="stacked-group" data-tooltip="단일 8 · 묶음 4 · 턴키 2 · 총 14건">
                   <div class="stacked-bar" style="height:70%">
                     <i class="stack-segment" style="height:57.1%;background:#5b8fd9"></i>
                     <i class="stack-segment" style="height:28.6%;background:#8d83d8"></i>
-                    <i class="stack-segment" style="height:14.3%;background:#e8b15b"></i>
+                    <i class="stack-segment" style="height:14.3%;background:#9ca3af"></i>
                   </div>
                 </div>
                 <div class="stacked-group" data-tooltip="단일 7 · 묶음 4 · 턴키 2 · 총 13건">
                   <div class="stacked-bar" style="height:65%">
                     <i class="stack-segment" style="height:53.8%;background:#5b8fd9"></i>
                     <i class="stack-segment" style="height:30.8%;background:#8d83d8"></i>
-                    <i class="stack-segment" style="height:15.4%;background:#e8b15b"></i>
+                    <i class="stack-segment" style="height:15.4%;background:#9ca3af"></i>
                   </div>
                 </div>
                 <div class="stacked-group" data-tooltip="단일 9 · 묶음 5 · 턴키 3 · 총 17건">
                   <div class="stacked-bar" style="height:85%">
                     <i class="stack-segment" style="height:52.9%;background:#5b8fd9"></i>
                     <i class="stack-segment" style="height:29.4%;background:#8d83d8"></i>
-                    <i class="stack-segment" style="height:17.7%;background:#e8b15b"></i>
+                    <i class="stack-segment" style="height:17.7%;background:#9ca3af"></i>
                   </div>
                 </div>
               </div>
@@ -627,25 +628,25 @@ const chartGroups = {
   growth: [
     { title:'월별 신규 가입 회사', series:[['제작사','producer','#5b8fd9'],['플랫폼사','platform','#a9c8ec']], unit:'개사' },
     { title:'월별 콘텐츠 등록', series:[['신규 콘텐츠','content','#8d83d8']], unit:'편' },
-    { title:'월별 신규 구매 문의', series:[['구매 문의','inquiry','#d18a52']], unit:'건' },
+    { title:'월별 신규 구매 문의', series:[['구매 문의','inquiry','#6b7280']], unit:'건' },
     { title:'월간 활성 회사', series:[['활성 회사','active','#4fa987']], unit:'개사' },
   ],
   conversion: [
-    { title:'구매 문의 유형', series:[['단일','single','#5b8fd9'],['묶음','bundle','#8d83d8'],['턴키','turnkey','#e8b15b']], unit:'건' },
+    { title:'구매 문의 유형', series:[['단일','single','#5b8fd9'],['묶음','bundle','#8d83d8'],['턴키','turnkey','#9ca3af']], unit:'건' },
     { title:'월별 거래 성공', series:[['거래 성공','success','#4fa987']], unit:'건' },
-    { title:'월별 거래 전환율', series:[['전환율','conversion','#d18a52']], unit:'%', percent:true },
-    { title:'문의 대비 미전환', series:[['미전환','unconverted','#c9a6a1']], unit:'건' },
+    { title:'월별 거래 전환율', series:[['전환율','conversion','#6b7280']], unit:'%', percent:true },
+    { title:'문의 대비 미전환', series:[['미전환','unconverted','#9ca3af']], unit:'건' },
   ],
   settlement: [
     { title:'월별 거래액', series:[['거래액','amount','#4fa987']], unit:'원', money:true },
     { title:'월별 bable 수수료', series:[['bable 수수료','fee','#5b8fd9']], unit:'원', money:true },
     { title:'월별 제작사 정산액', series:[['제작사 정산액','payout','#8d83d8']], unit:'원', money:true },
-    { title:'월별 정산 처리 건수', series:[['처리 건수','success','#e8b15b']], unit:'건' },
+    { title:'월별 정산 처리 건수', series:[['처리 건수','success','#9ca3af']], unit:'건' },
   ],
   pipeline: [
     { title:'월별 신규 구매 문의', series:[['구매 문의','inquiry','#5b8fd9']], unit:'건' },
     { title:'월별 거래 성공', series:[['거래 성공','success','#4fa987']], unit:'건' },
-    { title:'월별 진행 중 거래', series:[['진행 중','unconverted','#d18a52']], unit:'건' },
+    { title:'월별 진행 중 거래', series:[['진행 중','unconverted','#6b7280']], unit:'건' },
     { title:'월별 파이프라인 전환율', series:[['전환율','conversion','#8d83d8']], unit:'%', percent:true },
   ],
 };
@@ -728,13 +729,13 @@ function showRsDrilldown(month) {
     <table class="rs-drilldown-table">
       <colgroup><col style="width:34%"><col style="width:22%"><col style="width:20%"><col style="width:24%"></colgroup>
       <thead><tr>
-        <th style="position:sticky;top:34px;z-index:1;height:32px;padding:0 18px;background:#f2f1ed;color:#999;font-size:11px;font-weight:500;text-align:left;">IP명</th>
-        <th style="position:sticky;top:34px;z-index:1;height:32px;padding:0 18px;background:#f2f1ed;color:#999;font-size:11px;font-weight:500;text-align:left;">플랫폼</th>
-        <th style="position:sticky;top:34px;z-index:1;height:32px;padding:0 18px;background:#f2f1ed;color:#999;font-size:11px;font-weight:500;text-align:left;">정산 분기</th>
-        <th style="position:sticky;top:34px;z-index:1;height:32px;padding:0 18px;background:#f2f1ed;color:#999;font-size:11px;font-weight:500;text-align:right;">금액</th>
+        <th style="position:sticky;top:34px;z-index:1;height:32px;padding:0 18px;background:rgb(250, 250, 250);color:#888;font-size:11px;font-weight:500;text-align:left;">IP명</th>
+        <th style="position:sticky;top:34px;z-index:1;height:32px;padding:0 18px;background:rgb(250, 250, 250);color:#888;font-size:11px;font-weight:500;text-align:left;">플랫폼</th>
+        <th style="position:sticky;top:34px;z-index:1;height:32px;padding:0 18px;background:rgb(250, 250, 250);color:#888;font-size:11px;font-weight:500;text-align:left;">정산 분기</th>
+        <th style="position:sticky;top:34px;z-index:1;height:32px;padding:0 18px;background:rgb(250, 250, 250);color:#888;font-size:11px;font-weight:500;text-align:right;">금액</th>
       </tr></thead>
       <tbody>${items.map((r, i) => `
-        <tr style="${i % 2 === 1 ? 'background:rgba(235,233,227,.42)' : ''}">
+        <tr style="${i % 2 === 1 ? 'background:rgb(250, 250, 250)' : ''}">
           <td style="height:32px;padding:0 18px;font-size:11px;color:#333;font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.ip}</td>
           <td style="height:32px;padding:0 18px;font-size:11px;color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.platform}</td>
           <td style="height:32px;padding:0 18px;font-size:11px;color:#555;white-space:nowrap;">${r.period}</td>
@@ -742,8 +743,8 @@ function showRsDrilldown(month) {
         </tr>`).join('')}
       </tbody>
       <tfoot><tr>
-        <td colspan="3" style="height:34px;padding:0 18px;font-size:11px;color:#222;font-weight:650;border-top:1px solid #e5e3dd;">합계</td>
-        <td style="height:34px;padding:0 18px;font-size:11px;color:#222;font-weight:650;border-top:1px solid #e5e3dd;text-align:right;">${total.toLocaleString('ko-KR')}원</td>
+        <td colspan="3" style="height:34px;padding:0 18px;font-size:11px;color:#222;font-weight:650;border-top:1px solid #e5e7eb;">합계</td>
+        <td style="height:34px;padding:0 18px;font-size:11px;color:#222;font-weight:650;border-top:1px solid #e5e7eb;text-align:right;">${total.toLocaleString('ko-KR')}원</td>
       </tr></tfoot>
     </table>`;
 }
@@ -814,7 +815,7 @@ function renderChartValueTable(rows, series, { percent = false, money = false, u
 function renderPipelineBoard() {
   const stages = [
     { id:'proposal', name:'제안 완료', count:9, color:'#9ca0a6' },
-    { id:'negotiation', name:'컨펌메세지 발송', count:6, color:'#a47c00' },
+    { id:'negotiation', name:'컨펌메세지 발송', count:6, color:'#6b7280' },
     { id:'review', name:'컨펌메세지 확인', count:5, color:'#185FA5' },
     { id:'complete', name:'메타데이터 부여', count:4, color:'#16713d' },
   ];
@@ -988,7 +989,7 @@ function renderStackedCard({ title, rows }) {
   const series = [
     { name:'MG', color:'#5b8fd9', value:row => row.amount * .55 },
     { name:'FlatFee', color:'#8d83d8', value:row => row.amount * .25 },
-    { name:'RS', color:'#e8b15b', value:row => row.amount * .20 },
+    { name:'RS', color:'#9ca3af', value:row => row.amount * .20 },
   ];
   pendingApexCharts.push({ id: chartId, rows, series, money: true, type: 'stacked' });
   const legend = series.map(item => `<span class="legend-item"><i class="legend-dot" style="background:${item.color}"></i>${item.name}</span>`).join('');
@@ -1036,7 +1037,7 @@ function renderAnalysisCharts() {
         }) +
         renderLineCard({
           title:'콘텐츠 등록 누적 추이', rows: cumulativeRows, fill:true, straight:true,
-          series:[{ name:'누적 콘텐츠', color:'#a06f00', unit:'편', value:row => row.cumContent }],
+          series:[{ name:'누적 콘텐츠', color:'#6b7280', unit:'편', value:row => row.cumContent }],
         });
     } else {
       container.innerHTML =
@@ -1049,7 +1050,7 @@ function renderAnalysisCharts() {
         }) +
         renderLineCard({
           title:'월별 콘텐츠 등록 추이', rows, fill:true,
-          series:[{ name:'신규 콘텐츠', color:'#a06f00', unit:'편', value:row => row.content }],
+          series:[{ name:'신규 콘텐츠', color:'#6b7280', unit:'편', value:row => row.content }],
         });
     }
     initPendingApexCharts();
@@ -1076,7 +1077,7 @@ function renderAnalysisCharts() {
       }) +
       renderLineCard({
         title:'IP→제안 전환율', rows, percent:true, wide:true,
-        series:[{ name:'IP→제안', color:'#d18a52', value:row => row.totalIp ? row.workflowCount / row.totalIp * 100 : 0 }],
+        series:[{ name:'IP→제안', color:'#6b7280', value:row => row.totalIp ? row.workflowCount / row.totalIp * 100 : 0 }],
         calculation:{
           numeratorLabel:'Workflow 생성', denominatorLabel:'전체 등록 IP', resultLabel:'전환율',
           numerator:row => row.workflowCount, denominator:row => row.totalIp,

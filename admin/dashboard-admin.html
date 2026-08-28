@@ -33,7 +33,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
 
 /* MAIN */
 .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-.topbar { position: relative; height: 62px; background: rgb(242, 242, 242); display: flex; align-items: center; padding: 7px 32px 0; flex-shrink: 0; }
+.topbar { position: relative; height: 62px; background: rgb(242, 242, 242); display: flex; align-items: center; padding: 7px 30px 0; flex-shrink: 0; }
 .topbar::after { content: ""; position: absolute; left: 30px; right: 30px; bottom: 0; height: 0.5px; background: #d6d4cd; }
 .topbar-title { display: flex; align-items: center; gap: 9px; font-size: 19px; font-weight: 550; }
 .topbar-separator { color: #bbb; font-weight: 400; }
@@ -42,104 +42,111 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
 .topbar-date { font-size: 12px; color: #888; }
 
 /* BODY */
-.body { flex: 1; overflow-y: auto; padding: 20px 30px 30px; display: grid; grid-template-columns: minmax(0, 2fr) minmax(300px, 350px); grid-template-areas: "operations side"; gap: 22px; align-items: start; width: 100%; }
-.operations-left { grid-area: operations; display: flex; flex-direction: column; gap: 22px; min-width: 0; }
-.operations-right { grid-area: side; display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.body { flex: 1; overflow-y: auto; padding: 22px 30px 30px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; align-items: start; width: 100%; }
+.ops-overview { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; min-width: 0; }
+.operations-left { grid-column: 1 / span 8; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.operations-right { grid-column: 9 / span 4; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 
 /* CARDS */
 .card { background: #fff; border: 0.5px solid rgb(242, 242, 242); border-radius: 10px; overflow: hidden; }
-.card-head { min-height: 50px; padding: 0 22px; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; justify-content: space-between; }
-.card-title { font-size: 14px; font-weight: 550; color: #777; letter-spacing: 0.02em; text-transform: uppercase; display: flex; align-items: center; gap: 7px; }
-.card-title i { font-size: 16px; }
+.card-head { min-height: 44px; padding: 0 18px; border-bottom: 0.5px solid #e8e6e0; display: flex; align-items: center; justify-content: space-between; }
+.card-title { font-size: 13px; font-weight: 550; color: #777; letter-spacing: 0.02em; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+.card-title i { font-size: 15px; }
 .card-action { font-size: 11.5px; color: #888; cursor: pointer; display: flex; align-items: center; gap: 3px; }
 .card-action:hover { color: #333; }
 
+/* OPERATIONS OVERVIEW */
+.ops-overview-tile { min-height: 92px; padding: 14px 16px; border: 0.5px solid #e8e6e0; border-radius: 10px; background: #fff; color: inherit; text-decoration: none; display: grid; grid-template-columns: minmax(0, 1fr) 36px; gap: 10px; align-items: start; transition: background .15s ease, border-color .15s ease; }
+.ops-overview-tile:hover { background: #fafafa; border-color: #d8d6cf; }
+.ops-overview-label { color: #888; font-size: 11.5px; font-weight: 550; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ops-overview-value { margin-top: 8px; color: #111; font-size: 27px; line-height: 1; font-weight: 650; font-variant-numeric: tabular-nums; }
+.ops-overview-value small { margin-left: 3px; color: #aaa; font-size: 12px; font-weight: 400; }
+.ops-overview-meta { margin-top: 7px; color: #999; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ops-overview-icon { width: 36px; height: 36px; border-radius: 9px; background: rgb(242, 242, 242); color: #555; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.ops-overview-tile.warning .ops-overview-icon { background: rgba(232,93,44,0.12); color: #c0521c; }
+.ops-overview-tile.money .ops-overview-icon { background: rgba(59,109,17,0.1); color: #3B6D11; }
+.ops-overview-tile.message .ops-overview-icon { background: rgba(237,233,254,.82); color: #6559b5; }
+
 /* FOCUS */
-.focus-card { order: 1; }
+.focus-card { order: 1; display: flex; flex-direction: column; }
 .focus-head-meta { display: flex; align-items: center; gap: 8px; }
 .sort-sel { font-size: 11px; padding: 2px 7px; border: 0.5px solid rgb(242, 242, 242); border-radius: 5px; background: #fff; color: #666; outline: none; cursor: pointer; font-family: inherit; }
-.focus-filters { min-height: 50px; padding: 8px 22px; background: #fff; border-bottom: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; gap: 8px; overflow-x: auto; }
-.focus-filter-title { margin-right: auto; padding-right: 18px; display: flex; align-items: center; gap: 7px; color: #777; font-size: 14px; font-weight: 550; letter-spacing: .02em; white-space: nowrap; }
-.focus-filter-title i { font-size: 16px; }
-.focus-filter-title span { color: #bbb; font-size: 11.5px; font-weight: 400; letter-spacing: 0; }
-.focus-filter { min-height: 32px; border: 0; border-radius: 12px; padding: 7px 12px; background: rgba(242,242,242,.82); color: #717171; font-family: inherit; font-size: 12px; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; box-shadow: inset 0 1px 0 rgba(255,255,255,.72); transition: background .16s ease, color .16s ease, transform .16s ease; }
-.focus-filter:hover { background: #efeee9; color: #333; }
-.focus-filter:active { transform: scale(.98); }
-.focus-filter.active { background: #e5e4df; color: #1d1d1f; font-weight: 600; box-shadow: inset 0 1px 0 rgba(255,255,255,.85), 0 1px 2px rgba(0,0,0,.04); }
-.focus-filter-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-.focus-filter-count { min-width: 19px; height: 19px; padding: 0 5px; border-radius: 10px; background: rgba(255,255,255,.82); color: #6e6e73; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; box-shadow: inset 0 0 0 .5px rgba(0,0,0,.04); }
-.focus-list { min-height: 464px; display: flex; flex-direction: column; }
-.focus-item { min-height: 58px; display: flex; align-items: center; gap: 12px; padding: 12px 22px; border-bottom: 0.5px solid #f1f0ec; cursor: pointer; transition: background .15s ease; }
+.focus-filters { min-height: 54px; padding: 8px 18px; background: #fff; border-bottom: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; gap: 10px; overflow: visible; }
+.focus-filter-title { margin-right: auto; padding-right: 14px; display: flex; align-items: center; gap: 6px; color: #777; font-size: 13px; font-weight: 550; letter-spacing: .02em; white-space: nowrap; }
+.focus-filter-title i { font-size: 15px; }
+.focus-filter-title span { color: #bbb; font-size: 11px; font-weight: 400; letter-spacing: 0; }
+.queue-selector { position: relative; width: 150px; flex: 0 0 150px; }
+.queue-selector-btn { width: 100%; height: 38px; padding: 0 34px 0 13px; border: 1px solid #dedede; border-radius: 8px; background: #fff; color: #1a1a18; font-family: inherit; font-size: 12.5px; font-weight: 400; line-height: 1; text-align: left; cursor: pointer; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 2px rgba(0,0,0,.03); }
+.queue-selector-btn:hover { border-color: #c8c8c8; }
+.queue-selector-btn:focus-visible,
+.queue-selector.open .queue-selector-btn { outline: none; border-color: #aaa; box-shadow: 0 0 0 3px rgba(26,26,24,.05); }
+.queue-selector-btn i { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #888; font-size: 15px; pointer-events: none; }
+.queue-selector-menu { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 80; padding: 5px; border: 1px solid #dedede; border-radius: 8px; background: #fff; box-shadow: 0 12px 26px rgba(0,0,0,.10); display: none; }
+.queue-selector.open .queue-selector-menu { display: grid; gap: 2px; }
+.queue-selector-option { width: 100%; height: 32px; padding: 0 9px; border: 0; border-radius: 6px; background: transparent; color: #333; font-family: inherit; font-size: 12px; font-weight: 400; cursor: pointer; display: flex; align-items: center; justify-content: space-between; text-align: left; }
+.queue-selector-option:hover,
+.queue-selector-option.active { background: rgb(242, 242, 242); }
+.queue-selector-count { color: #999; font-size: 11px; font-variant-numeric: tabular-nums; }
+.focus-table-head { height: 32px; padding: 0 18px; border-bottom: 0.5px solid rgb(242, 242, 242); background: #fafafa; display: grid; grid-template-columns: 44px 86px minmax(0, 1fr) 88px 62px; align-items: center; column-gap: 10px; color: #9a9a96; font-size: 11px; font-weight: 400; }
+.focus-table-head span:last-child { text-align: right; }
+.focus-list { min-height: 0; flex: 1 1 auto; display: flex; flex-direction: column; overflow: hidden; }
+.focus-item { min-height: 44px; display: grid; grid-template-columns: 44px 86px minmax(0, 1fr) 88px 62px; align-items: center; column-gap: 10px; padding: 7px 18px; border-bottom: 0.5px solid #f1f0ec; cursor: pointer; transition: background .15s ease; }
 .focus-item:last-child { border-bottom: none; }
 .focus-item:hover { background: rgb(242, 242, 242); }
-.focus-num { width: 22px; flex: 0 0 22px; font-size: 12px; color: #ccc; font-weight: 500; }
-.focus-tag { width: 76px; min-height: 26px; padding: 5px 8px; border: 0; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; line-height: 1; white-space: nowrap; flex: 0 0 76px; box-shadow: inset 0 1px 0 rgba(255,255,255,.5); }
+.focus-num { font-size: 12px; color: #aaa; font-weight: 500; font-variant-numeric: tabular-nums; }
+.focus-tag { width: 70px; min-height: 24px; padding: 4px 7px; border: 0; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 600; line-height: 1; white-space: nowrap; box-shadow: inset 0 1px 0 rgba(255,255,255,.5); }
 .ft-revision  { background: rgba(230,241,251,.78); color: #266a9f; }
 .ft-content   { background: rgba(250,238,218,.82); color: #936016; }
 .ft-inquiry   { background: rgba(237,233,254,.82); color: #6559b5; }
+.ft-mailbox   { background: rgba(232,244,245,.9); color: #247178; }
 .ft-user      { background: rgba(234,243,222,.82); color: #4a781f; }
-.focus-info { flex: 1; min-width: 0; }
-.focus-title { font-size: 13.5px; font-weight: 500; color: #1a1a18; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.focus-age { font-size: 11.5px; color: #bbb; white-space: nowrap; flex-shrink: 0; }
-.focus-btn { min-height: 32px; padding: 6px 14px; border-radius: 8px; border: 0; cursor: pointer; background: #1a1a18; color: #fff; font-family: inherit; font-size: 12px; white-space: nowrap; flex-shrink: 0; }
+.focus-info { min-width: 0; }
+.focus-title { font-size: 12.5px; font-weight: 400; color: #1a1a18; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.focus-age { color: #aaa; font-size: 11.5px; text-align: left; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.focus-btn { min-height: 28px; padding: 5px 10px; border-radius: 7px; border: 0; cursor: pointer; background: #1a1a18; color: #fff; font-family: inherit; font-size: 11px; white-space: nowrap; }
 .focus-empty { padding: 32px 16px; text-align: center; color: #ccc; font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .focus-empty i { font-size: 24px; }
-.focus-pagination { padding: 9px 22px; border-top: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; justify-content: center; gap: 4px; }
-.focus-page-btn { min-width: 27px; height: 27px; padding: 0 7px; border: 0.5px solid rgb(242, 242, 242); border-radius: 6px; background: #fff; color: #777; font-family: inherit; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
-.focus-page-btn:hover { border-color: #aaa; color: #333; }
-.focus-page-btn.active { border-color: #1a1a18; background: #1a1a18; color: #fff; font-weight: 600; }
-.focus-page-btn:disabled { color: #ccc; cursor: default; border-color: #ecebe7; }
+.focus-pagination { padding: 7px 18px; border-top: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; justify-content: center; gap: 4px; }
+.focus-page-btn { min-width: 27px; height: 27px; padding: 0 7px; border: 0; border-radius: 6px; background: transparent; color: #777; font-family: inherit; font-size: 11px; line-height: 27px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; text-align: center; }
+.focus-page-btn:hover { color: #333; }
+.focus-page-btn.active { background: #e5e5e5; color: #333; font-weight: 600; }
 
 /* SETTLEMENT STATUS */
-.settlement-stage { padding: 24px 22px; display: flex; align-items: center; gap: 16px; cursor: pointer; text-decoration: none; border: none !important; transition: transform .15s ease, box-shadow .15s ease; }
-.settlement-stage:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-.settlement-stage > div:last-child { flex: 1; display: flex; flex-direction: column; gap: 3px; }
-.settlement-stage.scheduled { background: #fff; }
-.settlement-stage.complete-wait { background: #fff; }
-.settlement-stage-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(0,0,0,0.06); color: #555; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-.settlement-stage.scheduled .settlement-stage-icon { background: rgba(232,93,44,0.12); color: #c0521c; }
-.settlement-stage.complete-wait .settlement-stage-icon { background: rgba(59,109,17,0.1); color: #3B6D11; }
-.settlement-stage-label { color: #888; font-size: 12px; font-weight: 500; letter-spacing: 0.01em; margin-bottom: 4px; }
-.settlement-stage-value { color: #1a1a18; font-size: 24px; line-height: 1; font-weight: 600; white-space: nowrap; }
-.settlement-stage-value small { margin-left: 3px; color: #aaa; font-size: 13px; font-weight: 400; }
-.settlement-arrow { display: none; }
-.settlement-stage.card { overflow: visible; }
-.settlement-chevron { margin-left: auto; color: #bbb; font-size: 20px; flex-shrink: 0; }
-
-/* CONTRACT EXPIRY */
-.contract-alert-card { order: 0; }
-.contract-alert-total { min-width: 23px; height: 20px; padding: 0 7px; border-radius: 999px; background: rgb(242, 242, 242); color: #555; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 650; }
-.contract-alert-body { padding: 6px 18px 8px; }
-.contract-alert-list { display: flex; flex-direction: column; }
-.contract-alert-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; min-height: 58px; padding: 11px 0; color: inherit; text-decoration: none; border-bottom: 0.5px solid rgb(242, 242, 242); }
-.contract-alert-item:last-child { border-bottom: none; }
-.contract-alert-item:hover .contract-alert-title { color: #c0521c; }
-.contract-alert-title { display: block; color: #1a1a18; font-size: 12.5px; font-weight: 550; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.contract-alert-meta { margin-top: 4px; color: #999; font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.contract-alert-date { display: inline-flex; align-items: center; color: #d93025; font-size: 13px; font-weight: 750; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.contract-alert-empty { padding: 14px 0 4px; color: #aaa; font-size: 12px; text-align: center; }
+.settlement-summary { order: 0; display: flex; flex-direction: column; }
+.settlement-status-list { flex: 1 1 auto; padding: 14px 16px; display: grid; grid-template-columns: minmax(0, 1fr) 14px minmax(0, 1fr) 14px minmax(0, 1fr); gap: 8px; align-items: center; }
+.settlement-status-link { position: relative; min-height: 86px; height: 100%; padding: 14px 10px 12px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; color: inherit; text-decoration: none; border: 0.5px solid rgb(242, 242, 242); border-radius: 8px; background: #fff; transition: background .15s ease, border-color .15s ease; }
+.settlement-flow-arrow { color: #c4c4c0; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+.settlement-status-link:hover { background: #fafafa; border-color: #dedede; }
+.settlement-status-icon { display: none; }
+.settlement-status-link.confirm .settlement-status-icon { background: rgba(232,93,44,0.12); color: #c0521c; }
+.settlement-status-link.deposit .settlement-status-icon { background: rgba(59,109,17,0.1); color: #3B6D11; }
+.settlement-status-label { width: 100%; color: #333; font-size: 12px; font-weight: 550; line-height: 1.2; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.settlement-status-meta { width: 100%; margin-top: 5px; color: #999; font-size: 10.5px; line-height: 1.25; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.settlement-status-count { margin-top: auto; color: #111; font-size: 22px; line-height: 1; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.settlement-status-count small { margin-left: 3px; color: #aaa; font-size: 12px; font-weight: 400; }
+.settlement-status-arrow { display: none; }
 
 /* DEAL PIPELINE */
 .pipeline-overview { order: 3; }
-.pipeline-body { padding: 16px 18px 18px; overflow-x: auto; }
+.pipeline-body { padding: 12px 14px 14px; overflow-x: auto; }
 .pipeline-content { min-width: 760px; }
-.pipeline-stages { display: grid; grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr) 44px minmax(0, 1fr); align-items: center; margin-bottom: 16px; }
-.pipeline-stage { min-height: 72px; padding: 13px 16px; border: 1px solid #e3e1db; border-radius: 14px; background: #fff; cursor: pointer; font-family: inherit; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.pipeline-stages { display: grid; grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr) 34px minmax(0, 1fr); align-items: center; margin-bottom: 12px; }
+.pipeline-stage { min-height: 60px; padding: 10px 12px; border: 1px solid #e3e1db; border-radius: 12px; background: #fff; cursor: pointer; font-family: inherit; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .pipeline-stage:hover { background: rgb(242, 242, 242); }
 .pipeline-stage.active { background: #1a1a18; border-color: #1a1a18; }
 .pipeline-stage.active .pipeline-stage-name { color: #fff; }
 .pipeline-stage.active .pipeline-stage-value { color: #fff; }
 .pipeline-stage.active .pipeline-stage-value small { color: rgba(255,255,255,0.6); }
-.pipeline-stage-name { display: flex; align-items: center; gap: 6px; color: #555; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.pipeline-stage-name { display: flex; align-items: center; gap: 6px; color: #555; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
 .pipeline-stage-dot { display: none; }
-.pipeline-stage-value { color: #111; font-size: 22px; line-height: 1; font-weight: 650; flex-shrink: 0; }
+.pipeline-stage-value { color: #111; font-size: 20px; line-height: 1; font-weight: 650; flex-shrink: 0; }
 .pipeline-stage-value small { margin-left: 3px; color: #777; font-size: 11px; font-weight: 500; }
 .pipeline-rate { display: flex; align-items: center; justify-content: center; color: #aaa; }
 .pipeline-rate i { font-size: 12px; }
-.pipeline-table-wrap { min-height: 223px; border: 1px solid #e3e1db; border-radius: 9px; overflow: hidden; }
+.pipeline-table-wrap { min-height: 202px; border: 1px solid #e3e1db; border-radius: 9px; overflow: hidden; }
 .pipeline-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-.pipeline-table th { height: 40px; padding: 0 28px; background: rgb(242, 242, 242); color: #999; font-size: 12px; font-weight: 500; text-align: left; }
-.pipeline-table td { height: 48px; padding: 0 28px; border-top: 1px solid #eceae5; color: #555; font-size: 13px; }
+.pipeline-table th { height: 34px; padding: 0 22px; background: rgb(242, 242, 242); color: #999; font-size: 11.5px; font-weight: 500; text-align: left; }
+.pipeline-table td { height: 42px; padding: 0 22px; border-top: 1px solid #eceae5; color: #555; font-size: 12.5px; }
 .pipeline-table td:first-child { color: #222; font-weight: 550; }
 .pipeline-table.deal-detail-table th:nth-child(1),
 .pipeline-table.deal-detail-table td:nth-child(1) { width: 18%; }
@@ -155,68 +162,88 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
 .pipeline-deal-content { color: #222; font-weight: 550; }
 .pipeline-budget { color: #444; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .pipeline-region { color: #666; white-space: normal; line-height: 1.4; }
-.pipeline-pagination { min-height: 34px; display: flex; align-items: flex-end; justify-content: center; gap: 14px; }
+.pipeline-pagination { min-height: 30px; display: flex; align-items: flex-end; justify-content: center; gap: 12px; }
 .pipeline-page-number { padding: 4px 2px 1px; border: 0; border-bottom: 1px solid transparent; background: transparent; color: #aaa; font-family: inherit; font-size: 11px; cursor: pointer; }
 .pipeline-page-number:hover { color: #444; }
 .pipeline-page-number.active { border-bottom-color: #222; color: #222; font-weight: 650; }
 
 /* RECENT */
 .recent-list { display: flex; flex-direction: column; }
-.recent-item { display: flex; align-items: center; gap: 9px; padding: 10px 18px; border-bottom: 0.5px solid rgb(242, 242, 242); }
+.recent-item { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-bottom: 0.5px solid rgb(242, 242, 242); }
 .recent-item:last-child { border-bottom: none; }
 .rt { font-size: 11px; width: 64px; text-align: center; padding: 3px 0; border-radius: 4px; font-weight: 500; white-space: nowrap; flex-shrink: 0; background: rgba(232,93,44,0.12); color: #c0521c; }
 .rt-approve, .rt-reject, .rt-meta, .rt-confirm, .rt-credit, .rt-close { background: rgba(232,93,44,0.12); color: #c0521c; }
-.recent-main { flex: 1; min-width: 0; font-size: 13px; color: #1a1a18; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.recent-main { flex: 1; min-width: 0; font-size: 12.5px; color: #1a1a18; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .recent-right { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
 .recent-who { font-size: 12px; color: #888; }
 .recent-time { font-size: 12px; color: #bbb; white-space: nowrap; }
 
-/* TURNKEY INTENT */
-.turnkey-message-list { display: flex; flex-direction: column; padding: 8px 0; }
-.turnkey-message { display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; column-gap: 14px; row-gap: 5px; padding: 14px 14px 14px 14px; color: inherit; text-decoration: none; transition: background .15s ease; border-radius: 8px; margin: 2px 4px; }
-.turnkey-message:hover { background: rgb(242, 242, 242); }
-.turnkey-avatar { grid-row: 1 / 3; align-self: start; width: 42px; height: 42px; border-radius: 50%; background: rgb(242, 242, 242); display: flex; align-items: center; justify-content: center; font-size: 22px; overflow: hidden; }
-.turnkey-avatar img { width: 65%; height: 65%; object-fit: contain; }
-.turnkey-company { min-width: 0; color: #111; font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.turnkey-date { color: #aaa; font-size: 11px; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.turnkey-summary { grid-column: 2 / 3; color: #888; font-size: 12.5px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+/* RS REQUEST SCHEDULE */
+.rs-schedule-card { display: flex; flex-direction: column; }
+.rs-schedule-body { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; padding: 12px 16px 14px; color: inherit; text-decoration: none; }
+.rs-schedule-body:hover { background: rgb(250, 250, 250); }
+.rs-schedule-note { margin-bottom: 11px; color: #888; font-size: 11.5px; }
+.rs-schedule-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.rs-schedule-kpi { min-height: 54px; padding: 9px 8px; border: 1px solid rgb(242, 242, 242); border-radius: 8px; background: #fff; }
+.rs-schedule-kpi strong { display: block; color: #111; font-size: 20px; line-height: 1; font-weight: 600; font-variant-numeric: tabular-nums; }
+.rs-schedule-kpi span { display: block; margin-top: 5px; color: #888; font-size: 10.5px; white-space: nowrap; }
 
 /* CONTENT VIEW RANKING */
-.ranking-head { gap: 12px; }
-.ranking-tabs { display: flex; align-items: center; gap: 3px; padding: 3px; border-radius: 7px; background: rgb(242, 242, 242); }
-.ranking-tab { height: 24px; padding: 0 8px; border: 0; border-radius: 5px; background: transparent; color: #888; font-family: inherit; font-size: 11px; cursor: pointer; white-space: nowrap; }
-.ranking-tab.active { background: #fff; color: #222; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.ranking-head { min-height: 54px; padding: 8px 18px; border-bottom-color: rgb(242, 242, 242); background: #fff; gap: 12px; }
+.ranking-head .card-title { margin-right: auto; padding-right: 14px; color: #777; font-size: 13px; font-weight: 550; letter-spacing: .02em; text-transform: none; gap: 6px; white-space: nowrap; }
+.ranking-head .card-title i { font-size: 15px; }
+.ranking-tabs { --ranking-tab-index: 0; position: relative; width: 150px; height: 30px; padding: 3px; border-radius: 8px; background: rgb(242, 242, 242); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; overflow: hidden; }
+.ranking-tabs[data-active="month"] { --ranking-tab-index: 1; }
+.ranking-tabs::before { content: ""; position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc((100% - 6px) / 2); border-radius: 6px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.08); transform: translateX(calc(var(--ranking-tab-index) * 100%)); transition: transform .22s cubic-bezier(.2,.8,.2,1); }
+.ranking-tab { position: relative; z-index: 1; height: 24px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; color: #888; font-family: inherit; font-size: 11px; font-weight: 300; cursor: pointer; white-space: nowrap; transition: color .18s ease, font-weight .18s ease; }
+.ranking-tab.active { color: #222; font-weight: 500; }
 .ranking-table-wrap { overflow: hidden; }
 .ranking-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-.ranking-table th { height: 32px; padding: 0 10px; background: rgb(242, 242, 242); color: #999; font-size: 11px; font-weight: 500; text-align: left; white-space: nowrap; }
+.ranking-table th { height: 32px; padding: 0 10px; background: rgb(250, 250, 250); color: #9a9a96; font-size: 11px; font-weight: 400; text-align: left; white-space: nowrap; }
 .ranking-table td { height: 38px; padding: 0 10px; border-top: 0.5px solid #efeee9; color: #555; font-size: 12px; }
 .ranking-table th:nth-child(1), .ranking-table td:nth-child(1) { width: 58px; text-align: center; }
 .ranking-table th:nth-child(2), .ranking-table td:nth-child(2) { width: auto; }
 .ranking-table th:nth-child(3), .ranking-table td:nth-child(3) { width: 62px; }
-.ranking-table th:nth-child(4), .ranking-table td:nth-child(4) { width: 82px; text-align: right; }
+.ranking-table th:nth-child(4), .ranking-table td:nth-child(4) { width: 82px; text-align: left; }
 .ranking-table th:first-child, .ranking-table td:first-child { padding-left: 16px; }
 .ranking-table th:last-child, .ranking-table td:last-child { padding-right: 16px; }
-.ranking-rank { color: #999; font-weight: 600; }
-.ranking-rank.top { font-size: 13px; font-weight: 600; }
+.ranking-rank { color: #999; font-weight: 500; }
+.ranking-rank.top { font-size: 13px; font-weight: 500; }
 .ranking-rank.gold { color: #C8963C; }
 .ranking-rank.silver { color: #8A9099; }
 .ranking-rank.bronze { color: #A0673A; }
 .ranking-episode { color: #666; font-size: 11.5px; white-space: nowrap; }
-.ranking-title { display: block; color: #222; font-weight: 550; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ranking-title { display: block; color: #222; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ranking-top3-gold .ranking-title,
+.ranking-top3-silver .ranking-title,
+.ranking-top3-bronze .ranking-title { font-weight: 500; }
 .ranking-views { color: #222; font-variant-numeric: tabular-nums; font-weight: 550; white-space: nowrap; }
-.ranking-pagination { min-height: 44px; padding: 8px 14px; border-top: 0.5px solid #efeee9; display: flex; align-items: center; justify-content: center; gap: 4px; }
+.ranking-pagination { min-height: 38px; padding: 6px 14px; border-top: 0.5px solid #efeee9; display: flex; align-items: center; justify-content: center; gap: 4px; }
 .ranking-page-btn { width: 28px; height: 28px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: #666; font-family: inherit; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
 .ranking-page-btn:hover:not(:disabled) { background: rgb(242, 242, 242); color: #222; }
 .ranking-page-btn:disabled { color: #ccc; cursor: default; }
 .ranking-page-status { min-width: 70px; color: #aaa; font-size: 10.5px; text-align: center; }
 
 @media (max-width: 1050px) {
-  .body { grid-template-columns: 1fr; grid-template-areas: "operations" "side"; }
+  .body { grid-template-columns: 1fr; }
+  .ops-overview,
+  .operations-left,
+  .operations-right { grid-column: 1 / -1; }
+  .ops-overview { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 760px) {
-  .settlement-flow { grid-template-columns: 1fr; gap: 8px; }
-  .settlement-arrow { transform: rotate(90deg); }
+  .body { padding: 16px; }
+  .ops-overview { grid-template-columns: 1fr; }
+  .focus-filters { align-items: flex-start; flex-wrap: wrap; }
+  .focus-filter-title { width: 100%; margin-right: 0; }
+  .queue-selector { width: 100%; flex-basis: 100%; }
+  .focus-table-head,
+  .focus-item { grid-template-columns: 32px 72px minmax(0, 1fr) 62px 46px; column-gap: 8px; padding-left: 12px; padding-right: 12px; }
+  .focus-tag { width: 68px; }
+  .focus-btn { padding-left: 8px; padding-right: 8px; }
+  .settlement-status-list { grid-template-columns: 1fr; }
+  .settlement-flow-arrow { transform: rotate(90deg); }
 }
 
 /* scrollbar */
@@ -246,6 +273,7 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
     <div class="sub">
       <a class="ni" href="member-admin.html#users">유저</a>
       <a class="ni" href="member-admin.html#companies">회사</a>
+      <a class="ni" href="member-admin.html#temporary-companies">임시 회사</a>
     </div>
     <div class="nav-label">콘텐츠</div>
     <a class="ni" href="content-admin-full.html"><i class="ti ti-file-text"></i> 콘텐츠 관리</a>
@@ -268,8 +296,8 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
     <div class="sub">
       <a class="ni" href="settlement-admin.html#contracts">계약관리</a>
       <a class="ni" href="settlement-admin.html#settlement">정산 진행 관리</a>
+      <a class="ni" href="settlement-admin.html#rs-requests">RS 요청 관리</a>
     </div>
-    <a class="ni" href="mail-admin.html"><i class="ti ti-mail"></i> 메일 발송</a>
     <a class="ni" href="audit-log.html"><i class="ti ti-shield-check"></i> 관리 이력</a>
   </nav>
   <div class="sb-foot">
@@ -293,32 +321,28 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
 
   <div class="body">
 
+    <div class="ops-overview" id="ops-overview" aria-label="운영 요약"></div>
+
     <div class="operations-left">
 
     <!-- FOCUS -->
     <div class="card focus-card">
       <div class="focus-filters" id="queue-filters" aria-label="FOCUS 항목 필터">
-        <div class="focus-filter-title"><i class="ti ti-focus-2"></i>FOCUS <span>처리 대기 항목</span></div>
-        <button class="focus-filter active" type="button" data-filter="all" aria-pressed="true">
-          <span class="focus-filter-dot" style="background:#1a1a18"></span>전체
-          <span class="focus-filter-count" data-count="all">0</span>
-        </button>
-        <button class="focus-filter" type="button" data-filter="user" aria-pressed="false">
-          <span class="focus-filter-dot" style="background:#3B6D11"></span>유저 승인
-          <span class="focus-filter-count" data-count="user">0</span>
-        </button>
-        <button class="focus-filter" type="button" data-filter="content" aria-pressed="false">
-          <span class="focus-filter-dot" style="background:#854F0B"></span>콘텐츠 승인
-          <span class="focus-filter-count" data-count="content">0</span>
-        </button>
-        <button class="focus-filter" type="button" data-filter="revision" aria-pressed="false">
-          <span class="focus-filter-dot" style="background:#185FA5"></span>수정 요청
-          <span class="focus-filter-count" data-count="revision">0</span>
-        </button>
-        <button class="focus-filter" type="button" data-filter="inquiry" aria-pressed="false">
-          <span class="focus-filter-dot" style="background:#534AB7"></span>구매의사
-          <span class="focus-filter-count" data-count="inquiry">0</span>
-        </button>
+        <div class="focus-filter-title"><i class="ti ti-focus-2"></i>ACTION QUEUE</div>
+        <div class="queue-selector" id="queue-selector">
+          <button class="queue-selector-btn" id="queue-selector-button" type="button" aria-haspopup="listbox" aria-expanded="false" onclick="toggleQueueSelector(event)">
+            <span id="queue-selector-value">전체</span>
+            <i class="ti ti-chevron-down"></i>
+          </button>
+          <div class="queue-selector-menu" id="queue-selector-menu" role="listbox" aria-label="ACTION QUEUE 타입"></div>
+        </div>
+      </div>
+      <div class="focus-table-head" aria-hidden="true">
+        <span>No</span>
+        <span>타입</span>
+        <span>요약</span>
+        <span>대기시간</span>
+        <span></span>
       </div>
       <div class="focus-list" id="focus-list"></div>
       <div class="focus-pagination" id="focus-pagination"></div>
@@ -337,47 +361,63 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
 
     <div class="operations-right">
 
-      <!-- 정산 현황 카드 3개 -->
-      <a class="settlement-stage card" href="settlement-admin.html#draft" style="text-decoration:none">
-        <div class="settlement-stage-icon"><i class="ti ti-hourglass"></i></div>
-        <div>
-          <div class="settlement-stage-label">정산 예정 처리</div>
-          <div class="settlement-stage-value">7<small>건</small></div>
-        </div>
-        <i class="ti ti-chevron-right settlement-chevron"></i>
-      </a>
-      <a class="settlement-stage scheduled card" href="settlement-admin.html#progress" style="text-decoration:none">
-        <div class="settlement-stage-icon"><i class="ti ti-calendar-dollar"></i></div>
-        <div>
-          <div class="settlement-stage-label">제작사 확인 대기</div>
-          <div class="settlement-stage-value">5<small>건</small></div>
-        </div>
-        <i class="ti ti-chevron-right settlement-chevron"></i>
-      </a>
-      <a class="settlement-stage complete-wait card" href="settlement-admin.html#ready" style="text-decoration:none">
-        <div class="settlement-stage-icon"><i class="ti ti-circle-check"></i></div>
-        <div>
-          <div class="settlement-stage-label">정산 입금 대기</div>
-          <div class="settlement-stage-value">3<small>건</small></div>
-        </div>
-        <i class="ti ti-chevron-right settlement-chevron"></i>
-      </a>
-
-      <!-- CONTRACT EXPIRY -->
-      <div class="card contract-alert-card">
+      <!-- 정산 처리 현황 -->
+      <div class="card settlement-summary">
         <div class="card-head">
-          <div class="card-title"><i class="ti ti-calendar-exclamation"></i> 만료 임박 계약 <span class="contract-alert-total" id="contract-alert-count">0</span></div>
+          <div class="card-title"><i class="ti ti-receipt"></i> 정산 처리 현황</div>
         </div>
-        <div class="contract-alert-body">
-          <div class="contract-alert-list" id="contract-alert-list"></div>
+        <div class="settlement-status-list">
+          <a class="settlement-status-link" href="settlement-admin.html#draft">
+            <div class="settlement-status-icon"><i class="ti ti-hourglass"></i></div>
+            <div>
+              <div class="settlement-status-label">정산 예정 처리</div>
+            </div>
+            <div class="settlement-status-count">7<small>건</small></div>
+            <i class="ti ti-chevron-right settlement-status-arrow"></i>
+          </a>
+          <i class="ti ti-chevron-right settlement-flow-arrow" aria-hidden="true"></i>
+          <a class="settlement-status-link confirm" href="settlement-admin.html#progress">
+            <div class="settlement-status-icon"><i class="ti ti-calendar-dollar"></i></div>
+            <div>
+              <div class="settlement-status-label">제작사 확인 대기</div>
+            </div>
+            <div class="settlement-status-count">5<small>건</small></div>
+            <i class="ti ti-chevron-right settlement-status-arrow"></i>
+          </a>
+          <i class="ti ti-chevron-right settlement-flow-arrow" aria-hidden="true"></i>
+          <a class="settlement-status-link deposit" href="settlement-admin.html#ready">
+            <div class="settlement-status-icon"><i class="ti ti-circle-check"></i></div>
+            <div>
+              <div class="settlement-status-label">정산 입금 대기</div>
+            </div>
+            <div class="settlement-status-count">3<small>건</small></div>
+            <i class="ti ti-chevron-right settlement-status-arrow"></i>
+          </a>
         </div>
+      </div>
+
+      <!-- RS REQUEST SCHEDULE -->
+      <div class="card rs-schedule-card">
+        <div class="card-head">
+          <div class="card-title"><i class="ti ti-mail-forward"></i> RS 요청 현황</div>
+          <a class="card-action" href="settlement-admin.html#rs-requests" style="text-decoration:none">전체 보기 <i class="ti ti-chevron-right" style="font-size:12px"></i></a>
+        </div>
+        <a class="rs-schedule-body" href="settlement-admin.html#rs-requests">
+          <div class="rs-schedule-note">8월 기준</div>
+          <div class="rs-schedule-kpis">
+            <div class="rs-schedule-kpi"><strong id="rs-schedule-content-count">0</strong><span>콘텐츠</span></div>
+            <div class="rs-schedule-kpi"><strong id="rs-schedule-sent-count">0</strong><span>발송완료</span></div>
+            <div class="rs-schedule-kpi"><strong id="rs-schedule-pending-count">0</strong><span>미회신</span></div>
+            <div class="rs-schedule-kpi"><strong id="rs-schedule-replied-count">0</strong><span>회신완료</span></div>
+          </div>
+        </a>
       </div>
 
       <!-- CONTENT VIEW RANKING -->
       <div class="card ranking-card">
         <div class="card-head ranking-head">
           <div class="card-title"><i class="ti ti-chart-bar"></i> 콘텐츠 조회수 랭킹</div>
-          <div class="ranking-tabs" role="tablist" aria-label="조회수 집계 기간">
+          <div class="ranking-tabs" role="tablist" aria-label="조회수 집계 기간" data-active="total">
             <button class="ranking-tab active" type="button" data-ranking-period="total" aria-selected="true">누적</button>
             <button class="ranking-tab" type="button" data-ranking-period="month" aria-selected="false">최근 1개월</button>
           </div>
@@ -411,11 +451,13 @@ const focusItems = [
   { type:'content', tag:'콘텐츠 승인', tagClass:'ft-content', title:'별빛 로맨스 ( 제작사: 왓챠 엔터테인먼트 )', meta:'시놉시스 + 번역 완료', age:'48h 경과' },
   { type:'revision', tag:'수정 요청', tagClass:'ft-revision', title:'역전 신데렐라 ( 제작사: 원테이크 미디어 )', meta:'회차 수 변경', age:'28h 경과' },
   { type:'inquiry', tag:'구매의사', tagClass:'ft-inquiry', title:'도쿄 미드나잇 / 쇼트릴 US', meta:'PLATFORM', age:'4h 경과' },
+  { type:'mailbox', tag:'문의함', tagClass:'ft-mailbox', title:'WeTV / 턴키판매', meta:'TURNKEY', age:'3h 경과' },
   { type:'user', tag:'유저 승인', tagClass:'ft-user', title:'김은진 ( 넥스트웨이브 스튜디오 )', meta:'PRODUCTION · OWNER', age:'2h 경과' },
   { type:'content', tag:'콘텐츠 승인', tagClass:'ft-content', title:'다시 피는 봄 ( 제작사: 페이퍼렌즈 )', meta:'번역 미완료', age:'1h 경과' },
   { type:'user', tag:'유저 승인', tagClass:'ft-user', title:'박소연 ( 블루프레임 스튜디오 )', meta:'PRODUCTION · MEMBER', age:'55m 경과' },
   { type:'revision', tag:'수정 요청', tagClass:'ft-revision', title:'비밀 계약 ( 제작사: 스튜디오 엠 )', meta:'포스터 교체', age:'42m 경과' },
   { type:'inquiry', tag:'구매의사', tagClass:'ft-inquiry', title:'러브 리셋 / 드라마박스', meta:'BUNDLE', age:'35m 경과' },
+  { type:'mailbox', tag:'문의함', tagClass:'ft-mailbox', title:'iQIYI / 제작협업', meta:'COLLAB', age:'31m 경과' },
   { type:'content', tag:'콘텐츠 승인', tagClass:'ft-content', title:'비 온 뒤 맑음 ( 제작사: 문라이트 픽처스 )', meta:'검토 요청', age:'22m 경과' },
   { type:'user', tag:'유저 승인', tagClass:'ft-user', title:'최민석 ( 플레이쇼트 )', meta:'PLATFORM · OWNER', age:'18m 경과' },
   { type:'revision', tag:'수정 요청', tagClass:'ft-revision', title:'세븐 데이즈 ( 제작사: 넥스트웨이브 스튜디오 )', meta:'러닝타임 변경', age:'12m 경과' },
@@ -424,7 +466,16 @@ const focusItems = [
 
 let activeFocusFilter = 'all';
 let activeFocusPage = 1;
-const focusPageSize = 8;
+const focusPageSize = 5;
+
+const queueFilterOptions = [
+  { value:'all', label:'전체' },
+  { value:'user', label:'유저 승인' },
+  { value:'content', label:'콘텐츠 승인' },
+  { value:'revision', label:'수정 요청' },
+  { value:'inquiry', label:'구매의사' },
+  { value:'mailbox', label:'문의함' },
+];
 
 const recentItems = [
   { type:'콘텐츠 승인', cls:'rt-approve', main:'Echo of Spring 승인 처리', who:'김관리', time:'14:55' },
@@ -433,6 +484,29 @@ const recentItems = [
   { type:'크레딧 충전', cls:'rt-credit', main:'BrightFrame +$12,000', who:'박리자', time:'11:05' },
   { type:'컨펌 발송', cls:'rt-confirm', main:'Seven Suns → Viki 컨펌 메시지 발송', who:'김관리', time:'10:30' },
   { type:'수정 거절', cls:'rt-reject', main:'The Last Letter 수정 요청 거절', who:'박리자', time:'09:15' },
+];
+
+const inquiryAlerts = [
+  { company:'DramaBox', type:'구매의사', time:'15:18', message:'죽었다가 회귀한 톱스타와 오피스 로맨스 장르 콘텐츠를 북미 지역으로 검토하고 싶습니다.' },
+  { company:'WeTV SEA', type:'턴키', time:'14:36', message:'동남아 편성용 턴키 패키지 제안을 받고 싶습니다. 로맨스와 복수극 중심으로 확인 부탁드립니다.' },
+  { company:'ShortReel US', type:'단일 거래', time:'13:02', message:'대표님이 내 전남친입니다 시즌1의 영어권 독점 조건과 공급 가능 일정을 문의드립니다.' },
+];
+
+const rsScheduleItems = [
+  { platform:'Alpha Stream', count:3, replied:true },
+  { platform:'Beta Mini', count:1, replied:false },
+  { platform:'DramaBox (US)', count:4, replied:true },
+  { platform:'Dramora', count:2, replied:false },
+  { platform:'Episode One', count:1, replied:false },
+  { platform:'FlexTV (JP)', count:2, replied:true },
+  { platform:'GoodShort', count:1, replied:false },
+  { platform:'iQIYI', count:3, replied:true },
+  { platform:'K-Story Hub', count:2, replied:false },
+  { platform:'MiniDrama', count:2, replied:true },
+  { platform:'MoboReels', count:3, replied:false },
+  { platform:'Rakuten Viki', count:2, replied:true },
+  { platform:'ShortMax', count:1, replied:false },
+  { platform:'StoryTap', count:3, replied:true },
 ];
 
 const contentViewItems = [
@@ -496,6 +570,97 @@ let activePipelineStage = 'proposal';
 let activePipelinePage = 1;
 const pipelinePageSize = 5;
 
+const settlementStatusItems = [
+  { id:'draft', label:'정산 예정 처리', count:7, href:'settlement-admin.html#draft', icon:'ti-hourglass', level:'high', meta:'정산 데이터 검토 필요' },
+  { id:'progress', label:'제작사 확인 대기', count:5, href:'settlement-admin.html#progress', icon:'ti-calendar-dollar', level:'medium', meta:'제작사 회신 대기 중' },
+  { id:'ready', label:'정산 입금 대기', count:3, href:'settlement-admin.html#ready', icon:'ti-circle-check', level:'medium', meta:'입금 처리 전 단계' },
+];
+
+function focusTypeCount(type) {
+  return focusItems.filter(item => item.type === type).length;
+}
+
+function queueFilterCount(value) {
+  return value === 'all' ? focusItems.length : focusTypeCount(value);
+}
+
+function queueFilterLabel(value) {
+  return queueFilterOptions.find(option => option.value === value)?.label || '전체';
+}
+
+function focusAgeMinutes(age) {
+  const value = Number.parseInt(age, 10);
+  if (!Number.isFinite(value)) return 0;
+  if (age.includes('h')) return value * 60;
+  if (age.includes('m')) return value;
+  return value * 1440;
+}
+
+function formatQueueAge(age) {
+  return String(age || '').replace(/\s*경과\s*$/, '').trim();
+}
+
+function expiringContractCount() {
+  return contractExpiryItems
+    .map(item => daysUntil(item.expireDate))
+    .filter(days => days != null && days >= 0 && days <= 92)
+    .length;
+}
+
+function renderOpsOverview() {
+  const target = document.getElementById('ops-overview');
+  if (!target) return;
+  const delayedCount = focusItems.filter(item => focusAgeMinutes(item.age) >= 1440).length;
+  const rsPendingCount = rsScheduleItems.filter(item => !item.replied).length;
+  const tiles = [
+    {
+      label:'처리 대기',
+      value:focusItems.length,
+      unit:'건',
+      meta:`승인 ${focusTypeCount('content') + focusTypeCount('user')} · 구매의사 ${focusTypeCount('inquiry')} · 문의함 ${focusTypeCount('mailbox')}`,
+      href:'#queue-filters',
+      icon:'ti-list-check'
+    },
+    {
+      label:'지연 항목',
+      value:delayedCount,
+      unit:'건',
+      meta:'24시간 이상 대기 중',
+      href:'#queue-filters',
+      icon:'ti-alert-triangle',
+      cls:'warning'
+    },
+    {
+      label:'만료 임박 계약',
+      value:expiringContractCount(),
+      unit:'건',
+      meta:'3개월 이내 만료 예정',
+      href:'platform-contract-admin.html',
+      icon:'ti-calendar-exclamation',
+      cls:'warning'
+    },
+    {
+      label:'외부 응답',
+      value:inquiryAlerts.length + rsPendingCount,
+      unit:'건',
+      meta:`신규 문의 ${inquiryAlerts.length} · RS 미회신 ${rsPendingCount}`,
+      href:'turnkey-intent-admin.html',
+      icon:'ti-message-circle',
+      cls:'message'
+    }
+  ];
+  target.innerHTML = tiles.map(tile => `
+    <a class="ops-overview-tile ${tile.cls || ''}" href="${tile.href}">
+      <span>
+        <span class="ops-overview-label">${tile.label}</span>
+        <span class="ops-overview-value">${tile.value}<small>${tile.unit}</small></span>
+        <span class="ops-overview-meta">${tile.meta}</span>
+      </span>
+      <span class="ops-overview-icon"><i class="ti ${tile.icon}"></i></span>
+    </a>
+  `).join('');
+}
+
 function renderFocus() {
   const list = document.getElementById('focus-list');
   const filteredItems = activeFocusFilter === 'all'
@@ -517,8 +682,8 @@ function renderFocus() {
       <div class="focus-info">
         <div class="focus-title">${item.title}</div>
       </div>
-      <span class="focus-age">${item.age}</span>
-      <button class="focus-btn">검토 →</button>
+      <span class="focus-age">${formatQueueAge(item.age)}</span>
+      <button class="focus-btn">검토</button>
     </div>`).join('');
   renderFocusPagination(totalPages);
 }
@@ -526,14 +691,11 @@ function renderFocus() {
 function renderFocusPagination(totalPages) {
   const pagination = document.getElementById('focus-pagination');
   pagination.innerHTML = `
-    <button class="focus-page-btn" type="button" data-page="${activeFocusPage - 1}" ${activeFocusPage === 1 ? 'disabled' : ''} aria-label="이전 페이지"><i class="ti ti-chevron-left"></i></button>
     ${Array.from({ length: totalPages }, (_, index) => {
       const page = index + 1;
       return `<button class="focus-page-btn ${page === activeFocusPage ? 'active' : ''}" type="button" data-page="${page}" ${page === activeFocusPage ? 'aria-current="page"' : ''}>${page}</button>`;
-    }).join('')}
-    <button class="focus-page-btn" type="button" data-page="${activeFocusPage + 1}" ${activeFocusPage === totalPages ? 'disabled' : ''} aria-label="다음 페이지"><i class="ti ti-chevron-right"></i></button>
-  `;
-  pagination.querySelectorAll('[data-page]:not(:disabled)').forEach(button => {
+    }).join('')}`;
+  pagination.querySelectorAll('[data-page]').forEach(button => {
     button.addEventListener('click', () => {
       activeFocusPage = Number(button.dataset.page);
       renderFocus();
@@ -541,28 +703,82 @@ function renderFocusPagination(totalPages) {
   });
 }
 
+function renderQueueSelector() {
+  const label = document.getElementById('queue-selector-value');
+  const menu = document.getElementById('queue-selector-menu');
+  if (label) label.textContent = queueFilterLabel(activeFocusFilter);
+  if (!menu) return;
+  menu.innerHTML = queueFilterOptions.map(option => `
+    <button class="queue-selector-option ${option.value === activeFocusFilter ? 'active' : ''}" type="button" role="option" aria-selected="${option.value === activeFocusFilter}" onclick="selectQueueFilter('${option.value}')">
+      <span>${option.label}</span>
+      <span class="queue-selector-count">${queueFilterCount(option.value)}</span>
+    </button>
+  `).join('');
+}
+
+function toggleQueueSelector(event) {
+  event?.stopPropagation();
+  const selector = document.getElementById('queue-selector');
+  if (!selector) return;
+  const nextOpen = !selector.classList.contains('open');
+  selector.classList.toggle('open', nextOpen);
+  document.getElementById('queue-selector-button')?.setAttribute('aria-expanded', String(nextOpen));
+}
+
+function closeQueueSelector() {
+  document.getElementById('queue-selector')?.classList.remove('open');
+  document.getElementById('queue-selector-button')?.setAttribute('aria-expanded', 'false');
+}
+
+function selectQueueFilter(value) {
+  activeFocusFilter = value || 'all';
+  activeFocusPage = 1;
+  closeQueueSelector();
+  renderQueueSelector();
+  renderFocus();
+  syncPrimaryOperationHeights();
+}
+
 function initQueueFilters() {
-  const filters = document.querySelectorAll('.focus-filter[data-filter]');
-
-  document.querySelectorAll('[data-count]').forEach(count => {
-    const filter = count.dataset.count;
-    count.textContent = filter === 'all'
-      ? focusItems.length
-      : focusItems.filter(item => item.type === filter).length;
+  renderQueueSelector();
+  document.addEventListener('click', (event) => {
+    if (!event.target.closest('#queue-selector')) closeQueueSelector();
   });
+}
 
-  filters.forEach(filter => {
-    filter.addEventListener('click', () => {
-      activeFocusFilter = filter.dataset.filter;
-      activeFocusPage = 1;
-      filters.forEach(item => {
-        const active = item === filter;
-        item.classList.toggle('active', active);
-        item.setAttribute('aria-pressed', String(active));
-      });
-      renderFocus();
-    });
-  });
+function syncPrimaryOperationHeights() {
+  const focusCard = document.querySelector('.focus-card');
+  const settlementCard = document.querySelector('.settlement-summary');
+  const rsCard = document.querySelector('.rs-schedule-card');
+  const rightColumn = document.querySelector('.operations-right');
+  if (!focusCard || !settlementCard || !rsCard || !rightColumn) return;
+  settlementCard.style.height = '';
+  rsCard.style.height = '';
+  if (window.matchMedia('(max-width: 1050px)').matches) {
+    return;
+  }
+  const rightStyles = getComputedStyle(rightColumn);
+  const rightGap = Number.parseFloat(rightStyles.rowGap) || Number.parseFloat(rightStyles.gap) || 0;
+  const focusHeight = focusCard.getBoundingClientRect().height;
+  const settlementHeight = settlementCard.getBoundingClientRect().height;
+  const rsHeight = rsCard.getBoundingClientRect().height;
+  const currentHeight = settlementHeight + rightGap + rsHeight;
+  const extraHeight = Math.ceil(focusHeight - currentHeight);
+  if (extraHeight <= 0) return;
+  settlementCard.style.height = `${Math.ceil(settlementHeight + extraHeight * 0.35)}px`;
+  rsCard.style.height = `${Math.ceil(rsHeight + extraHeight * 0.65)}px`;
+}
+
+function initPrimaryOperationHeights() {
+  const watched = [
+    document.querySelector('.focus-card')
+  ].filter(Boolean);
+  if ('ResizeObserver' in window) {
+    const observer = new ResizeObserver(syncPrimaryOperationHeights);
+    watched.forEach(item => observer.observe(item));
+  }
+  window.addEventListener('resize', syncPrimaryOperationHeights);
+  requestAnimationFrame(syncPrimaryOperationHeights);
 }
 
 function renderRecent() {
@@ -576,6 +792,16 @@ function renderRecent() {
         <span class="recent-time">${r.time}</span>
       </div>
     </div>`).join('');
+}
+
+function renderRsSchedule() {
+  const totalContents = rsScheduleItems.reduce((sum, item) => sum + item.count, 0);
+  const repliedCount = rsScheduleItems.filter(item => item.replied).length;
+  const pendingCount = rsScheduleItems.length - repliedCount;
+  document.getElementById('rs-schedule-content-count').textContent = totalContents;
+  document.getElementById('rs-schedule-sent-count').textContent = rsScheduleItems.length;
+  document.getElementById('rs-schedule-pending-count').textContent = pendingCount;
+  document.getElementById('rs-schedule-replied-count').textContent = repliedCount;
 }
 
 function renderRanking() {
@@ -618,32 +844,6 @@ function daysUntil(value) {
   return Math.ceil((target - today) / 86400000);
 }
 
-function formatDDay(days) {
-  if (days == null) return '—';
-  if (days === 0) return 'D-day';
-  return days > 0 ? `D-${days}` : `D+${Math.abs(days)}`;
-}
-
-function renderExpiringContracts() {
-  const items = contractExpiryItems
-    .map(item => ({ ...item, days: daysUntil(item.expireDate) }))
-    .filter(item => item.days != null && item.days >= 0 && item.days <= 92)
-    .sort((a, b) => a.days - b.days);
-  document.getElementById('contract-alert-count').textContent = items.length;
-  const list = document.getElementById('contract-alert-list');
-  list.innerHTML = items.length
-    ? items.slice(0, 4).map(item => `
-      <a class="contract-alert-item" href="platform-contract-admin.html">
-        <span>
-          <span class="contract-alert-title">${item.title}</span>
-          <span class="contract-alert-meta">${item.platform}</span>
-        </span>
-        <span class="contract-alert-date">${formatDDay(item.days)}</span>
-      </a>
-    `).join('')
-    : '<div class="contract-alert-empty">3개월 이내 만료 예정 계약이 없습니다</div>';
-}
-
 function initRankingTabs() {
   document.querySelectorAll('[data-ranking-period]').forEach(button => {
     button.addEventListener('click', () => {
@@ -654,6 +854,7 @@ function initRankingTabs() {
         item.classList.toggle('active', active);
         item.setAttribute('aria-selected', String(active));
       });
+      document.querySelector('.ranking-tabs')?.setAttribute('data-active', activeRankingPeriod);
       renderRanking();
     });
   });
@@ -723,11 +924,13 @@ function renderPipeline() {
   });
 }
 
+renderOpsOverview();
 initQueueFilters();
 renderFocus();
 renderRecent();
+renderRsSchedule();
 renderPipeline();
-renderExpiringContracts();
+initPrimaryOperationHeights();
 initRankingTabs();
 renderRanking();
 </script>

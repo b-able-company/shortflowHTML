@@ -236,9 +236,44 @@ td{padding-left:24px;padding-right:24px}
 .quick-range:hover,
 .btn-reset:hover{background:#fafafa}
 .table-wrap{background:#fff;border-top:1px solid #e5e7eb;border-bottom:0}
-th{background:#fff;border-bottom:1px solid #e5e7eb;color:#8f96a3;font-weight:400}
-td{background:#fff;border-bottom:1px solid #eef0f3}
+.native-select{appearance:none;-webkit-appearance:none;height:40px;min-width:190px;padding:0 38px 0 14px;border:0!important;border-radius:2px;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%239aa0a9' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;color:#1a1a18;font:inherit;font-size:12.5px;font-weight:400;line-height:38px;outline:none;cursor:pointer;box-shadow:none}
+.native-select:hover{background-color:#fff}
+.native-select:focus{box-shadow:none}
+.native-select:disabled{background:#fff;color:#aaa;cursor:not-allowed;opacity:1}
+.native-select.hidden-select{display:none}
+.action-detail-select{min-width:300px}
+select.native-select:has(option[value=""]:checked){color:#777;font-weight:400}
+.filter-select{position:relative;display:inline-block}
+.filter-select-btn{appearance:none;-webkit-appearance:none;height:40px;min-width:190px;padding:0 38px 0 14px;border:0;border-radius:2px;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%239aa0a9' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;color:#1a1a18;font:inherit;font-size:12.5px;font-weight:400;line-height:38px;outline:none;cursor:pointer;text-align:left;box-shadow:none}
+.filter-select-btn.placeholder{color:#777}
+.filter-select-btn:disabled{background-color:#fff;color:#aaa;cursor:not-allowed;opacity:1}
+.filter-select-btn.action-detail-select{width:300px;min-width:300px}
+.filter-select-menu{position:absolute;left:0;right:0;top:calc(100% + 4px);max-height:220px;overflow:auto;border:1px solid #e1e3e8;border-radius:6px;background:#fff;box-shadow:0 10px 26px rgba(0,0,0,.08);z-index:40;display:none}
+.filter-select-menu.show{display:block}
+.filter-select-option{appearance:none;-webkit-appearance:none;width:100%;min-height:40px;padding:8px 11px;border:0;background:transparent;display:flex;align-items:center;color:#333;font:inherit;font-size:12.5px;line-height:1.2;text-align:left;cursor:pointer;white-space:nowrap;outline:none}
+.filter-select-option:hover,.filter-select-option.active{background:#fafafa}
+th{background:#fff;border-bottom:1px solid #e5e7eb;color:#8f96a3;font-size:12px;font-weight:400;text-align:left;padding:12px 24px;letter-spacing:.025em}
+td{background:#fff;border-bottom:1px solid #eef0f3;color:#333;font-size:13px;font-weight:400;padding:9px 24px;vertical-align:middle}
 tbody tr:hover td{background:#fafafa}
+.date-range{display:flex;align-items:center;gap:28px;height:auto;border:0;border-radius:0;background:transparent;overflow:visible}
+.date-range:hover{background:transparent;border-color:transparent}
+.date-field{position:relative;width:158px;flex:0 0 158px}
+.date-field input{width:100%;height:38px;border:0!important;border-radius:2px;background:#fff;padding:0 40px 0 12px;color:var(--text-primary);font:inherit;font-size:12px;outline:none;cursor:pointer}
+.date-icon-btn{position:absolute;top:50%;right:7px;transform:translateY(-50%);width:24px;height:24px;border:0;border-radius:50%;background:transparent;color:#9aa0a9;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.date-icon-btn:hover{background:#f2f2f2;color:#333}
+.date-popover{position:fixed;width:280px;padding:12px;border:1px solid #e1e3e8;border-radius:8px;background:#fff;box-shadow:0 12px 32px rgba(0,0,0,.1);z-index:1400;display:none}
+.date-popover.show{display:block}
+.date-picker-head{height:32px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.date-picker-title{color:#1a1a18;font-size:13px;font-weight:500}
+.date-picker-nav{width:28px;height:28px;border:0;border-radius:6px;background:transparent;color:#777;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.date-picker-nav:hover{background:#f4f4f4;color:#111}
+.date-picker-week,.date-picker-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.date-picker-week span{height:26px;display:flex;align-items:center;justify-content:center;color:#9aa0a9;font-size:10.5px}
+.date-picker-day{height:34px;border:0;border-radius:6px;background:#fff;color:#333;font:inherit;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.date-picker-day:hover{background:#f4f4f4}
+.date-picker-day.is-muted{color:#c2c6cc}
+.date-picker-day.is-today{color:#111;font-weight:600}
+.date-picker-day.is-selected{background:#222;color:#fff;font-weight:500}
 
 @media(max-width:980px){
   .filter-row{align-items:flex-start;gap:8px;flex-direction:column;padding:15px 0}
@@ -270,6 +305,7 @@ tbody tr:hover td{background:#fafafa}
     <div class="sub">
       <a class="ni" href="member-admin.html#users">유저</a>
       <a class="ni" href="member-admin.html#companies">회사</a>
+      <a class="ni" href="member-admin.html#temporary-companies">임시 회사</a>
     </div>
     <div class="nav-label">콘텐츠</div>
     <a class="ni" href="content-admin-full.html"><i class="ti ti-file-text"></i> 콘텐츠 관리</a>
@@ -292,8 +328,8 @@ tbody tr:hover td{background:#fafafa}
     <div class="sub">
       <a class="ni" href="settlement-admin.html#contracts">계약관리</a>
       <a class="ni" href="settlement-admin.html#settlement">정산 진행 관리</a>
+      <a class="ni" href="settlement-admin.html#rs-requests">RS 요청 관리</a>
     </div>
-    <a class="ni" href="mail-admin.html"><i class="ti ti-mail"></i> 메일 발송</a>
     <a class="ni active" href="audit-log.html"><i class="ti ti-shield-check"></i> 관리 이력</a>
   </nav>
   <div class="sb-foot">
@@ -320,9 +356,15 @@ tbody tr:hover td{background:#fafafa}
         <div class="filter-label">조회 기간</div>
         <div class="filter-controls">
           <div class="date-range">
-            <input type="date" id="date-from" value="2026-05-01" aria-label="조회 시작일">
+            <div class="date-field has-value" id="date-from-field">
+              <input type="text" id="date-from" value="2026-05-01" aria-label="조회 시작일" readonly onclick="openDatePicker('date-from')" onkeydown="handleDateInputKeydown(event,'date-from')">
+              <button class="date-icon-btn" type="button" onclick="openDatePicker('date-from')" aria-label="조회 시작일 달력 열기"><i class="ti ti-calendar"></i></button>
+            </div>
             <span class="date-tilde">~</span>
-            <input type="date" id="date-to" value="2026-05-14" aria-label="조회 종료일">
+            <div class="date-field has-value" id="date-to-field">
+              <input type="text" id="date-to" value="2026-05-14" aria-label="조회 종료일" readonly onclick="openDatePicker('date-to')" onkeydown="handleDateInputKeydown(event,'date-to')">
+              <button class="date-icon-btn" type="button" onclick="openDatePicker('date-to')" aria-label="조회 종료일 달력 열기"><i class="ti ti-calendar"></i></button>
+            </div>
           </div>
           <div class="quick-ranges" aria-label="빠른 조회 기간">
             <button class="quick-range" type="button" data-range="today">오늘</button>
@@ -339,7 +381,7 @@ tbody tr:hover td{background:#fafafa}
         <div class="filter-label">상세 필터</div>
         <div class="filter-controls">
           <div class="action-filter-group">
-            <select class="native-select" id="action-category" aria-label="액션 대분류">
+            <select class="native-select hidden-select" id="action-category" aria-label="액션 대분류">
               <option value="">전체 액션 유형</option>
               <option value="user">유저</option>
               <option value="content">콘텐츠</option>
@@ -349,9 +391,17 @@ tbody tr:hover td{background:#fafafa}
               <option value="settlement">정산</option>
               <option value="performance-credit">성과·크레딧</option>
             </select>
-            <select class="native-select action-detail-select" id="action-detail" aria-label="세부 액션" disabled>
+            <div class="filter-select" data-filter-select="action-category">
+              <button class="filter-select-btn placeholder" id="action-category-button" type="button" onclick="toggleFilterSelect('action-category',event)" aria-haspopup="listbox" aria-expanded="false">전체 액션 유형</button>
+              <div class="filter-select-menu" id="action-category-menu" role="listbox" aria-label="액션 대분류"></div>
+            </div>
+            <select class="native-select hidden-select action-detail-select" id="action-detail" aria-label="세부 액션" disabled>
               <option value="">세부 액션 전체</option>
             </select>
+            <div class="filter-select" data-filter-select="action-detail">
+              <button class="filter-select-btn action-detail-select placeholder" id="action-detail-button" type="button" onclick="toggleFilterSelect('action-detail',event)" aria-haspopup="listbox" aria-expanded="false" disabled>세부 액션 전체</button>
+              <div class="filter-select-menu" id="action-detail-menu" role="listbox" aria-label="세부 액션"></div>
+            </div>
           </div>
 
           <!-- 액션 유형 -->
@@ -411,12 +461,16 @@ tbody tr:hover td{background:#fafafa}
           </div>
 
           <div class="admin-filter-wrap">
-            <select class="native-select" id="admin-filter" aria-label="관리자 필터">
+            <select class="native-select hidden-select" id="admin-filter" aria-label="관리자 필터">
               <option value="">전체 관리자</option>
               <option value="박관리">박관리</option>
               <option value="김리자">김리자</option>
               <option value="이운영">이운영</option>
             </select>
+            <div class="filter-select" data-filter-select="admin-filter">
+              <button class="filter-select-btn placeholder" id="admin-filter-button" type="button" onclick="toggleFilterSelect('admin-filter',event)" aria-haspopup="listbox" aria-expanded="false">전체 관리자</button>
+              <div class="filter-select-menu" id="admin-filter-menu" role="listbox" aria-label="관리자 필터"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -484,6 +538,8 @@ tbody tr:hover td{background:#fafafa}
   </div>
 </div>
 
+<div class="date-popover" id="date-popover" role="dialog" aria-label="날짜 선택"></div>
+
 <script>
 const state={'cs-action':[]};
 const defaults={'cs-action':'액션 유형'};
@@ -491,6 +547,8 @@ const defaultDates={from:'2026-05-01',to:'2026-05-14'};
 const PAGE_SIZE=15;
 let currentPage=1;
 let filteredRows=[];
+let activeDateInputId='';
+let datePickerMonth=new Date();
 
 const actionValues={
   '유저 승인':'USER_APPROVE',
@@ -567,6 +625,69 @@ const actionCategoryByValue=Object.fromEntries(
     actions.map(([value])=>[value,category])
   )
 );
+
+function escapeHtml(value){
+  return String(value ?? '').replace(/[&<>"']/g,char=>({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
+  }[char]));
+}
+
+function closeFilterSelects(exceptId=''){
+  document.querySelectorAll('.filter-select').forEach(selectWrap=>{
+    const id=selectWrap.dataset.filterSelect;
+    if(id===exceptId) return;
+    document.getElementById(`${id}-menu`)?.classList.remove('show');
+    document.getElementById(`${id}-button`)?.setAttribute('aria-expanded','false');
+  });
+}
+
+function renderFilterSelect(id){
+  const select=document.getElementById(id);
+  const button=document.getElementById(`${id}-button`);
+  const menu=document.getElementById(`${id}-menu`);
+  if(!select || !button || !menu) return;
+  const selectedOption=select.options[select.selectedIndex] || select.options[0];
+  button.textContent=selectedOption?.textContent || '';
+  button.disabled=select.disabled;
+  button.classList.toggle('placeholder',!select.value);
+  menu.innerHTML=[...select.options].map(option=>`
+    <button class="filter-select-option ${option.value===select.value?'active':''}" type="button" role="option" aria-selected="${option.value===select.value}" onclick="pickFilterSelect('${id}','${escapeHtml(option.value)}')">${escapeHtml(option.textContent)}</button>
+  `).join('');
+}
+
+function toggleFilterSelect(id,event){
+  event?.stopPropagation();
+  const select=document.getElementById(id);
+  if(select?.disabled) return;
+  const menu=document.getElementById(`${id}-menu`);
+  const button=document.getElementById(`${id}-button`);
+  const isOpen=menu?.classList.contains('show');
+  closeFilterSelects(id);
+  closeAll();
+  menu?.classList.toggle('show',!isOpen);
+  button?.setAttribute('aria-expanded',String(!isOpen));
+}
+
+function pickFilterSelect(id,value){
+  const select=document.getElementById(id);
+  if(select) select.value=value;
+  if(id==='action-category'){
+    updateActionDetails();
+  }else{
+    renderFilterSelect(id);
+  }
+  closeFilterSelects();
+}
+
+function renderFilterSelects(){
+  renderFilterSelect('action-category');
+  renderFilterSelect('action-detail');
+  renderFilterSelect('admin-filter');
+}
 
 function toggleDropdown(id){
   const dd=document.getElementById('dd-'+id.replace('cs-',''));
@@ -660,7 +781,10 @@ function renderDateTag(wrap){
 function resetDates(){
   document.getElementById('date-from').value=defaultDates.from;
   document.getElementById('date-to').value=defaultDates.to;
+  updateDateFieldState('date-from');
+  updateDateFieldState('date-to');
   clearQuickRange();
+  closeDatePicker();
   renderTags();
 }
 
@@ -668,11 +792,15 @@ function resetAll(){
   Object.keys(state).forEach(id=>clearSelect(id));
   document.getElementById('date-from').value=defaultDates.from;
   document.getElementById('date-to').value=defaultDates.to;
+  updateDateFieldState('date-from');
+  updateDateFieldState('date-to');
   document.getElementById('log-search').value='';
   document.getElementById('admin-filter').value='';
   document.getElementById('action-category').value='';
   updateActionDetails();
+  renderFilterSelects();
   clearQuickRange();
+  closeDatePicker();
   renderTags();
   filterLogs();
 }
@@ -688,6 +816,8 @@ function updateActionDetails(){
     detail.appendChild(option);
   });
   detail.disabled=!category;
+  renderFilterSelect('action-category');
+  renderFilterSelect('action-detail');
 }
 
 function formatDate(date){
@@ -695,6 +825,112 @@ function formatDate(date){
   const month=String(date.getMonth()+1).padStart(2,'0');
   const day=String(date.getDate()).padStart(2,'0');
   return `${year}-${month}-${day}`;
+}
+
+function parseDateValue(value){
+  const match=String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!match) return null;
+  return new Date(Number(match[1]),Number(match[2])-1,Number(match[3]));
+}
+
+function updateDateFieldState(id){
+  const input=document.getElementById(id);
+  document.getElementById(`${id}-field`)?.classList.toggle('has-value',!!input?.value);
+}
+
+function positionDatePicker(){
+  const input=document.getElementById(activeDateInputId);
+  const popover=document.getElementById('date-popover');
+  if(!input || !popover) return;
+  const rect=input.getBoundingClientRect();
+  const top=rect.bottom+6;
+  const left=Math.min(rect.left,window.innerWidth-popover.offsetWidth-12);
+  popover.style.top=`${top}px`;
+  popover.style.left=`${Math.max(12,left)}px`;
+}
+
+function renderDatePicker(){
+  const popover=document.getElementById('date-popover');
+  const input=document.getElementById(activeDateInputId);
+  if(!popover || !input) return;
+  const selected=parseDateValue(input.value);
+  const today=new Date();
+  const viewYear=datePickerMonth.getFullYear();
+  const viewMonth=datePickerMonth.getMonth();
+  const firstDay=new Date(viewYear,viewMonth,1);
+  const gridStart=new Date(viewYear,viewMonth,1-firstDay.getDay());
+  const weeks=['일','월','화','수','목','금','토'];
+  const days=Array.from({length:42},(_,index)=>{
+    const day=new Date(gridStart);
+    day.setDate(gridStart.getDate()+index);
+    const value=formatDate(day);
+    const muted=day.getMonth()!==viewMonth;
+    const isToday=formatDate(day)===formatDate(today);
+    const isSelected=selected && formatDate(day)===formatDate(selected);
+    return `<button class="date-picker-day ${muted?'is-muted':''} ${isToday?'is-today':''} ${isSelected?'is-selected':''}" type="button" onclick="selectDateValue('${value}')">${day.getDate()}</button>`;
+  }).join('');
+  popover.innerHTML=`
+    <div class="date-picker-head">
+      <button class="date-picker-nav" type="button" onclick="moveDatePickerMonth(-1)" aria-label="이전 달"><i class="ti ti-chevron-left"></i></button>
+      <div class="date-picker-title">${viewYear}.${String(viewMonth+1).padStart(2,'0')}</div>
+      <button class="date-picker-nav" type="button" onclick="moveDatePickerMonth(1)" aria-label="다음 달"><i class="ti ti-chevron-right"></i></button>
+    </div>
+    <div class="date-picker-week">${weeks.map(day=>`<span>${day}</span>`).join('')}</div>
+    <div class="date-picker-grid">${days}</div>
+  `;
+  popover.classList.add('show');
+  requestAnimationFrame(positionDatePicker);
+}
+
+function openDatePicker(id){
+  activeDateInputId=id;
+  const selected=parseDateValue(document.getElementById(id)?.value);
+  const base=selected || new Date();
+  datePickerMonth=new Date(base.getFullYear(),base.getMonth(),1);
+  renderDatePicker();
+}
+
+function closeDatePicker(){
+  document.getElementById('date-popover')?.classList.remove('show');
+  activeDateInputId='';
+}
+
+function moveDatePickerMonth(offset){
+  datePickerMonth=new Date(datePickerMonth.getFullYear(),datePickerMonth.getMonth()+offset,1);
+  renderDatePicker();
+}
+
+function selectDateValue(value){
+  const input=document.getElementById(activeDateInputId);
+  if(!input) return;
+  input.value=value;
+  updateDateFieldState(activeDateInputId);
+  clearQuickRange();
+  closeDatePicker();
+  renderTags();
+}
+
+function selectToday(){
+  selectDateValue(formatDate(new Date()));
+}
+
+function clearDateValue(id,event){
+  event?.stopPropagation();
+  const input=document.getElementById(id);
+  if(!input) return;
+  input.value='';
+  updateDateFieldState(id);
+  clearQuickRange();
+  if(activeDateInputId===id) closeDatePicker();
+  renderTags();
+}
+
+function handleDateInputKeydown(event,id){
+  if(event.key==='Enter' || event.key===' ' || event.key==='ArrowDown'){
+    event.preventDefault();
+    openDatePicker(id);
+  }
+  if(event.key==='Escape') closeDatePicker();
 }
 
 function clearQuickRange(){
@@ -713,7 +949,10 @@ function setQuickRange(value,button){
 
   document.getElementById('date-from').value=formatDate(from);
   document.getElementById('date-to').value=formatDate(to);
+  updateDateFieldState('date-from');
+  updateDateFieldState('date-to');
   clearQuickRange();
+  closeDatePicker();
   button.classList.add('active');
   renderTags();
 }
@@ -816,7 +1055,9 @@ function goPage(page){
 }
 
 document.addEventListener('click',e=>{
+  closeFilterSelects();
   if(!e.target.closest('.custom-select'))closeAll();
+  if(!e.target.closest('.date-field') && !e.target.closest('#date-popover')) closeDatePicker();
 });
 document.getElementById('date-from').addEventListener('change',renderTags);
 document.getElementById('date-to').addEventListener('change',renderTags);
@@ -829,6 +1070,8 @@ document.getElementById('action-category').addEventListener('change',updateActio
 document.getElementById('log-search').addEventListener('keydown',event=>{
   if(event.key==='Enter')filterLogs();
 });
+window.addEventListener('resize',()=>{ if(activeDateInputId) positionDatePicker(); });
+document.querySelector('.content')?.addEventListener('scroll',()=>{ if(activeDateInputId) positionDatePicker(); });
 
 document.addEventListener('DOMContentLoaded',()=>{
   const topbar=document.querySelector('.main > .topbar');
@@ -845,6 +1088,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 enhanceRows();
+renderFilterSelects();
 filterLogs();
 </script>
 </body>
