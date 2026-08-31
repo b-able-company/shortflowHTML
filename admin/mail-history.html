@@ -204,6 +204,7 @@ tbody tr.mail-row.active td{background:rgb(242, 242, 242)}
 .review-key{min-width:0;color:#aaa;font-size:11px;white-space:nowrap;display:flex;align-items:center;justify-content:flex-start}
 .review-val{min-width:0;color:#333;font-size:12px;text-align:right;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .review-val.multiline,.review-val.wide{text-align:left;white-space:normal;overflow:visible;text-overflow:clip}
+.review-val.mail-body-content{text-align:left;white-space:pre-line;overflow:visible;text-overflow:clip;line-height:1.6}
 .detail-body{border-color:rgb(232, 232, 232);border-radius:4px}
 .detail-body .review-row{min-height:38px;padding:0;border-bottom:.5px solid rgb(232, 232, 232);grid-template-columns:130px minmax(0,1fr);gap:0;align-items:stretch}
 .detail-body .review-row:last-child{border-bottom:0}
@@ -216,6 +217,7 @@ tbody tr.mail-row.active td{background:rgb(242, 242, 242)}
 .detail-body .review-val.multiline,
 .detail-body .review-val.wide{align-items:flex-start}
 .detail-body .review-val.multiline{align-items:center}
+.detail-body .review-val.mail-body-content{align-items:flex-start;white-space:pre-line}
 .history-content-tags{display:flex;flex-wrap:wrap;gap:6px}
 .history-content-tag{min-height:28px;max-width:100%;padding:7px 11px;border:.5px solid #e1e1e1;border-radius:999px;background:#fff;color:#333;font-size:12px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .history-target-list{display:block;margin-top:0;min-width:0;max-width:100%}
@@ -365,6 +367,7 @@ tbody tr.mail-row.active td{background:rgb(242, 242, 242)}
             <option value="CONTENT_PROPOSAL">콘텐츠/기획안 제안</option>
             <option value="SETTLEMENT_PERFORMANCE">정산/퍼포먼스 안내</option>
             <option value="RS_REQUEST">RS 요청</option>
+            <option value="FREE_MAIL">자유형식</option>
           </select>
           <div class="filter-select" data-filter-select="mail-type">
             <button class="filter-select-btn mail-type-select placeholder" id="mail-type-button" type="button" onclick="toggleFilterSelect('mail-type',event)" aria-haspopup="listbox" aria-expanded="false">메일 종류</button>
@@ -401,7 +404,7 @@ tbody tr.mail-row.active td{background:rgb(242, 242, 242)}
     </div>
 
     <div class="result-bar">
-      <div class="result-meta">총 <strong id="result-count">23</strong>건</div>
+      <div class="result-meta">총 <strong id="result-count">24</strong>건</div>
     </div>
 
     <div class="table-wrap">
@@ -411,6 +414,7 @@ tbody tr.mail-row.active td{background:rgb(242, 242, 242)}
           <tr><th>No</th><th>메일 종류</th><th>제목</th><th>발송자</th><th>발송 일시</th></tr>
         </thead>
         <tbody id="mail-body">
+          <tr data-type="FREE_MAIL" data-category="FREE_MAIL" data-status="성공" data-sender="김관리자" data-body="안녕하세요.&#10;&#10;Shortflow 운영팀입니다. 8월 파트너 운영 일정과 콘텐츠 검토 자료 업데이트 기준을 안내드립니다.&#10;&#10;이번 달 신규 제안 검토는 8월 28일까지 접수된 자료를 기준으로 순차 진행되며, 추가 확인이 필요한 항목은 담당 매니저가 개별 연락드릴 예정입니다.&#10;&#10;확인 후 회신이 필요한 내용이 있으면 Shortflow 메시지로 남겨주세요." data-recipients="jamie@alphastream.example|성공|외부|Alpha Stream,mina@kstoryhub.example|성공|외부|K-Story Hub,bd@viki.com|성공|내부|Viki"><td><div class="dt-date">2026-05-14</div><div class="dt-time">19:05</div></td><td><span class="recipient">jamie@alphastream.example</span></td><td><span class="mail-type">FREE_MAIL</span></td><td><span class="mail-status">성공</span></td><td class="subject">8월 파트너 운영 일정 안내</td></tr>
           <tr data-type="RS_REQUEST" data-category="RS_REQUEST" data-status="성공" data-sender="자동시스템" data-recipients="bd@viki.com|성공|외부|Viki" data-rs-items="오늘의 챌린지|월별|2026년 7~8월분;퇴근 후 로맨스|월별|2026년 9월분;아이돌 매니저로 살아남기|분기별(연도)|2026년 1~3분기분"><td><div class="dt-date">2026-05-14</div><div class="dt-time">18:40</div></td><td><span class="recipient">bd@viki.com</span></td><td><span class="mail-type">RS_REQUEST</span></td><td><span class="mail-status">성공</span></td><td class="subject">RS 데이터를 요청드립니다 - Viki</td></tr>
           <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-14</div><div class="dt-time">18:12</div></td><td><span class="recipient">ops@shortflow.io</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 콘텐츠 등록 신청이 들어왔어요</td></tr>
           <tr data-type="WORKFLOW" data-status="성공"><td><div class="dt-date">2026-05-14</div><div class="dt-time">16:44</div></td><td><span class="recipient">content@shortmax.com</span></td><td><span class="mail-type">WORKFLOW</span></td><td><span class="mail-status">성공</span></td><td class="subject">[Shortflow] 콘텐츠 자료 업로드가 완료되었습니다</td></tr>
@@ -649,6 +653,7 @@ const mailCategoryLabels={
   CONTENT_PROPOSAL:'콘텐츠/기획안 제안',
   SETTLEMENT:'정산/퍼포먼스 안내',
   PERFORMANCE:'정산/퍼포먼스 안내',
+  FREE_MAIL:'자유형식',
   RS_REQUEST:'RS 요청'
 };
 
@@ -955,14 +960,22 @@ function recipientTypeForItem(item){
 
 function renderDetailRecipientTable(row, recipients){
   const company=row.dataset.targetCompany || '-';
-  const showRecipientType=row.dataset.category === 'CONTENT_PROPOSAL';
+  const showRecipientType=['CONTENT_PROPOSAL','FREE_MAIL'].includes(row.dataset.category);
   const showRecipientCompany=row.dataset.category !== 'ADMIN_NOTICE';
   const rowClass=showRecipientType ? '' : (showRecipientCompany ? 'no-recipient-type' : 'admin-notice');
-  const rows=recipients.map((item,index)=>{
+  const displayRecipients=row.dataset.category === 'FREE_MAIL'
+    ? [...recipients].sort((a,b)=>{
+      const typeOrder={ '외부':0, '내부':1 };
+      const typeDiff=(typeOrder[recipientTypeForItem(a)] ?? 2) - (typeOrder[recipientTypeForItem(b)] ?? 2);
+      if(typeDiff) return typeDiff;
+      return String(a.company || company).localeCompare(String(b.company || company),'ko');
+    })
+    : recipients;
+  const rows=displayRecipients.map((item,index)=>{
     const opened=recipientOpened(item,index);
     const recipientType=recipientTypeForItem(item);
     const recipientCompany=item.company || company;
-    const previous=recipients[index - 1];
+    const previous=displayRecipients[index - 1];
     const isTypeGroupStart=!previous || recipientTypeForItem(previous) !== recipientType;
     const isCompanyGroupStart=!previous || (previous.company || company) !== recipientCompany;
     const typeTopLineClass=isTypeGroupStart && index > 0 ? 'with-company-top-line' : '';
@@ -1064,6 +1077,20 @@ function renderRsRequestSection(row){
   `;
 }
 
+function renderMailBodySection(row){
+  if(row.dataset.category !== 'FREE_MAIL') return '';
+  const bodyText=row.dataset.body || '';
+  if(!bodyText) return '';
+  return `
+    <div class="detail-section">
+      <div class="detail-section-title">본문 내용</div>
+      <div class="detail-body">
+        <div class="review-row"><span class="review-key">본문</span><span class="review-val mail-body-content">${escapeHtml(bodyText)}</span></div>
+      </div>
+    </div>
+  `;
+}
+
 function productionCompanyForProposal(row){
   const subject=row.dataset.subject || '';
   if(subject.includes('연애의 정석')) return { company:'Warm Cut Studio', name:'서하린', email:'hello@warmcut.studio' };
@@ -1128,6 +1155,7 @@ function showMailDetailPanel(rowKey){
           </div>
         </div>
         ${renderRsRequestSection(row)}
+        ${renderMailBodySection(row)}
         <div class="detail-section">
           <div class="detail-section-title">수신 상세</div>
           <div class="history-target-list">${renderDetailRecipientTable(row, recipients)}</div>
@@ -1313,7 +1341,7 @@ function openMailComposePanel(){
   const panel=document.getElementById('mail-compose-panel');
   const frame=document.getElementById('mail-compose-frame');
   setMailComposeExpanded(false);
-  if(frame&&!panel?.classList.contains('show')) frame.setAttribute('src','mail-admin.html?embed=compose&v=panel-controls-20260826#compose');
+  if(frame&&!panel?.classList.contains('show')) frame.setAttribute('src','mail-admin.html?embed=compose&v=compose-prompt-20260831#compose');
   panel?.classList.add('show');
 }
 

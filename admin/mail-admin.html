@@ -251,7 +251,7 @@ body.embed-compose .utility-remote {
 
 /* MAIL TYPE */
 .mail-type-step-body { min-height: 254px; display: flex; flex-direction: column; align-items: stretch; justify-content: center; }
-.mail-type-prompt { display: none; color: #1a1a18; font-size: 18px; font-weight: 500; text-align: center; transform: translateY(-8px); }
+.mail-type-prompt { display: none; color: #1a1a18; font-size: 18px; font-weight: 500; line-height: 1.45; text-align: center; }
 .type-group { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); justify-content: center; gap: 14px; }
 .type-btn { width: 100%; min-height: 100%; padding: 0 18px; border: 0.5px solid #e3e3e3; border-radius: 14px; background: #fff; color: #1a1a18; font-family: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; transition: background .14s ease, border-color .14s ease, color .14s ease; }
 .type-btn:hover { background: #fafafa; border-color: #d7d7d7; }
@@ -269,6 +269,8 @@ body.embed-compose .utility-remote {
 .compose-pane.type-selecting .type-btn { min-height: 78px; padding: 0 28px; border-radius: 12px; border-color: #dcdcdc; background: #fff; box-shadow: none; }
 .compose-pane.type-selecting .type-btn:hover { background: #f5f5f5; border-color: #dcdcdc; box-shadow: none; }
 .compose-pane.type-selecting .type-name { font-size: 16px; font-weight: 400; }
+body.embed-compose .compose-pane.type-selecting .compose-panel-head { min-height: 94px; padding-top: 26px; padding-bottom: 4px; }
+body.embed-compose .compose-pane.type-selecting .compose-flow { padding-top: 6px; }
 .step-panel-actions { margin-top: auto; padding-top: 14px; display: flex; justify-content: flex-end; }
 .compose-step-panel[data-compose-step="2"] .step-panel-actions,
 .compose-step-panel[data-compose-step="3"] .step-panel-actions,
@@ -291,12 +293,15 @@ body.embed-compose .utility-remote {
 /* SOURCE LIST */
 .source-tools,
 .platform-tools { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.source-tools #select-all-sources-btn { display: none; height: 34px; min-width: 92px; padding: 0 16px; }
+.source-tools.show-free-select-all #select-all-sources-btn { display: inline-flex; }
 .platform-tools #select-all-targets-btn { height: 34px; min-width: 92px; padding: 0 16px; }
 .settlement-company-filter { display: none; min-width: 148px; margin: 0; }
 .source-tools.show-settlement-filter .settlement-company-filter { display: block; }
 .source-list { max-height: 252px; overflow: auto; border: 0.5px solid rgb(242, 242, 242); border-radius: 10px; background: #fff; }
 .compose-step-panel.active[data-compose-step="2"] .source-list.content-source-list { height: auto; max-height: none; overflow: visible; }
 .compose-step-panel.active[data-compose-step="2"] .source-list.collaboration-source-list { height: auto; max-height: none; overflow: visible; }
+.compose-step-panel.active[data-compose-step="2"] .source-list.free-source-list { height: auto; max-height: none; overflow: visible; }
 .compose-step-panel.active[data-compose-step="2"] .source-list.settlement-source-list { max-height: calc(100vh - 238px); overflow: auto; }
 .source-table-head { display: grid; align-items: center; min-height: 34px; border-bottom: 0.5px solid rgb(242, 242, 242); color: #aaa; font-size: 10.5px; }
 .source-head-cell { min-width: 0; overflow: hidden; text-overflow: ellipsis; padding: 8px 12px; border-right: 0.5px solid rgb(242, 242, 242); white-space: nowrap; }
@@ -320,6 +325,11 @@ body.embed-compose .utility-remote {
 .source-list.settlement-company-source-list .source-row { min-height: 38px; }
 .source-list.settlement-company-source-list .source-cell { padding-top: 7px; padding-bottom: 7px; }
 .source-list.settlement-company-source-list .source-title { font-weight: 400; }
+.source-list.free-source-list .source-table-head,
+.source-list.free-source-list .source-row { grid-template-columns: 42px 86px minmax(220px, 1fr) 96px; min-width: 520px; }
+.source-list.free-source-list .source-row { min-height: 38px; }
+.source-list.free-source-list .source-cell { padding-top: 7px; padding-bottom: 7px; }
+.source-list.free-source-list .source-title { font-weight: 400; }
 .source-cell { min-width: 0; min-height: 100%; padding: 9px 12px; border-right: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; }
 .source-cell:last-child { border-right: 0; }
 .source-check-cell { justify-content: center; padding: 0 10px; }
@@ -481,6 +491,11 @@ body.embed-compose .utility-remote {
 .external-platform-panel .manual-recipient-input-row .manual-recipient-input-cell:last-child { border-right: 0; }
 .external-platform-panel .manual-recipient-add { width: 100%; height: 100%; border: 0; border-radius: 0; background: transparent; font-size: 19px; }
 .external-platform-panel .manual-recipient-add:hover { background: #f5f5f5; }
+.free-external-panel .manual-recipient-selected-table .manual-recipient-table-head,
+.free-external-panel .manual-recipient-selected-table .manual-recipient-input-row,
+.free-external-panel .manual-recipient-selected-table .manual-recipient-option-row { grid-template-columns: 42px 86px minmax(120px, 0.9fr) minmax(96px, 0.7fr) minmax(180px, 1.15fr); min-width: 650px; }
+.free-external-panel .manual-recipient-selected-table .manual-recipient-option-row .manual-recipient-cell:nth-child(2) { color: #555; font-weight: 400; }
+.free-external-panel .manual-recipient-selected-table .manual-recipient-option-row .manual-recipient-cell:nth-child(3) { color: #1a1a18; font-weight: 500; }
 .empty-state { padding: 28px 12px; color: #bbb; font-size: 12px; text-align: center; }
 .settlement-message-panel { display: none; min-height: 252px; padding: 18px 4px 0; }
 .settlement-message-panel.show { display: block; }
@@ -822,6 +837,9 @@ table.settlement-content-list tr:last-child td { border-bottom: 1px solid #eeeee
   .external-platform-panel .manual-recipient-selected-table .manual-recipient-table-head,
   .external-platform-panel .manual-recipient-selected-table .manual-recipient-input-row,
   .external-platform-panel .manual-recipient-selected-table .manual-recipient-option-row { grid-template-columns: 42px minmax(120px, 0.9fr) minmax(90px, 0.7fr) minmax(170px, 1.15fr); min-width: 520px; }
+  .free-external-panel .manual-recipient-selected-table .manual-recipient-table-head,
+  .free-external-panel .manual-recipient-selected-table .manual-recipient-input-row,
+  .free-external-panel .manual-recipient-selected-table .manual-recipient-option-row { grid-template-columns: 42px 78px minmax(120px, 0.9fr) minmax(90px, 0.7fr) minmax(170px, 1.15fr); min-width: 620px; }
   .preview-target-row { min-width: 560px; }
 }
 
@@ -911,6 +929,7 @@ table.settlement-content-list tr:last-child td { border-bottom: 1px solid #eeeee
           <option value="collaboration">기획안 제안</option>
           <option value="settlement">정산 알림</option>
           <option value="performance">퍼포먼스 알림</option>
+          <option value="free">자유형식</option>
         </select>
       </div>
       <div class="history-table" id="history-table"></div>
@@ -983,6 +1002,7 @@ table.settlement-content-list tr:last-child td { border-bottom: 1px solid #eeeee
                 <i class="ti ti-search"></i>
                 <input class="search-input" id="source-search" placeholder="검색" oninput="filterSources(this.value)" />
               </div>
+              <button class="btn" id="select-all-sources-btn" type="button" onclick="selectAllFreeRecipientCompanies()">전체 선택</button>
             </div>
             <div class="source-list" id="source-list"></div>
             <div class="source-pagination" id="source-pagination"></div>
@@ -1146,6 +1166,15 @@ const mailTypes = {
     targetSearchPlaceholder: '관리자 메시지 입력',
     subject: source => `[Shortflow] ${source.contentTitleSummary} 퍼포먼스 정보 업데이트`,
     body: source => `퍼포먼스 정보 업데이트\n\n안녕하세요, ${source.companyName}님,\n\n아래 콘텐츠의 퍼포먼스 관련 정보가 업데이트되어 안내드립니다.\n\n${(source.contentTitles || []).map(title => `- ${title}`).join('\n')}\n\n아래 버튼을 눌러 퍼포먼스 내역을 확인해 주세요.\n\n[퍼포먼스 확인하기] → ${source.performanceUrl || source.settlementUrl}\n\n${source.adminMessage ? `${source.adminMessage}\n\n` : ''}`,
+  },
+  free: {
+    label: '자유형식',
+    sourceLabel: '내부 회사 선택',
+    targetLabel: '외부 회사 선택',
+    searchPlaceholder: '수신회사명 검색',
+    targetSearchPlaceholder: '외부 수신 회사명 검색',
+    subject: source => `[Shortflow] ${source.title || '안내 메일'}`,
+    body: source => source.adminMessage || '',
   },
 };
 
@@ -1545,7 +1574,7 @@ let draftSourceIds = new Set();
 let checkedPlatforms = new Set();
 let manualRecipients = [];
 let manualRecipientId = 1;
-let manualRecipientDraft = { companyName: '', name: '', email: '' };
+let manualRecipientDraft = { companyKind: 'platform', companyName: '', name: '', email: '' };
 let sourceQuery = '';
 let platformQuery = '';
 let manualRecipientQuery = '';
@@ -1570,6 +1599,7 @@ const historyPageSize = 15;
 const sourcePageSize = 10;
 const platformPageSize = 15;
 const settlementCompanyPageSize = 15;
+const freeSourcePageSize = 15;
 const manualRecipientPageSize = 15;
 const maxContentSelection = 10;
 const adminMessageMaxLength = 200;
@@ -1639,6 +1669,42 @@ function mockRecipientEmail(platform) {
   return `contact@${slug}.example`;
 }
 
+function normalizeCompanyKind(value) {
+  return value === 'production' ? 'production' : 'platform';
+}
+
+function companyKindLabel(value) {
+  return normalizeCompanyKind(value) === 'production' ? '제작사' : '플랫폼';
+}
+
+function freeInternalRecipientCompanies() {
+  return [
+    ...settlementCompanies().map(company => ({
+      id: `production-${company.id}`,
+      sourceId: company.id,
+      name: company.title,
+      region: company.region,
+      manager: company.manager,
+      email: company.email,
+      companyKind: 'production',
+    })),
+    ...platforms.map(platform => ({
+      ...platform,
+      id: `platform-${platform.id}`,
+      sourceId: platform.id,
+      email: mockRecipientEmail(platform),
+      companyKind: 'platform',
+    })),
+  ];
+}
+
+function visibleFreeRecipientCompanies() {
+  return freeInternalRecipientCompanies().filter(company => {
+    const text = `${companyKindLabel(company.companyKind)} ${company.name} ${company.region} ${company.manager}`.toLowerCase();
+    return !sourceQuery || text.includes(sourceQuery);
+  });
+}
+
 function companySlug(value) {
   return String(value || 'company')
     .toLowerCase()
@@ -1670,6 +1736,10 @@ function buildOwnerNotifications(sources) {
 
 function selectedRegisteredPlatforms() {
   if (isSettlementMail()) return [];
+  if (isFreeMail()) {
+    return freeInternalRecipientCompanies()
+      .filter(company => checkedPlatforms.has(company.id));
+  }
   return [...checkedPlatforms]
     .map(id => platforms.find(platform => platform.id === id))
     .filter(Boolean);
@@ -1685,28 +1755,28 @@ function validManualRecipients() {
 }
 
 function manualRecipientKey(recipient) {
-  return `${String(recipient.email || '').trim().toLowerCase()}|${String(recipient.companyName || '').trim().toLowerCase()}`;
+  return `${normalizeCompanyKind(recipient.companyKind)}|${String(recipient.email || '').trim().toLowerCase()}|${String(recipient.companyName || '').trim().toLowerCase()}`;
 }
 
 const previousManualRecipientMocks = [
-  { id: 'mock-manual-1', companyName: 'Alpha Stream', name: 'Jamie Park', email: 'jamie@alphastream.example' },
-  { id: 'mock-manual-2', companyName: 'Beta Mini', name: 'Olivia Han', email: 'olivia@betamini.example' },
-  { id: 'mock-manual-3', companyName: 'CherryPick TV', name: 'Alex Choi', email: 'alex@cherrypick.example' },
-  { id: 'mock-manual-4', companyName: 'Moonplay', name: 'Irene Seo', email: 'irene@moonplay.example' },
-  { id: 'mock-manual-5', companyName: 'Nova Shorts', name: 'Daniel Kim', email: 'daniel@novashorts.example' },
-  { id: 'mock-manual-6', companyName: 'Pocket Drama', name: 'Maya Chen', email: 'maya@pocketdrama.example' },
-  { id: 'mock-manual-7', companyName: 'K-Story Hub', name: 'Peter Lim', email: 'peter@kstoryhub.example' },
-  { id: 'mock-manual-8', companyName: 'Dramora', name: 'Sally Oh', email: 'sally@dramora.example' },
-  { id: 'mock-manual-9', companyName: 'Streamlet', name: 'Victor Lee', email: 'victor@streamlet.example' },
-  { id: 'mock-manual-10', companyName: 'BingeRoom', name: 'Hannah Yu', email: 'hannah@bingeroom.example' },
-  { id: 'mock-manual-11', companyName: 'Episode One', name: 'Chris Moon', email: 'chris@episodeone.example' },
-  { id: 'mock-manual-12', companyName: 'StoryTap', name: 'Nina Jung', email: 'nina@storytap.example' },
-  { id: 'mock-manual-13', companyName: 'KlipHouse', name: 'Ethan Kang', email: 'ethan@kliphouse.example' },
-  { id: 'mock-manual-14', companyName: 'ScenePop', name: 'Yuna Chae', email: 'yuna@scenepop.example' },
-  { id: 'mock-manual-15', companyName: 'Doki Channel', name: 'Min Park', email: 'min@dokichannel.example' },
-  { id: 'mock-manual-16', companyName: 'ReelPocket', name: 'Liam Koo', email: 'liam@reelpocket.example' },
-  { id: 'mock-manual-17', companyName: 'TinyFlix', name: 'Sara Baek', email: 'sara@tinyflix.example' },
-  { id: 'mock-manual-18', companyName: 'ClipGarden', name: 'Joon Lee', email: 'joon@clipgarden.example' },
+  { id: 'mock-manual-1', companyKind: 'platform', companyName: 'Alpha Stream', name: 'Jamie Park', email: 'jamie@alphastream.example' },
+  { id: 'mock-manual-2', companyKind: 'platform', companyName: 'Beta Mini', name: 'Olivia Han', email: 'olivia@betamini.example' },
+  { id: 'mock-manual-3', companyKind: 'platform', companyName: 'CherryPick TV', name: 'Alex Choi', email: 'alex@cherrypick.example' },
+  { id: 'mock-manual-4', companyKind: 'platform', companyName: 'Moonplay', name: 'Irene Seo', email: 'irene@moonplay.example' },
+  { id: 'mock-manual-5', companyKind: 'platform', companyName: 'Nova Shorts', name: 'Daniel Kim', email: 'daniel@novashorts.example' },
+  { id: 'mock-manual-6', companyKind: 'platform', companyName: 'Pocket Drama', name: 'Maya Chen', email: 'maya@pocketdrama.example' },
+  { id: 'mock-manual-7', companyKind: 'production', companyName: 'K-Story Hub', name: 'Peter Lim', email: 'peter@kstoryhub.example' },
+  { id: 'mock-manual-8', companyKind: 'production', companyName: 'Dramora', name: 'Sally Oh', email: 'sally@dramora.example' },
+  { id: 'mock-manual-9', companyKind: 'platform', companyName: 'Streamlet', name: 'Victor Lee', email: 'victor@streamlet.example' },
+  { id: 'mock-manual-10', companyKind: 'platform', companyName: 'BingeRoom', name: 'Hannah Yu', email: 'hannah@bingeroom.example' },
+  { id: 'mock-manual-11', companyKind: 'production', companyName: 'Episode One', name: 'Chris Moon', email: 'chris@episodeone.example' },
+  { id: 'mock-manual-12', companyKind: 'platform', companyName: 'StoryTap', name: 'Nina Jung', email: 'nina@storytap.example' },
+  { id: 'mock-manual-13', companyKind: 'production', companyName: 'KlipHouse', name: 'Ethan Kang', email: 'ethan@kliphouse.example' },
+  { id: 'mock-manual-14', companyKind: 'platform', companyName: 'ScenePop', name: 'Yuna Chae', email: 'yuna@scenepop.example' },
+  { id: 'mock-manual-15', companyKind: 'platform', companyName: 'Doki Channel', name: 'Min Park', email: 'min@dokichannel.example' },
+  { id: 'mock-manual-16', companyKind: 'platform', companyName: 'ReelPocket', name: 'Liam Koo', email: 'liam@reelpocket.example' },
+  { id: 'mock-manual-17', companyKind: 'platform', companyName: 'TinyFlix', name: 'Sara Baek', email: 'sara@tinyflix.example' },
+  { id: 'mock-manual-18', companyKind: 'production', companyName: 'ClipGarden', name: 'Joon Lee', email: 'joon@clipgarden.example' },
 ];
 
 function previousManualRecipients() {
@@ -1715,13 +1785,14 @@ function previousManualRecipients() {
     saved.set(manualRecipientKey(recipient), recipient);
   });
   history.forEach(item => {
-    if (item.type !== 'content' && item.type !== 'collaboration') return;
+    if (item.type !== 'content' && item.type !== 'collaboration' && item.type !== 'free') return;
     historyTargets(item).forEach(target => {
       if (!String(target.companyId || '').startsWith('manual-')) return;
       const recipient = Array.isArray(target.recipients) ? target.recipients[0] : null;
       if (!recipient?.email) return;
       const savedRecipient = {
         id: `previous-${target.companyId}-${recipient.email}`,
+        companyKind: normalizeCompanyKind(target.companyKind),
         companyName: target.companyName || '',
         name: recipient.name || '',
         email: recipient.email || '',
@@ -1763,7 +1834,7 @@ function previousManualRecipientOptions() {
 
 function visibleManualRecipientOptions() {
   return manualRecipientOptions().filter(recipient => {
-    const keyword = String(recipient.companyName || '').toLowerCase();
+    const keyword = `${companyKindLabel(recipient.companyKind)} ${recipient.companyName || ''} ${recipient.name || ''} ${recipient.email || ''}`.toLowerCase();
     return !manualRecipientQuery || keyword.includes(manualRecipientQuery);
   });
 }
@@ -1777,16 +1848,20 @@ function proposalTargetCount() {
   return selectedRegisteredPlatforms().length + validManualRecipients().length;
 }
 
+function freeTargetCount() {
+  return selectedRegisteredPlatforms().length + validManualRecipients().length;
+}
+
 function selectedProposalTargets() {
   return [
     ...selectedRegisteredPlatforms().map(platform => ({
-      type: '가입 플랫폼',
+      type: isFreeMail() ? companyKindLabel(platform.companyKind) : '가입 플랫폼',
       companyName: platform.name,
       name: platform.manager || '-',
-      email: mockRecipientEmail(platform),
+      email: platform.email || mockRecipientEmail(platform),
     })),
     ...validManualRecipients().map(recipient => ({
-      type: '외부 플랫폼',
+      type: isFreeMail() ? `외부 ${companyKindLabel(recipient.companyKind)}` : '외부 플랫폼',
       companyName: recipient.companyName,
       name: recipient.name,
       email: recipient.email,
@@ -1847,11 +1922,16 @@ function settlementContentSources() {
 function currentSources() {
   if (!selectedMailType) return [];
   if (isSettlementMail()) return settlementContentSources();
+  if (isFreeMail()) return [];
   return sourceData[selectedMailType] || [];
 }
 
 function isSettlementMail() {
   return selectedMailType === 'settlement' || selectedMailType === 'performance';
+}
+
+function isFreeMail() {
+  return selectedMailType === 'free';
 }
 
 function currentNoticeLabel() {
@@ -1932,6 +2012,7 @@ function currentSource() {
 
 function selectedSources() {
   if (isSettlementMail()) return selectedSettlementContents();
+  if (isFreeMail()) return [];
   const sources = currentSources();
   const ids = selectedSourceIds.size
     ? selectedSourceIds
@@ -1941,6 +2022,7 @@ function selectedSources() {
 
 function hasSelectedSources() {
   if (isSettlementMail()) return selectedSettlementContents().length > 0;
+  if (isFreeMail()) return true;
   return selectedSources().length > 0;
 }
 
@@ -1950,6 +2032,7 @@ function draftSources() {
 }
 
 function hasDraftSources() {
+  if (isFreeMail()) return true;
   return draftSources().length > 0;
 }
 
@@ -1987,7 +2070,7 @@ function commitDraftSourceSelection() {
   syncPrimarySourceId();
   checkedPlatforms.clear();
   manualRecipients = [];
-  manualRecipientDraft = { companyName: '', name: '', email: '' };
+  manualRecipientDraft = { companyKind: 'platform', companyName: '', name: '', email: '' };
   platformQuery = '';
   manualRecipientQuery = '';
   platformPage = 1;
@@ -2047,7 +2130,7 @@ function resetComposeSelection() {
   draftSourceIds.clear();
   checkedPlatforms.clear();
   manualRecipients = [];
-  manualRecipientDraft = { companyName: '', name: '', email: '' };
+  manualRecipientDraft = { companyKind: 'platform', companyName: '', name: '', email: '' };
   sourceQuery = '';
   platformQuery = '';
   manualRecipientQuery = '';
@@ -2107,7 +2190,7 @@ function setMailType(type) {
   draftSourceIds.clear();
   checkedPlatforms.clear();
   manualRecipients = [];
-  manualRecipientDraft = { companyName: '', name: '', email: '' };
+  manualRecipientDraft = { companyKind: 'platform', companyName: '', name: '', email: '' };
   sourceQuery = '';
   platformQuery = '';
   manualRecipientQuery = '';
@@ -2136,6 +2219,12 @@ function filterSources(value) {
 }
 
 function filterPlatforms(value) {
+  if (isFreeMail()) {
+    manualRecipientQuery = value.trim().toLowerCase();
+    manualRecipientPage = 1;
+    renderPlatforms();
+    return;
+  }
   platformQuery = value.trim().toLowerCase();
   platformPage = 1;
   renderPlatforms();
@@ -2149,25 +2238,29 @@ function filterManualRecipients(value) {
 
 function addManualRecipient() {
   if (isSettlementMail() || !hasSelectedSources()) return;
+  const kindInput = document.getElementById('manual-company-kind');
   const companyInput = document.getElementById('manual-company-name');
   const nameInput = document.getElementById('manual-recipient-name');
   const emailInput = document.getElementById('manual-recipient-email');
+  const companyKind = normalizeCompanyKind(kindInput?.value || manualRecipientDraft.companyKind);
   const companyName = companyInput?.value.trim() || '';
   const name = nameInput?.value.trim() || '';
   const email = emailInput?.value.trim() || '';
   if (!companyName || !name || !email) return;
   const nextRecipient = {
     id: manualRecipientId++,
+    companyKind,
     companyName,
     name,
     email,
   };
   if (!isManualRecipientSelected(nextRecipient)) manualRecipients.push(nextRecipient);
-  manualRecipientDraft = { companyName: '', name: '', email: '' };
+  manualRecipientDraft = { companyKind: 'platform', companyName: '', name: '', email: '' };
+  if (kindInput) kindInput.value = manualRecipientDraft.companyKind;
   if (companyInput) companyInput.value = '';
   if (nameInput) nameInput.value = '';
   if (emailInput) emailInput.value = '';
-  currentMailStep = 4;
+  currentMailStep = isFreeMail() ? 3 : 4;
   manualRecipientPage = 1;
   renderPlatforms();
   renderPreview();
@@ -2189,12 +2282,13 @@ function toggleManualRecipientOption(index) {
   } else {
     manualRecipients.push({
       id: manualRecipientId++,
+      companyKind: normalizeCompanyKind(recipient.companyKind),
       companyName: recipient.companyName,
       name: recipient.name,
       email: recipient.email,
     });
   }
-  currentMailStep = 4;
+  currentMailStep = isFreeMail() ? 3 : 4;
   renderPlatforms();
   renderPreview();
 }
@@ -2204,6 +2298,7 @@ function addPreviousManualRecipient(index) {
   if (!recipient || isManualRecipientSelected(recipient)) return;
   manualRecipients.push({
     id: manualRecipientId++,
+    companyKind: normalizeCompanyKind(recipient.companyKind),
     companyName: recipient.companyName,
     name: recipient.name,
     email: recipient.email,
@@ -2289,7 +2384,7 @@ function selectSource(id) {
   }
   checkedPlatforms.clear();
   manualRecipients = [];
-  manualRecipientDraft = { companyName: '', name: '', email: '' };
+  manualRecipientDraft = { companyKind: 'platform', companyName: '', name: '', email: '' };
   platformQuery = '';
   manualRecipientQuery = '';
   platformPage = 1;
@@ -2305,7 +2400,7 @@ function clearSourceSelection() {
   draftSourceIds.clear();
   checkedPlatforms.clear();
   manualRecipients = [];
-  manualRecipientDraft = { companyName: '', name: '', email: '' };
+  manualRecipientDraft = { companyKind: 'platform', companyName: '', name: '', email: '' };
   platformQuery = '';
   manualRecipientQuery = '';
   if (isSettlementMail()) {
@@ -2338,6 +2433,10 @@ function visiblePlatforms() {
 
 function togglePlatform(id) {
   if (isSettlementMail() && !hasSelectedSettlementCompany()) return;
+  if (isFreeMail()) {
+    toggleFreeRecipientCompany(id);
+    return;
+  }
   if (!isSettlementMail() && !hasSelectedSources()) return;
   if (checkedPlatforms.has(id)) checkedPlatforms.delete(id);
   else checkedPlatforms.add(id);
@@ -2346,7 +2445,30 @@ function togglePlatform(id) {
   renderPreview();
 }
 
+function toggleFreeRecipientCompany(id) {
+  if (!isFreeMail()) return;
+  if (checkedPlatforms.has(id)) checkedPlatforms.delete(id);
+  else checkedPlatforms.add(id);
+  currentMailStep = 2;
+  renderSources();
+  renderComposeStep();
+  renderPreview();
+}
+
+function selectAllFreeRecipientCompanies() {
+  if (!isFreeMail()) return;
+  visibleFreeRecipientCompanies().forEach(company => checkedPlatforms.add(company.id));
+  currentMailStep = 2;
+  renderSources();
+  renderComposeStep();
+  renderPreview();
+}
+
 function selectAllPlatforms() {
+  if (isFreeMail()) {
+    selectAllManualRecipients();
+    return;
+  }
   if (isSettlementMail() && !hasSelectedSettlementCompany()) return;
   if (!isSettlementMail() && !hasSelectedSources()) return;
   visiblePlatforms().forEach(platform => checkedPlatforms.add(platform.id));
@@ -2361,13 +2483,15 @@ function selectAllManualRecipients() {
     if (isManualRecipientSelected(recipient)) return;
     manualRecipients.push({
       id: manualRecipientId++,
+      companyKind: normalizeCompanyKind(recipient.companyKind),
       companyName: recipient.companyName,
       name: recipient.name,
       email: recipient.email,
     });
   });
-  currentMailStep = 4;
-  renderManualRecipients();
+  currentMailStep = isFreeMail() ? 3 : 4;
+  if (isFreeMail()) renderPlatforms();
+  else renderManualRecipients();
   renderPreview();
 }
 
@@ -2386,6 +2510,10 @@ function renderStepper() {
 
 function getMaxMailStep() {
   if (!selectedMailType) return 1;
+  if (isFreeMail()) {
+    if (!freeTargetCount() || !settlementAdminMessage.trim()) return 4;
+    return 5;
+  }
   if (isSettlementMail()) {
     if (!hasSelectedSettlementCompany()) return 2;
     if (!selectedSettlementContents().length) return 3;
@@ -2403,6 +2531,12 @@ function normalizeMailStep() {
 function canEnterMailStep(step) {
   if (step === 1) return true;
   if (step === 2) return Boolean(selectedMailType);
+  if (isFreeMail()) {
+    if (step === 3) return true;
+    if (step === 4) return true;
+    if (step === 5) return Boolean(freeTargetCount() && settlementAdminMessage.trim());
+    return false;
+  }
   if (isSettlementMail()) {
     if (step === 3) return hasSelectedSettlementCompany();
     if (step === 4) return selectedSettlementContents().length > 0;
@@ -2418,6 +2552,12 @@ function canEnterMailStep(step) {
 function getMailStepNotice() {
   const noticeLabel = currentNoticeLabel();
   if (currentMailStep === 1) return '메일 유형을 선택한 뒤 다음으로 이동합니다.';
+  if (isFreeMail()) {
+    if (currentMailStep === 2) return selectedRegisteredPlatforms().length ? `${selectedRegisteredPlatforms().length}개 수신회사 선택됨` : '내부 수신회사 없이도 다음 단계로 이동할 수 있습니다.';
+    if (currentMailStep === 3) return validManualRecipients().length ? `${validManualRecipients().length}개 외부 수신 회사 추가됨` : '외부 수신 회사 추가는 선택 입력입니다.';
+    if (currentMailStep === 4) return settlementAdminMessage.trim() ? '관리자메세지 작성됨' : '메일에 포함할 관리자메세지를 작성해주세요.';
+    return '미리보기 확인 후 메일을 발송합니다.';
+  }
   if (currentMailStep === 2) return isSettlementMail()
     ? (hasSelectedSettlementCompany() ? '선택한 제작사로 다음 단계 진행 가능' : `${noticeLabel} 알림을 보낼 제작사를 선택해주세요.`)
     : (hasSelectedSources() ? '선택한 콘텐츠로 다음 단계 진행 가능' : '발송할 자료를 선택해주세요.');
@@ -2453,38 +2593,48 @@ function renderComposeStep() {
   document.getElementById('mail-type-summary').textContent = selectedMailType ? mailTypes[selectedMailType].label : '';
   const company = selectedSettlementCompany();
   const settlementContents = selectedSettlementContents();
-  document.getElementById('source-section-title').textContent = isSettlementMail() ? '제작사 선택' : (selectedMailType ? proposalSourceStepLabel() : '자료 선택');
-  document.getElementById('target-section-title').textContent = isSettlementMail() ? '콘텐츠 선택' : '전송할 플랫폼 선택';
-  document.getElementById('message-section-title').textContent = isSettlementMail() ? '관리자 메시지' : '외부 플랫폼 선택';
-  document.getElementById('platform-search').placeholder = isSettlementMail() ? '콘텐츠명 검색' : (selectedMailType ? mailTypes[selectedMailType].targetSearchPlaceholder : '플랫폼사명 검색');
+  document.getElementById('source-section-title').textContent = isFreeMail() ? '내부 회사 선택' : (isSettlementMail() ? '제작사 선택' : (selectedMailType ? proposalSourceStepLabel() : '자료 선택'));
+  document.getElementById('target-section-title').textContent = isFreeMail() ? '외부 회사 선택' : (isSettlementMail() ? '콘텐츠 선택' : '전송할 플랫폼 선택');
+  document.getElementById('message-section-title').textContent = isFreeMail() ? '관리자메세지 작성' : (isSettlementMail() ? '관리자 메시지' : '외부 플랫폼 선택');
+  document.getElementById('platform-search').placeholder = isFreeMail() ? '외부 수신 회사명 검색' : (isSettlementMail() ? '콘텐츠명 검색' : (selectedMailType ? mailTypes[selectedMailType].targetSearchPlaceholder : '플랫폼사명 검색'));
   document.getElementById('select-all-targets-btn').textContent = isSettlementMail() ? '전체 선택' : '전체 선택';
-  document.getElementById('settlement-admin-message').placeholder = `${noticeLabel} 안내에 추가할 메시지를 입력해주세요.`;
+  document.getElementById('settlement-admin-message').placeholder = isFreeMail() ? '메일 본문에 들어갈 관리자메세지를 입력해주세요.' : `${noticeLabel} 안내에 추가할 메시지를 입력해주세요.`;
+  const adminMessageLabel = document.querySelector('.settlement-message-label > span:first-child');
+  if (adminMessageLabel) {
+    adminMessageLabel.innerHTML = isFreeMail() ? '관리자메세지 <span>필수 입력</span>' : '관리자 메시지 <span>선택 입력</span>';
+  }
   updateSettlementMessageCount();
   const sourceSummaryEl = document.getElementById('source-summary');
   const selectedSourceItems = selectedSources();
-  sourceSummaryEl.innerHTML = isSettlementMail()
+  sourceSummaryEl.innerHTML = isFreeMail()
+    ? (selectedPlatformNames.length ? `${selectedPlatformNames.length}개` : '')
+    : isSettlementMail()
     ? escapeHtml(company?.title || '')
     : selectedSourceItems.length > 1
     ? `<span class="step-desc-main">${escapeHtml(selectedSourceItems[0].title)}</span><span class="step-desc-count">외 ${selectedSourceItems.length - 1}개</span>`
     : escapeHtml(sourceSummary);
   document.getElementById('platform-summary').textContent = isSettlementMail()
     ? (settlementContents.length ? `${settlementContents.length}개` : '')
+    : isFreeMail()
+    ? (manualTargetCount ? `${manualTargetCount}개` : '선택 입력')
     : (selectedPlatformNames.length ? `${selectedPlatformNames.length}개` : '');
   document.getElementById('message-summary').textContent = isSettlementMail()
     ? (settlementAdminMessage.trim() ? '작성됨' : '선택 입력')
+    : isFreeMail()
+    ? (settlementAdminMessage.trim() ? '작성됨' : '필수 입력')
     : (manualTargetCount ? `${manualTargetCount}개` : '선택 입력');
   document.getElementById('preview-summary').textContent = '';
   const sourceNextBtn = document.getElementById('source-next-btn');
   const platformNextBtn = document.getElementById('platform-next-btn');
   const externalRecipientNextBtn = document.getElementById('external-recipient-next-btn');
   const settlementMessageNextBtn = document.getElementById('settlement-message-next-btn');
-  if (sourceNextBtn) sourceNextBtn.disabled = isSettlementMail() ? !draftSettlementCompanyId : !hasDraftSources();
-  if (platformNextBtn) platformNextBtn.disabled = isSettlementMail() ? !settlementContents.length : !hasSelectedSources();
-  if (externalRecipientNextBtn) externalRecipientNextBtn.disabled = isSettlementMail() ? true : !proposalTargets;
-  if (settlementMessageNextBtn) settlementMessageNextBtn.disabled = isSettlementMail() ? !settlementContents.length : true;
+  if (sourceNextBtn) sourceNextBtn.disabled = isFreeMail() ? false : (isSettlementMail() ? !draftSettlementCompanyId : !hasDraftSources());
+  if (platformNextBtn) platformNextBtn.disabled = isFreeMail() ? false : (isSettlementMail() ? !settlementContents.length : !hasSelectedSources());
+  if (externalRecipientNextBtn) externalRecipientNextBtn.disabled = isSettlementMail() || isFreeMail() ? true : !proposalTargets;
+  if (settlementMessageNextBtn) settlementMessageNextBtn.disabled = isFreeMail() ? (!freeTargetCount() || !settlementAdminMessage.trim()) : (isSettlementMail() ? !settlementContents.length : true);
   document.querySelector('#preview-body')?.closest('.preview-grid')?.classList.toggle('hidden', isSettlementMail());
   document.querySelector('#settlement-preview-body')?.closest('.preview-grid')?.classList.toggle('hidden', !isSettlementMail());
-  document.getElementById('settlement-message-panel')?.classList.toggle('show', isSettlementMail());
+  document.getElementById('settlement-message-panel')?.classList.toggle('show', isSettlementMail() || isFreeMail());
   document.querySelectorAll('.compose-step-head').forEach(button => {
     const step = Number(button.dataset.composeStep);
     button.classList.remove('first-visible', 'last-visible');
@@ -2505,7 +2655,7 @@ function renderComposeStep() {
     const step = Number(panel.dataset.composeStep);
     panel.classList.toggle('active', step === currentMailStep);
     if (step === 3) panel.classList.toggle('settlement-platform-step', isSettlementMail());
-    if (step === 4) panel.classList.toggle('settlement-message-step', isSettlementMail());
+    if (step === 4) panel.classList.toggle('settlement-message-step', isSettlementMail() || isFreeMail());
   });
   document.getElementById('compose-nav').innerHTML = '';
 }
@@ -2513,6 +2663,12 @@ function renderComposeStep() {
 function isMailStepDone(step) {
   if (step >= currentMailStep) return false;
   if (step === 1) return Boolean(selectedMailType);
+  if (isFreeMail()) {
+    if (step === 2) return true;
+    if (step === 3) return true;
+    if (step === 4) return Boolean(freeTargetCount() && settlementAdminMessage.trim());
+    return false;
+  }
   if (isSettlementMail()) {
     if (step === 2) return hasSelectedSettlementCompany();
     if (step === 3) return selectedSettlementContents().length > 0;
@@ -2555,6 +2711,14 @@ function handleMailStepNext() {
       checkedPlatforms.clear();
       platformQuery = '';
       platformPage = 1;
+      document.getElementById('platform-search').value = '';
+      setMailStep(3);
+      renderPlatforms();
+      return;
+    }
+    if (isFreeMail()) {
+      manualRecipientQuery = '';
+      manualRecipientPage = 1;
       document.getElementById('platform-search').value = '';
       setMailStep(3);
       renderPlatforms();
@@ -2620,17 +2784,20 @@ function openSourceConfirm() {
 
 function renderSources() {
   const type = mailTypes[selectedMailType];
-  document.getElementById('source-section-title').textContent = isSettlementMail() ? '제작사 선택' : (type ? proposalSourceStepLabel() : '자료 선택');
-  document.getElementById('source-search').placeholder = isSettlementMail() ? '제작사명 검색' : (type ? type.searchPlaceholder : '검색');
+  document.getElementById('source-section-title').textContent = isFreeMail() ? '내부 회사 선택' : (isSettlementMail() ? '제작사 선택' : (type ? proposalSourceStepLabel() : '자료 선택'));
+  document.getElementById('source-search').placeholder = isFreeMail() ? '수신회사명 검색' : (isSettlementMail() ? '제작사명 검색' : (type ? type.searchPlaceholder : '검색'));
   const list = document.getElementById('source-list');
   const pagination = document.getElementById('source-pagination');
   const tools = document.querySelector('.source-tools');
   const companyFilter = document.getElementById('settlement-company-filter');
+  const selectAllSourcesButton = document.getElementById('select-all-sources-btn');
   list.classList.toggle('content-source-list', selectedMailType === 'content');
   list.classList.toggle('collaboration-source-list', selectedMailType === 'collaboration');
   list.classList.toggle('settlement-source-list', isSettlementMail());
   list.classList.toggle('settlement-company-source-list', isSettlementMail());
+  list.classList.toggle('free-source-list', isFreeMail());
   tools?.classList.toggle('show-settlement-filter', false);
+  tools?.classList.toggle('show-free-select-all', isFreeMail());
   if (companyFilter) {
     companyFilter.innerHTML = `
       <option value="">전체 제작사</option>
@@ -2641,6 +2808,37 @@ function renderSources() {
   if (!type) {
     list.innerHTML = '<div class="empty-state">메일 유형을 먼저 선택해주세요</div>';
     pagination.innerHTML = '';
+    return;
+  }
+  if (isFreeMail()) {
+    const filtered = visibleFreeRecipientCompanies();
+    if (selectAllSourcesButton) selectAllSourcesButton.disabled = !filtered.length;
+    if (!filtered.length) {
+      list.innerHTML = '<div class="empty-state">조건에 맞는 수신회사가 없습니다</div>';
+      pagination.innerHTML = '';
+      return;
+    }
+    const totalPages = Math.max(1, Math.ceil(filtered.length / freeSourcePageSize));
+    sourcePage = Math.min(Math.max(1, sourcePage), totalPages);
+    const start = (sourcePage - 1) * freeSourcePageSize;
+    const pageRows = filtered.slice(start, start + freeSourcePageSize);
+    list.innerHTML = `
+      <div class="source-table-head">
+        <div class="source-head-cell"></div>
+        <div class="source-head-cell">구분</div>
+        <div class="source-head-cell">수신회사</div>
+        <div class="source-head-cell">지역</div>
+      </div>
+      ${pageRows.map(company => `
+        <div class="source-row ${checkedPlatforms.has(company.id) ? 'selected' : ''}" onclick="toggleFreeRecipientCompany('${escapeHtml(company.id)}')">
+          <div class="source-cell source-check-cell"><span class="source-check" aria-hidden="true"><i class="ti ti-check"></i></span></div>
+          <div class="source-cell"><span class="source-meta">${escapeHtml(companyKindLabel(company.companyKind))}</span></div>
+          <div class="source-cell"><div class="source-title">${escapeHtml(company.name)}</div></div>
+          <div class="source-cell"><span class="source-meta">${escapeHtml(company.region)}</span></div>
+        </div>
+      `).join('')}
+    `;
+    renderSourcePagination(filtered.length, totalPages);
     return;
   }
   if (isSettlementMail()) {
@@ -2753,7 +2951,9 @@ function renderSourcePagination(total, totalPages) {
 }
 
 function setSourcePage(page) {
-  const total = isSettlementMail()
+  const total = isFreeMail()
+    ? visibleFreeRecipientCompanies().length
+    : isSettlementMail()
     ? settlementCompanies().filter(company => {
       const text = `${company.title} ${company.region}`.toLowerCase();
       return !sourceQuery || text.includes(sourceQuery);
@@ -2762,7 +2962,7 @@ function setSourcePage(page) {
       const text = item.title.toLowerCase();
       return !sourceQuery || text.includes(sourceQuery);
     }).length;
-  const pageSize = isSettlementMail() ? settlementCompanyPageSize : sourcePageSize;
+  const pageSize = isFreeMail() ? freeSourcePageSize : (isSettlementMail() ? settlementCompanyPageSize : sourcePageSize);
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   sourcePage = Math.min(Math.max(1, page), totalPages);
   renderSources();
@@ -2775,6 +2975,62 @@ function renderPlatforms() {
   const messageInput = document.getElementById('settlement-admin-message');
   const noticeLabel = currentNoticeLabel();
   table.classList.toggle('settlement-content-table', isSettlementMail());
+  if (isFreeMail()) {
+    if (tools) tools.style.display = '';
+    if (table) table.style.display = '';
+    if (pagination) pagination.style.display = '';
+    const rows = visibleManualRecipientOptions();
+    const totalPages = Math.max(1, Math.ceil(rows.length / manualRecipientPageSize));
+    manualRecipientPage = Math.min(Math.max(1, manualRecipientPage), totalPages);
+    const start = (manualRecipientPage - 1) * manualRecipientPageSize;
+    const pageRows = rows.slice(start, start + manualRecipientPageSize);
+    table.innerHTML = `
+      <div class="external-platform-panel free-external-panel">
+        <div class="manual-recipient-table manual-recipient-selected-table">
+          <div class="manual-recipient-table-head">
+            <div class="manual-recipient-cell"></div>
+            <div class="manual-recipient-cell">구분</div>
+            <div class="manual-recipient-cell">회사명</div>
+            <div class="manual-recipient-cell">이름</div>
+            <div class="manual-recipient-cell">이메일</div>
+          </div>
+          <div class="manual-recipient-input-row">
+            <div class="manual-recipient-cell">
+              <button class="manual-recipient-add" type="button" onclick="addManualRecipient()" aria-label="외부 수신 회사 추가">+</button>
+            </div>
+            <div class="manual-recipient-input-cell">
+              <select class="manual-recipient-input" id="manual-company-kind" onchange="setManualRecipientDraft('companyKind', this.value)">
+                <option value="platform" ${normalizeCompanyKind(manualRecipientDraft.companyKind) === 'platform' ? 'selected' : ''}>플랫폼</option>
+                <option value="production" ${normalizeCompanyKind(manualRecipientDraft.companyKind) === 'production' ? 'selected' : ''}>제작사</option>
+              </select>
+            </div>
+            <div class="manual-recipient-input-cell">
+              <input class="manual-recipient-input" id="manual-company-name" placeholder="회사명" value="${escapeHtml(manualRecipientDraft.companyName)}" oninput="setManualRecipientDraft('companyName', this.value)" />
+            </div>
+            <div class="manual-recipient-input-cell">
+              <input class="manual-recipient-input" id="manual-recipient-name" placeholder="이름" value="${escapeHtml(manualRecipientDraft.name)}" oninput="setManualRecipientDraft('name', this.value)" />
+            </div>
+            <div class="manual-recipient-input-cell">
+              <input class="manual-recipient-input" id="manual-recipient-email" placeholder="이메일주소" value="${escapeHtml(manualRecipientDraft.email)}" oninput="setManualRecipientDraft('email', this.value)" onkeydown="if(event.key === 'Enter') addManualRecipient()" />
+            </div>
+          </div>
+          ${pageRows.length ? pageRows.map((recipient, index) => `
+            <div class="manual-recipient-option-row ${recipient.selected ? 'selected' : ''}" onclick="toggleManualRecipientOption(${start + index})">
+              <div class="manual-recipient-cell">
+                <div class="platform-check"><i class="ti ti-check"></i></div>
+              </div>
+              <div class="manual-recipient-cell">${escapeHtml(companyKindLabel(recipient.companyKind))}</div>
+              <div class="manual-recipient-cell">${escapeHtml(recipient.companyName)}</div>
+              <div class="manual-recipient-cell">${escapeHtml(recipient.name)}</div>
+              <div class="manual-recipient-cell">${escapeHtml(recipient.email)}</div>
+            </div>
+          `).join('') : '<div class="empty-state">조건에 맞는 외부 수신 회사가 없습니다</div>'}
+        </div>
+      </div>
+    `;
+    renderPlatformPagination(rows.length, totalPages);
+    return;
+  }
   if (isSettlementMail()) {
     renderManualRecipients();
     if (tools) tools.style.display = '';
@@ -2860,7 +3116,7 @@ function renderManualRecipients() {
   const panel = document.getElementById('manual-recipient-panel');
   if (!panel) return;
   document.getElementById('manual-recipient-add-panel')?.remove();
-  const shouldShow = !isSettlementMail() && hasSelectedSources();
+  const shouldShow = !isSettlementMail() && !isFreeMail() && hasSelectedSources();
   panel.classList.toggle('show', shouldShow);
   if (!shouldShow) {
     panel.innerHTML = '';
@@ -2937,10 +3193,15 @@ function renderPlatformPagination(total, totalPages) {
 function setManualRecipientPage(page) {
   const totalPages = Math.max(1, Math.ceil(visibleManualRecipientOptions().length / manualRecipientPageSize));
   manualRecipientPage = Math.min(Math.max(1, page), totalPages);
-  renderManualRecipients();
+  if (isFreeMail()) renderPlatforms();
+  else renderManualRecipients();
 }
 
 function setPlatformPage(page) {
+  if (isFreeMail()) {
+    setManualRecipientPage(page);
+    return;
+  }
   const totalPages = Math.max(1, Math.ceil(visiblePlatforms().length / platformPageSize));
   platformPage = Math.min(Math.max(1, page), totalPages);
   renderPlatforms();
@@ -2968,6 +3229,29 @@ function renderPreview() {
   const previewBody = document.getElementById(isSettlementMail() ? 'settlement-preview-body' : 'preview-body');
   const previewTargetSlot = document.getElementById('preview-target-slot');
   const sendButton = document.getElementById(isSettlementMail() ? 'settlement-send-btn' : 'send-btn');
+  if (isFreeMail()) {
+    const targets = selectedProposalTargets();
+    const adminMessage = settlementAdminMessage.trim();
+    const canSend = Boolean(freeTargetCount() && adminMessage);
+    if (previewBody) previewBody.innerHTML = canSend ? `
+      <div class="email-template-card">
+        <p class="email-template-copy">
+          안녕하세요.<br>
+          Shortflow에서 안내 메일을 전달드립니다.
+        </p>
+        <div class="settlement-admin-message">${escapeHtml(adminMessage)}</div>
+        <div class="email-template-foot">
+          <p class="email-template-note">본 메일은 발신전용이며, 문의사항은 Shortflow 서비스를 통해 접수해주세요.</p>
+          <p class="email-template-brand">Short<span>flow</span></p>
+        </div>
+      </div>
+    ` : '<div class="empty-state">수신 대상과 관리자메세지를 입력하면 메일 미리보기를 확인할 수 있습니다</div>';
+    if (previewTargetSlot) previewTargetSlot.innerHTML = targets.length ? renderPreviewTargetBox(targets) : '';
+    if (sendButton) sendButton.disabled = !canSend;
+    renderStepper();
+    renderComposeStep();
+    return;
+  }
   if (isSettlementMail()) {
     if (previewTargetSlot) previewTargetSlot.innerHTML = '';
     const noticeLabel = currentNoticeLabel();
@@ -3043,6 +3327,27 @@ function renderPreview() {
 }
 
 function sendMail() {
+  if (isFreeMail()) {
+    const targets = [...selectedRegisteredPlatforms(), ...validManualRecipients().map(recipient => ({ ...recipient, isManual: true }))];
+    if (!settlementAdminMessage.trim() || !targets.length) return;
+    openMailConfirm({
+      title: '메일을 발송할까요?',
+      message: `자유형식\n선택한 ${targets.length}개 수신처에 메일이 발송됩니다.`,
+      confirmLabel: '발송',
+      showIcon: false,
+      extraHtml: `
+        <div class="mail-confirm-list">
+          ${targets.map(item => {
+            const typeLabel = item.isManual ? `외부 ${companyKindLabel(item.companyKind)}` : companyKindLabel(item.companyKind);
+            const companyName = item.isManual ? item.companyName : item.name;
+            return `<div class="mail-confirm-list-row">${escapeHtml(typeLabel)} · ${escapeHtml(companyName)}</div>`;
+          }).join('')}
+        </div>
+      `,
+      onConfirm: performSendMail,
+    });
+    return;
+  }
   const sources = selectedSources();
   if (!sources.length || (!isSettlementMail() && !proposalTargetCount())) return;
   const selected = isSettlementMail()
@@ -3105,6 +3410,80 @@ function openSentMailDetail(newHistoryId) {
 }
 
 function performSendMail() {
+  if (isFreeMail()) {
+    const selected = selectedRegisteredPlatforms();
+    const manualTargets = validManualRecipients();
+    const allTargets = [...selected, ...manualTargets.map(recipient => ({ ...recipient, isManual: true }))];
+    const adminMessage = settlementAdminMessage.trim();
+    if (!adminMessage || !allTargets.length) return;
+    const type = mailTypes[selectedMailType];
+    const now = new Date();
+    const sentAt = localMailIso(now);
+    const newHistoryId = Date.now();
+    history.unshift({
+      id: newHistoryId,
+      sendBatchId: `batch-${newHistoryId}`,
+      type: selectedMailType,
+      contentTrack: 'FREE_MAIL',
+      sentByName: '김관리자',
+      sentAt,
+      target: '자유메일',
+      company: `${allTargets.length}개 수신처`,
+      contents: [],
+      platforms: [
+        ...selected.map(platform => platform.name),
+        ...manualTargets.map(recipient => recipient.companyName),
+      ],
+      targets: [
+        ...selected.map(platform => ({
+          companyId: platform.id,
+          companyName: platform.name,
+          companyKind: normalizeCompanyKind(platform.companyKind),
+          companyType: companyKindLabel(platform.companyKind),
+          sentToUserCount: 1,
+          recipients: [
+            {
+              name: platform.manager || '-',
+              email: platform.email || mockRecipientEmail(platform),
+              opened: false,
+              openedAt: null,
+            },
+          ],
+        })),
+        ...manualTargets.map(recipient => ({
+          companyId: `manual-${recipient.id}`,
+          companyName: recipient.companyName,
+          companyKind: normalizeCompanyKind(recipient.companyKind),
+          companyType: `외부 ${companyKindLabel(recipient.companyKind)}`,
+          sentToUserCount: 1,
+          recipients: [
+            {
+              name: recipient.name,
+              email: recipient.email,
+              opened: false,
+              openedAt: null,
+            },
+          ],
+        })),
+      ],
+      success: allTargets.length,
+      failed: 0,
+      adminMessage,
+      subject: type.subject({ title: '자유메일 안내', adminMessage }),
+    });
+    checkedPlatforms.clear();
+    manualRecipients = [];
+    manualRecipientDraft = { companyKind: 'platform', companyName: '', name: '', email: '' };
+    sourceQuery = '';
+    manualRecipientQuery = '';
+    sourcePage = 1;
+    manualRecipientPage = 1;
+    isPreviewTargetsExpanded = false;
+    settlementAdminMessage = '';
+    document.getElementById('send-success')?.classList.remove('show');
+    openSentMailDetail(newHistoryId);
+    return;
+  }
   const sources = selectedSources();
   const source = sources[0];
   if (!source || (!isSettlementMail() && !proposalTargetCount())) return;
@@ -3174,7 +3553,7 @@ function performSendMail() {
     draftSourceIds.clear();
     checkedPlatforms.clear();
     manualRecipients = [];
-    manualRecipientDraft = { companyName: '', name: '', email: '' };
+    manualRecipientDraft = { companyKind: 'platform', companyName: '', name: '', email: '' };
     manualRecipientQuery = '';
     manualRecipientPage = 1;
     isPreviousManualRecipientsExpanded = false;
@@ -3251,7 +3630,7 @@ function performSendMail() {
   draftSourceIds.clear();
   checkedPlatforms.clear();
   manualRecipients = [];
-  manualRecipientDraft = { companyName: '', name: '', email: '' };
+  manualRecipientDraft = { companyKind: 'platform', companyName: '', name: '', email: '' };
   manualRecipientQuery = '';
   manualRecipientPage = 1;
   isPreviousManualRecipientsExpanded = false;
@@ -3292,6 +3671,7 @@ function historyTargetLabel(item) {
 
 function historyListTypeLabel(type) {
   if (type === 'collaboration') return '기획안 제안';
+  if (type === 'free') return '자유형식';
   if (type === 'settlement') return '정산 알림';
   if (type === 'performance') return '퍼포먼스 알림';
   return '콘텐츠 제안';
@@ -3392,7 +3772,7 @@ function renderHistoryDetailPane() {
 function renderHistoryInlineDetail(item) {
   const contentNames = historyContentNames(item);
   const targets = historyTargets(item);
-  const adminMessage = (item.type === 'settlement' || item.type === 'performance') ? String(item.adminMessage || '').trim() : '';
+  const adminMessage = (item.type === 'settlement' || item.type === 'performance' || item.type === 'free') ? String(item.adminMessage || '').trim() : '';
   const ownerNotifications = historyOwnerNotifications(item);
   const subject = item.subject || `${historyTargetLabel(item)} ${historyListTypeLabel(item.type)}`;
   const contentListHtml = contentNames.length
@@ -3400,7 +3780,7 @@ function renderHistoryInlineDetail(item) {
     : '<span class="muted-copy">발송한 콘텐츠가 없습니다</span>';
   const targetListHtml = targets.length
     ? renderHistoryRecipientTable(targets, item.type)
-    : '<div class="recipient-empty">발송한 플랫폼사가 없습니다</div>';
+    : `<div class="recipient-empty">발송한 ${item.type === 'free' ? '수신사' : '플랫폼사'}가 없습니다</div>`;
   const ownerNotificationHtml = ownerNotifications.length
     ? renderOwnerNotificationTable(ownerNotifications)
     : '<div class="recipient-empty">제작사 알림 발송 내역이 없습니다</div>';
@@ -3459,12 +3839,14 @@ function renderOwnerNotificationTable(notifications) {
 }
 
 function renderHistoryRecipientTable(targets, mailType) {
-  const showTargetType = mailType === 'content' || mailType === 'collaboration';
+  const showTargetType = mailType === 'content' || mailType === 'collaboration' || mailType === 'free';
   const recipientRows = targets.flatMap((target, targetIndex) => {
     const recipients = Array.isArray(target.recipients) ? target.recipients : [];
     const companyTopLineClass = targetIndex > 0 ? 'with-company-top-line' : '';
     if (!recipients.length) {
-      const targetType = String(target.companyId || '').startsWith('manual-') ? '외부' : '내부';
+      const targetType = mailType === 'free'
+        ? (target.companyType || companyKindLabel(target.companyKind))
+        : (String(target.companyId || '').startsWith('manual-') ? '외부' : '내부');
       return [`
         <div class="recipient-row recipient-group-start ${showTargetType ? '' : 'no-target-type'}">
           ${showTargetType ? `<div class="recipient-cell recipient-type ${companyTopLineClass}">${targetType}</div>` : ''}
@@ -3476,7 +3858,9 @@ function renderHistoryRecipientTable(targets, mailType) {
         </div>
       `];
     }
-    const targetType = String(target.companyId || '').startsWith('manual-') ? '외부' : '내부';
+    const targetType = mailType === 'free'
+      ? (target.companyType || companyKindLabel(target.companyKind))
+      : (String(target.companyId || '').startsWith('manual-') ? '외부' : '내부');
     return recipients.map((recipient, index) => `
       <div class="recipient-row ${index === 0 ? 'recipient-group-start' : ''} ${showTargetType ? '' : 'no-target-type'}">
         ${showTargetType ? `<div class="recipient-cell recipient-type ${index === 0 ? companyTopLineClass : 'blank'}">${index === 0 ? targetType : ''}</div>` : ''}
