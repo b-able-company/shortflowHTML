@@ -381,6 +381,193 @@
       margin-left: 0;
     }
 
+    .workflow-platform-overview {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      padding-top: 8px;
+      margin-bottom: 18px;
+    }
+
+    .workflow-platform-box {
+      position: relative;
+      min-width: 0;
+      padding: 22px 26px 20px;
+      border: 0.5px solid var(--dist-line);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .workflow-platform-box-head {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 10px;
+    }
+
+    .workflow-platform-box-title {
+      position: absolute;
+      top: -8px;
+      left: 18px;
+      margin: 0;
+      padding: 0 8px;
+      background: #fff;
+      color: #181818;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.2;
+    }
+
+    .workflow-platform-box-count {
+      height: 22px;
+      padding: 0 8px;
+      border: 0.5px solid #ececec;
+      border-radius: 999px;
+      background: #fafafa;
+      color: #737780;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .workflow-contract-list,
+    .workflow-negotiation-list {
+      display: grid;
+      gap: 0;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .workflow-contract-item,
+    .workflow-negotiation-item {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 0.5px solid #f0f0f0;
+    }
+
+    .workflow-contract-item:first-child,
+    .workflow-negotiation-item:first-child {
+      padding-top: 0;
+    }
+
+    .workflow-contract-item:last-child,
+    .workflow-negotiation-item:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .workflow-contract-name,
+    .workflow-negotiation-name {
+      min-width: 0;
+      overflow: hidden;
+      color: #181818;
+      flex: 0 1 auto;
+      font-size: 13px;
+      font-weight: 450;
+      line-height: 1.25;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .workflow-contract-status,
+    .workflow-negotiation-status {
+      height: 24px;
+      padding: 0 9px 0 8px;
+      border: 0.5px solid #e9e9e9;
+      border-radius: 999px;
+      color: #4f535a;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      flex: 0 0 auto;
+      font-size: 11px;
+      font-weight: 570;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .workflow-contract-status {
+      width: 65px;
+      position: relative;
+      justify-content: center;
+      padding: 0 8px 0 20px;
+    }
+
+    .workflow-negotiation-status {
+      min-width: 52px;
+    }
+
+    .workflow-contract-status::before,
+    .workflow-negotiation-status::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: currentColor;
+      flex: 0 0 auto;
+    }
+
+    .workflow-contract-status::before {
+      position: absolute;
+      top: 50%;
+      left: 8px;
+      transform: translateY(-50%);
+    }
+
+    .workflow-contract-status.is-active {
+      color: #2f8f52;
+    }
+
+    .workflow-contract-status.is-active::before {
+      animation: livePulse 2s ease-in-out infinite;
+    }
+
+    .workflow-contract-status.is-scheduled {
+      color: #3d7db8;
+    }
+
+    .workflow-contract-status.is-closed {
+      color: #7d828a;
+    }
+
+    .workflow-negotiation-status.is-negotiating {
+      border-color: #d8eadf;
+      background: #f3faf6;
+      color: #2f8f52;
+    }
+
+    .workflow-negotiation-status::before {
+      display: none;
+    }
+
+    .workflow-negotiation-status.is-hold {
+      border-color: #eee4bd;
+      background: #fff9e7;
+      color: #8a7a36;
+    }
+
+    .workflow-negotiation-meta {
+      margin-top: 4px;
+      color: #8a8e96;
+      display: block;
+      font-size: 11.5px;
+      font-weight: 500;
+      line-height: 1.25;
+    }
+
     .workflow-material-group h4 span {
       width: 5px;
       height: 5px;
@@ -1497,6 +1684,10 @@
         grid-template-columns: 1fr;
       }
 
+      .workflow-platform-overview {
+        grid-template-columns: 1fr;
+      }
+
       .workflow-material-item {
         border-left: 0;
         border-top: 0.5px solid #f2f2f2;
@@ -1581,6 +1772,8 @@
       detailUrl: 'my-content-detail.html?title=%EB%8C%80%ED%91%9C%EB%8B%98%EC%9D%B4%20%EB%82%B4%20%EC%A0%84%EB%82%A8%EC%B9%9C%EC%9E%85%EB%8B%88%EB%8B%A4',
       timeline: [
         { title: '퍼포먼스 데이터가 업데이트되었습니다.', date: '2026년 7월 15일 14:18', active: true },
+        { title: 'WeTV와 협의중 상태입니다.', date: '2026년 7월 15일 13:35' },
+        { title: 'ReelShort와 계약이 성사되었습니다.', date: '2026년 7월 15일 12:20' },
         { title: 'NovaShort 외 2개사에 제안 메일을 발송했습니다.', date: '2026년 7월 15일 11:42' },
         { title: '콘텐츠 정보 수정을 신청했습니다.', date: '2026년 7월 14일 16:05' },
         { title: '관리자가 콘텐츠 등록을 승인했습니다.', date: '2026년 7월 13일 16:20' },
@@ -1640,6 +1833,11 @@
           ['홍보자료', '2 개']
         ]
       }
+    ];
+    const negotiatingPlatforms = [
+      { name: 'ShortReel', status: 'negotiating' },
+      { name: 'WeTV', status: 'negotiating' },
+      { name: 'Mango TV Global', status: 'hold' }
     ];
     const rsMonthlyTemplate = [
       ['2024-10', 210], ['2024-11', 290], ['2024-12', 340],
@@ -1833,10 +2031,11 @@
         return `
           <div class="hero-summary">
             <div class="hero-eyebrow">워크플로우 상태</div>
-            <div class="hero-metric-grid is-three" aria-label="워크플로우 요약">
+            <div class="hero-metric-grid" aria-label="워크플로우 요약">
               ${renderHeroMetric('계약 플랫폼', `${formatNumber(row.platforms.length)}개`)}
+              ${renderHeroMetric('협의중 플랫폼', `${formatNumber(negotiatingPlatforms.length)}개`)}
               ${renderHeroMetric('콘텐츠 상태', '공개')}
-              ${renderHeroMetric('드라이브 업로드', workflowDetail.driveUploadStatus)}
+              ${renderHeroMetric('드라이브 업로드 상태', workflowDetail.driveUploadStatus)}
             </div>
           </div>
         `;
@@ -2272,6 +2471,65 @@
       `;
     }
 
+    const contractPeriodMeta = {
+      scheduled: { label: '방영예정', className: 'is-scheduled' },
+      active: { label: '유통중', className: 'is-active' },
+      closed: { label: '계약종료', className: 'is-closed' }
+    };
+    const negotiationStatusMeta = {
+      negotiating: { label: '협의중', className: 'is-negotiating' },
+      hold: { label: '보류', className: 'is-hold' }
+    };
+
+    function workflowContractPeriodStatus(platform) {
+      if (contractPeriodMeta[platform.stage]) return contractPeriodMeta[platform.stage];
+      const startDate = new Date(`${platform.releaseDate || platform.periodStart}T00:00:00`);
+      const endDate = new Date(`${platform.expiryDate || platform.periodEnd}T23:59:59`);
+      const today = new Date();
+      if (!Number.isNaN(startDate.getTime()) && today < startDate) return contractPeriodMeta.scheduled;
+      if (!Number.isNaN(endDate.getTime()) && today > endDate) return contractPeriodMeta.closed;
+      return contractPeriodMeta.active;
+    }
+
+    function renderWorkflowPlatformOverview() {
+      return `
+        <div class="workflow-platform-overview" aria-label="플랫폼 계약 및 협의 현황">
+          <article class="workflow-platform-box">
+            <div class="workflow-platform-box-head">
+              <h3 class="workflow-platform-box-title">계약 플랫폼</h3>
+            </div>
+            <ul class="workflow-contract-list">
+              ${settlementPlatforms.map(platform => {
+                const periodStatus = workflowContractPeriodStatus(platform);
+                return `
+                  <li class="workflow-contract-item">
+                    <strong class="workflow-contract-name">${escapeHtml(platform.name)}</strong>
+                    <span class="workflow-contract-status ${periodStatus.className}">${escapeHtml(periodStatus.label)}</span>
+                  </li>
+                `;
+              }).join('')}
+            </ul>
+          </article>
+          <article class="workflow-platform-box">
+            <div class="workflow-platform-box-head">
+              <h3 class="workflow-platform-box-title">협의중 플랫폼</h3>
+            </div>
+            <ul class="workflow-negotiation-list">
+              ${negotiatingPlatforms.map(platform => {
+                const status = negotiationStatusMeta[platform.status] || negotiationStatusMeta.negotiating;
+                return `
+                  <li class="workflow-negotiation-item">
+                    <strong class="workflow-negotiation-name">${escapeHtml(platform.name)}</strong>
+                    <span class="workflow-negotiation-status ${status.className}">${escapeHtml(status.label)}</span>
+                  </li>
+                `;
+              }).join('')}
+            </ul>
+          </article>
+        </div>
+      `;
+    }
+
     function renderDriveMaterialCell(entry) {
       if (!entry) return '<td></td><td></td>';
       const [label, count] = entry;
@@ -2406,6 +2664,7 @@
 
     function renderDriveContent() {
       return `
+        ${renderWorkflowPlatformOverview()}
         <div class="workflow-section">
           <h3 class="workflow-section-title">구글 드라이브 현황</h3>
           <div class="workflow-material-panel">
