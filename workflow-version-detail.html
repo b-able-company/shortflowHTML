@@ -355,10 +355,21 @@
       padding: 0 8px;
       background: #fff;
       color: #181818;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
       font-size: 16px;
       font-weight: 700;
       letter-spacing: 0;
       line-height: 1.2;
+    }
+
+    .workflow-section-title-icon {
+      width: 16px;
+      height: 16px;
+      display: block;
+      flex: 0 0 auto;
+      object-fit: contain;
     }
 
     .workflow-detail-split .workflow-section > .workflow-card {
@@ -414,6 +425,9 @@
       padding: 0 8px;
       background: #fff;
       color: #181818;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
       font-size: 16px;
       font-weight: 700;
       letter-spacing: 0;
@@ -2428,7 +2442,7 @@
     function renderWorkflowTimeline() {
       return `
         <div class="workflow-section">
-          <h3 class="workflow-section-title">타임라인</h3>
+          <h3 class="workflow-section-title"><img class="workflow-section-title-icon" src="images/ui/icon/timeline.png" alt="" aria-hidden="true">타임라인</h3>
           <article class="workflow-card">
             <ol class="workflow-timeline">
               ${workflowDetail.timeline.map(step => `
@@ -2496,7 +2510,7 @@
         <div class="workflow-platform-overview" aria-label="플랫폼 계약 및 협의 현황">
           <article class="workflow-platform-box">
             <div class="workflow-platform-box-head">
-              <h3 class="workflow-platform-box-title">계약 플랫폼</h3>
+              <h3 class="workflow-platform-box-title"><img class="workflow-section-title-icon" src="images/ui/icon/circle-check.png" alt="" aria-hidden="true">계약 플랫폼</h3>
             </div>
             <ul class="workflow-contract-list">
               ${settlementPlatforms.map(platform => {
@@ -2512,7 +2526,7 @@
           </article>
           <article class="workflow-platform-box">
             <div class="workflow-platform-box-head">
-              <h3 class="workflow-platform-box-title">협의중 플랫폼</h3>
+              <h3 class="workflow-platform-box-title"><img class="workflow-section-title-icon" src="images/ui/icon/messages-square.png" alt="" aria-hidden="true">협의중 플랫폼</h3>
             </div>
             <ul class="workflow-negotiation-list">
               ${negotiatingPlatforms.map(platform => {
@@ -2666,7 +2680,7 @@
       return `
         ${renderWorkflowPlatformOverview()}
         <div class="workflow-section">
-          <h3 class="workflow-section-title">구글 드라이브 현황</h3>
+          <h3 class="workflow-section-title"><img class="workflow-section-title-icon" src="images/ui/icon/folder-sync.png" alt="" aria-hidden="true">구글 드라이브 현황</h3>
           <div class="workflow-material-panel">
             ${driveMaterialStatus === 'loaded' ? `
               ${driveMaterialGroups.map(group => `
