@@ -1023,6 +1023,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 /* ── DETAIL INNER TABS ── */
 .dtabbar { background: #fff; border-bottom: 0.5px solid rgb(242, 242, 242); display: flex; padding: 0 18px; flex-shrink: 0; }
 .dtab { padding: 9px 12px; font-size: 12px; color: #aaa; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -0.5px; user-select: none; }
+.dtab-divider { width: 1px; height: 18px; margin: 0 4px; background: #e5e5e5; flex: 0 0 auto; }
 .dtab:hover { color: #666; }
 .dtab.active { color: #1a1a18; border-bottom-color: #1a1a18; font-weight: 500; }
 
@@ -1081,7 +1082,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 .material-folder-create-label {
   display: none;
   color: #999;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 400;
 }
 .material-folder-field.is-create .material-folder-create-icon {
@@ -1423,7 +1424,7 @@ td { padding: 9px 12px; vertical-align: middle; }
   background: #f1f1f1;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.1), inset 0 -0.5px 0 rgba(255,255,255,0.9);
   color: #1a1a18;
-  font-weight: 450;
+  font-weight: 400;
   z-index: 1;
 }
 .ltab.active.has-value {
@@ -1850,7 +1851,7 @@ td { padding: 9px 12px; vertical-align: middle; }
   background: #f7f7f7;
   position: relative;
 }
-.tl-text { font-size: 13px; color: #333; }
+.tl-text { font-size: 12px; font-weight: 450; color: #333; }
 .tl-time { font-size: 11.5px; color: #bbb; margin-top: 2px; }
 .tl-delete {
   width: 24px;
@@ -1875,6 +1876,338 @@ td { padding: 9px 12px; vertical-align: middle; }
 .tl-delete i {
   font-size: 16px;
 }
+.timeline-manual {
+  margin-bottom: 18px;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgb(240, 240, 240);
+  display: grid;
+  grid-template-columns: minmax(180px, 1.35fr) minmax(160px, 1fr) minmax(120px, .65fr) minmax(98px, .5fr) auto;
+  gap: 8px;
+  align-items: end;
+}
+.timeline-manual-field {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+.timeline-manual-field label {
+  color: #777;
+  font-size: 10.5px;
+  font-weight: 400;
+}
+.timeline-manual select,
+.timeline-manual input {
+  width: 100%;
+  height: 34px;
+  padding: 0 10px;
+  border: 0.5px solid #d0d0d0;
+  border-radius: 8px;
+  background: #fff;
+  color: #1f1f1f;
+  font-family: inherit;
+  font-size: 12px;
+  outline: none;
+}
+.timeline-manual select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238d8d8d' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+}
+.timeline-manual-values {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.timeline-manual-values.single {
+  grid-template-columns: minmax(0, 1fr);
+}
+.timeline-datetime-field {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+.timeline-datetime-field > label {
+  color: #777;
+  font-size: 10.5px;
+  font-weight: 400;
+}
+.timeline-datetime-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+}
+.timeline-date-field {
+  position: relative;
+  min-width: 0;
+}
+.timeline-date-field input {
+  padding-right: 38px;
+  cursor: pointer;
+}
+.timeline-date-btn {
+  position: absolute;
+  right: 7px;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #9aa0a9;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+.timeline-date-btn:hover {
+  background: #f2f2f2;
+  color: #333;
+}
+.timeline-date-popover {
+  position: fixed;
+  width: 280px;
+  padding: 12px;
+  border: 1px solid #e1e3e8;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(0,0,0,.1);
+  z-index: 420;
+  display: none;
+}
+.timeline-date-popover.show {
+  display: block;
+}
+.date-picker-head {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.date-picker-title {
+  color: #1a1a18;
+  font-size: 13px;
+  font-weight: 500;
+}
+.date-picker-nav {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #777;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.date-picker-nav:hover {
+  background: #f4f4f4;
+  color: #111;
+}
+.date-picker-week,
+.date-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.date-picker-week span {
+  height: 26px;
+  color: #9aa0a9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10.5px;
+}
+.date-picker-day {
+  height: 34px;
+  border: 0;
+  border-radius: 6px;
+  background: #fff;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.date-picker-day:hover {
+  background: #f4f4f4;
+}
+.date-picker-day.is-muted {
+  color: #c2c6cc;
+}
+.date-picker-day.is-today {
+  color: #111;
+  font-weight: 600;
+}
+.date-picker-day.is-selected {
+  background: #222;
+  color: #fff;
+  font-weight: 500;
+}
+.timeline-manual-add {
+  height: 34px;
+  min-width: 78px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 8px;
+  background: #1a1a18;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.timeline-manual-add i {
+  font-size: 15px;
+}
+.timeline-manual-trigger {
+  margin-top: -8px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+.timeline-manual-open {
+  min-height: 36px;
+  padding: 0 14px 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: #1a1a18;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 450;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  transition: background .12s ease, transform .12s ease, box-shadow .12s ease;
+}
+.timeline-manual-open:hover {
+  background: #30302d;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+.timeline-manual-open:active {
+  background: #050505;
+  transform: translateY(0.5px);
+}
+.timeline-manual-open i {
+  font-size: 16px;
+}
+.timeline-manual-modal {
+  width: min(552px, calc(100vw - 48px));
+  border-radius: 14px;
+  box-shadow: 0 18px 54px rgba(0,0,0,0.18);
+}
+.timeline-manual-modal .admin-modal-head {
+  display: none;
+}
+.timeline-manual-modal .timeline-manual {
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+.timeline-manual-modal .admin-modal-title {
+  font-size: 13.5px;
+  font-weight: 550;
+}
+.timeline-manual-modal .admin-modal-close {
+  display: none;
+}
+.timeline-manual-modal .company-picker-body {
+  padding: 20px 20px 8px;
+}
+.timeline-manual-modal .admin-modal-actions {
+  min-height: 58px;
+  padding: 6px 20px 20px;
+  border-top: 0;
+}
+.timeline-manual-heading {
+  grid-column: 1 / -1;
+  margin-bottom: 4px;
+  color: #1f1f1f;
+  font-size: 13.5px;
+  font-weight: 550;
+  line-height: 1.3;
+}
+.timeline-manual-field.is-full,
+.timeline-manual-modal .timeline-datetime-field,
+.timeline-manual-preview-wrap,
+.timeline-manual-modal .timeline-manual-values {
+  grid-column: 1 / -1;
+}
+.timeline-manual-modal .timeline-manual-field label,
+.timeline-manual-modal .timeline-datetime-field > label {
+  color: #3f3f3f;
+  font-size: 11px;
+  font-weight: 450;
+}
+.timeline-manual-modal .timeline-manual-values {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.timeline-manual-modal .timeline-manual-values.single {
+  grid-template-columns: minmax(0, 1fr);
+}
+.timeline-manual-preview {
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 0.5px solid #dedede;
+  border-radius: 8px;
+  background: #fff;
+  color: #1a1a18;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+.timeline-manual-preview strong {
+  font-weight: 500;
+}
+.timeline-manual-preview.is-empty {
+  color: #1a1a18;
+}
+.timeline-manual-confirm {
+  font-weight: 350;
+}
+.timeline-manual-cancel,
+.timeline-manual-confirm {
+  min-width: 84px;
+  min-height: 34px;
+  border-radius: 999px;
+  justify-content: center;
+  font-size: 12px;
+}
+.timeline-manual-cancel {
+  border: 0.5px solid #d8d8d8;
+  background: #fff;
+  color: #333;
+}
+.timeline-manual-cancel:hover {
+  background: #f7f7f7;
+}
+.tl-text strong {
+  font-weight: 650;
+}
 
 /* ── MAIL ROWS ── */
 .mrow { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 9px 10px; font-size: 12px; border: 0.5px solid #eeeeea; border-radius: 7px; background: #fff; }
@@ -1882,10 +2215,102 @@ td { padding: 9px 12px; vertical-align: middle; }
 .mplatform { color: #333; font-weight: 500; }
 .mdate { color: #bbb; font-size: 11px; white-space: nowrap; }
 
-/* ── BOOKMARK ── */
-.bookmark-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
-.brow { min-height: 34px; display: flex; align-items: center; justify-content: center; padding: 8px 9px; font-size: 11.5px; border: 0.5px solid #eeeeea; border-radius: 7px; background: #fff; }
-.bplatform { color: #333; font-weight: 500; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* ── CONTRACT STATUS ── */
+.contract-status-page { width: calc(100% - 24px); margin: 0 auto; display: grid; gap: 22px; }
+.contract-status-section { display: grid; gap: 9px; }
+.contract-status-label { color: #4d4d4d; font-size: 11px; font-weight: 600; line-height: 1.2; }
+.contract-status-help {
+  position: relative;
+  width: 15px;
+  height: 15px;
+  margin-left: 6px;
+  border: 0.5px solid #d6d6d6;
+  border-radius: 50%;
+  color: #999;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9.5px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: help;
+  vertical-align: 1px;
+}
+.contract-status-help::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  width: 240px;
+  padding: 8px 10px;
+  border: 0.5px solid #e5e5e5;
+  border-radius: 8px;
+  background: #fff;
+  color: #555;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.45;
+  white-space: normal;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transform: translateY(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .12s ease;
+  z-index: 1000;
+}
+.contract-status-help:hover::after { opacity: 1; }
+.contract-status-card { overflow: hidden; border-radius: 12px; background: rgb(240, 240, 240); }
+.contract-status-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; min-height: 56px; padding: 13px 16px; border-bottom: 0.5px solid #dcdcdc; background: transparent; }
+.contract-status-row:last-child { border-bottom: 0; }
+.contract-status-row.is-empty { display: flex; color: #9a9a9a; font-size: 12px; }
+.contract-status-name { min-width: 0; color: #1f1f1f; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 560; line-height: 1.25; }
+.contract-status-meta { margin-top: 5px; color: #666; display: block; font-size: 11.5px; line-height: 1.35; white-space: nowrap; }
+.contract-status-actions { display: inline-flex; align-items: center; justify-content: flex-end; gap: 8px; min-width: 0; }
+.bookmark-chip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); gap: 8px; padding: 12px; }
+.bookmark-chip { min-width: 0; min-height: 34px; padding: 0 12px; border-radius: 8px; background: #fff; color: #1f1f1f; display: inline-flex; align-items: center; justify-content: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; font-weight: 450; }
+.discussion-platform-add { min-height: 28px; padding: 0 10px; border: 0; border-radius: 7px; background: #1a1a18; color: #fff; display: inline-flex; align-items: center; justify-content: center; gap: 5px; font-family: inherit; font-size: 11.5px; cursor: pointer; white-space: nowrap; }
+.discussion-platform-status-select { width: 92px; height: 32px; padding: 0 28px 0 10px; border: 0.5px solid #d4d4d4; border-radius: 8px; background: #fff; color: #333; font-family: inherit; font-size: 12px; }
+.discussion-platform-status-pill { min-width: 58px; min-height: 24px; padding: 0 8px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; white-space: nowrap; }
+.discussion-platform-status-pill.is-progress { border: 0.5px solid #b9c9ea; background: #fff; color: #31589f; }
+.discussion-platform-status-pill.is-hold { border: 0.5px solid #cfcfcf; background: #fff; color: #666; }
+.discussion-platform-actions { display: inline-flex; align-items: center; justify-content: flex-end; gap: 4px; }
+.discussion-platform-icon-btn { width: 32px; height: 32px; border: 0; border-radius: 7px; background: transparent; color: #aaa; display: inline-flex; align-items: center; justify-content: center; font-family: inherit; cursor: pointer; }
+.discussion-platform-icon-btn i { font-size: 18px; }
+.discussion-platform-icon-btn:hover { background: #f7f7f7; color: #1a1a18; }
+.discussion-platform-icon-btn.is-save:hover { background: #eef8f0; color: #2f7d4b; }
+.discussion-platform-icon-btn.is-delete:hover { background: #fff1ec; color: #e85d2c; }
+.discussion-platform-table,
+.contract-platform-table { width: 100%; border-collapse: collapse; table-layout: fixed; background: rgb(240, 240, 240); }
+.discussion-platform-table th,
+.contract-platform-table th { height: 34px; padding: 0 16px; border-bottom: 0.5px solid #dcdcdc; background: rgb(240, 240, 240); color: #777; font-size: 10.5px; font-weight: 400; text-align: left; }
+.discussion-platform-table th:nth-child(1) { width: 58%; }
+.discussion-platform-table th:nth-child(2) { width: 22%; text-align: center; }
+.discussion-platform-table th:nth-child(3) { width: 84px; padding-right: 12px; text-align: right; }
+.contract-platform-table th:nth-child(1) { width: 36%; }
+.contract-platform-table th:nth-child(2) { width: 34%; }
+.contract-platform-table th:nth-child(3) { width: 18%; text-align: center; }
+.contract-platform-table th:nth-child(4) { width: 48px; padding-right: 12px; text-align: right; }
+.discussion-platform-table td,
+.contract-platform-table td { height: 48px; padding: 0 16px; border-bottom: 0.5px solid #dcdcdc; color: #1f1f1f; font-size: 12px; vertical-align: middle; }
+.discussion-platform-table tr:last-child td,
+.contract-platform-table tr:last-child td { border-bottom: 0; }
+.discussion-platform-table td:nth-child(2) { text-align: center; }
+.discussion-platform-table td:nth-child(3) { padding-right: 12px; text-align: right; }
+.contract-platform-table td:nth-child(3) { text-align: center; }
+.contract-platform-table td:nth-child(4) { padding-right: 12px; text-align: right; }
+.discussion-platform-add-row { cursor: pointer; }
+.discussion-platform-add-row:hover td { background: #f7f7f7; }
+.discussion-platform-add-cell { height: 46px; color: #777; text-align: center !important; font-size: 12px; font-weight: 500; }
+.discussion-platform-add-text { display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
+.contract-platform-name { min-width: 0; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 450; }
+.contract-platform-period { max-width: 100%; color: #777; display: block; overflow: hidden; text-overflow: ellipsis; font-size: 12px; white-space: nowrap; }
+.contract-platform-status { min-width: 58px; min-height: 24px; padding: 0 8px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; white-space: nowrap; }
+.contract-platform-status.is-scheduled { border: 0.5px solid #e4c872; background: #fff; color: #8b6a0c; }
+.contract-platform-status.is-active { border: 0.5px solid #9bc9a9; background: #fff; color: #2f7d4b; }
+.contract-platform-status.is-ended { border: 0.5px solid #cfcfcf; background: #fff; color: #666; }
+.contract-platform-link { width: 28px; height: 28px; border-radius: 7px; color: #888; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.contract-platform-link:hover { background: #f7f7f7; color: #1a1a18; }
+.contract-platform-link i { font-size: 19px; }
 
 /* ── EXTRA INFO ── */
 .extra-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
@@ -1893,7 +2318,6 @@ td { padding: 9px 12px; vertical-align: middle; }
 .extra-panel-head { padding: 11px 13px; border-bottom: 0.5px solid rgb(242, 242, 242); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .extra-panel-title { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 500; color: #333; }
 .extra-panel-title i { font-size: 14px; color: #aaa; }
-.extra-panel-count { font-size: 10.5px; color: #aaa; }
 .extra-panel-body { padding: 12px 13px; }
 .extra-panel-body .tl-item:first-child { padding-top: 0; }
 .extra-panel-body .tl-item:last-child { padding-bottom: 0; }
@@ -1909,37 +2333,116 @@ td { padding: 9px 12px; vertical-align: middle; }
 .timeline-panel .extra-panel-body {
   padding: 14px 18px 0;
 }
-.operation-settings-body { display: grid; grid-template-columns: 1fr; gap: 10px; padding-top: 0; padding-bottom: 0; }
-.operation-setting-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 72px; padding: 14px 16px; border: 0.5px solid #eeeeea; border-radius: 8px; background: #fff; }
+.operation-settings-page { width: calc(100% - 24px); margin: 0 auto; display: grid; gap: 22px; }
+.operation-settings-section { display: grid; gap: 9px; }
+.operation-settings-label { color: #4d4d4d; font-size: 11px; font-weight: 600; line-height: 1.2; }
+.operation-settings-card { overflow: hidden; border-radius: 12px; background: #f0f0f0; }
+.operation-setting-row { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; align-items: center; gap: 12px; min-height: 62px; padding: 14px 16px; border-bottom: 0.5px solid #dcdcdc; background: transparent; }
+.operation-setting-row:last-child { border-bottom: 0; }
+.operation-setting-icon { width: 18px; height: 18px; color: #777; display: inline-flex; align-items: center; justify-content: center; }
+.operation-setting-icon i { font-size: 15px; }
 .operation-setting-copy { min-width: 0; }
-.operation-setting-name { font-size: 12px; font-weight: 600; color: #2b2b28; }
-.operation-setting-desc { margin-top: 4px; font-size: 11px; line-height: 1.45; color: #99978f; }
+.operation-setting-name { color: #1f1f1f; font-size: 12.5px; font-weight: 500; line-height: 1.25; }
+.operation-setting-desc { margin-top: 5px; color: #5f5f5f; font-size: 11.5px; line-height: 1.35; }
 .operation-link-field {
   width: 100%;
   min-height: 40px;
 }
-.operation-switch { appearance: none; -webkit-appearance: none; position: relative; align-self: center; width: 40px; min-width: 40px; max-width: 40px; height: 22px; min-height: 22px; max-height: 22px; flex: 0 0 40px; margin: 0; padding: 0; border: 0; border-radius: 999px; background: #d8d7d2; line-height: 0; cursor: pointer; transition: background 140ms ease; }
-.operation-switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: transform 140ms ease; }
-.operation-switch.is-on { background: #e85d2c; }
+.operation-switch { appearance: none; -webkit-appearance: none; position: relative; align-self: center; width: 42px; min-width: 42px; max-width: 42px; height: 24px; min-height: 24px; max-height: 24px; flex: 0 0 42px; margin: 0; padding: 0; border: 0; border-radius: 999px; background: #cfcfcf; line-height: 0; cursor: pointer; transition: background 140ms ease; }
+.operation-switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: transform 140ms ease; }
+.operation-switch.is-on { background: #242424; }
 .operation-switch.is-on::after { transform: translateX(18px); }
 .operation-switch:focus-visible { outline: 2px solid rgba(232,93,44,0.3); outline-offset: 2px; }
-.ownership-transfer-grid { display: grid; grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr) auto; gap: 10px; align-items: end; }
-.ownership-transfer-section { padding: 18px 16px; }
-.ownership-transfer-section .fg input,
-.ownership-transfer-section .fg select { height: 40px; padding: 9px 12px; font-size: 12.5px; }
-.ownership-transfer-section .fg select {
-  appearance: none;
-  -webkit-appearance: none;
-  padding-right: 34px;
-  background-image: linear-gradient(45deg, transparent 50%, #999 50%), linear-gradient(135deg, #999 50%, transparent 50%);
-  background-position: calc(100% - 19px) 17px, calc(100% - 14px) 17px;
-  background-size: 5px 5px, 5px 5px;
-  background-repeat: no-repeat;
+.operation-owner-row { grid-template-columns: 18px minmax(0, 1fr); align-items: flex-start; }
+.operation-owner-card { overflow: visible; position: relative; z-index: 20; }
+.operation-owner-card .operation-owner-row { position: relative; z-index: 1; }
+.operation-owner-content { min-width: 0; display: grid; gap: 13px; }
+.operation-owner-controls { display: grid; grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr) auto; align-items: end; gap: 8px; }
+.operation-owner-field { min-width: 0; }
+.operation-owner-field label { margin-bottom: 5px; color: #777; display: block; font-size: 10.5px; font-weight: 400; }
+.operation-owner-field input { width: 100%; height: 30px; padding: 0 9px; border: 0.5px solid #d0d0d0; border-radius: 9px; background: #fff; color: #1f1f1f; font-family: inherit; font-size: 12px; outline: none; }
+.operation-owner-field input[readonly] { color: #777; background: #f8f8f8; }
+.operation-owner-arrow { height: 30px; margin-top: 18px; color: #999; display: inline-flex; align-items: center; justify-content: center; align-self: end; }
+.operation-owner-arrow i { font-size: 15px; }
+.operation-owner-actions { height: 30px; display: inline-flex; align-items: center; align-self: end; }
+.btn-ownership-transfer { height: 30px; border-radius: 9px; background: #fff; border-color: #d0d0d0; color: #1f1f1f; display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
+.ownership-transfer-section { padding: 0; border: 0; background: transparent; }
+.btn-ownership-transfer { min-width: 62px; padding: 0 16px; }
+.btn-ownership-transfer:hover { background: #f7f7f7; border-color: #c8c8c8; }
+.ownership-dropdown { position: relative; width: 100%; }
+.ownership-dropdown-button { width: 100%; height: 30px; padding: 0 8px 0 10px; border: 0.5px solid #d0d0d0; border-radius: 9px; background: #fff; color: #1f1f1f; display: inline-flex; align-items: center; justify-content: space-between; gap: 10px; font-family: inherit; font-size: 12px; line-height: 1; text-align: left; cursor: pointer; }
+.ownership-dropdown-button:hover { background: #f7f7f7; }
+.ownership-dropdown-button span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ownership-dropdown-button .is-placeholder { color: #999; }
+.ownership-dropdown-button i { color: #8d8d8d; font-size: 16px; transition: transform 0.14s ease; }
+.ownership-dropdown.open .ownership-dropdown-button i { transform: rotate(180deg); }
+.ownership-dropdown-menu { position: absolute; left: 0; top: calc(100% + 6px); z-index: 140; width: 100%; min-width: 210px; padding: 6px; border: 0.5px solid #dedede; border-radius: 10px; background: #fff; box-shadow: 0 12px 28px rgba(0,0,0,0.1); display: none; }
+.ownership-dropdown.open .ownership-dropdown-menu { display: block; }
+.ownership-dropdown-search { width: 100%; height: 30px; margin-bottom: 5px; padding: 0 9px; border: 0.5px solid #dedede; border-radius: 7px; background: #fafafa; color: #333; font-family: inherit; font-size: 12px; outline: none; }
+.ownership-dropdown-search:focus { border-color: #c8c8c8; background: #fff; }
+.ownership-dropdown-search::placeholder { color: #b6bac2; }
+.ownership-dropdown-list { max-height: 186px; overflow-y: auto; }
+.ownership-dropdown-item { width: 100%; min-height: 30px; padding: 0 9px; border: 0; border-radius: 7px; background: transparent; color: #333; display: flex; align-items: center; justify-content: flex-start; font-family: inherit; font-size: 12px; text-align: left; white-space: nowrap; cursor: pointer; }
+.ownership-dropdown-item:hover { background: #f7f7f7; }
+.ownership-dropdown-item.active { background: #fff1ec; color: #e85d2c; font-weight: 500; }
+.ownership-dropdown-empty { display: none; min-height: 30px; padding: 0 9px; color: #aaa; align-items: center; font-size: 12px; }
+.ownership-dropdown-empty.show { display: flex; }
+@media (max-width: 900px) {
+  .timeline-manual {
+    grid-template-columns: 1fr 1fr;
+  }
+  .timeline-manual-modal .timeline-manual {
+    grid-template-columns: 1fr;
+  }
+  .timeline-manual > .timeline-manual-field:first-child,
+  .timeline-manual-values,
+  .timeline-manual-add {
+    grid-column: 1 / -1;
+  }
+  .timeline-manual-add {
+    width: 100%;
+  }
+  .contract-status-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .contract-status-actions {
+    justify-content: flex-start;
+  }
+  .bookmark-chip-grid {
+    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+  }
+  .contract-status-help::after {
+    left: auto;
+    right: 0;
+    top: calc(100% + 8px);
+    transform: none;
+  }
+  .discussion-platform-table th,
+  .discussion-platform-table td,
+  .contract-platform-table th,
+  .contract-platform-table td {
+    padding: 0 10px;
+  }
+  .discussion-platform-table th:nth-child(3),
+  .discussion-platform-table td:nth-child(3),
+  .contract-platform-table th:nth-child(4),
+  .contract-platform-table td:nth-child(4) {
+    padding-right: 8px;
+  }
+  .operation-setting-row,
+  .operation-owner-row {
+    grid-template-columns: 18px minmax(0, 1fr);
+  }
+  .operation-setting-row > .operation-switch {
+    grid-column: 2;
+  }
+  .operation-owner-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .operation-owner-arrow {
+    display: none;
+  }
 }
-.ownership-arrow { height: 40px; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 15px; }
-.ownership-actions { display: flex; justify-content: flex-end; }
-.btn-ownership-transfer { min-width: 74px; height: 40px; padding: 0 22px; background: #1a1a18; border-color: #1a1a18; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; }
-.btn-ownership-transfer:hover { background: #000; border-color: #000; }
 .ownership-note {
   min-height: 38px;
   margin-top: 2px;
@@ -2099,6 +2602,7 @@ td { padding: 9px 12px; vertical-align: middle; }
 .release-form.show { display: block; }
 .release-form .form-grid { grid-template-columns: minmax(0, 1fr) 118px 118px 150px; gap: 10px; }
 .release-form-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 10px; }
+.release-note { margin-top: 10px; }
 
 /* ── REVISION COMPARE ── */
 .cmp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
@@ -2626,6 +3130,13 @@ td { padding: 9px 12px; vertical-align: middle; }
   margin-bottom: -0.5px;
   user-select: none;
   white-space: nowrap;
+}
+.content-split #dp-detail .dtab-divider {
+  width: 1px;
+  height: 18px;
+  margin: 0 2px;
+  background: #e3e3e3;
+  flex: 0 0 auto;
 }
 .content-split #dp-detail .dtab:hover,
 .content-split #plan-detail .dtab:hover {
@@ -3160,6 +3671,260 @@ td { padding: 9px 12px; vertical-align: middle; }
 }
 .admin-modal-close i {
   font-size: 20px;
+}
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(19,19,15,.42);
+}
+.modal-backdrop.show { display: flex; }
+.modal {
+  width: min(560px, 100%);
+  max-height: calc(100vh - 48px);
+  overflow: hidden;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 18px 60px rgba(0,0,0,.22);
+  display: flex;
+  flex-direction: column;
+}
+.contract-content-modal {
+  width: min(500px, 100%);
+  border: 0.5px solid #dedede;
+  box-shadow: none;
+}
+.contract-platform-modal {
+  width: min(580px, 100%);
+}
+.contract-content-modal .modal-body {
+  padding: 14px 16px;
+  overflow: auto;
+}
+.platform-modal-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 12px;
+  border-radius: 9px;
+  background: rgb(242, 242, 242);
+}
+.platform-modal-tab {
+  height: 32px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #777d86;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.platform-modal-tab.active {
+  background: #fff;
+  color: #1a1a18;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+.contract-content-modal .modal-search {
+  display: block;
+  position: relative;
+  margin-bottom: 12px;
+}
+.contract-content-modal .modal-search i {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #bbb;
+  font-size: 13px;
+}
+.contract-content-modal .modal-search input {
+  width: 100%;
+  height: 40px;
+  padding: 0 10px 0 30px;
+  border: 0.5px solid #dedede;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  font-family: inherit;
+  font-size: 12px;
+  outline: none;
+}
+.result-table {
+  border: 0.5px solid #dedede;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+.result-head,
+.result-item {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+}
+.contract-platform-result-table .result-head,
+.contract-platform-result-table .result-item {
+  grid-template-columns: 24px minmax(0, 1.05fr) minmax(0, .8fr) minmax(0, 1.2fr);
+}
+.contract-platform-result-table.is-company .result-head,
+.contract-platform-result-table.is-company .result-item {
+  grid-template-columns: 24px minmax(0, 1.25fr) minmax(0, .75fr);
+}
+.contract-platform-result-table .result-list {
+  border-bottom: 0.5px solid #ededed;
+}
+.result-head {
+  padding: 8px 10px;
+  border-bottom: 0.5px solid #dedede;
+  background: #fff;
+  color: #5f646d;
+  font-size: 11px;
+  font-weight: 500;
+}
+.result-head span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.result-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.result-item {
+  padding: 9px 10px;
+  border-bottom: 0.5px solid #ededed;
+  cursor: pointer;
+}
+.result-item:last-child { border-bottom: 0; }
+.result-item:hover,
+.result-item.sel { background: #fafafa; }
+.result-name,
+.result-meta {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+}
+.result-name { color: #1a1a18; font-weight: 500; }
+.result-meta { color: #777d86; }
+.result-check-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.result-check {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border: 1px solid #d2d2d2;
+  border-radius: 5px;
+  background: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.result-check::before {
+  content: "";
+  width: 5px;
+  height: 9px;
+  border-right: 2.4px solid #fff;
+  border-bottom: 2.4px solid #fff;
+  border-radius: 1px;
+  transform: translateY(-1px) rotate(45deg) scale(0);
+  transform-origin: center;
+}
+.result-check:checked {
+  border-color: #252525;
+  background: #252525;
+}
+.result-check:checked::before {
+  transform: translateY(-1px) rotate(45deg) scale(1);
+}
+.modal-pagebar {
+  min-height: 42px;
+  padding: 8px 10px;
+  border-top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: #fff;
+  box-shadow: none;
+}
+.modal-page-btn,
+.modal-page-number {
+  min-width: 22px;
+  height: 24px;
+  padding: 0 5px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #777;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 400;
+}
+.modal-page-btn i { font-size: 14px; stroke-width: 1.8; }
+.modal-page-btn:hover,
+.modal-page-number:hover {
+  opacity: 1;
+  color: #1a1a18;
+}
+.modal-page-btn:disabled {
+  opacity: .3;
+  cursor: default;
+}
+.modal-page-numbers {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.modal-page-number.active {
+  color: #1a1a18;
+  font-weight: 600;
+}
+.modal-actions {
+  padding: 4px 16px 14px;
+  border-top: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 7px;
+}
+.modal-cancel-btn,
+.modal-confirm-btn {
+  min-width: 96px;
+  height: 38px;
+  padding: 0 18px;
+  border-radius: 999px;
+  justify-content: center;
+  font-size: 12px;
+}
+.modal-cancel-btn {
+  border-color: #dedede;
+  background: #fff;
+  color: #1a1a18;
+}
+.modal-confirm-btn {
+  border-color: #1a1a18;
+  background: #1a1a18;
+  color: #fff;
+}
+.modal-confirm-btn:disabled {
+  border-color: #dedede;
+  background: #dedede;
+  color: #999;
 }
 .revision-media-modal {
   width: min(820px, calc(100vw - 48px));
@@ -4063,9 +4828,10 @@ td { padding: 9px 12px; vertical-align: middle; }
             <div class="dtab" onclick="switchDTab(this,'tab-video')">영상</div>
             <div class="dtab" onclick="switchDTab(this,'tab-material')">자료</div>
             <div class="dtab" onclick="switchDTab(this,'tab-release')">릴리즈</div>
-            <div class="dtab" onclick="switchDTab(this,'tab-operation')">운영 설정</div>
-            <div class="dtab" onclick="switchDTab(this,'tab-extra')">부가 정보</div>
+            <span class="dtab-divider" aria-hidden="true"></span>
+            <div class="dtab" onclick="switchDTab(this,'tab-extra')">계약 현황</div>
             <div class="dtab" onclick="switchDTab(this,'tab-timeline')">타임라인</div>
+            <div class="dtab" onclick="switchDTab(this,'tab-operation')">운영 설정</div>
           </div>
 
           <div class="dbody">
@@ -4407,6 +5173,13 @@ td { padding: 9px 12px; vertical-align: middle; }
                   </div>
                 </div>
                 <div class="sec">
+                  <div class="sec-title material-section-title">영상 조회 전용 링크</div>
+                  <div class="operation-link-field material-folder-field content-preview-field">
+                    <input id="b-preview-url" readonly placeholder="조회 링크가 생성되지 않았습니다" />
+                    <button class="btn btn-material btn-material-text" type="button" onclick="reissueContentPreviewLink()">재발급</button>
+                  </div>
+                </div>
+                <div class="sec">
                   <div class="sec-title material-section-title">기획안 파일</div>
                   <div class="planning-upload-box" onclick="triggerPlanningFileUpload()">
                     <input id="planning-file-input" type="file" accept=".pdf,.ppt,.pptx,.doc,.docx,.hwp,.hwpx" multiple hidden onchange="handlePlanningFileUpload(this)" />
@@ -4425,26 +5198,28 @@ td { padding: 9px 12px; vertical-align: middle; }
             <div class="dpanel" id="tab-release">
               <div class="sec">
                 <div class="release-list" id="release-list"></div>
+                <div class="ownership-note release-note">
+                  <span class="ownership-note-label">NOTE</span>
+                  <span>릴리즈탭의 플랫폼은 제작사 입점 전·후 플랫폼을 포함하며 플랫폼 화면에 노출되는 유통 이력입니다.<br>계약 현황탭의 플랫폼은 bable 통해 계약되어 정산/계약 관리가 필요한 플랫폼만 표시됩니다.</span>
+                </div>
               </div>
             </div>
 
-            <!-- ── 탭: 부가 정보 ── -->
+            <!-- ── 탭: 계약 현황 ── -->
             <div class="dpanel" id="tab-extra">
-              <div class="extra-grid">
-                <div class="extra-panel">
-                  <div class="extra-panel-head">
-                    <div class="extra-panel-title"><i class="ti ti-bookmark"></i> 북마크한 플랫폼</div>
-                    <div class="extra-panel-count" id="extra-bookmark-count"></div>
-                  </div>
-                  <div class="extra-panel-body" id="extra-bookmarks"></div>
-                </div>
-                <div class="extra-panel">
-                  <div class="extra-panel-head">
-                    <div class="extra-panel-title"><i class="ti ti-mail-forward"></i> 제안 메일 발송 이력</div>
-                    <div class="extra-panel-count" id="extra-mail-count"></div>
-                  </div>
-                  <div class="extra-panel-body" id="extra-mails"></div>
-                </div>
+              <div class="contract-status-page">
+                <section class="contract-status-section">
+                  <div class="contract-status-label">북마크한 플랫폼<span class="contract-status-help" data-tooltip="이 콘텐츠에 관심 표시한 플랫폼사 목록입니다.">?</span></div>
+                  <div class="contract-status-card" id="extra-bookmarks"></div>
+                </section>
+                <section class="contract-status-section">
+                  <div class="contract-status-label">협의중 플랫폼<span class="contract-status-help" data-tooltip="계약 전 협의가 진행 중이거나 보류된 플랫폼사입니다.">?</span></div>
+                  <div class="contract-status-card" id="extra-discussions"></div>
+                </section>
+                <section class="contract-status-section">
+                  <div class="contract-status-label">계약 플랫폼<span class="contract-status-help" data-tooltip="정산/계약관리와 연결된 플랫폼 계약 목록입니다.">?</span></div>
+                  <div class="contract-status-card" id="extra-contract-platforms"></div>
+                </section>
               </div>
             </div>
 
@@ -4453,9 +5228,11 @@ td { padding: 9px 12px; vertical-align: middle; }
               <div class="extra-panel timeline-panel">
                 <div class="extra-panel-head">
                   <div class="extra-panel-title"><i class="ti ti-timeline"></i> 타임라인</div>
-                  <div class="extra-panel-count" id="extra-timeline-count"></div>
                 </div>
                 <div class="extra-panel-body">
+                  <div class="timeline-manual-trigger">
+                    <button class="timeline-manual-open" type="button" onclick="openTimelineManualModal()"><i class="ti ti-plus"></i><span>수동 생성</span></button>
+                  </div>
                   <div class="tl" id="extra-timeline"></div>
                 </div>
               </div>
@@ -4463,11 +5240,12 @@ td { padding: 9px 12px; vertical-align: middle; }
 
             <!-- ── 탭: 운영 설정 ── -->
             <div class="dpanel" id="tab-operation">
-              <div class="basic-stack">
-                <div class="sec">
-                  <div class="sec-title operation-section-title">운영 설정</div>
-                  <div class="operation-settings-body">
+              <div class="operation-settings-page">
+                <section class="operation-settings-section">
+                  <div class="operation-settings-label">공개 설정</div>
+                  <div class="operation-settings-card">
                     <div class="operation-setting-row">
+                      <span class="operation-setting-icon" aria-hidden="true"><i class="ti ti-world"></i></span>
                       <div class="operation-setting-copy">
                         <div class="operation-setting-name">플랫폼 공개 여부</div>
                         <div class="operation-setting-desc" id="platform-visible-desc"></div>
@@ -4475,6 +5253,7 @@ td { padding: 9px 12px; vertical-align: middle; }
                       <button class="operation-switch" id="platform-visible-toggle" type="button" role="switch" onclick="toggleContentOperation('platformVisible')" aria-label="플랫폼 공개 여부"></button>
                     </div>
                     <div class="operation-setting-row">
+                      <span class="operation-setting-icon" aria-hidden="true"><i class="ti ti-lock-square"></i></span>
                       <div class="operation-setting-copy">
                         <div class="operation-setting-name">Bable Only</div>
                         <div class="operation-setting-desc" id="bable-only-desc"></div>
@@ -4482,33 +5261,41 @@ td { padding: 9px 12px; vertical-align: middle; }
                       <button class="operation-switch" id="bable-only-toggle" type="button" role="switch" onclick="toggleContentOperation('bableOnly')" aria-label="Bable Only"></button>
                     </div>
                   </div>
-                </div>
-                <div class="sec">
-                  <div class="sec-title operation-section-title">영상 조회 전용 링크</div>
-                  <div class="operation-link-field material-folder-field content-preview-field">
-                    <input id="b-preview-url" readonly placeholder="조회 링크가 생성되지 않았습니다" />
-                    <button class="btn btn-material btn-material-text" type="button" onclick="reissueContentPreviewLink()">재발급</button>
-                  </div>
-                </div>
-                <div class="sec">
-                  <div class="sec-title operation-section-title">소유 제작사 변경 <span class="ownership-help" data-tooltip="저장하면 이 콘텐츠의 제작사 표시와 소유 기준이 선택한 제작사로 변경됩니다.">?</span></div>
-                  <div class="form-section ownership-transfer-section">
-                    <div class="ownership-transfer-grid">
-                      <div class="fg">
-                        <label>현재 소유 제작사</label>
-                        <input id="ownership-current-company" readonly />
-                      </div>
-                      <div class="ownership-arrow"><i class="ti ti-arrow-right"></i></div>
-                      <div class="fg">
-                        <label>변경할 제작사</label>
-                        <select id="ownership-target-company"></select>
-                      </div>
-                      <div class="ownership-actions">
-                        <button class="btn btn-ownership-transfer" type="button" onclick="transferContentOwnership()">변경</button>
+                </section>
+                <section class="operation-settings-section">
+                  <div class="operation-settings-label">소유 정보 <span class="ownership-help" data-tooltip="저장하면 이 콘텐츠의 제작사 표시와 소유 기준이 선택한 제작사로 변경됩니다.">?</span></div>
+                  <div class="operation-settings-card operation-owner-card">
+                    <div class="operation-setting-row operation-owner-row">
+                      <span class="operation-setting-icon" aria-hidden="true"><i class="ti ti-building"></i></span>
+                      <div class="operation-owner-content">
+                        <div class="operation-setting-copy">
+                          <div class="operation-setting-name">소유 제작사 변경</div>
+                        </div>
+                        <div class="operation-owner-controls">
+                          <div class="operation-owner-field">
+                            <label>현재 소유 제작사</label>
+                            <input id="ownership-current-company" readonly />
+                          </div>
+                          <div class="operation-owner-arrow"><i class="ti ti-arrow-right"></i></div>
+                          <div class="operation-owner-field">
+                            <label>변경할 제작사</label>
+                            <input id="ownership-target-company" type="hidden" value="" />
+                            <div class="ownership-dropdown" id="ownership-target-dropdown">
+                              <button class="ownership-dropdown-button" type="button" aria-haspopup="menu" aria-expanded="false" onclick="toggleOwnershipDropdown()">
+                                <span id="ownership-target-label" class="is-placeholder">이전할 제작사 선택</span>
+                                <i class="ti ti-chevron-down"></i>
+                              </button>
+                              <div class="ownership-dropdown-menu" id="ownership-target-menu"></div>
+                            </div>
+                          </div>
+                          <div class="operation-owner-actions">
+                            <button class="btn btn-ownership-transfer" type="button" onclick="transferContentOwnership()">변경</button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </section>
               </div>
             </div>
 
@@ -4605,6 +5392,43 @@ td { padding: 9px 12px; vertical-align: middle; }
   </div><!-- /view-list -->
 </div><!-- /main -->
 
+<div class="admin-modal-backdrop" id="timeline-manual-modal" aria-hidden="true" onclick="closeTimelineManualModal(event)">
+  <div class="admin-modal timeline-manual-modal" role="dialog" aria-modal="true" aria-labelledby="timeline-manual-title" onclick="event.stopPropagation()">
+    <div class="admin-modal-head">
+      <div class="admin-modal-title">타임라인 수동 생성</div>
+    </div>
+    <div class="company-picker-body">
+      <div class="timeline-manual">
+        <div class="timeline-manual-heading" id="timeline-manual-title">타임라인 수동 생성</div>
+        <div class="timeline-manual-field is-full">
+          <label for="timeline-template">프리셋</label>
+          <select id="timeline-template" onchange="renderTimelineManualFields()"></select>
+        </div>
+        <div class="timeline-manual-values single" id="timeline-manual-values"></div>
+        <div class="timeline-datetime-field">
+          <label for="timeline-date">기록 시각</label>
+          <div class="timeline-datetime-row">
+            <div class="timeline-date-field" id="timeline-date-field">
+              <input id="timeline-date" type="text" placeholder="Select a date" readonly onclick="openTimelineDatePicker()" onkeydown="handleTimelineDateInputKeydown(event)" />
+              <button class="timeline-date-btn" type="button" onclick="openTimelineDatePicker()" aria-label="날짜 선택"><i class="ti ti-calendar"></i></button>
+            </div>
+            <input id="timeline-time" type="time" step="60" placeholder="Select a time" onchange="updateTimelineManualPreview()" />
+          </div>
+        </div>
+        <div class="timeline-manual-field timeline-manual-preview-wrap">
+          <label>예시</label>
+          <div class="timeline-manual-preview is-empty" id="timeline-manual-preview"></div>
+        </div>
+      </div>
+      <div class="timeline-date-popover" id="timeline-date-popover"></div>
+    </div>
+    <div class="admin-modal-actions">
+      <button class="btn timeline-manual-cancel" type="button" onclick="closeTimelineManualModal()">취소</button>
+      <button class="company-picker-confirm timeline-manual-confirm" type="button" onclick="addManualTimelineEvent()">추가</button>
+    </div>
+  </div>
+</div>
+
 <div class="admin-modal-backdrop" id="company-picker-modal" aria-hidden="true" onclick="closeCompanyPicker()">
   <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="company-picker-title" onclick="event.stopPropagation()">
     <div class="admin-modal-head">
@@ -4620,6 +5444,33 @@ td { padding: 9px 12px; vertical-align: middle; }
     </div>
     <div class="admin-modal-actions">
       <button class="company-picker-confirm" type="button" onclick="confirmCompanyPicker()">확인</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="platform-picker-modal" aria-hidden="true" onclick="closeDiscussionPlatformPicker(event)">
+  <div class="modal contract-content-modal contract-platform-modal" role="dialog" aria-modal="true" aria-labelledby="platform-picker-title">
+    <div class="modal-title" id="platform-picker-title" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">플랫폼사 검색</div>
+    <div class="modal-body">
+      <div class="platform-modal-tabs" role="tablist" aria-label="플랫폼사 유형">
+        <button class="platform-modal-tab active" id="discussion-platform-tab-company" type="button" role="tab" aria-selected="true" onclick="switchDiscussionPlatformSource('company')">기존 회사</button>
+        <button class="platform-modal-tab" id="discussion-platform-tab-temporary" type="button" role="tab" aria-selected="false" onclick="switchDiscussionPlatformSource('temporary')">임시 회사</button>
+      </div>
+      <div class="modal-search">
+        <i class="ti ti-search"></i>
+        <input id="platform-picker-search" placeholder="회사명 검색" oninput="searchDiscussionPlatformPicker()" onkeydown="handleDiscussionPlatformPickerSearchKey(event)" />
+      </div>
+      <div class="result-table contract-platform-result-table is-company" id="platform-picker-results">
+        <div class="result-head" id="platform-picker-result-head" aria-hidden="true"><span></span><span>회사명</span><span>지역</span></div>
+        <div class="result-list" id="platform-picker-list"></div>
+        <div class="modal-pagebar" id="platform-picker-pagebar">
+          <div class="modal-page-numbers" id="platform-picker-pages"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn modal-cancel-btn" type="button" onclick="closeDiscussionPlatformPicker()">취소</button>
+      <button class="btn btn-primary modal-confirm-btn" id="platform-picker-confirm" type="button" onclick="confirmDiscussionPlatformPicker()" disabled>확인</button>
     </div>
   </div>
 </div>
@@ -5118,6 +5969,7 @@ let selId = null;
 let selectedPlanId = null;
 let selectedRevisionId = null;
 let releaseSeq = 10;
+let discussionPlatformSeq = 0;
 let editingReleaseId = null;
 let contentPage = 1;
 let currentMainTab = 'contents';
@@ -5127,6 +5979,71 @@ const revisionFilters = { status: '', kind: '' };
 let companyPickerContext = null;
 let companyPickerSelected = '';
 let companyPickerKeyword = '';
+let discussionPlatformPickerSelectedId = '';
+let discussionPlatformPickerSelectedSource = 'company';
+let discussionPlatformPickerSource = 'company';
+let discussionPlatformPickerKeyword = '';
+let discussionPlatformPickerPage = 1;
+let editingDiscussionPlatformId = null;
+let timelineDatePickerMonth = new Date();
+const DISCUSSION_PLATFORM_PICKER_PAGE_SIZE = 10;
+
+const platformDirectory = [
+  { id: 'PLT-001', name: 'ShortReel (US)', isInternal: false },
+  { id: 'PLT-002', name: 'Viki', isInternal: false },
+  { id: 'PLT-003', name: 'WeTV', isInternal: false },
+  { id: 'PLT-004', name: 'iQIYI', isInternal: false },
+  { id: 'PLT-005', name: 'DramaBox', isInternal: false },
+  { id: 'PLT-006', name: 'Rakuten Viki', isInternal: false },
+  { id: 'PLT-007', name: 'FlexTV (JP)', isInternal: false },
+  { id: 'PLT-008', name: 'KuaiKan Drama', isInternal: false },
+  { id: 'PLT-009', name: 'DramaBox (US)', isInternal: false },
+  { id: 'PLT-101', name: 'Shortflow', isInternal: true },
+  { id: 'PLT-102', name: 'Shortflow Originals', isInternal: true },
+  { id: 'PLT-103', name: 'Shortflow Preview', isInternal: true },
+];
+
+const discussionPlatformCompanyOptions = [
+  { id: 'PLT-001', source: 'company', name: 'ShortReel (US)', country: 'US' },
+  { id: 'PLT-002', source: 'company', name: 'Viki', country: 'US' },
+  { id: 'PLT-003', source: 'company', name: 'WeTV', country: 'CN' },
+  { id: 'PLT-004', source: 'company', name: 'iQIYI', country: 'CN' },
+  { id: 'PLT-005', source: 'company', name: 'DramaBox', country: 'US' },
+  { id: 'PLT-006', source: 'company', name: 'Rakuten Viki', country: 'JP' },
+  { id: 'PLT-007', source: 'company', name: 'FlexTV (JP)', country: 'JP' },
+  { id: 'PLT-008', source: 'company', name: 'KuaiKan Drama', country: 'CN' },
+  { id: 'PLT-009', source: 'company', name: 'DramaBox (US)', country: 'US' },
+  { id: 'PLT-101', source: 'company', name: 'Shortflow', country: 'KR' },
+  { id: 'PLT-102', source: 'company', name: 'Shortflow Originals', country: 'KR' },
+  { id: 'PLT-103', source: 'company', name: 'Shortflow Preview', country: 'KR' },
+];
+
+const discussionTemporaryPlatformCompanyOptions = [
+  { id: 'temp-company-019', source: 'temporary', name: 'ClipHouse', representativeName: 'Daniel Choi', email: 'content@cliphouse.io' },
+  { id: 'temp-company-017', source: 'temporary', name: 'ShortCup', representativeName: 'Olivia Lin', email: 'bd@shortcup.tv' },
+  { id: 'temp-company-015', source: 'temporary', name: 'Dramini', representativeName: 'Noah Chen', email: 'partnerships@dramini.com' },
+  { id: 'temp-company-013', source: 'temporary', name: 'MicroVibe', representativeName: 'Grace Wong', email: 'content@microvibe.app' },
+  { id: 'temp-company-011', source: 'temporary', name: 'NovaByte', representativeName: 'Lucas Tan', email: 'acq@novabyte.tv' },
+  { id: 'temp-company-009', source: 'temporary', name: 'SnackPlay', representativeName: 'Sofia Kim', email: 'bd@snackplay.io' },
+  { id: 'temp-company-007', source: 'temporary', name: 'QuickDrama', representativeName: 'Ethan Park', email: 'content@quickdrama.com' },
+  { id: 'temp-company-005', source: 'temporary', name: 'ShortBox Asia', representativeName: 'Hannah Lee', email: 'partners@shortbox.asia' },
+  { id: 'temp-company-002', source: 'temporary', name: 'MiniStage', representativeName: 'Alex Wu', email: 'partnerships@ministage.io' },
+  { id: 'temp-company-001', source: 'temporary', name: 'NovaShort', representativeName: 'Mia Chen', email: 'content@novashort.com' },
+  { id: 'temp-company-021', source: 'temporary', name: 'EpisodeTap', representativeName: 'Jamie Lee', email: 'partners@episodetap.io' },
+  { id: 'temp-company-022', source: 'temporary', name: 'TinyDrama Hub', representativeName: 'Chris Park', email: 'bd@tinydrama.tv' },
+  { id: 'temp-company-023', source: 'temporary', name: 'ReelPocket', representativeName: 'Nina Cho', email: 'content@reelpocket.app' },
+];
+
+const contentContractPlatforms = [
+  { contractId: 1, contentId: 1, platformId: 'PLT-001', companyName: 'ShortReel (US)', startDate: '2024-05-10', termMonths: 24, status: 'discussion' },
+  { contractId: 2, contentId: 1, platformId: 'PLT-002', companyName: 'Viki', startDate: '2024-06-01', termMonths: 18, status: 'hold' },
+  { contractId: 4, contentId: 2, platformId: 'PLT-004', companyName: 'iQIYI', startDate: '2024-08-01', termMonths: 24, status: 'discussion' },
+  { contractId: 7, contentId: 3, platformId: 'PLT-007', companyName: 'FlexTV (JP)', startDate: '2024-11-15', termMonths: 18, status: 'discussion' },
+  { contractId: 5, contentId: 4, platformId: 'PLT-002', companyName: 'Viki', startDate: '2024-09-10', termMonths: 12, status: 'hold' },
+  { contractId: 6, contentId: 5, platformId: 'PLT-001', companyName: 'ShortReel (US)', startDate: '2024-10-01', termMonths: 36, status: 'discussion' },
+  { contractId: 3, contentId: 6, platformId: 'PLT-003', companyName: 'WeTV', startDate: '2024-07-15', termMonths: 12, status: 'discussion' },
+  { contractId: 12, contentId: 8, platformId: 'PLT-008', companyName: 'KuaiKan Drama', startDate: '2025-02-18', termMonths: 18, status: 'hold' },
+];
 
 const companyDirectory = [
   { id: 101, name: 'NextWave Studios' },
@@ -5163,9 +6080,9 @@ const contentTabLabels = {
   'tab-video': { key: 'video', label: '영상' },
   'tab-material': { key: 'material', label: '자료' },
   'tab-release': { key: 'release', label: '릴리즈' },
-  'tab-operation': { key: 'operation', label: '운영 설정' },
-  'tab-extra': { key: 'extra', label: '부가 정보' },
+  'tab-extra': { key: 'extra', label: '계약 현황' },
   'tab-timeline': { key: 'timeline', label: '타임라인' },
+  'tab-operation': { key: 'operation', label: '운영 설정' },
 };
 const planDetailTabLabels = {
   'plan-detail-info': '기본 정보',
@@ -5450,13 +6367,81 @@ function confirmCompanyPicker() {
 function populateOwnershipTransfer(c) {
   const current = document.getElementById('ownership-current-company');
   const target = document.getElementById('ownership-target-company');
-  if (!current || !target || !c) return;
+  const label = document.getElementById('ownership-target-label');
+  const menu = document.getElementById('ownership-target-menu');
+  if (!current || !target || !label || !menu || !c) return;
   current.value = c.company;
   const options = getCompanyOptions().filter(company => company !== c.company);
-  target.innerHTML = [
-    '<option value="">이전할 제작사 선택</option>',
-    ...options.map(company => `<option value="${company}">${company}</option>`),
-  ].join('');
+  target.value = '';
+  label.textContent = '이전할 제작사 선택';
+  label.classList.add('is-placeholder');
+  const items = options.map(company => {
+    const companyArg = escapeAttr(JSON.stringify(company));
+    return `<button class="ownership-dropdown-item" type="button" onclick="selectOwnershipTargetCompany(${companyArg})">${escapeAttr(company)}</button>`;
+  }).join('');
+  menu.innerHTML = `
+    <input class="ownership-dropdown-search" type="text" placeholder="제작사명 검색" oninput="filterOwnershipDropdownOptions(this)" onclick="event.stopPropagation()" onkeydown="handleOwnershipDropdownSearchKey(event)" />
+    <div class="ownership-dropdown-list">${items}</div>
+    <div class="ownership-dropdown-empty">검색 결과 없음</div>
+  `;
+  closeOwnershipDropdown();
+}
+
+function closeOwnershipDropdown() {
+  const dropdown = document.getElementById('ownership-target-dropdown');
+  dropdown?.classList.remove('open');
+  dropdown?.querySelector('.ownership-dropdown-button')?.setAttribute('aria-expanded', 'false');
+}
+
+function toggleOwnershipDropdown() {
+  const dropdown = document.getElementById('ownership-target-dropdown');
+  if (!dropdown) return;
+  const nextOpen = !dropdown.classList.contains('open');
+  dropdown.classList.toggle('open', nextOpen);
+  dropdown.querySelector('.ownership-dropdown-button')?.setAttribute('aria-expanded', String(nextOpen));
+  if (nextOpen) {
+    const search = dropdown.querySelector('.ownership-dropdown-search');
+    if (search) {
+      search.value = '';
+      filterOwnershipDropdownOptions(search);
+      setTimeout(() => search.focus(), 0);
+    }
+  }
+}
+
+function selectOwnershipTargetCompany(company) {
+  const target = document.getElementById('ownership-target-company');
+  const label = document.getElementById('ownership-target-label');
+  if (target) target.value = company || '';
+  if (label) {
+    label.textContent = company || '이전할 제작사 선택';
+    label.classList.toggle('is-placeholder', !company);
+  }
+  document.querySelectorAll('#ownership-target-menu .ownership-dropdown-item').forEach(item => {
+    item.classList.toggle('active', item.textContent.trim() === company);
+  });
+  closeOwnershipDropdown();
+}
+
+function filterOwnershipDropdownOptions(input) {
+  const menu = input?.closest('.ownership-dropdown-menu');
+  if (!menu) return;
+  const keyword = input.value.trim().toLowerCase();
+  let visibleCount = 0;
+  menu.querySelectorAll('.ownership-dropdown-item').forEach(item => {
+    const visible = !keyword || item.textContent.trim().toLowerCase().includes(keyword);
+    item.style.display = visible ? '' : 'none';
+    if (visible) visibleCount += 1;
+  });
+  menu.querySelector('.ownership-dropdown-empty')?.classList.toggle('show', visibleCount === 0);
+}
+
+function handleOwnershipDropdownSearchKey(event) {
+  if (event.key !== 'Enter') return;
+  event.preventDefault();
+  const firstVisible = Array.from(document.querySelectorAll('#ownership-target-menu .ownership-dropdown-item'))
+    .find(item => item.style.display !== 'none');
+  firstVisible?.click();
 }
 
 function getTranslationInputs() {
@@ -5683,6 +6668,42 @@ function buildTranslatedMetadata(koValues, lang, c) {
   }, {});
 }
 
+const timelineManualTemplates = [
+  {
+    id: 'proposal-mail',
+    label: '제안 메일 발송',
+    fields: [{ key: 'target', label: '플랫폼사', previewLabel: '플랫폼사', placeholder: '예: DramaBox' }],
+    build: values => `<strong>${escapeAttr(values.target)}</strong>에 제안 메일을 발송했습니다.`,
+  },
+  {
+    id: 'performance-update',
+    label: '퍼포먼스 데이터 업데이트',
+    fields: [{ key: 'target', label: '플랫폼사', previewLabel: '플랫폼사', placeholder: '예: iQIYI' }],
+    build: values => `<strong>${escapeAttr(values.target)}</strong>의 퍼포먼스 데이터가 업데이트되었습니다.`,
+  },
+  {
+    id: 'discussion-started',
+    label: '협의 진행',
+    fields: [{ key: 'target', label: '플랫폼사', previewLabel: '플랫폼사', placeholder: '예: Viki' }],
+    build: values => `<strong>${escapeAttr(values.target)}</strong>와 협의가 진행 중입니다.`,
+  },
+  {
+    id: 'contract-signed',
+    label: '계약 성사',
+    fields: [{ key: 'target', label: '플랫폼사', previewLabel: '플랫폼사', placeholder: '예: ShortReel (US)' }],
+    build: values => `<strong>${escapeAttr(values.target)}</strong>과 계약이 성사되었습니다.`,
+  },
+  {
+    id: 'settlement-complete',
+    label: '정산 완료',
+    fields: [
+      { key: 'year', label: '정산 연도', previewLabel: '연도', placeholder: '예: 2026' },
+      { key: 'month', label: '정산 월', previewLabel: '월', placeholder: '예: 05' },
+    ],
+    build: values => `<strong>${escapeAttr(values.year)}</strong>년 <strong>${escapeAttr(values.month)}</strong>월분 정산이 완료되었습니다.`,
+  },
+];
+
 function translateKoreanMetadata() {
   const c = contents.find(item => item.id === selId);
   if (!c) return;
@@ -5707,18 +6728,20 @@ function translateKoreanMetadata() {
 function renderExtraInfo(c) {
   const bk = document.getElementById('extra-bookmarks');
   const tl = document.getElementById('extra-timeline');
-  const ml = document.getElementById('extra-mails');
-  if (!bk || !tl || !ml || !c) return;
+  const discussion = document.getElementById('extra-discussions');
+  const contractPlatforms = document.getElementById('extra-contract-platforms');
+  if (!bk || !tl || !discussion || !contractPlatforms || !c) return;
 
   renderContentOperations(c);
+  initializeTimelineManualForm();
 
-  document.getElementById('extra-bookmark-count').textContent = `${c.bookmarks.length}개`;
   bk.innerHTML = c.bookmarks.length
-    ? `<div class="bookmark-grid">${c.bookmarks.map(p=>`<div class="brow"><span class="bplatform">${p}</span></div>`).join('')}</div>`
-    : '<div class="extra-empty">북마크 없음</div>';
+    ? `<div class="bookmark-chip-grid">${c.bookmarks.map(p=>`<span class="bookmark-chip">${escapeAttr(p)}</span>`).join('')}</div>`
+    : '<div class="contract-status-row is-empty">북마크 없음</div>';
 
-  const timelineCount = document.getElementById('extra-timeline-count');
-  if (timelineCount) timelineCount.textContent = `${c.timeline.length}건`;
+  renderDiscussionPlatforms(c, discussion);
+  renderContractPlatforms(c, contractPlatforms);
+
   tl.innerHTML = c.timeline.map((t, index)=>`
     <div class="tl-item">
       <div class="tl-dot ${index === 0 ? 'orange' : 'gray'}"></div>
@@ -5728,11 +6751,608 @@ function renderExtraInfo(c) {
         <button class="tl-delete" type="button" onclick="requestDeleteTimelineEvent(${index})" aria-label="타임라인 이벤트 삭제"><i class="ti ti-trash"></i></button>
       </div>
     </div>`).join('');
+}
 
-  document.getElementById('extra-mail-count').textContent = `${c.mails.length}건`;
-  ml.innerHTML = c.mails.length
-    ? c.mails.map(m=>{const[p,d]=m.split(' — ');return`<div class="mrow"><span class="mplatform">${p}</span><span class="mdate">${d}</span></div>`;}).join('')
-    : '<div class="extra-empty">발송 이력 없음</div>';
+function timelineInputDateValue(date = new Date()) {
+  const pad = value => String(value).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+function parseTimelineDateValue(value) {
+  const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return null;
+  return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+}
+
+function timelineInputTimeValue(date = new Date()) {
+  const pad = value => String(value).padStart(2, '0');
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function initializeTimelineManualForm() {
+  const select = document.getElementById('timeline-template');
+  if (!select) return;
+  if (select.options.length !== timelineManualTemplates.length) {
+    select.innerHTML = timelineManualTemplates.map(template =>
+      `<option value="${escapeAttr(template.id)}">${escapeAttr(template.label)}</option>`
+    ).join('');
+  }
+  if (!select.value) select.value = timelineManualTemplates[0]?.id || '';
+  const date = document.getElementById('timeline-date');
+  const time = document.getElementById('timeline-time');
+  const now = new Date();
+  if (date && !date.value) date.value = timelineInputDateValue(now);
+  if (time && !time.value) time.value = timelineInputTimeValue(now);
+  renderTimelineManualFields();
+}
+
+function getSelectedTimelineManualTemplate() {
+  const selected = document.getElementById('timeline-template')?.value;
+  return timelineManualTemplates.find(template => template.id === selected) || timelineManualTemplates[0];
+}
+
+function timelineManualFieldMaxLength(template, field) {
+  return template.fields.length === 1 && field.label === '플랫폼사' ? 20 : null;
+}
+
+function renderTimelineManualFields() {
+  const wrap = document.getElementById('timeline-manual-values');
+  const template = getSelectedTimelineManualTemplate();
+  if (!wrap || !template) return;
+  const currentValues = {};
+  wrap.querySelectorAll('[data-timeline-value]').forEach(input => {
+    currentValues[input.dataset.timelineValue] = input.value;
+  });
+  wrap.classList.toggle('single', template.fields.length === 1);
+  wrap.innerHTML = template.fields.map(field => {
+    const maxLength = timelineManualFieldMaxLength(template, field);
+    const value = String(currentValues[field.key] || '').slice(0, maxLength || undefined);
+    return `
+      <div class="timeline-manual-field">
+        <label for="timeline-value-${escapeAttr(field.key)}">${escapeAttr(field.label)}</label>
+        <input id="timeline-value-${escapeAttr(field.key)}" data-timeline-value="${escapeAttr(field.key)}" type="text" placeholder="${escapeAttr(field.placeholder)}" value="${escapeAttr(value)}" ${maxLength ? `maxlength="${maxLength}"` : ''} oninput="updateTimelineManualPreview()" />
+      </div>
+    `;
+  }).join('');
+  updateTimelineManualPreview();
+}
+
+function positionTimelineDatePicker() {
+  const input = document.getElementById('timeline-date');
+  const popover = document.getElementById('timeline-date-popover');
+  if (!input || !popover) return;
+  const rect = input.getBoundingClientRect();
+  const top = rect.bottom + 6;
+  const left = Math.min(rect.left, window.innerWidth - popover.offsetWidth - 12);
+  popover.style.top = `${top}px`;
+  popover.style.left = `${Math.max(12, left)}px`;
+}
+
+function renderTimelineDatePicker() {
+  const popover = document.getElementById('timeline-date-popover');
+  const input = document.getElementById('timeline-date');
+  if (!popover || !input) return;
+  const selected = parseTimelineDateValue(input.value);
+  const today = new Date();
+  const viewYear = timelineDatePickerMonth.getFullYear();
+  const viewMonth = timelineDatePickerMonth.getMonth();
+  const firstDay = new Date(viewYear, viewMonth, 1);
+  const gridStart = new Date(viewYear, viewMonth, 1 - firstDay.getDay());
+  const weeks = ['일', '월', '화', '수', '목', '금', '토'];
+  const days = Array.from({ length: 42 }, (_, index) => {
+    const day = new Date(gridStart);
+    day.setDate(gridStart.getDate() + index);
+    const value = timelineInputDateValue(day);
+    const muted = day.getMonth() !== viewMonth;
+    const isToday = value === timelineInputDateValue(today);
+    const isSelected = selected && value === timelineInputDateValue(selected);
+    return `<button class="date-picker-day ${muted ? 'is-muted' : ''} ${isToday ? 'is-today' : ''} ${isSelected ? 'is-selected' : ''}" type="button" onclick="selectTimelineDateValue('${value}')">${day.getDate()}</button>`;
+  }).join('');
+  popover.innerHTML = `
+    <div class="date-picker-head">
+      <button class="date-picker-nav" type="button" onclick="moveTimelineDatePickerMonth(-1)" aria-label="이전 달"><i class="ti ti-chevron-left"></i></button>
+      <div class="date-picker-title">${viewYear}.${String(viewMonth + 1).padStart(2, '0')}</div>
+      <button class="date-picker-nav" type="button" onclick="moveTimelineDatePickerMonth(1)" aria-label="다음 달"><i class="ti ti-chevron-right"></i></button>
+    </div>
+    <div class="date-picker-week">${weeks.map(day => `<span>${day}</span>`).join('')}</div>
+    <div class="date-picker-grid">${days}</div>
+  `;
+  popover.classList.add('show');
+  requestAnimationFrame(positionTimelineDatePicker);
+}
+
+function openTimelineDatePicker() {
+  const selected = parseTimelineDateValue(document.getElementById('timeline-date')?.value);
+  const base = selected || new Date();
+  timelineDatePickerMonth = new Date(base.getFullYear(), base.getMonth(), 1);
+  renderTimelineDatePicker();
+}
+
+function closeTimelineDatePicker() {
+  document.getElementById('timeline-date-popover')?.classList.remove('show');
+}
+
+function moveTimelineDatePickerMonth(offset) {
+  timelineDatePickerMonth = new Date(timelineDatePickerMonth.getFullYear(), timelineDatePickerMonth.getMonth() + offset, 1);
+  renderTimelineDatePicker();
+}
+
+function selectTimelineDateValue(value) {
+  const input = document.getElementById('timeline-date');
+  if (!input) return;
+  input.value = value;
+  closeTimelineDatePicker();
+  updateTimelineManualPreview();
+}
+
+function handleTimelineDateInputKeydown(event) {
+  if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowDown') {
+    event.preventDefault();
+    openTimelineDatePicker();
+  }
+  if (event.key === 'Escape') closeTimelineDatePicker();
+}
+
+function getTimelineManualValues() {
+  const template = getSelectedTimelineManualTemplate();
+  const values = {};
+  document.querySelectorAll('[data-timeline-value]').forEach(input => {
+    const field = template?.fields.find(item => item.key === input.dataset.timelineValue);
+    const maxLength = field ? timelineManualFieldMaxLength(template, field) : null;
+    values[input.dataset.timelineValue] = input.value.trim().slice(0, maxLength || undefined);
+  });
+  return values;
+}
+
+function updateTimelineManualPreview() {
+  const preview = document.getElementById('timeline-manual-preview');
+  const template = getSelectedTimelineManualTemplate();
+  if (!preview || !template) return;
+  const values = getTimelineManualValues();
+  const hasAllValues = template.fields.every(field => values[field.key]);
+  const previewValues = template.fields.reduce((acc, field) => {
+    acc[field.key] = values[field.key] || `{${field.previewLabel || field.label}}`;
+    return acc;
+  }, {});
+  preview.classList.toggle('is-empty', !hasAllValues);
+  preview.innerHTML = template.build(previewValues);
+}
+
+function openTimelineManualModal() {
+  if (!selId) return;
+  initializeTimelineManualForm();
+  const modal = document.getElementById('timeline-manual-modal');
+  modal?.classList.add('show');
+  modal?.setAttribute('aria-hidden', 'false');
+  setTimeout(() => document.getElementById('timeline-template')?.focus(), 0);
+}
+
+function closeTimelineManualModal(event) {
+  if (event && event.target !== event.currentTarget) return;
+  closeTimelineDatePicker();
+  const modal = document.getElementById('timeline-manual-modal');
+  modal?.classList.remove('show');
+  modal?.setAttribute('aria-hidden', 'true');
+}
+
+function manualTimelineDate() {
+  const dateValue = document.getElementById('timeline-date')?.value || '';
+  const timeValue = document.getElementById('timeline-time')?.value || '00:00';
+  if (!dateValue) return null;
+  const date = new Date(`${dateValue}T${timeValue}`);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function addManualTimelineEvent() {
+  const c = contents.find(item => item.id === selId);
+  const template = getSelectedTimelineManualTemplate();
+  if (!c || !template) return;
+  const values = {};
+  let firstMissing = null;
+  template.fields.forEach(field => {
+    const input = document.querySelector(`[data-timeline-value="${field.key}"]`);
+    const maxLength = timelineManualFieldMaxLength(template, field);
+    values[field.key] = (input?.value.trim() || '').slice(0, maxLength || undefined);
+    if (!values[field.key] && !firstMissing) firstMissing = input;
+  });
+  if (firstMissing) {
+    firstMissing.focus();
+    return;
+  }
+  const date = manualTimelineDate();
+  if (!date) {
+    document.getElementById('timeline-date')?.focus();
+    return;
+  }
+  c.timeline.unshift({
+    dot: 'orange',
+    text: template.build(values),
+    time: formatContentAdminDate(date),
+  });
+  template.fields.forEach(field => {
+    const input = document.querySelector(`[data-timeline-value="${field.key}"]`);
+    if (input) input.value = '';
+  });
+  closeTimelineManualModal();
+  renderExtraInfo(c);
+}
+
+function normalizeDiscussionStatus(status) {
+  return status === 'hold' ? 'hold' : 'progress';
+}
+
+function discussionPlatformStatusMeta(status) {
+  return normalizeDiscussionStatus(status) === 'hold'
+    ? { label: '보류', className: 'is-hold' }
+    : { label: '협의중', className: 'is-progress' };
+}
+
+function findPlatformById(platformId) {
+  return platformDirectory.find(platform => platform.id === platformId);
+}
+
+function findPlatformByName(platformName) {
+  return platformDirectory.find(platform => platform.name === platformName);
+}
+
+function ensureDiscussionPlatforms(c) {
+  if (!c) return [];
+  if (!Array.isArray(c.discussionPlatforms)) c.discussionPlatforms = [];
+  c.discussionPlatforms = c.discussionPlatforms.map(item => ({
+    id: item.id || ++discussionPlatformSeq,
+    platformId: item.platformId || findPlatformByName(item.platformName || item.name || '')?.id || '',
+    source: item.source || item.platformSource || (String(item.platformId || '').startsWith('temp-company-') ? 'temporary' : 'company'),
+    platformName: item.platformName || item.name || findPlatformById(item.platformId)?.name || '',
+    isInternal: item.platformId ? Boolean(findPlatformById(item.platformId)?.isInternal) : Boolean(item.isInternal),
+    status: normalizeDiscussionStatus(item.status),
+  })).filter(item => item.platformName);
+  return c.discussionPlatforms;
+}
+
+function renderDiscussionPlatforms(c, target) {
+  const rows = ensureDiscussionPlatforms(c);
+  if (editingDiscussionPlatformId && !rows.some(row => row.id === editingDiscussionPlatformId)) {
+    editingDiscussionPlatformId = null;
+  }
+
+  target.innerHTML = `
+    <table class="discussion-platform-table">
+      <thead>
+        <tr>
+          <th>플랫폼명</th>
+          <th>상태</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.map(row => {
+          const isEditing = row.id === editingDiscussionPlatformId;
+          const status = discussionPlatformStatusMeta(row.status);
+          return `
+            <tr class="${isEditing ? 'is-editing' : ''}">
+              <td><span class="contract-platform-name">${escapeAttr(row.platformName)}</span></td>
+              <td>
+                ${isEditing ? `
+                  <select class="discussion-platform-status-select" id="discussion-platform-status-${row.id}" aria-label="협의 상태">
+                    <option value="progress" ${normalizeDiscussionStatus(row.status) === 'progress' ? 'selected' : ''}>협의중</option>
+                    <option value="hold" ${normalizeDiscussionStatus(row.status) === 'hold' ? 'selected' : ''}>보류</option>
+                  </select>
+                ` : `<span class="discussion-platform-status-pill ${status.className}">${status.label}</span>`}
+              </td>
+              <td>
+                <span class="discussion-platform-actions">
+                  ${isEditing ? `
+                    <button class="discussion-platform-icon-btn is-save" type="button" onclick="saveDiscussionPlatform(${row.id})" aria-label="협의중 플랫폼 저장"><i class="ti ti-device-floppy"></i></button>
+                    <button class="discussion-platform-icon-btn is-delete" type="button" onclick="deleteDiscussionPlatform(${row.id})" aria-label="협의중 플랫폼 삭제"><i class="ti ti-trash"></i></button>
+                  ` : `
+                    <button class="discussion-platform-icon-btn is-edit" type="button" onclick="editDiscussionPlatform(${row.id})" aria-label="협의중 플랫폼 수정"><i class="ti ti-pencil"></i></button>
+                  `}
+                </span>
+              </td>
+            </tr>
+          `;
+        }).join('')}
+        <tr class="discussion-platform-add-row" onclick="openDiscussionPlatformPicker()">
+          <td class="discussion-platform-add-cell" colspan="3">
+            <span class="discussion-platform-add-text"><i class="ti ti-plus"></i><span>추가</span></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  `;
+}
+
+function discussionPlatformOptionsForSource(source = discussionPlatformPickerSource) {
+  return source === 'temporary' ? discussionTemporaryPlatformCompanyOptions : discussionPlatformCompanyOptions;
+}
+
+function findDiscussionPlatformOption(source, platformId) {
+  return discussionPlatformOptionsForSource(source).find(item => item.id === platformId);
+}
+
+function syncDiscussionPlatformTabs() {
+  document.querySelectorAll('#platform-picker-modal .platform-modal-tab').forEach(tab => {
+    const isActive = tab.id === `discussion-platform-tab-${discussionPlatformPickerSource}`;
+    tab.classList.toggle('active', isActive);
+    tab.setAttribute('aria-selected', String(isActive));
+  });
+}
+
+function discussionPlatformPickerMatchedItems() {
+  const keyword = String(discussionPlatformPickerKeyword || '').trim().toLowerCase();
+  return discussionPlatformOptionsForSource().filter(item => {
+    const haystack = [item.id, item.name, item.country, item.representativeName, item.email].filter(Boolean).join(' ').toLowerCase();
+    return !keyword || haystack.includes(keyword);
+  });
+}
+
+function syncDiscussionPlatformPickerLayout() {
+  const isTemporary = discussionPlatformPickerSource === 'temporary';
+  const table = document.getElementById('platform-picker-results');
+  const head = document.getElementById('platform-picker-result-head');
+  table?.classList.toggle('is-company', !isTemporary);
+  if (head) {
+    head.innerHTML = isTemporary
+      ? '<span></span><span>회사명</span><span>대표 유저명</span><span>이메일</span>'
+      : '<span></span><span>회사명</span><span>지역</span>';
+  }
+}
+
+function discussionPlatformPickerResultRow(item) {
+  const fields = item.source === 'temporary'
+    ? `<div class="result-meta">${escapeAttr(item.representativeName)}</div><div class="result-meta">${escapeAttr(item.email)}</div>`
+    : `<div class="result-meta">${escapeAttr(item.country)}</div>`;
+  const sourceArg = escapeAttr(JSON.stringify(item.source));
+  const idArg = escapeAttr(JSON.stringify(item.id));
+  return `
+    <div class="result-item" data-id="${escapeAttr(item.id)}" data-source="${escapeAttr(item.source)}" onclick="selectDiscussionPlatformPickerItem(${sourceArg},${idArg})">
+      <label class="result-check-wrap"><input class="result-check" type="checkbox" aria-label="${escapeAttr(item.name)} 선택" onclick="event.stopPropagation()" onchange="selectDiscussionPlatformPickerItem(${sourceArg},${idArg})" /></label>
+      <div class="result-name">${escapeAttr(item.name)}</div>
+      ${fields}
+    </div>
+  `;
+}
+
+function renderDiscussionPlatformPickerList() {
+  const list = document.getElementById('platform-picker-list');
+  if (!list) return;
+  syncDiscussionPlatformPickerLayout();
+  const matched = discussionPlatformPickerMatchedItems();
+  const totalPages = Math.max(1, Math.ceil(matched.length / DISCUSSION_PLATFORM_PICKER_PAGE_SIZE));
+  discussionPlatformPickerPage = Math.min(Math.max(1, discussionPlatformPickerPage), totalPages);
+  const start = (discussionPlatformPickerPage - 1) * DISCUSSION_PLATFORM_PICKER_PAGE_SIZE;
+  const pageItems = matched.slice(start, start + DISCUSSION_PLATFORM_PICKER_PAGE_SIZE);
+  list.innerHTML = pageItems.length
+    ? pageItems.map(discussionPlatformPickerResultRow).join('')
+    : '<div class="company-picker-empty">검색 결과가 없습니다</div>';
+  const pagebar = document.getElementById('platform-picker-pagebar');
+  const pages = document.getElementById('platform-picker-pages');
+  if (pagebar) pagebar.style.display = totalPages > 1 ? '' : 'none';
+  if (pages) {
+    pages.innerHTML = Array.from({ length: totalPages }, (_, index) => {
+      const page = index + 1;
+      return `<button class="modal-page-number ${page === discussionPlatformPickerPage ? 'active' : ''}" type="button" onclick="setDiscussionPlatformPickerPage(${page})">${page}</button>`;
+    }).join('');
+  }
+  syncDiscussionPlatformPickerSelection();
+}
+
+function syncDiscussionPlatformPickerSelection() {
+  document.querySelectorAll('#platform-picker-modal .result-item').forEach(item => {
+    const checked = item.dataset.id === discussionPlatformPickerSelectedId && item.dataset.source === discussionPlatformPickerSelectedSource;
+    const check = item.querySelector('.result-check');
+    if (check) check.checked = checked;
+    item.classList.toggle('sel', checked);
+  });
+  const confirmButton = document.getElementById('platform-picker-confirm');
+  if (confirmButton) {
+    confirmButton.disabled = !findDiscussionPlatformOption(discussionPlatformPickerSelectedSource, discussionPlatformPickerSelectedId);
+  }
+}
+
+function setDiscussionPlatformPickerPage(page) {
+  discussionPlatformPickerPage = page;
+  renderDiscussionPlatformPickerList();
+}
+
+function switchDiscussionPlatformSource(source) {
+  discussionPlatformPickerSource = source === 'temporary' ? 'temporary' : 'company';
+  discussionPlatformPickerSelectedSource = discussionPlatformPickerSource;
+  discussionPlatformPickerSelectedId = '';
+  discussionPlatformPickerPage = 1;
+  syncDiscussionPlatformTabs();
+  renderDiscussionPlatformPickerList();
+}
+
+function openDiscussionPlatformPicker() {
+  if (!selId) return;
+  discussionPlatformPickerSource = 'company';
+  discussionPlatformPickerSelectedSource = 'company';
+  discussionPlatformPickerSelectedId = '';
+  discussionPlatformPickerKeyword = '';
+  discussionPlatformPickerPage = 1;
+  const modal = document.getElementById('platform-picker-modal');
+  const search = document.getElementById('platform-picker-search');
+  if (search) search.value = '';
+  syncDiscussionPlatformTabs();
+  renderDiscussionPlatformPickerList();
+  modal?.classList.add('show');
+  modal?.setAttribute('aria-hidden', 'false');
+  setTimeout(() => search?.focus(), 0);
+}
+
+function closeDiscussionPlatformPicker(event) {
+  if (event && !event.target.classList.contains('modal-backdrop')) return;
+  const modal = document.getElementById('platform-picker-modal');
+  modal?.classList.remove('show');
+  modal?.setAttribute('aria-hidden', 'true');
+  discussionPlatformPickerSelectedId = '';
+  discussionPlatformPickerKeyword = '';
+  discussionPlatformPickerPage = 1;
+}
+
+function searchDiscussionPlatformPicker() {
+  discussionPlatformPickerKeyword = document.getElementById('platform-picker-search')?.value || '';
+  discussionPlatformPickerPage = 1;
+  renderDiscussionPlatformPickerList();
+}
+
+function handleDiscussionPlatformPickerSearchKey(event) {
+  if (event.key !== 'Enter') return;
+  event.preventDefault();
+  if (discussionPlatformPickerSelectedId) {
+    confirmDiscussionPlatformPicker();
+    return;
+  }
+  searchDiscussionPlatformPicker();
+}
+
+function selectDiscussionPlatformPickerItem(source, platformId) {
+  discussionPlatformPickerSelectedSource = source === 'temporary' ? 'temporary' : 'company';
+  discussionPlatformPickerSelectedId = platformId;
+  syncDiscussionPlatformPickerSelection();
+}
+
+function confirmDiscussionPlatformPicker() {
+  const c = contents.find(item => item.id === selId);
+  if (!c) return;
+  const platform = findDiscussionPlatformOption(discussionPlatformPickerSelectedSource, discussionPlatformPickerSelectedId);
+  if (!platform) {
+    alert('플랫폼사를 선택해주세요.');
+    return;
+  }
+  const rows = ensureDiscussionPlatforms(c);
+  const exists = rows.some(row => row.platformId === platform.id && (row.source || 'company') === platform.source);
+  if (exists) {
+    alert('이미 추가된 협의중 플랫폼입니다.');
+    return;
+  }
+  rows.push({
+    id: ++discussionPlatformSeq,
+    platformId: platform.id,
+    source: platform.source,
+    platformName: platform.name,
+    isInternal: Boolean(findPlatformById(platform.id)?.isInternal),
+    status: 'progress',
+  });
+  editingDiscussionPlatformId = discussionPlatformSeq;
+  closeDiscussionPlatformPicker();
+  renderExtraInfo(c);
+}
+
+function editDiscussionPlatform(id) {
+  editingDiscussionPlatformId = Number(id);
+  const c = contents.find(item => item.id === selId);
+  if (c) renderExtraInfo(c);
+}
+
+function saveDiscussionPlatform(id) {
+  const c = contents.find(item => item.id === selId);
+  const row = ensureDiscussionPlatforms(c).find(item => item.id === Number(id));
+  if (!row) return;
+  const select = document.getElementById(`discussion-platform-status-${id}`);
+  row.status = normalizeDiscussionStatus(select?.value);
+  editingDiscussionPlatformId = null;
+  renderExtraInfo(c);
+}
+
+function updateDiscussionPlatformStatus(id, status) {
+  const c = contents.find(item => item.id === selId);
+  const row = ensureDiscussionPlatforms(c).find(item => item.id === Number(id));
+  if (!row) return;
+  row.status = normalizeDiscussionStatus(status);
+  renderExtraInfo(c);
+}
+
+function deleteDiscussionPlatform(id) {
+  const c = contents.find(item => item.id === selId);
+  if (!c) return;
+  c.discussionPlatforms = ensureDiscussionPlatforms(c).filter(item => item.id !== Number(id));
+  if (editingDiscussionPlatformId === Number(id)) editingDiscussionPlatformId = null;
+  renderExtraInfo(c);
+}
+
+function dateFromYmd(value) {
+  if (!value) return null;
+  const date = new Date(`${value}T00:00:00`);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function addMonths(date, months) {
+  const next = new Date(date);
+  next.setMonth(next.getMonth() + Number(months || 0));
+  return next;
+}
+
+function contractEndDate(contract) {
+  const start = dateFromYmd(contract.startDate);
+  if (!start) return null;
+  const end = addMonths(start, contract.termMonths || 0);
+  end.setDate(end.getDate() - 1);
+  return end;
+}
+
+function formatContractDate(date) {
+  if (!date) return '-';
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}.${month}.${day}`;
+}
+
+function contractPlatformStatus(contract) {
+  const start = dateFromYmd(contract.startDate);
+  const end = contractEndDate(contract);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  if (start && today < start) return { label: '방영예정', className: 'is-scheduled' };
+  if (end && today > end) return { label: '계약 종료', className: 'is-ended' };
+  return { label: '유통중', className: 'is-active' };
+}
+
+function contractPlatformPeriod(contract) {
+  return `${formatContractDate(dateFromYmd(contract.startDate))} - ${formatContractDate(contractEndDate(contract))}`;
+}
+
+function contractPlatformManageUrl(contract) {
+  return `settlement-admin.html?contractId=${encodeURIComponent(contract.contractId)}&contentId=${encodeURIComponent(contract.contentId)}&platformId=${encodeURIComponent(contract.platformId)}#contracts`;
+}
+
+function contractPlatformDisplayName(contract) {
+  return findPlatformById(contract.platformId)?.name || contract.platformName || contract.companyName || '-';
+}
+
+function renderContractPlatforms(c, target) {
+  const rows = contentContractPlatforms.filter(contract => Number(contract.contentId) === Number(c.id));
+  target.innerHTML = rows.length ? `
+    <table class="contract-platform-table">
+      <thead>
+        <tr>
+          <th>플랫폼명</th>
+          <th>계약기간</th>
+          <th>상태</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.map(contract => {
+          const status = contractPlatformStatus(contract);
+          return `
+            <tr>
+              <td><span class="contract-platform-name">${escapeAttr(contractPlatformDisplayName(contract))}</span></td>
+              <td><span class="contract-platform-period">${escapeAttr(contractPlatformPeriod(contract))}</span></td>
+              <td><span class="contract-platform-status ${status.className}">${escapeAttr(status.label)}</span></td>
+              <td>
+                <a class="contract-platform-link" href="${escapeAttr(contractPlatformManageUrl(contract))}" aria-label="계약관리 바로가기">
+                  <i class="ti ti-arrow-up-right"></i>
+                </a>
+              </td>
+            </tr>
+          `;
+        }).join('')}
+      </tbody>
+    </table>
+  ` : '<div class="contract-status-row is-empty">계약 플랫폼 없음</div>';
 }
 
 function requestDeleteTimelineEvent(index) {
@@ -7294,6 +8914,7 @@ function createAdminContent() {
       time: formatContentAdminDate(now),
     }],
     mails: [],
+    discussionPlatforms: [],
     adminNote: '',
     producerRequest: '',
   };
@@ -7661,8 +9282,9 @@ function saveContentTab(tab) {
     video: '영상',
     material: '자료',
     release: '릴리즈',
+    extra: '계약 현황',
+    timeline: '타임라인',
     operation: '운영 설정',
-    extra: '부가 정보',
   };
   alert(`${labels[tab] || '탭'}가 저장되었습니다.`);
 }
@@ -8744,14 +10366,38 @@ document.addEventListener('click', event => {
   if (!event.target.closest('.plan-dropdown')) {
     document.querySelectorAll('.plan-dropdown.open').forEach(dropdown => dropdown.classList.remove('open'));
   }
+  if (!event.target.closest('.ownership-dropdown')) {
+    closeOwnershipDropdown();
+  }
   if (!event.target.closest('.content-filter-dropdown')) {
     closeContentFilterDropdowns();
+  }
+  if (!event.target.closest('.timeline-date-field') && !event.target.closest('#timeline-date-popover')) {
+    closeTimelineDatePicker();
   }
 });
 
 document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && document.getElementById('timeline-manual-modal')?.classList.contains('show')) {
+    if (document.getElementById('timeline-date-popover')?.classList.contains('show')) {
+      closeTimelineDatePicker();
+      return;
+    }
+    closeTimelineManualModal();
+    return;
+  }
+  if (event.key === 'Escape' && document.getElementById('platform-picker-modal')?.classList.contains('show')) {
+    closeDiscussionPlatformPicker();
+    return;
+  }
   if (event.key === 'Escape' && document.getElementById('revision-media-modal')?.classList.contains('show')) {
     closeRevisionMediaPreview();
+  }
+});
+
+window.addEventListener('resize', () => {
+  if (document.getElementById('timeline-date-popover')?.classList.contains('show')) {
+    positionTimelineDatePicker();
   }
 });
 

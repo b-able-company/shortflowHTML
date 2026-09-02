@@ -7879,6 +7879,15 @@ document.addEventListener('click', (event) => {
 window.addEventListener('resize', closeRsReplyFilterMenu);
 window.addEventListener('resize', closeRsTypeFilterMenu);
 
+function openInitialContractFromQuery() {
+  const contractId = Number(new URLSearchParams(window.location.search).get('contractId'));
+  if (!Number.isFinite(contractId) || !contractId) return;
+  if (contracts.some((contract) => contract.id === contractId)) {
+    switchTab('contracts');
+    selectContract(contractId);
+  }
+}
+
 refreshContractFilters();
 renderTable();
 updateContractAddToggle();
@@ -7888,6 +7897,7 @@ const initialHash = location.hash.slice(1);
 if (['contracts', 'settlement', 'rs-requests', 'pending', 'draft', 'scheduled', 'progress', 'complete', 'ready', 'completed'].includes(initialHash)) {
   switchTab(initialHash);
 }
+openInitialContractFromQuery();
 </script>
 </body>
 </html>
