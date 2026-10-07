@@ -89,10 +89,6 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
 .analysis-period::after { content: ""; position: absolute; right: 12px; top: 50%; width: 6px; height: 6px; border-right: 1.5px solid #777; border-bottom: 1.5px solid #777; transform: translateY(-68%) rotate(45deg); pointer-events: none; }
 .analysis-period-select { width: 88px; height: 29px; padding: 0 26px 0 8px; border: 1px solid #d9d9d9; border-radius: 6px; background: #fff; color: #444; font-family: inherit; font-size: 12px; font-weight: 550; text-align: center; text-align-last: center; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; }
 .analysis-period-select:focus { border-color: #888; }
-.growth-mode-toggle { display: flex; align-items: center; border: 1px solid #d9d9d9; border-radius: 7px; overflow: hidden; }
-.growth-mode-btn { width: 54px; height: 27px; padding: 0 12px; border: 0; background: transparent; color: #777; font-family: inherit; font-size: 12px; font-weight: 550; cursor: pointer; white-space: nowrap; }
-.growth-mode-btn:hover { color: #333; }
-.growth-mode-btn.active { background: #1a1a18; color: #fff; }
 .chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; padding: 18px; align-items: start; min-width: 860px; }
 .chart-grid.chart-table-grid { grid-template-columns: 1fr; }
 .legacy-chart-grid { display: none; }
@@ -258,6 +254,240 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+/* KPI workspace: readable summaries, comparable charts and full-width detail. */
+.main { min-width: 0; background: #f4f4f5; color: #202124; }
+.body { scrollbar-gutter: stable; min-height: 0; }
+.kpi-workspace { max-width: 1440px; margin: 0 auto; padding: 6px 0 8px; }
+.section { margin-bottom: 24px; }
+.summary-head { margin-bottom: 16px; gap: 16px; align-items: flex-start; }
+.summary-label { color: #202124; font-size: 20px; font-weight: 650; letter-spacing: -.5px; }
+.summary-description { margin-top: 6px; color: #626873; font-size: 13px; line-height: 1.6; }
+.summary-period { color: #454b55; font-size: 13px; padding: 8px 12px; background: #fff; border: 1px solid #dedfe3; border-radius: 8px; white-space: nowrap; }
+.summary-grid { gap: 14px; }
+.metric-card, .analysis-card, .table-card, .ranking-card { border: 1px solid #e2e4e8; border-radius: 12px; box-shadow: 0 2px 6px #20212403; }
+.metric-card { min-width: 0; padding: 14px 18px 12px; min-height: 140px; }
+.metric-top { padding-right: 0; }
+.metric-name { font-size: 13px; line-height: 1.5; color: #454b55; font-weight: 550; }
+.metric-value { margin-top: 8px; padding-right: 0; font-size: 32px; font-weight: 650; letter-spacing: -.5px; font-variant-numeric: tabular-nums; }
+.metric-value span { margin-left: 4px; color: #626873; font-size: 14px !important; font-weight: 500; }
+.metric-basis { margin-top: 6px; font-size: 12px; color: #626873; line-height: 1.5; }
+.metric-change { margin-top: auto; padding-top: 8px; font-size: 12px; color: #626873; gap: 5px; }
+.metric-change strong { color: #19724d; }
+.metric-change.negative strong { color: #b5473c; }
+.metric-change.flat strong { color: #626873; }
+.platform-details { position: relative; }
+.platform-details > summary { cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.platform-popover { position: absolute; top: calc(100% + 8px); left: 0; z-index: 30; width: min(310px, 70vw); padding: 16px; border: 1px solid #d9dce2; border-radius: 10px; background: #fff; box-shadow: 0 8px 24px #20212418; }
+.platform-popover p { margin-bottom: 10px; line-height: 1.65; }
+.platform-popover ul { padding-left: 18px; columns: 2; line-height: 1.9; }
+.analysis-section { display: flex; flex-direction: column; gap: 24px; }
+.analysis-card, .analysis-section .table-card, .ranking-card { width: 100%; min-width: 0; margin-top: 0; overflow: hidden; }
+.kpi-panel-head { padding: 22px 24px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.kpi-panel-head h2, .table-title { font-size: 17px; font-weight: 650; letter-spacing: -.3px; }
+.kpi-panel-note { font-size: 12px; color: #626873; line-height: 1.5; }
+.analysis-head { min-height: 56px; padding: 0 24px; border-color: #e2e4e8; flex-wrap: wrap; gap: 8px 20px; }
+.analysis-tabs { gap: 24px; width: auto; }
+.analysis-tab { height: 52px; padding: 0 4px; border-radius: 0; font-size: 14px; color: #626873; position: relative; }
+.analysis-tab.active { background: transparent; color: #202124; font-weight: 650; }
+.analysis-tab.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: #202124; border-radius: 2px; }
+.analysis-tab:hover { background: #f5f5f6; }
+.analysis-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding: 8px 0; }
+.analysis-period-select, .table-year-select { height: 36px; border-color: #d9dce2; color: #454b55; font-size: 13px; font-weight: 500; }
+.analysis-period-select { width: 134px; }
+.analysis-year-filter { display: flex; align-items: center; gap: 14px; color: #626873; font-size: 12px; }
+.analysis-filter-field { display: flex; align-items: center; gap: 8px; }
+.analysis-mode-select { width: 96px; }
+.analysis-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; max-width: 100%; }
+.analysis-toolbar .analysis-period-select { width: 106px; text-align: left; text-align-last: left; padding-left: 12px; }
+.analysis-toolbar .analysis-metric-select { width: 260px; max-width: 100%; color: #202124; font-weight: 550; }
+.analysis-toolbar .analysis-mode-select { width: 86px; }
+.analysis-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.analysis-card > .kpi-panel-head { border-bottom: 1px solid #eceef1; padding-top: 18px; padding-bottom: 18px; }
+.analysis-toolbar .analysis-period { max-width: 100%; }
+.analysis-subtabs { display: flex; gap: 6px; padding: 16px 22px 0; overflow-x: auto; scrollbar-width: thin; }
+.analysis-subtab { min-height: 38px; padding: 0 14px; border: 1px solid transparent; border-radius: 8px; background: transparent; color: #626873; font-family: inherit; font-size: 13px; font-weight: 500; white-space: nowrap; cursor: pointer; }
+.analysis-subtab:hover { background: #f3f4f6; color: #292e36; }
+.analysis-subtab[aria-selected="true"] { border-color: #d9dce2; background: #fff; color: #202124; font-weight: 650; box-shadow: 0 1px 3px #2021240d; }
+.chart-grid.chart-table-grid { grid-template-columns: minmax(0, 1fr); min-width: 0; gap: 0; padding: 14px 22px 22px; align-items: start; }
+.chart-card { min-width: 0; border-color: #e2e4e8; border-radius: 10px; }
+.chart-content { display: block; }
+.chart-head { height: auto; min-height: 78px; padding: 18px 20px 8px; flex-direction: column; align-items: flex-start; gap: 10px; }
+.chart-title { font-size: 15px; font-weight: 600; color: #292e36; line-height: 1.5; }
+.chart-body-line { height: 310px; padding: 0 16px; }
+.legend { flex-wrap: wrap; white-space: normal; font-size: 12px; color: #555d69; gap: 12px; }
+.legend-dot { width: 8px; height: 8px; }
+.kpi-data-details { min-width: 0; border-top: 1px solid #e2e4e8; }
+.kpi-data-details summary { padding: 13px 20px; color: #505866; font-size: 12px; cursor: pointer; }
+.kpi-data-details summary:hover { background: #f5f5f6; }
+.chart-values { height: auto; max-height: 300px; overflow: auto; }
+.chart-values th { height: 38px; font-size: 12px; color: #555d69; }
+.chart-values td { height: 36px; font-size: 13px; color: #363d47; font-variant-numeric: tabular-nums; }
+.chart-values th, .chart-values td { padding-left: 12px; padding-right: 12px; }
+.chart-values th:first-child, .chart-values td:first-child { width: 88px; }
+.chart-values .rs-drilldown-table { min-width: 620px; }
+.rs-month-button { border: 0; background: none; padding: 8px 0; font: inherit; color: #285ea8; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+.rs-month-button span { margin-left: 8px; font-size: 12px; }
+.drilldown-head { height: 44px; }
+.drilldown-back { height: 30px; font-size: 12px; }
+.drilldown-month { color: #555d69; font-size: 12px; }
+.drilldown-empty { padding: 22px; font-size: 13px; color: #626873; }
+.table-head { min-height: 76px; height: auto; padding: 18px 24px; gap: 16px; flex-wrap: wrap; border-color: #e2e4e8; }
+.table-description { margin-top: 6px; color: #626873; font-size: 12px; }
+.kpi-table-tabs { display: flex; gap: 24px; padding: 0 24px; overflow-x: auto; border-bottom: 1px solid #e2e4e8; }
+.kpi-table-tab { border: 0; background: transparent; color: #626873; padding: 14px 2px; font: inherit; font-size: 13px; white-space: nowrap; cursor: pointer; border-bottom: 2px solid transparent; }
+.kpi-table-tab[aria-pressed="true"] { color: #202124; border-bottom-color: #202124; font-weight: 600; }
+.table-wrap { isolation: isolate; }
+.data-table { min-width: 620px; }
+.data-table[data-group="all"] { min-width: 1420px; }
+.data-table th, .data-table td { width: auto; padding: 14px 20px; font-size: 13px; font-variant-numeric: tabular-nums; }
+.data-table th { background: #f6f7f8; color: #555d69; }
+.data-table td { color: #363d47; }
+.data-table th:first-child, .data-table td:first-child { position: sticky; left: 0; z-index: 2; width: 120px; border-right: 1px solid #e2e4e8; background: #fff; }
+.data-table th:first-child { background: #f6f7f8; }
+.data-table tbody tr:hover td { background: #f5f7fa; }
+.data-table tbody tr.is-latest td { background: #f8f9fa; }
+.data-table tbody tr.is-latest td:first-child { color: #454b55; font-weight: 600; }
+.data-table tfoot td { background: #f6f7f8; border-top: 2px solid #e2e4e8; }
+.help-tip { color: #626873; border-color: #9299a3; }
+.help-tip::after { display: none; }
+.ranking-card { display: grid; grid-template-columns: 280px minmax(0, 1fr); background: #fff; padding: 24px; gap: 24px; }
+.ranking-card .kpi-panel-head { padding: 0 0 16px; align-items: flex-start; }
+.ranking-subtitle { color: #626873; font-size: 12px; line-height: 1.7; margin: 12px 0; }
+.ranking-controls { display: flex; flex-wrap: wrap; gap: 4px; }
+.ranking-controls button, .ranking-pagination button { font: inherit; font-size: 13px; border: 0; background: transparent; color: #555d69; border-radius: 6px; cursor: pointer; padding: 9px 12px; min-height: 36px; }
+.ranking-controls button[aria-pressed="true"], .ranking-pagination button[aria-current="page"] { background: #eceef1; color: #202124; font-weight: 600; }
+.ranking-controls button:hover, .ranking-pagination button:hover { background: #f5f5f6; }
+.ranking-list { list-style: none; min-width: 0; }
+.ranking-list li { display: grid; grid-template-columns: 24px 40px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 10px 0; }
+.ranking-list li:first-child { padding-top: 0; }
+.ranking-list li + li { border-top: 1px solid #eceef1; }
+.ranking-place { color: #626873; font-size: 14px; font-variant-numeric: tabular-nums; }
+.ranking-place.is-first { color: #202124; font-weight: 650; }
+.ranking-list img { width: 40px; height: 52px; object-fit: cover; border-radius: 5px; }
+.ranking-copy { min-width: 0; }
+.ranking-title { font-size: 14px; font-weight: 500; line-height: 1.6; overflow-wrap: anywhere; }
+.ranking-views { font-size: 15px; font-weight: 600; color: #363d47; font-variant-numeric: tabular-nums; text-align: right; }
+.ranking-views small { margin-left: 4px; font-size: 12px; font-weight: 400; color: #626873; }
+.ranking-foot { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 16px; border-top: 1px solid #e2e4e8; color: #626873; font-size: 12px; }
+.ranking-pagination { display: flex; gap: 4px; }
+.ranking-pagination button:disabled { color: #a2a7af; cursor: default; background: transparent; }
+.main :is(button, summary, select, [tabindex]):focus-visible { outline: 2px solid #285ea8; outline-offset: 3px; }
+@media (max-width: 1200px) {
+  .summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .ranking-card { grid-template-columns: 220px minmax(0, 1fr); }
+}
+@media (max-width: 900px) {
+  .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .analysis-head { align-items: flex-start; }
+  .ranking-card { grid-template-columns: minmax(0, 1fr); }
+  .platform-popover { left: auto; right: 0; }
+}
+@media (max-width: 760px) {
+  .main > .body { padding: 18px 16px 24px !important; }
+  .summary-head { flex-direction: column; gap: 10px; }
+  .summary-grid { grid-template-columns: minmax(0, 1fr); }
+  .kpi-panel-head, .table-head { padding: 18px 16px; }
+  .analysis-head { padding: 0 16px; }
+  .analysis-subtabs { padding: 12px 12px 0; }
+  .analysis-subtab { min-height: 36px; padding: 0 12px; font-size: 12px; }
+  .chart-grid.chart-table-grid { padding: 12px; gap: 14px; }
+  .chart-body-line { height: 270px; padding: 0 6px; }
+  .chart-head { padding-left: 14px; padding-right: 14px; }
+  .kpi-table-tabs { padding: 0 16px; gap: 18px; }
+  .ranking-card { padding: 18px 16px; gap: 16px; }
+  .ranking-list li { grid-template-columns: 20px minmax(0, 1fr) auto; gap: 8px; }
+  .ranking-list img { display: none; }
+  .platform-popover { width: min(310px, 100%); }
+}
+/* Secondary dashboard cards share the existing typography and neutral palette. */
+.support-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: stretch; }
+.support-card { min-width: 0; }
+.support-grid > .support-card, .detail-dialog .support-card { display: flex; flex-direction: column; padding: 0; gap: 0; box-shadow: none; }
+.support-card .table-head, .support-card .kpi-panel-head { padding: 16px 18px; min-height: 66px; border-bottom: 0; }
+.support-card .table-title, .support-card .kpi-panel-head h2 { font-size: 15px; font-weight: 600; }
+.support-card .table-year-select { width: 102px; height: 32px; }
+.support-card .kpi-table-tabs { padding: 0 18px; gap: 22px; }
+.support-card .kpi-table-tab { padding: 9px 0; font-size: 12px; }
+.support-grid .data-table { min-width: 420px; }
+.support-grid .data-table th, .support-grid .data-table td { padding: 10px 12px; height: 40px; font-size: 12px; }
+.support-grid .data-table th:first-child, .support-grid .data-table td:first-child { width: 82px; padding-left: 18px; border-right: 0; }
+.support-grid .data-table td { border-bottom: 0; }
+.support-grid .data-table tbody tr + tr td { border-top: 1px solid #f4f5f6; }
+.support-grid .data-table tfoot, .support-grid [data-table-group="all"] { display: none; }
+.support-card .ranking-intro { padding: 0; }
+.support-card .ranking-intro .kpi-panel-head { min-height: 66px; gap: 8px 16px; flex-wrap: wrap; }
+.support-card .ranking-subtitle { margin: 0 0 0 auto; font-size: 12px; text-align: right; white-space: nowrap; }
+.support-card .ranking-list { padding: 0 18px 8px; }
+.support-card .ranking-list li { grid-template-columns: 20px 32px minmax(0, 1fr) auto; gap: 10px; padding: 7px 0; min-height: 56px; border: 0; }
+.support-card .ranking-list img { display: block; width: 32px; height: 42px; border-radius: 4px; }
+.support-card .ranking-title { font-size: 13px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.support-card .ranking-video { display: block; margin-top: 2px; font-size: 11px; line-height: 1.4; font-weight: 400; color: #737985; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.support-card .ranking-place, .support-card .ranking-views { font-size: 13px; }
+.support-card .ranking-views { white-space: nowrap; }
+.support-card .ranking-views small { font-size: 11px; }
+.support-card .support-foot { margin: auto 18px 0; min-height: 52px; padding: 10px 0; display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; border-top: 1px solid #f1f2f4; color: #626873; font-size: 12px; }
+.support-card .data-table th, .support-card .data-table td { border-color: #f4f5f6; }
+.support-card .kpi-table-tabs { border-bottom-color: #f1f2f4; }
+.support-card .ranking-views { text-align: right; font-variant-numeric: tabular-nums; }
+.support-action { border: 0; background: none; padding: 6px 0; color: #454b55; font: inherit; font-size: 12px; font-weight: 550; cursor: pointer; }
+.support-action:hover { color: #202124; text-decoration: underline; text-underline-offset: 3px; }
+.detail-dialog { margin: auto; width: min(1200px, calc(100vw - 40px)); max-height: calc(100vh - 48px); padding: 0; border: 1px solid #e2e4e8; border-radius: 12px; background: #fff; color: #202124; font-family: inherit; overflow: auto; }
+.detail-dialog::backdrop { background: rgba(26,26,24,.35); }
+.detail-dialog .support-card { width: 100%; border: 0; border-radius: 0; }
+.detail-dialog .support-card .table-head, .detail-dialog .support-card .kpi-panel-head { padding-right: 64px; }
+.detail-dialog[data-detail="ranking"] { width: min(640px, calc(100vw - 40px)); }
+.detail-close { position: sticky; top: 12px; float: right; margin: 12px 12px -48px 0; z-index: 5; width: 32px; height: 32px; border: 0; border-radius: 6px; background: #f4f4f5; color: #454b55; font-size: 22px; cursor: pointer; }
+.detail-dialog :is(button, select, [tabindex]):focus-visible { outline: 2px solid #285ea8; outline-offset: 2px; }
+@media (max-width: 1180px) { .support-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 760px) { .support-grid { gap: 16px; } .detail-dialog { width: calc(100vw - 24px); } }
+.analysis-card { overflow: visible; }
+.analysis-card > .kpi-panel-head { border-bottom: 0; padding: 18px 22px 10px; display: flex; flex-direction: column; align-items: stretch; gap: 12px; }
+.analysis-heading { justify-content: space-between; }
+.metric-picker { position: relative; max-width: 100%; }
+#analysis-metric-trigger { min-height: 36px; max-width: 100%; padding: 0 12px; border: 0; border-radius: 8px; background: #f1f2f4; color: #202124; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+#analysis-metric-trigger:hover, #analysis-metric-trigger[aria-expanded="true"] { background: #e8ebf0; }
+#analysis-metric-panel { position: absolute; top: calc(100% + 6px); left: 0; z-index: 20; width: min(540px, calc(100vw - 64px)); padding: 14px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; background: #fff; border: 1px solid #e2e4e8; border-radius: 10px; box-shadow: 0 6px 20px #20212412; }
+#analysis-metric-panel[hidden] { display: none; }
+#analysis-metric-panel h3 { margin: 0 8px 8px; font-size: 11px; color: #737984; font-weight: 500; }
+#analysis-metric-panel button { display: block; width: 100%; padding: 9px 8px; border: 0; border-radius: 6px; background: transparent; color: #454b55; font: inherit; font-size: 12px; text-align: left; cursor: pointer; }
+#analysis-metric-panel button:hover { background: #f4f5f7; }
+#analysis-metric-panel button[aria-pressed="true"] { background: #edf2f8; color: #285ea8; font-weight: 650; }
+.analysis-window button:disabled { opacity: 1; color: #9297a0; background: #e9ebee; cursor: not-allowed; }
+#analysis-charts .apexcharts-tooltip { border: 1px solid #e2e4e8; box-shadow: none; border-radius: 8px; font-variant-numeric: tabular-nums; }
+#analysis-charts .apexcharts-tooltip-title { background: #f7f8fa; border-bottom: 0; font-size: 11px; }
+@media (max-width: 600px) { #analysis-metric-panel { grid-template-columns: 1fr; max-height: 320px; overflow-y: auto; } }
+.analysis-heading { gap: 8px 12px; }
+.analysis-toolbar { gap: 12px; }
+.analysis-window { display: inline-flex; padding: 3px; gap: 2px; border-radius: 8px; background: #f1f2f4; }
+.analysis-window button { min-height: 30px; padding: 0 10px; border: 0; border-radius: 5px; background: transparent; color: #626873; font: inherit; font-size: 12px; white-space: nowrap; cursor: pointer; }
+.analysis-window button[aria-pressed="true"] { background: #fff; color: #202124; font-weight: 600; }
+.chart-grid.chart-table-grid { padding: 4px 16px 12px; }
+#analysis-charts .chart-card { border: 0; border-radius: 0; min-height: 0; }
+#analysis-charts .chart-head { min-height: 0; padding: 10px 6px 0; flex-direction: row; align-items: center; flex-wrap: wrap; gap: 8px 16px; }
+#analysis-charts .chart-title { font-size: 13px; font-weight: 550; }
+.chart-legend-value { margin-left: 6px; color: #737985; font-weight: 400; font-variant-numeric: tabular-nums; }
+.analysis-toolbar .metric-picker { margin-right: auto; }
+#analysis-metric-trigger { min-height: 32px; background: #f7f8fa; font-weight: 500; }
+.analysis-window { background: #f7f8fa; padding: 2px; }
+.analysis-window button { min-height: 28px; }
+.chart-actions { position: relative; }
+#analysis-charts .chart-actions summary { width: fit-content; }
+.settlement-detail-action { position: absolute; top: 2px; right: 6px; padding: 6px 8px; border: 0; border-radius: 5px; background: #f5f7fa; color: #285ea8; font: inherit; font-size: 11.5px; cursor: pointer; }
+.settlement-detail-action:hover { background: #eaf0f8; }
+@media (max-width: 480px) { .settlement-detail-action { position: static; margin: 4px 6px; } }
+#analysis-charts .legend { font-size: 11px; gap: 10px; }
+#analysis-charts .legend-dot { width: 6px; height: 6px; }
+#analysis-charts .chart-body-line { height: 226px; padding: 0; }
+#analysis-charts .kpi-data-details { border-top: 0; }
+#analysis-charts .kpi-data-details summary { padding: 8px 6px; font-size: 11.5px; color: #737983; }
+#analysis-charts .chart-values { max-height: 220px; }
+#analysis-charts .chart-values th, #analysis-charts .chart-values td { height: 30px; padding: 5px 12px; font-size: 12px; font-weight: 400; }
+#analysis-charts .chart-values th { background: #f7f8f9; }
+.chart-empty-detail { padding: 14px 12px; color: #737983; font-size: 12px; }
+.support-card .ranking-pagination { display: flex; align-items: center; gap: 10px; }
+.ranking-page-status { min-width: 30px; text-align: center; color: #626873; font-size: 12px; font-variant-numeric: tabular-nums; }
+.support-card .ranking-pagination button { min-height: 30px; width: 30px; padding: 0; font-size: 19px; border: 0; background: transparent; }
+@media (max-width: 760px) { .analysis-card > .kpi-panel-head { padding: 16px 16px 8px; } .analysis-coverage { padding: 0 16px; } .analysis-toolbar { gap: 8px; } .chart-grid.chart-table-grid { padding: 4px 10px 10px; } }
 </style>
 </head>
 <body>
@@ -326,95 +556,32 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
   </div>
 
   <div class="body">
+    <div class="kpi-workspace">
     <section class="section">
       <div class="summary-head">
-        <div class="summary-label">월간 핵심 지표</div>
-        <div class="summary-period">2026년 6월 기준</div>
+        <h1 class="summary-label">KPI 대시보드</h1>
+        <div class="summary-period" id="summary-period"></div>
       </div>
-      <div class="summary-grid">
-        <article class="metric-card">
-          <div class="metric-top">
-            <span class="metric-name">신규 파트너사</span>
-            <span class="metric-icon tone-violet"><i class="ti ti-users"></i></span>
-          </div>
-          <strong class="metric-value">7<span style="font-size:13px;margin-left:2px">개사</span></strong>
-          <div class="metric-change down"><i class="ti ti-trending-down"></i><strong>-2</strong><span>전월 대비</span></div>
-        </article>
-        <article class="metric-card">
-          <div class="metric-top">
-            <span class="metric-name metric-name-with-help">활성 플랫폼 수
-              <button class="metric-help" type="button" aria-label="활성 플랫폼사 목록">?</button>
-              <span class="metric-help-popover" role="tooltip">
-                <strong>활성 플랫폼 수란?</strong>
-                <p>최근 3개월 이내 구매 문의를 1건 이상 보낸 플랫폼사 수예요.</p>
-                <p>증감(+/-)은 한 달 전 같은 기준으로 집계한 값과 비교한 수치입니다.</p>
-                <em>활성 플랫폼 목록</em>
-                <span>· ShortReel (US)</span>
-                <span>· Viki</span>
-                <span>· WeTV</span>
-                <span>· DramaBox</span>
-                <span>· MoboReels</span>
-                <span>· GoodShort</span>
-                <span>· FlexTV</span>
-                <span>· ReelShort</span>
-                <span>· ShortMax</span>
-              </span>
-            </span>
-            <span class="metric-icon tone-blue"><i class="ti ti-activity"></i></span>
-          </div>
-          <strong class="metric-value">9<span style="font-size:13px;margin-left:2px">개사</span></strong>
-          <div class="metric-change"><i class="ti ti-trending-up"></i><strong>+1</strong><span>전월 대비</span></div>
-        </article>
-
-        <article class="metric-card">
-          <div class="metric-top">
-            <span class="metric-name">등록 콘텐츠 수</span>
-            <span class="metric-icon tone-orange"><i class="ti ti-photo-video"></i></span>
-          </div>
-          <strong class="metric-value">87<span style="font-size:13px;margin-left:2px">편</span></strong>
-          <div class="metric-change"><i class="ti ti-trending-up"></i><strong>+12</strong><span>전월 대비</span></div>
-        </article>
-        <article class="metric-card">
-          <div class="metric-top">
-            <span class="metric-name">구매 문의 수</span>
-            <span class="metric-icon tone-blue"><i class="ti ti-message-question"></i></span>
-          </div>
-          <strong class="metric-value">28<span style="font-size:13px;margin-left:2px">건</span></strong>
-          <div class="metric-change down"><i class="ti ti-trending-down"></i><strong>-3</strong><span>전월 대비</span></div>
-        </article>
-        <article class="metric-card">
-          <div class="metric-top">
-            <span class="metric-name">거래 완료 수</span>
-            <span class="metric-icon tone-green"><i class="ti ti-circle-check"></i></span>
-          </div>
-          <strong class="metric-value">18<span style="font-size:15px;margin-left:2px">건</span></strong>
-          <div class="metric-change"><i class="ti ti-trending-up"></i><strong>+4건</strong><span>전월 대비</span></div>
-        </article>
-      </div>
+      <div class="summary-grid" id="summary-metrics"></div>
     </section>
 
     <section class="section analysis-section">
       <div class="analysis-card">
-        <div class="analysis-head">
-          <div class="analysis-tabs" role="tablist" aria-label="그래프 분석 항목">
-            <button class="analysis-tab active" type="button" data-analysis="growth" aria-selected="true">성장</button>
-            <button class="analysis-tab" type="button" data-analysis="conversion" aria-selected="false">거래</button>
-            <button class="analysis-tab" type="button" data-analysis="settlement" aria-selected="false">정산</button>
+        <div class="kpi-panel-head">
+          <div class="analysis-heading">
+            <h2 id="analysis-heading">추이 분석</h2>
+            <span class="kpi-panel-note" id="analysis-range"></span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div class="growth-mode-toggle" id="growth-mode-toggle" style="display:none">
-              <button class="growth-mode-btn active" type="button" data-mode="monthly">월별</button>
-              <button class="growth-mode-btn" type="button" data-mode="cumulative">누적</button>
+          <div class="analysis-toolbar" role="group" aria-label="추이 분석 조회 설정">
+            <div class="metric-picker">
+              <button type="button" id="analysis-metric-trigger" aria-haspopup="dialog" aria-expanded="false" aria-controls="analysis-metric-panel"></button>
+              <div id="analysis-metric-panel" role="dialog" aria-label="분석 지표 선택" hidden></div>
             </div>
-            <div class="analysis-period">
-              <select class="analysis-period-select" id="analysis-period-select" aria-label="그래프 조회 기간">
-              <option value="6">6개월</option>
-              <option value="12" selected>1년</option>
-            </select>
-          </div>
+            <div class="analysis-window" role="group" aria-label="추이 분석 기간"><button type="button" data-analysis-window="6" aria-pressed="false" aria-controls="analysis-charts">최근 6개월</button><button type="button" data-analysis-window="12" aria-pressed="true" aria-controls="analysis-charts">최근 12개월</button></div>
+            <div class="analysis-window" role="group" aria-label="표현 방식"><button type="button" data-growth-mode="monthly" aria-pressed="true" aria-controls="analysis-charts">월별</button><button type="button" data-growth-mode="cumulative" aria-pressed="false" aria-controls="analysis-charts" aria-describedby="analysis-mode-note">누적</button></div>
           </div>
         </div>
-        <div class="chart-grid" id="analysis-charts"></div>
+        <div class="chart-grid" id="analysis-charts" role="region" aria-labelledby="analysis-heading"></div>
         <div class="chart-grid legacy-chart-grid">
         <article class="chart-card">
           <div class="chart-head">
@@ -561,18 +728,16 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
         </article>
         </div>
       </div>
-      <div class="table-card">
+
+      <div class="support-grid">
+      <div class="table-card support-card" id="monthly-detail-card">
         <div class="table-head">
-          <div class="table-title">월별 상세 지표</div>
-          <div class="table-period-control">
-            <select class="table-year-select" id="table-year-select" aria-label="월별 상세 지표 연도">
-              <option value="2026" selected>2026</option>
-              <option value="2025">2025</option>
-            </select>
-          </div>
+          <h2 class="table-title" id="monthly-detail-heading">월별 상세 지표</h2>
+          <div class="table-period-control"><select class="table-year-select" id="table-year-select" aria-label="월별 상세 지표 연도" aria-controls="monthly-table-body monthly-table-foot"></select></div>
         </div>
-        <div class="table-wrap">
-          <table class="data-table">
+        <div class="kpi-table-tabs" role="group" aria-label="월별 상세 지표 분류"><button class="kpi-table-tab" data-table-group="growth" aria-pressed="true">성장</button><button class="kpi-table-tab" data-table-group="conversion" aria-pressed="false">거래</button><button class="kpi-table-tab" data-table-group="settlement" aria-pressed="false">정산</button><button class="kpi-table-tab" data-table-group="all" aria-pressed="false">전체 지표</button></div>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="월별 상세 지표 표, 가로로 스크롤하여 전체 열 확인">
+          <table class="data-table" aria-label="월별 상세 지표">
             <thead>
               <tr>
                 <th>기준월</th>
@@ -580,8 +745,8 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
                 <th>신규 플랫폼사</th>
                 <th>신규 콘텐츠</th>
                 <th><span class="th-label">구매 문의<span class="help-tip" tabindex="0" data-tooltip="단일 구매 문의, 묶음 구매 문의, 턴키 구매 문의를 합산한 건수">?</span></span></th>
-                <th><span class="th-label">거래 성공<span class="help-tip" tabindex="0" data-tooltip="플랫폼사에 메타데이터 권한이 부여된 건수">?</span></span></th>
-                <th><span class="th-label">거래 전환율<span class="help-tip" tabindex="0" data-tooltip="구매 문의 대비 거래 성공 비율 (거래 성공 ÷ 구매 문의 × 100)">?</span></span></th>
+                <th><span class="th-label">거래 완료<span class="help-tip" tabindex="0" data-tooltip="플랫폼사에 메타데이터 권한이 부여된 건수">?</span></span></th>
+                <th><span class="th-label">거래 전환율<span class="help-tip" tabindex="0" data-tooltip="구매 문의 대비 거래 완료 비율 (거래 완료 ÷ 구매 문의 × 100)">?</span></span></th>
                 <th><span class="th-label">거래액<span class="help-tip" tabindex="0" data-tooltip="플랫폼사가 bable에 지급한 금액">?</span></span></th>
                 <th><span class="th-label">bable 수수료<span class="help-tip" tabindex="0" data-tooltip="거래액에서 bable이 가져가는 수수료">?</span></span></th>
                 <th><span class="th-label">제작사 정산액<span class="help-tip" tabindex="0" data-tooltip="bable이 제작사에 최종 지급한 금액">?</span></span></th>
@@ -591,10 +756,25 @@ body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: rgb
             <tfoot id="monthly-table-foot"></tfoot>
           </table>
         </div>
+        <div class="support-foot"><button class="support-action" type="button" data-open-detail="monthly" aria-haspopup="dialog">전체 지표 보기 →</button></div>
+      </div>
+      <aside class="ranking-card support-card" id="ranking-detail-card" aria-labelledby="ranking-heading">
+        <div class="ranking-intro"><div class="kpi-panel-head"><h2 id="ranking-heading">영상 조회수 TOP 20</h2><p class="ranking-subtitle">최근 30일 조회수</p></div>
+        </div><ol class="ranking-list" id="ranking-list">
+          <li><span class="ranking-place">1</span><img src="../images/posters/우리집에킬러가산다.png" alt=""><div class="ranking-copy"><span class="ranking-title">우리 집에 킬러가 산다</span><span class="ranking-company">BrightFrame</span></div><span class="ranking-views">12,840<small>조회</small></span></li>
+          <li><span class="ranking-place">2</span><img src="../images/posters/비밀사내결혼.png" alt=""><div class="ranking-copy"><span class="ranking-title">비밀 사내 결혼</span></div><span class="ranking-views">10,620<small>조회</small></span></li>
+          <li><span class="ranking-place">3</span><img src="../images/posters/chaebol-secretary.png" alt=""><div class="ranking-copy"><span class="ranking-title">재벌집 막내 비서</span><span class="ranking-company">OneTake Media</span></div><span class="ranking-views">9,450<small>조회</small></span></li>
+          <li><span class="ranking-place">4</span><img src="../images/posters/return-topstar-poster.png" alt=""><div class="ranking-copy"><span class="ranking-title">죽었다가 회귀한 톱스타</span><span class="ranking-company">PaperLens</span></div><span class="ranking-views">8,210<small>조회</small></span></li>
+          <li><span class="ranking-place">5</span><img src="../images/posters/첫사랑은계약종료.png" alt=""><div class="ranking-copy"><span class="ranking-title">첫사랑은 계약 종료</span></div><span class="ranking-views">7,680<small>조회</small></span></li>
+        </ol>
+        <div class="ranking-foot support-foot"><nav class="ranking-pagination" id="ranking-pagination" aria-label="영상 조회수 순위 페이지"><button type="button" data-ranking-direction="previous" aria-label="이전 순위 5개">‹</button><span class="ranking-page-status" id="ranking-page-status" role="status" aria-live="polite"></span><button type="button" data-ranking-direction="next" aria-label="다음 순위 5개">›</button></nav></div>
+      </aside>
       </div>
     </section>
   </div>
 </div>
+</div>
+<dialog class="detail-dialog" id="kpi-detail-dialog"><button type="button" class="detail-close" aria-label="상세 보기 닫기">×</button><div id="kpi-detail-content"></div></dialog>
 <script>
 const monthlyKpiData = [
   { month:'2025.01', producer:1, platform:1, content:4, inquiry:11, success:5, firstRun:4, secondRun:1, amount:28000000, fee:2800000, payout:25200000, active:16, activePlatform:3, single:3, bundle:1, turnkey:1 },
@@ -615,14 +795,40 @@ const monthlyKpiData = [
   { month:'2026.04', producer:4, platform:2, content:13, inquiry:21, success:16, firstRun:11, secondRun:5, amount:72000000, fee:7200000, payout:64800000, active:50, activePlatform:9, single:8, bundle:5, turnkey:3 },
   { month:'2026.05', producer:6, platform:3, content:11, inquiry:23, success:14, firstRun:10, secondRun:4, amount:64000000, fee:6400000, payout:57600000, active:54, activePlatform:8, single:7, bundle:4, turnkey:3 },
   { month:'2026.06', producer:5, platform:2, content:16, inquiry:28, success:18, firstRun:13, secondRun:5, amount:85000000, fee:8500000, payout:76500000, active:61, activePlatform:9, single:9, bundle:5, turnkey:4 },
+  { month:'2026.07', producer:6, platform:2, content:18, totalIp:105, inquiry:31, success:20, firstRun:14, secondRun:6, amount:94000000, fee:9400000, payout:84600000, active:65, activePlatform:9, single:10, bundle:6, turnkey:4 },
+  { month:'2026.08', producer:5, platform:3, content:20, totalIp:125, inquiry:34, success:22, firstRun:16, secondRun:6, amount:108000000, fee:10800000, payout:97200000, active:70, activePlatform:8, single:11, bundle:7, turnkey:4 },
+  { month:'2026.09', producer:7, platform:3, content:23, totalIp:148, inquiry:39, success:26, firstRun:18, secondRun:8, amount:126000000, fee:12600000, payout:113400000, active:78, activePlatform:9, single:13, bundle:8, turnkey:5 },
 ];
 
 monthlyKpiData.forEach((row, index) => {
   row.workflowCount = row.inquiry;
-  row.totalIp = Math.round(42 + (45 * index / (monthlyKpiData.length - 1)));
+  // Keep the original 18-month mock history stable when appending new months.
+  row.totalIp ??= Math.round(42 + (45 * index / 17));
   row.mgAmount = row.amount * .55;
   row.mgIpCount = row.firstRun;
 });
+
+function renderSummary() {
+  const current = monthlyKpiData[monthlyKpiData.length - 1];
+  const previous = monthlyKpiData[monthlyKpiData.length - 2];
+  const [year, month] = current.month.split('.');
+  document.getElementById('summary-period').textContent = `${year}년 ${Number(month)}월 기준`;
+  const platforms = ['ShortReel (US)', 'Viki', 'WeTV', 'DramaBox', 'MoboReels', 'GoodShort', 'FlexTV', 'ReelShort', 'ShortMax'];
+  const metrics = [
+    { name:'신규 파트너사', unit:'개사', value:row => row.producer + row.platform, basis:'해당 월 신규 가입' },
+    { name:'활성 플랫폼', unit:'개사', value:row => row.activePlatform, basis:'최근 3개월 문의 기준', platforms:true },
+    { name:'누적 등록 콘텐츠', unit:'편', value:row => row.totalIp, basis:'기준월 말 전체 콘텐츠' },
+    { name:'구매 문의', unit:'건', value:row => row.inquiry, basis:'해당 월 접수' },
+    { name:'거래 완료', unit:'건', value:row => row.success, basis:'해당 월 완료' },
+  ];
+  document.getElementById('summary-metrics').innerHTML = metrics.map(metric => {
+    const value = metric.value(current);
+    const change = value - metric.value(previous);
+    const direction = change > 0 ? 'positive' : change < 0 ? 'negative' : 'flat';
+    const basis = metric.platforms ? `<details class="platform-details"><summary>${metric.basis}</summary><div class="platform-popover"><p>최근 3개월 이내 구매 문의를 1건 이상 보낸 플랫폼입니다. 전월에도 같은 기준으로 집계해 비교합니다.</p><strong>활성 플랫폼 ${value}개사</strong><ul>${platforms.map(name => `<li>${name}</li>`).join('')}</ul></div></details>` : metric.basis;
+    return `<article class="metric-card"><div class="metric-top"><h2 class="metric-name">${metric.name}</h2></div><strong class="metric-value">${value.toLocaleString('ko-KR')}<span>${metric.unit}</span></strong><div class="metric-basis">${basis}</div><div class="metric-change ${direction}"><strong>${change > 0 ? '+' : ''}${change.toLocaleString('ko-KR')}${metric.unit}</strong><span>전월 대비</span></div></article>`;
+  }).join('');
+}
 
 const chartGroups = {
   growth: [
@@ -633,7 +839,7 @@ const chartGroups = {
   ],
   conversion: [
     { title:'구매 문의 유형', series:[['단일','single','#5b8fd9'],['묶음','bundle','#8d83d8'],['턴키','turnkey','#9ca3af']], unit:'건' },
-    { title:'월별 거래 성공', series:[['거래 성공','success','#4fa987']], unit:'건' },
+    { title:'월별 거래 완료', series:[['거래 완료','success','#4fa987']], unit:'건' },
     { title:'월별 거래 전환율', series:[['전환율','conversion','#6b7280']], unit:'%', percent:true },
     { title:'문의 대비 미전환', series:[['미전환','unconverted','#9ca3af']], unit:'건' },
   ],
@@ -645,7 +851,7 @@ const chartGroups = {
   ],
   pipeline: [
     { title:'월별 신규 구매 문의', series:[['구매 문의','inquiry','#5b8fd9']], unit:'건' },
-    { title:'월별 거래 성공', series:[['거래 성공','success','#4fa987']], unit:'건' },
+    { title:'월별 거래 완료', series:[['거래 완료','success','#4fa987']], unit:'건' },
     { title:'월별 진행 중 거래', series:[['진행 중','unconverted','#6b7280']], unit:'건' },
     { title:'월별 파이프라인 전환율', series:[['전환율','conversion','#8d83d8']], unit:'%', percent:true },
   ],
@@ -664,12 +870,33 @@ const pipelineDeals = [
 ];
 
 let activeAnalysis = 'growth';
-let growthMode = 'monthly';
+let activeAnalysisWindow = 12;
+const activeSubchart = { growth:'signup', conversion:'complete', settlement:'amount' };
 let apexChartInstances = [];
 let pendingApexCharts = [];
 let apexChartCounter = 0;
-let activePeriod = 12;
-let activeTableYear = '2026';
+const reportYears = [...new Set(monthlyKpiData.map(row => row.month.slice(0, 4)))].sort().reverse();
+const latestReportYear = reportYears[0];
+let activeTableYear = latestReportYear;
+const tableYearSelect = document.getElementById('table-year-select');
+tableYearSelect.innerHTML = reportYears.map(year => `<option value="${year}">${year}년</option>`).join('');
+tableYearSelect.value = latestReportYear;
+function getAnalysisMonths(now = new Date()) {
+  const parts = new Intl.DateTimeFormat('en', { timeZone:'Asia/Seoul', year:'numeric', month:'numeric' }).formatToParts(now);
+  const year = Number(parts.find(part => part.type === 'year').value);
+  const month = Number(parts.find(part => part.type === 'month').value);
+  return Array.from({length:activeAnalysisWindow}, (_, index) => {
+    const date = new Date(Date.UTC(year, month - activeAnalysisWindow + index, 1));
+    return `${date.getUTCFullYear()}.${String(date.getUTCMonth() + 1).padStart(2, '0')}`;
+  });
+}
+function getAnalysisRows() {
+  const months = new Set(getAnalysisMonths());
+  return monthlyKpiData.filter(row => months.has(row.month));
+}
+function getTableRows() {
+  return monthlyKpiData.filter(row => row.month.startsWith(`${activeTableYear}.`));
+}
 let activePipelineStage = 'proposal';
 
 const rsIpData = {
@@ -713,45 +940,78 @@ const rsIpData = {
   ],
 };
 
+// Additional monthly design fixtures; totals match the existing 20% RS share.
+Object.assign(rsIpData, {
+  '2026.07': [
+    { ip:'Contract Marriage', platform:'MoboReels', period:'2026 - 2Q', amount:6800000 },
+    { ip:'Falling for the Villain', platform:'RedShort', period:'2026 - 2Q', amount:4900000 },
+    { ip:"Billionaire's Babysitter", platform:'FlexTV', period:'2026 - 2Q', amount:3700000 },
+    { ip:'Sweet Trap', platform:'WeTV SEA', period:'2026 - 2Q', amount:2200000 },
+    { ip:'Office Romance Rules', platform:'ManMan', period:'2026 - 2Q', amount:1200000 },
+  ],
+  '2026.08': [
+    { ip:'Contract Marriage', platform:'MoboReels', period:'2026 - 3Q', amount:7600000 },
+    { ip:'Falling for the Villain', platform:'RedShort', period:'2026 - 3Q', amount:5600000 },
+    { ip:"Billionaire's Babysitter", platform:'FlexTV', period:'2026 - 3Q', amount:4200000 },
+    { ip:'Sweet Trap', platform:'WeTV SEA', period:'2026 - 3Q', amount:2700000 },
+    { ip:'Office Romance Rules', platform:'ManMan', period:'2026 - 3Q', amount:1500000 },
+  ],
+  '2026.09': [
+    { ip:'Contract Marriage', platform:'MoboReels', period:'2026 - 3Q', amount:8800000 },
+    { ip:'Falling for the Villain', platform:'RedShort', period:'2026 - 3Q', amount:6500000 },
+    { ip:"Billionaire's Babysitter", platform:'FlexTV', period:'2026 - 3Q', amount:4900000 },
+    { ip:'Sweet Trap', platform:'WeTV SEA', period:'2026 - 3Q', amount:3100000 },
+    { ip:'Office Romance Rules', platform:'ManMan', period:'2026 - 3Q', amount:1900000 },
+  ],
+});
+
 let rsOriginalHtml = null;
 
 function showRsDrilldown(month) {
   const el = document.getElementById('rs-chart-values');
   if (!el) return;
+  if (el.closest('details')) el.closest('details').open = true;
   rsOriginalHtml = el.innerHTML;
+  el.dataset.returnMonth = month;
   const items = rsIpData[month] || [];
   const total = items.reduce((s, r) => s + r.amount, 0);
   el.innerHTML = `
     <div class="drilldown-head">
-      <button class="drilldown-back" onclick="restoreRsTable()">← 전체</button>
+      <button type="button" class="drilldown-back">← 월별 목록</button>
       <span class="drilldown-month" style="margin-left:auto">${month}</span>
     </div>
     <table class="rs-drilldown-table">
       <colgroup><col style="width:34%"><col style="width:22%"><col style="width:20%"><col style="width:24%"></colgroup>
       <thead><tr>
-        <th style="position:sticky;top:34px;z-index:1;height:32px;padding:0 18px;background:rgb(250, 250, 250);color:#888;font-size:11px;font-weight:500;text-align:left;">IP명</th>
-        <th style="position:sticky;top:34px;z-index:1;height:32px;padding:0 18px;background:rgb(250, 250, 250);color:#888;font-size:11px;font-weight:500;text-align:left;">플랫폼</th>
-        <th style="position:sticky;top:34px;z-index:1;height:32px;padding:0 18px;background:rgb(250, 250, 250);color:#888;font-size:11px;font-weight:500;text-align:left;">정산 분기</th>
-        <th style="position:sticky;top:34px;z-index:1;height:32px;padding:0 18px;background:rgb(250, 250, 250);color:#888;font-size:11px;font-weight:500;text-align:right;">금액</th>
+        <th style="position:sticky;top:44px;z-index:1;height:32px;padding:0 18px;background:rgb(250, 250, 250);color:#555;font-size:12px;font-weight:500;text-align:left;">콘텐츠명</th>
+        <th style="position:sticky;top:44px;z-index:1;height:32px;padding:0 18px;background:rgb(250, 250, 250);color:#888;font-size:11px;font-weight:500;text-align:left;">플랫폼</th>
+        <th style="position:sticky;top:44px;z-index:1;height:32px;padding:0 18px;background:rgb(250, 250, 250);color:#888;font-size:11px;font-weight:500;text-align:left;">정산 분기</th>
+        <th style="position:sticky;top:44px;z-index:1;height:32px;padding:0 18px;background:rgb(250, 250, 250);color:#888;font-size:11px;font-weight:500;text-align:right;">금액</th>
       </tr></thead>
       <tbody>${items.map((r, i) => `
         <tr style="${i % 2 === 1 ? 'background:rgb(250, 250, 250)' : ''}">
-          <td style="height:32px;padding:0 18px;font-size:11px;color:#333;font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.ip}</td>
-          <td style="height:32px;padding:0 18px;font-size:11px;color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.platform}</td>
-          <td style="height:32px;padding:0 18px;font-size:11px;color:#555;white-space:nowrap;">${r.period}</td>
-          <td style="height:32px;padding:0 18px;font-size:11px;color:#555;text-align:right;white-space:nowrap;">${r.amount.toLocaleString('ko-KR')}원</td>
+          <td style="height:32px;padding:0 18px;font-size:13px;color:#333;font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.ip}</td>
+          <td style="height:32px;padding:0 18px;font-size:13px;color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.platform}</td>
+          <td style="height:32px;padding:0 18px;font-size:13px;color:#555;white-space:nowrap;">${r.period}</td>
+          <td style="height:32px;padding:0 18px;font-size:13px;color:#555;text-align:right;white-space:nowrap;">${r.amount.toLocaleString('ko-KR')}원</td>
         </tr>`).join('')}
       </tbody>
       <tfoot><tr>
-        <td colspan="3" style="height:34px;padding:0 18px;font-size:11px;color:#222;font-weight:650;border-top:1px solid #e5e7eb;">합계</td>
-        <td style="height:34px;padding:0 18px;font-size:11px;color:#222;font-weight:650;border-top:1px solid #e5e7eb;text-align:right;">${total.toLocaleString('ko-KR')}원</td>
+        <td colspan="3" style="height:34px;padding:0 18px;font-size:13px;color:#222;font-weight:650;border-top:1px solid #e5e7eb;">합계</td>
+        <td style="height:34px;padding:0 18px;font-size:13px;color:#222;font-weight:650;border-top:1px solid #e5e7eb;text-align:right;">${total.toLocaleString('ko-KR')}원</td>
       </tr></tfoot>
     </table>`;
+  const back = el.querySelector('.drilldown-back');
+  back.addEventListener('click', restoreRsTable);
+  back.focus({preventScroll:true});
 }
 
 function restoreRsTable() {
   const el = document.getElementById('rs-chart-values');
-  if (el && rsOriginalHtml !== null) { el.innerHTML = rsOriginalHtml; rsOriginalHtml = null; }
+  if (el && rsOriginalHtml !== null) {
+    el.innerHTML = rsOriginalHtml; rsOriginalHtml = null;
+    el.querySelector(`[data-month="${el.dataset.returnMonth}"] button`)?.focus({preventScroll:true});
+  }
 }
 
 function valueFor(row, key) {
@@ -777,9 +1037,10 @@ function fullValue(value, chart) {
 
 function renderChartValueTable(rows, series, { percent = false, money = false, unit = '', calculation = null, valuesId = null } = {}) {
   const idAttr = valuesId ? ` id="${valuesId}"` : '';
+  if (!rows.length) return `<div class="chart-values"${idAttr}><p class="chart-empty-detail">선택한 기간에 제공된 데이터가 없습니다.</p></div>`;
   if (calculation) {
     return `<div class="chart-values"${idAttr}>
-      <table style="min-width:390px">
+      <table style="min-width:560px">
         <thead><tr><th>기준월</th><th>${calculation.numeratorLabel}</th><th>${calculation.denominatorLabel}</th><th>${calculation.resultLabel}</th></tr></thead>
         <tbody>${rows.slice().reverse().map(row => {
           const numerator = calculation.numerator(row);
@@ -800,13 +1061,13 @@ function renderChartValueTable(rows, series, { percent = false, money = false, u
     if (percent) return `${value.toFixed(1)}%`;
     return `${Math.round(value).toLocaleString('ko-KR')}${item.unit || unit}`;
   };
-  const minWidth = Math.max(250, 80 + series.length * 110);
+  const minWidth = Math.max(300, 100 + series.length * 140);
   const drillable = !!valuesId && valuesId === 'rs-chart-values';
   return `<div class="chart-values"${idAttr}>
     <table style="min-width:${minWidth}px">
       <thead><tr><th>기준월</th>${series.map(item => `<th>${item.name}</th>`).join('')}</tr></thead>
       <tbody>${rows.slice().reverse().map(row => `
-        <tr${drillable ? ` class="rs-drilldown-row" data-month="${row.month}"` : ''}><td${drillable ? ' class="rs-month-cell"' : ''}>${row.month}</td>${series.map(item => `<td>${format(item.value(row), item)}</td>`).join('')}</tr>
+        <tr${drillable && rsIpData[row.month] ? ` class="rs-drilldown-row" data-month="${row.month}"` : ''}><td${drillable ? ' class="rs-month-cell"' : ''}>${drillable && rsIpData[row.month] ? `<button type="button" class="rs-month-button" aria-label="${row.month} 콘텐츠별 정산 내역 보기">${row.month}<span aria-hidden="true">→</span></button>` : row.month}</td>${series.map(item => `<td>${format(item.value(row), item)}</td>`).join('')}</tr>
       `).join('')}</tbody>
     </table>
   </div>`;
@@ -880,7 +1141,7 @@ function renderBarCard({ title, rows, series, tableSeries = series, unit, money 
         <div class="chart-head"><div class="chart-title">${title}</div><div class="legend">${legend}</div></div>
         <div class="chart-body chart-body-line"><div id="${chartId}"></div></div>
       </div>
-      ${renderChartValueTable(rows, tableSeries, { money, unit })}
+      <details class="kpi-data-details"><summary>월별 데이터 보기</summary>${renderChartValueTable(rows, tableSeries, { money, unit })}</details>
     </div>
   </article>`;
 }
@@ -897,86 +1158,126 @@ function renderLineCard({ title, rows, series, percent = false, money = false, f
         <div class="chart-head"><div class="chart-title">${title}</div><div class="legend">${legend}</div></div>
         <div class="chart-body chart-body-line"><div id="${chartId}"></div></div>
       </div>
-      ${renderChartValueTable(rows, series, { percent, money, calculation, valuesId: drilldownId })}
+      <div class="chart-actions">
+        <details class="kpi-data-details"><summary>월별 데이터</summary>${renderChartValueTable(rows, series, { percent, money, calculation, valuesId: drilldownId })}</details>
+        ${drilldownId && rows.some(row => rsIpData[row.month]) ? `<button type="button" class="settlement-detail-action" data-settlement-month="${rows.filter(row => rsIpData[row.month]).at(-1).month}">${rows.filter(row => rsIpData[row.month]).at(-1).month} 정산 내역 보기 <span aria-hidden="true">→</span></button>` : ''}
+      </div>
     </div>
   </article>`;
 }
 
 function initPendingApexCharts() {
+  document.querySelectorAll('.kpi-data-details').forEach(details => { details.open = false; });
   apexChartInstances.forEach(c => { try { c.destroy(); } catch(e) {} });
   apexChartInstances = [];
   pendingApexCharts.forEach(({ id, rows, series, percent, money, fill, straight, unit, type, drilldownId }) => {
     const el = document.getElementById(id);
     if (!el) return;
-    const categories = rows.map(row => row.month.slice(2).replace('.', '/'));
+    const latest = [...rows].sort((a,b) => a.month.localeCompare(b.month)).at(-1);
+    const card = el.closest('.chart-card');
+    const isCumulative = activeAnalysis === 'growth' && growthMode === 'cumulative';
+    const formatValue = (value, item) => money ? `${Math.round(value).toLocaleString('ko-KR')}원`
+      : percent ? `${value.toFixed(1)}%` : `${Math.round(value).toLocaleString('ko-KR')}${item.unit || unit || ''}`;
+    card.querySelector('.chart-head')?.remove();
+    const commonLegend = {
+      show: true, showForSingleSeries: true, showForNullSeries: true,
+      position: 'top', horizontalAlign: 'right', floating: false,
+      fontSize: '11px', fontWeight: 400,
+      labels: { colors: '#626873' },
+      markers: { size: 3, shape: 'circle', strokeWidth: 0 },
+      itemMargin: { horizontal: 8, vertical: 4 },
+      onItemClick: { toggleDataSeries: false },
+      onItemHover: { highlightDataSeries: false },
+      formatter: (name, { seriesIndex }) => {
+        const item = series[seriesIndex];
+        const context = latest ? `${latest.month} 최신 집계값${isCumulative ? ' · 해당 연도 1월부터 누적' : ''}${type === 'stacked' ? ` · 총 거래액 ${formatValue(latest.amount, item)}` : ''}` : '데이터 없음';
+        return `<span title="${context}">${name}<span class="chart-legend-value">${latest ? formatValue(item.value(latest), item) : '—'}</span></span>`;
+      },
+    };
+    const months = getAnalysisMonths();
+    const categories = months.map(month => month.slice(2).replace('.', '/'));
+    const rowsByMonth = new Map(rows.map(row => [row.month, row]));
+    // Calendar slots have no invented values: missing source months stay null.
+    const plotValues = (item, precision = 10) => months.map(month => {
+      const row = rowsByMonth.get(month);
+      return row ? Math.round(item.value(row) * precision) / precision : null;
+    });
     const commonXAxis = {
       categories,
-      labels: { style: { fontSize: '10px', colors: '#aaa' }, rotate: 0 },
+      labels: { style: { fontSize: '10px', colors: '#737985' }, rotate: 0, hideOverlappingLabels: true },
       axisBorder: { show: false }, axisTicks: { show: false }, tooltip: { enabled: false }
     };
     const commonYAxis = {
+      tickAmount: 4,
       labels: {
-        style: { fontSize: '10px', colors: '#bbb' },
+        style: { fontSize: '10px', colors: '#737985' },
         formatter: val => percent ? `${Math.round(val)}%` : money ? compactNumber(val, true) : String(Math.round(val))
       }
     };
     const commonTooltip = {
-      theme: 'dark',
+      theme: 'light', shared: true, intersect: false, hideEmptySeries: true,
+      style: { fontSize: '12px', fontFamily: 'Noto Sans KR, -apple-system, sans-serif' },
+      x: { formatter: (value, context) => {
+        const month = months[context.dataPointIndex];
+        return month ? `${month.slice(0,4)}년 ${Number(month.slice(5))}월` : value;
+      } },
       y: { formatter: (val, { seriesIndex }) => {
+        if (val == null || !Number.isFinite(val)) return '미집계';
         const item = series[seriesIndex];
         if (money) return `${Math.round(val).toLocaleString('ko-KR')}원`;
         if (percent) return `${val.toFixed(1)}%`;
         return `${Math.round(val)}${item?.unit || unit || ''}`;
       }}
     };
-    const commonGrid = { borderColor: 'rgb(242, 242, 242)', padding: { left: 4, right: 8, bottom: -8 } };
+    const commonGrid = { borderColor: '#edeff1', strokeDashArray: 3, xaxis: {lines:{show:false}}, yaxis: {lines:{show:true}}, padding: { left: 0, right: 8, top: 0, bottom: -6 } };
 
     let options;
     if (type === 'bar') {
       options = {
-        series: series.map(item => ({ name: item.name, data: rows.map(row => Math.round(item.value(row) * 10) / 10) })),
+        series: series.map(item => ({ name: item.name, data: plotValues(item) })),
         chart: {
-          type: 'bar', height: 216, toolbar: { show: false }, zoom: { enabled: false },
-          animations: { enabled: true, speed: 400 },
-          fontFamily: '-apple-system, Helvetica Neue, sans-serif', background: 'transparent', offsetY: -22,
+          type: 'bar', height: 220, toolbar: { show: false }, zoom: { enabled: false },
+          animations: { enabled: false },
+          fontFamily: 'Noto Sans KR, -apple-system, sans-serif', background: 'transparent',
         },
-        plotOptions: { bar: { columnWidth: activePeriod === 12 ? '55%' : '45%', borderRadius: 3, borderRadiusApplication: 'end' } },
+        plotOptions: { bar: { columnWidth: months.length > 6 ? '22%' : '14%', borderRadius: 2, borderRadiusApplication: 'end' } },
         colors: series.map(item => item.color),
         xaxis: commonXAxis, yaxis: commonYAxis, grid: commonGrid, tooltip: commonTooltip,
         legend: { show: false }, dataLabels: { enabled: false },
-        fill: { opacity: 1 },
+        fill: { opacity: 0.95 },
       };
     } else if (type === 'stacked') {
       options = {
-        series: series.map(item => ({ name: item.name, data: rows.map(row => Math.round(item.value(row))) })),
+        series: series.map(item => ({ name: item.name, data: plotValues(item, 1) })),
         chart: {
-          type: 'bar', height: 216, stacked: true, toolbar: { show: false }, zoom: { enabled: false },
-          animations: { enabled: true, speed: 400 },
-          fontFamily: '-apple-system, Helvetica Neue, sans-serif', background: 'transparent', offsetY: -22,
+          type: 'bar', height: 220, stacked: true, toolbar: { show: false }, zoom: { enabled: false },
+          animations: { enabled: false },
+          fontFamily: 'Noto Sans KR, -apple-system, sans-serif', background: 'transparent',
         },
-        plotOptions: { bar: { columnWidth: activePeriod === 12 ? '55%' : '45%', borderRadius: 3, borderRadiusApplication: 'end', borderRadiusWhenStacked: 'last' } },
+        plotOptions: { bar: { columnWidth: months.length > 6 ? '22%' : '14%', borderRadius: 2, borderRadiusApplication: 'end', borderRadiusWhenStacked: 'last' } },
         colors: series.map(item => item.color),
         xaxis: commonXAxis, yaxis: commonYAxis, grid: commonGrid, tooltip: commonTooltip,
         legend: { show: false }, dataLabels: { enabled: false },
-        fill: { opacity: 1 },
+        fill: { opacity: 0.95 },
       };
     } else {
       options = {
-        series: series.map(item => ({ name: item.name, data: rows.map(row => Math.round(item.value(row) * 10) / 10) })),
+        series: series.map(item => ({ name: item.name, data: plotValues(item) })),
         chart: {
-          type: 'area', height: 216, toolbar: { show: false }, zoom: { enabled: false },
-          animations: { enabled: true, speed: 500 },
-          fontFamily: '-apple-system, Helvetica Neue, sans-serif', background: 'transparent', offsetY: -22,
+          type: fill ? 'area' : 'line', height: 220, toolbar: { show: false }, zoom: { enabled: false },
+          animations: { enabled: false },
+          fontFamily: 'Noto Sans KR, -apple-system, sans-serif', background: 'transparent',
           events: {}
         },
-        stroke: { curve: straight ? 'straight' : 'smooth', width: 2 },
-        fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: fill ? 0.18 : 0, opacityTo: 0.01, stops: [0, 100] } },
+        stroke: { curve: 'straight', width: 2.75 },
+        fill: { type: 'solid', opacity: fill ? 0.06 : 1 },
         colors: series.map(item => item.color),
-        markers: { size: 4, strokeWidth: 2, strokeColors: series.map(item => item.color), fillColor: '#fff', hover: { size: 6 } },
+        markers: { size: rows.length <= 6 ? 3 : 0, showNullDataPoints: false, strokeWidth: 2, hover: { size: 5 } },
         xaxis: commonXAxis, yaxis: commonYAxis, grid: commonGrid, tooltip: commonTooltip,
         legend: { show: false }, dataLabels: { enabled: false },
       };
     }
+    options.legend = commonLegend;
     const chart = new ApexCharts(el, options);
     chart.render();
     apexChartInstances.push(chart);
@@ -984,23 +1285,23 @@ function initPendingApexCharts() {
   pendingApexCharts = [];
 }
 
-function renderStackedCard({ title, rows }) {
+function renderStackedCard({ title, rows, wide = false }) {
   const chartId = `apex-stacked-${++apexChartCounter}`;
   const series = [
-    { name:'MG', color:'#5b8fd9', value:row => row.amount * .55 },
-    { name:'FlatFee', color:'#8d83d8', value:row => row.amount * .25 },
-    { name:'RS', color:'#9ca3af', value:row => row.amount * .20 },
+    { name:'MG', color:chartPalette.primary, value:row => row.amount * .55 },
+    { name:'FlatFee', color:chartPalette.secondary, value:row => row.amount * .25 },
+    { name:'RS', color:chartPalette.neutral, value:row => row.amount * .20 },
   ];
   pendingApexCharts.push({ id: chartId, rows, series, money: true, type: 'stacked' });
   const legend = series.map(item => `<span class="legend-item"><i class="legend-dot" style="background:${item.color}"></i>${item.name}</span>`).join('');
   const tableSeries = [{ name:'총 거래액', value:row => row.amount }, ...series];
-  return `<article class="chart-card">
+  return `<article class="chart-card ${wide ? 'chart-wide' : ''}">
     <div class="chart-content">
       <div class="chart-main">
         <div class="chart-head"><div class="chart-title">${title}</div><div class="legend">${legend}</div></div>
         <div class="chart-body chart-body-line"><div id="${chartId}"></div></div>
       </div>
-      ${renderChartValueTable(rows, tableSeries, { money:true })}
+      <details class="kpi-data-details"><summary>월별 데이터 · 거래액 구성 보기</summary>${renderChartValueTable(rows, tableSeries, { money:true })}</details>
     </div>
   </article>`;
 }
@@ -1014,114 +1315,220 @@ function bindPipelineStages() {
   });
 }
 
+const analysisSubchartOptions = {
+  growth: [
+    { key:'signup', label:'신규 가입' },
+    { key:'content', label:'콘텐츠 등록' },
+  ],
+  conversion: [
+    { key:'complete', label:'거래 완료' },
+    { key:'deal-rate', label:'문의 → 거래 전환율' },
+    { key:'inquiry-rate', label:'콘텐츠 → 문의 전환율' },
+  ],
+  settlement: [
+    { key:'amount', label:'월별 거래액' },
+    { key:'mg', label:'콘텐츠당 평균 MG' },
+    { key:'rs', label:'RS 정산액' },
+  ],
+};
+
+const analysisGroupLabels = { growth:'성장', conversion:'거래', settlement:'정산' };
+let growthMode = 'monthly';
+// Shared identities across monthly and cumulative charts; existing blue/violet/slate family.
+const chartPalette = { primary:'#285ea8', secondary:'#8060b5', neutral:'#397e91' };
+const metricTrigger = document.getElementById('analysis-metric-trigger');
+const metricPanel = document.getElementById('analysis-metric-panel');
+metricPanel.innerHTML = Object.entries(analysisSubchartOptions).map(([group, options]) =>
+  `<section aria-labelledby="metric-group-${group}"><h3 id="metric-group-${group}">${analysisGroupLabels[group]}</h3>${options.map(option =>
+    `<button type="button" data-analysis-metric="${group}:${option.key}" aria-pressed="false">${option.label}</button>`
+  ).join('')}</section>`
+).join('');
+function closeMetricPicker(restoreFocus = false) {
+  metricPanel.hidden = true;
+  metricTrigger.setAttribute('aria-expanded', 'false');
+  if (restoreFocus) metricTrigger.focus();
+}
+function openMetricPicker() {
+  metricPanel.hidden = false;
+  metricTrigger.setAttribute('aria-expanded', 'true');
+  metricPanel.querySelector('[aria-pressed="true"]').focus();
+}
+metricTrigger.addEventListener('click', () => metricPanel.hidden ? openMetricPicker() : closeMetricPicker());
+metricTrigger.addEventListener('keydown', event => {
+  if (event.key === 'ArrowDown') { event.preventDefault(); openMetricPicker(); }
+});
+metricPanel.addEventListener('click', event => {
+  const option = event.target.closest('[data-analysis-metric]');
+  if (!option) return;
+  const [group, metric] = option.dataset.analysisMetric.split(':');
+  activeAnalysis = group;
+  activeSubchart[group] = metric;
+  renderAnalysisCharts();
+  closeMetricPicker(true);
+});
+metricPanel.addEventListener('keydown', event => {
+  const buttons = [...metricPanel.querySelectorAll('button')];
+  const index = buttons.indexOf(document.activeElement);
+  let next;
+  if (['ArrowDown', 'ArrowRight'].includes(event.key)) next = (index + 1) % buttons.length;
+  if (['ArrowUp', 'ArrowLeft'].includes(event.key)) next = (index + buttons.length - 1) % buttons.length;
+  if (event.key === 'Home') next = 0;
+  if (event.key === 'End') next = buttons.length - 1;
+  if (next !== undefined) { event.preventDefault(); buttons[next].focus(); }
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && !metricPanel.hidden) { event.preventDefault(); closeMetricPicker(true); }
+});
+document.addEventListener('click', event => {
+  if (!event.target.closest('.metric-picker')) closeMetricPicker();
+});
+document.addEventListener('focusin', event => {
+  if (!event.target.closest('.metric-picker')) closeMetricPicker();
+});
+
+function getCumulativeGrowthRows(months) {
+  // Restore the prior annual baseline BEFORE limiting the visible window.
+  const totalsByYear = new Map();
+  return [...monthlyKpiData].sort((a, b) => a.month.localeCompare(b.month)).map(row => {
+    const year = row.month.slice(0, 4);
+    const totals = totalsByYear.get(year) || { cumProducer:0, cumPlatform:0, cumContent:0 };
+    totals.cumProducer += row.producer;
+    totals.cumPlatform += row.platform;
+    totals.cumContent += row.content;
+    totalsByYear.set(year, totals);
+    return { ...row, ...totals };
+  }).filter(row => months.includes(row.month));
+}
+
 function renderAnalysisCharts() {
-  const rows = monthlyKpiData.slice(-activePeriod);
+  const rows = getAnalysisRows();
+  const months = getAnalysisMonths();
+  const selected = activeSubchart[activeAnalysis];
   const container = document.getElementById('analysis-charts');
+  document.getElementById('analysis-range').textContent = `${months[0]}–${months[months.length - 1]}`;
+  document.querySelectorAll('[data-analysis-window]').forEach(button => button.setAttribute('aria-pressed', String(Number(button.dataset.analysisWindow) === activeAnalysisWindow)));
   container.classList.add('chart-table-grid');
+  metricTrigger.textContent = `${analysisGroupLabels[activeAnalysis]} · ${analysisSubchartOptions[activeAnalysis].find(option => option.key === selected).label} ▾`;
+  metricPanel.querySelectorAll('[data-analysis-metric]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.analysisMetric === `${activeAnalysis}:${selected}`)));
+  const effectiveMode = activeAnalysis === 'growth' ? growthMode : 'monthly';
+  document.querySelectorAll('[data-growth-mode]').forEach(button => {
+    button.setAttribute('aria-pressed', String(button.dataset.growthMode === effectiveMode));
+    button.disabled = button.dataset.growthMode === 'cumulative' && activeAnalysis !== 'growth';
+    button.removeAttribute('aria-describedby');
+    button.title = button.disabled ? '성장 지표에서 사용 가능' : '';
+  });
+
   if (activeAnalysis === 'growth') {
     if (growthMode === 'cumulative') {
-      let cumProducer = 0, cumPlatform = 0, cumContent = 0;
-      const cumulativeRows = monthlyKpiData.map(row => {
-        cumProducer += row.producer;
-        cumPlatform += row.platform;
-        cumContent += row.content;
-        return { ...row, cumProducer, cumPlatform, cumContent };
-      }).slice(-activePeriod);
-      container.innerHTML =
-        renderLineCard({
-          title:'신규 가입 누적 추이', rows: cumulativeRows, fill:true, straight:true,
-          series:[
-            { name:'제작사', color:'#285ea8', unit:'개사', value:row => row.cumProducer },
-            { name:'플랫폼사', color:'#4fa987', unit:'개사', value:row => row.cumPlatform },
-          ],
-        }) +
-        renderLineCard({
-          title:'콘텐츠 등록 누적 추이', rows: cumulativeRows, fill:true, straight:true,
-          series:[{ name:'누적 콘텐츠', color:'#6b7280', unit:'편', value:row => row.cumContent }],
-        });
+      const cumulativeRows = getCumulativeGrowthRows(months);
+      container.innerHTML = renderLineCard({
+        title: selected === 'signup' ? '신규 가입 연내 누적 추이 · 매년 1월 기준' : '콘텐츠 등록 연내 누적 추이 · 매년 1월 기준',
+        rows:cumulativeRows, fill:true, straight:true,
+        series: selected === 'signup' ? [
+          { name:'제작사', color:chartPalette.primary, unit:'개사', value:row => row.cumProducer },
+          { name:'플랫폼사', color:chartPalette.secondary, unit:'개사', value:row => row.cumPlatform },
+        ] : [{ name:'누적 콘텐츠', color:chartPalette.neutral, unit:'편', value:row => row.cumContent }],
+      });
     } else {
-      container.innerHTML =
-        renderBarCard({
-          title:'월별 신규 가입 추이', rows, unit:'개사',
-          series:[
-            { name:'제작사', color:'#285ea8', value:row => row.producer },
-            { name:'플랫폼사', color:'#4fa987', value:row => row.platform },
-          ],
-        }) +
-        renderLineCard({
-          title:'월별 콘텐츠 등록 추이', rows, fill:true,
-          series:[{ name:'신규 콘텐츠', color:'#6b7280', unit:'편', value:row => row.content }],
-        });
+      container.innerHTML = selected === 'signup'
+        ? renderBarCard({
+            title:'월별 신규 가입 추이', rows, unit:'개사',
+            series:[
+              { name:'제작사', color:chartPalette.primary, value:row => row.producer },
+              { name:'플랫폼사', color:chartPalette.secondary, value:row => row.platform },
+            ],
+          })
+        : renderLineCard({
+            title:'월별 콘텐츠 등록 추이', rows, fill:true,
+            series:[{ name:'신규 콘텐츠', color:chartPalette.neutral, unit:'편', value:row => row.content }],
+          });
     }
-    initPendingApexCharts();
-    return;
-  }
-  if (activeAnalysis === 'conversion') {
-    container.innerHTML =
-      renderBarCard({
+  } else if (activeAnalysis === 'conversion') {
+    if (selected === 'complete') {
+      container.innerHTML = renderBarCard({
         title:'월별 거래 완료 수', rows, unit:'건',
-        series:[{ name:'거래 완료', color:'#4fa987', value:row => row.success }],
-        tableSeries:[
-          { name:'거래 완료', color:'#23845d', unit:'건', value:row => row.success },
-        ],
-      }) +
-      renderLineCard({
-        title:'제안→거래 전환율', rows, percent:true,
-        series:[{ name:'제안→거래', color:'#285ea8', value:row => row.inquiry ? row.success / row.inquiry * 100 : 0 }],
+        series:[{ name:'거래 완료', color:chartPalette.primary, value:row => row.success }],
+        tableSeries:[{ name:'거래 완료', color:chartPalette.primary, unit:'건', value:row => row.success }],
+      });
+    } else if (selected === 'deal-rate') {
+      container.innerHTML = renderLineCard({
+        title:'구매 문의 대비 거래 완료 전환율', rows, percent:true,
+        series:[{ name:'구매 문의 대비 거래 완료', color:chartPalette.primary, value:row => row.inquiry ? row.success / row.inquiry * 100 : 0 }],
         calculation:{
-          numeratorLabel:'거래 성공', denominatorLabel:'구매 문의', resultLabel:'전환율',
+          numeratorLabel:'거래 완료', denominatorLabel:'구매 문의', resultLabel:'전환율',
           numerator:row => row.success, denominator:row => row.inquiry,
           result:row => row.inquiry ? row.success / row.inquiry * 100 : 0,
           formatNumerator:value => `${value}건`, formatDenominator:value => `${value}건`, formatResult:value => `${value.toFixed(1)}%`,
         },
-      }) +
-      renderLineCard({
-        title:'IP→제안 전환율', rows, percent:true, wide:true,
-        series:[{ name:'IP→제안', color:'#6b7280', value:row => row.totalIp ? row.workflowCount / row.totalIp * 100 : 0 }],
+      });
+    } else {
+      container.innerHTML = renderLineCard({
+        title:'등록 콘텐츠 대비 구매 문의 전환율', rows, percent:true,
+        series:[{ name:'등록 콘텐츠 대비 구매 문의', color:chartPalette.neutral, value:row => row.totalIp ? row.workflowCount / row.totalIp * 100 : 0 }],
         calculation:{
-          numeratorLabel:'Workflow 생성', denominatorLabel:'전체 등록 IP', resultLabel:'전환율',
+          numeratorLabel:'구매 문의', denominatorLabel:'전체 등록 콘텐츠', resultLabel:'전환율',
           numerator:row => row.workflowCount, denominator:row => row.totalIp,
           result:row => row.totalIp ? row.workflowCount / row.totalIp * 100 : 0,
           formatNumerator:value => `${value}건`, formatDenominator:value => `${value}편`, formatResult:value => `${value.toFixed(1)}%`,
         },
       });
-    initPendingApexCharts();
-    return;
-  }
-  container.innerHTML =
-    renderStackedCard({ title:'월별 거래액', rows }) +
-    renderLineCard({
-      title:'IP당 평균 MG 단가', rows, money:true,
-      series:[{ name:'평균 MG', color:'#8d83d8', value:row => row.mgIpCount ? row.mgAmount / row.mgIpCount : 0 }],
+    }
+  } else if (selected === 'amount') {
+    container.innerHTML = renderStackedCard({ title:'월별 거래액', rows });
+  } else if (selected === 'mg') {
+    container.innerHTML = renderLineCard({
+      title:'콘텐츠당 평균 MG 단가', rows, money:true,
+      series:[{ name:'평균 MG', color:chartPalette.primary, value:row => row.mgIpCount ? row.mgAmount / row.mgIpCount : 0 }],
       calculation:{
-        numeratorLabel:'MG 총액', denominatorLabel:'MG 적용 IP', resultLabel:'평균 단가',
+        numeratorLabel:'MG 총액', denominatorLabel:'MG 적용 콘텐츠', resultLabel:'평균 단가',
         numerator:row => row.mgAmount, denominator:row => row.mgIpCount,
         result:row => row.mgIpCount ? row.mgAmount / row.mgIpCount : 0,
         formatNumerator:value => `${Math.round(value).toLocaleString('ko-KR')}원`,
         formatDenominator:value => `${value}편`,
         formatResult:value => `${Math.round(value).toLocaleString('ko-KR')}원`,
       },
-    }) +
-    renderLineCard({
-      title:'RS 정산 금액 추이', rows, money:true, fill:true, wide:true, drilldownId:'rs-chart-values',
-      series:[{ name:'RS 정산액', color:'#4fa987', value:row => row.amount * .20 }],
     });
+  } else {
+    container.innerHTML = renderLineCard({
+      title:'RS 정산 금액 추이', rows, money:true, fill:true, drilldownId:'rs-chart-values',
+      series:[{ name:'RS 정산액', color:chartPalette.neutral, value:row => row.amount * .20 }],
+    });
+  }
+
   initPendingApexCharts();
-  document.getElementById('rs-chart-values')?.addEventListener('click', e => {
-    const row = e.target.closest('.rs-drilldown-row');
+  container.querySelector('[data-settlement-month]')?.addEventListener('click', event => {
+    container.querySelector('.drilldown-back')?.click();
+    container.querySelector('.kpi-data-details').open = true;
+    showRsDrilldown(event.currentTarget.dataset.settlementMonth);
+    container.querySelector('.drilldown-back')?.focus();
+  });
+  document.getElementById('rs-chart-values')?.addEventListener('click', event => {
+    const row = event.target.closest('.rs-drilldown-row');
     if (row) showRsDrilldown(row.dataset.month);
   });
 }
 
+let activeTableGroup = 'growth';
+let expandedDetail = null;
+function applyMonthlyTableGroup() {
+  document.querySelector('.data-table').dataset.group = activeTableGroup;
+  const columns = { growth: [0,1,2,3], conversion: [0,4,5,6], settlement: [0,7,8,9], all: [0,1,2,3,4,5,6,7,8,9] };
+  document.querySelectorAll('.data-table tr').forEach(row => {
+    Array.from(row.children).forEach((cell, index) => { cell.hidden = !columns[activeTableGroup].includes(index); });
+  });
+  document.querySelectorAll('[data-table-group]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.tableGroup === activeTableGroup)));
+}
+document.querySelectorAll('[data-table-group]').forEach(button => button.addEventListener('click', () => {
+  activeTableGroup = button.dataset.tableGroup;
+  applyMonthlyTableGroup();
+}));
 function renderMonthlyTable() {
-  const rows = monthlyKpiData
-    .filter(row => row.month.startsWith(activeTableYear))
-    .reverse();
+  const rows = getTableRows().reverse();
   const body = document.getElementById('monthly-table-body');
   const foot = document.getElementById('monthly-table-foot');
-  body.innerHTML = rows.map(row => {
+  body.innerHTML = rows.map((row, index) => {
     const conversion = row.inquiry ? row.success / row.inquiry * 100 : 0;
-    return `<tr>
+    return `<tr${expandedDetail !== 'monthly' && index >= 6 ? ' hidden' : ''} class="${row.month === rows[0].month ? 'is-latest' : ''}">
       <td>${row.month}</td><td>${row.producer}개사</td><td>${row.platform}개사</td><td>${row.content}편</td>
       <td>${row.inquiry}건</td><td>${row.success}건</td><td>${conversion.toFixed(1)}%</td>
       <td>${row.amount.toLocaleString('ko-KR')}원</td><td>${row.fee.toLocaleString('ko-KR')}원</td><td>${row.payout.toLocaleString('ko-KR')}원</td>
@@ -1137,40 +1544,20 @@ function renderMonthlyTable() {
     <td>${totals.inquiry}건</td><td>${totals.success}건</td><td>${conversion.toFixed(1)}%</td>
     <td>${totals.amount.toLocaleString('ko-KR')}원</td><td>${totals.fee.toLocaleString('ko-KR')}원</td><td>${totals.payout.toLocaleString('ko-KR')}원</td>
   </tr>`;
+  applyMonthlyTableGroup();
 }
 
-function updateGrowthToggleVisibility() {
-  const toggle = document.getElementById('growth-mode-toggle');
-  if (toggle) toggle.style.display = activeAnalysis === 'growth' ? 'flex' : 'none';
-}
-
-document.querySelectorAll('.analysis-tab').forEach(button => {
-  button.addEventListener('click', () => {
-    activeAnalysis = button.dataset.analysis;
-    document.querySelectorAll('.analysis-tab').forEach(item => {
-      const active = item === button;
-      item.classList.toggle('active', active);
-      item.setAttribute('aria-selected', String(active));
-    });
-    updateGrowthToggleVisibility();
-    renderAnalysisCharts();
-  });
-});
-
-document.getElementById('growth-mode-toggle').addEventListener('click', event => {
-  const btn = event.target.closest('.growth-mode-btn');
-  if (!btn) return;
-  growthMode = btn.dataset.mode;
-  document.querySelectorAll('.growth-mode-btn').forEach(b => b.classList.toggle('active', b === btn));
+document.querySelectorAll('[data-growth-mode]').forEach(button => button.addEventListener('click', () => {
+  growthMode = button.dataset.growthMode;
   renderAnalysisCharts();
-});
+}));
 
-document.getElementById('analysis-period-select').addEventListener('change', event => {
-  activePeriod = Number(event.target.value);
+document.querySelectorAll('[data-analysis-window]').forEach(button => button.addEventListener('click', () => {
+  activeAnalysisWindow = Number(button.dataset.analysisWindow);
   renderAnalysisCharts();
-});
+}));
 
-document.getElementById('table-year-select').addEventListener('change', event => {
+tableYearSelect.addEventListener('change', event => {
   activeTableYear = event.target.value;
   renderMonthlyTable();
 });
@@ -1209,7 +1596,121 @@ analysisCharts.addEventListener('click', event => {
   showRsDrilldown(point.dataset.drilldownMonth);
 });
 
-updateGrowthToggleVisibility();
+// Video-level design mock: content title, poster, recent views, lifetime views, video label.
+const rankingPreviewData = [
+  ['우리 집에 킬러가 산다','우리집에킬러가산다.png',12840,98600,'EP. 1'],
+  ['비밀 사내 결혼','비밀사내결혼.png',10620,142500,'예고편 2'],
+  ['재벌집 막내 비서','chaebol-secretary.png',9450,88400,'예고편 1'],
+  ['죽었다가 회귀한 톱스타','return-topstar-poster.png',8210,176200,'EP. 2'],
+  ['첫사랑은 계약 종료','첫사랑은계약종료.png',7680,62400,'하이라이트'],
+  ['우리 집에 킬러가 산다','우리집에킬러가산다.png',7250,38900,'EP. 2'],
+  ['왕자님의 퇴근길','왕자님의퇴근길.png',6980,73400,'EP. 1'],
+  ['나의 위험한 파트너','나의위험한파트너.png',6540,119800,'예고편 1'],
+  ['비밀 사내 결혼','비밀사내결혼.png',6120,46800,'EP. 3'],
+  ['첫사랑 리셋 버튼','첫사랑리셋버튼.png',5840,95200,'EP. 2'],
+  ['내 남편의 비밀 계정','내남편의비밀계정.png',5510,35800,'하이라이트'],
+  ['우주 택배 기사님','우주택배기사님.png',5290,51600,'예고편 2'],
+  ['대표님이 내 전남친입니다','대표님이내전남친입니다.png',4970,128400,'EP. 1'],
+  ['우리 집에 킬러가 산다','우리집에킬러가산다.png',4620,29300,'예고편 1'],
+  ['달빛 아래 편의점','달빛아래편의점.png',4350,56700,'EP. 3'],
+  ['재벌가 입주 과외','재벌가입주과외.png',4080,104600,'예고편 1'],
+  ['그녀의 두 번째 엔딩','그녀의두번째엔딩.png',3760,41200,'EP. 2'],
+  ['죽었다가 회귀한 톱스타','return-topstar-poster.png',3510,68400,'하이라이트'],
+  ['내 남친의 여자친구','내남친의여자친구.png',3280,81300,'EP. 1'],
+  ['새벽배송 로맨스','새벽배송로맨스.png',2950,22700,'예고편 2'],
+];
+const rankingState = { page: 1 };
+function renderRanking() {
+  const valueIndex = 2;
+  const ranked = [...rankingPreviewData].sort((a,b) => b[valueIndex] - a[valueIndex]).slice(0,20);
+  const pages = Math.ceil(ranked.length / 5);
+  rankingState.page = Math.min(Math.max(1, rankingState.page), pages);
+  const start = (rankingState.page - 1) * 5;
+  const list = document.getElementById('ranking-list');
+  list.start = start + 1;
+  list.innerHTML = ranked.slice(start, start + 5).map((item,index) => `<li><span class="ranking-place${start + index === 0 ? ' is-first' : ''}">${start + index + 1}</span><img src="../images/posters/${item[1]}" alt="" loading="lazy"><div class="ranking-copy"><span class="ranking-title" title="${item[0]}">${item[0]}</span><span class="ranking-video" title="${item[4]}">${item[4]}</span></div><span class="ranking-views">${item[valueIndex].toLocaleString('ko-KR')}<small>조회</small></span></li>`).join('');
+  document.getElementById('ranking-page-status').textContent = `${rankingState.page} / ${pages}`;
+  document.querySelector('[data-ranking-direction="previous"]').disabled = rankingState.page === 1;
+  document.querySelector('[data-ranking-direction="next"]').disabled = rankingState.page === pages;
+}
+document.getElementById('ranking-pagination').addEventListener('click', event => {
+  const button = event.target.closest('[data-ranking-direction]');
+  if (!button || button.disabled) return;
+  rankingState.page += button.dataset.rankingDirection === 'next' ? 1 : -1;
+  renderRanking();
+  if (button.disabled) document.querySelector('#ranking-pagination button:not(:disabled)')?.focus({preventScroll:true});
+});
+
+// Reuse the original cards and their listeners in the full-detail dialog.
+const detailDialog = document.getElementById('kpi-detail-dialog');
+const detailContent = document.getElementById('kpi-detail-content');
+let detailPlaceholder = null;
+let detailTrigger = null;
+let previewTableGroup = 'growth';
+document.querySelectorAll('[data-open-detail]').forEach(button => button.addEventListener('click', () => {
+  if (detailDialog.open) { detailDialog.close(); return; }
+  expandedDetail = button.dataset.openDetail;
+  detailTrigger = button;
+  const card = document.getElementById('monthly-detail-card');
+  detailPlaceholder = document.createComment('Dashboard card position');
+  card.before(detailPlaceholder);
+  detailContent.appendChild(card);
+  detailDialog.dataset.detail = expandedDetail;
+  detailDialog.setAttribute('aria-labelledby', 'monthly-detail-heading');
+  button.textContent = '요약으로 돌아가기';
+  previewTableGroup = activeTableGroup;
+  activeTableGroup = 'all';
+  renderMonthlyTable();
+  const tooltip = document.getElementById('kpi-help-tooltip');
+  tooltip.classList.remove('show');
+  detailDialog.appendChild(tooltip);
+  detailDialog.showModal();
+  detailDialog.querySelector('.detail-close').focus();
+}));
+detailDialog.querySelector('.detail-close').addEventListener('click', () => detailDialog.close());
+detailDialog.addEventListener('click', event => {
+  if (event.target !== detailDialog) return;
+  const rect = detailDialog.getBoundingClientRect();
+  if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) detailDialog.close();
+});
+detailDialog.addEventListener('close', () => {
+  if (!detailPlaceholder) return;
+  detailPlaceholder.replaceWith(detailContent.firstElementChild);
+  detailPlaceholder = null;
+  expandedDetail = null;
+  activeTableGroup = activeTableGroup === 'all' ? previewTableGroup : activeTableGroup;
+  renderMonthlyTable();
+  detailTrigger.textContent = '전체 지표 보기 →';
+  const tooltip = document.getElementById('kpi-help-tooltip');
+  tooltip.classList.remove('show');
+  document.body.appendChild(tooltip);
+  detailTrigger.focus({preventScroll:true});
+});
+const helpTooltip = document.createElement('div');
+helpTooltip.className = 'chart-hover-tooltip';
+helpTooltip.id = 'kpi-help-tooltip';
+helpTooltip.setAttribute('role', 'tooltip');
+document.body.appendChild(helpTooltip);
+document.querySelectorAll('.help-tip').forEach(tip => {
+  tip.setAttribute('aria-describedby', helpTooltip.id);
+  tip.setAttribute('aria-label', `${tip.parentElement.firstChild.textContent.trim()} 설명`);
+  const show = () => {
+    helpTooltip.textContent = tip.dataset.tooltip;
+    helpTooltip.classList.add('show');
+    const rect = tip.getBoundingClientRect();
+    const size = helpTooltip.getBoundingClientRect();
+    helpTooltip.style.left = `${Math.max(12, Math.min(rect.left, window.innerWidth - size.width - 12))}px`;
+    helpTooltip.style.top = `${Math.max(12, rect.bottom + size.height + 20 > window.innerHeight ? rect.top - size.height - 8 : rect.bottom + 8)}px`;
+  };
+  tip.addEventListener('pointerenter', show);
+  tip.addEventListener('focus', show);
+  tip.addEventListener('pointerleave', () => { if (document.activeElement !== tip) helpTooltip.classList.remove('show'); });
+  tip.addEventListener('blur', () => helpTooltip.classList.remove('show'));
+  tip.addEventListener('keydown', event => { if (event.key === 'Escape') helpTooltip.classList.remove('show'); });
+});
+document.addEventListener('scroll', () => helpTooltip.classList.remove('show'), true);
+renderSummary();
+renderRanking();
 renderAnalysisCharts();
 renderMonthlyTable();
 </script>

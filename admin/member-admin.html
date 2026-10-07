@@ -223,6 +223,21 @@ td { padding: 9px 12px; vertical-align: middle; }
   align-items: center;
   gap: 7px;
 }
+.company-preview-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid #e85d2c;
+  border-radius: 7px;
+  background: #fff5f0;
+  color: #c74a20;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.company-preview-button:hover { background: #ffe9df; }
 .company-drive-shortcut {
   width: 28px;
   height: 28px;
@@ -2800,6 +2815,7 @@ td { padding: 9px 12px; vertical-align: middle; }
               <div class="company-header-actions">
                 <div class="company-header-actions-top">
                   <span class="user-status-text" id="cd-status"></span>
+                  <button class="company-preview-button" type="button" onclick="openCompanyPreview()" title="회사 화면을 조회 전용으로 열기"><i class="ti ti-eye"></i> View 모드</button>
                   <button class="btn-close-panel" onclick="closeCompanyDetail()"><i class="ti ti-x"></i></button>
                 </div>
               </div>
@@ -5034,6 +5050,38 @@ function selectCompany(id) {
   document.getElementById('company-detail').style.display = 'flex';
 }
 
+function openCompanyPreview() {
+  const company = companies.find(item => item.id === selectedCompanyId);
+  if (!company) return;
+  const detail = ensureCompanyDetailDefaults(company);
+  const representative = users.find(user => user.companyId === company.id && user.perm === 'OWNER');
+  const preview = {
+    id: company.id,
+    name: company.name,
+    type: company.type,
+    email: company.email,
+    country: detail.country,
+    description: detail.description,
+    phone: `${detail.phoneCountryCode} ${detail.phone}`,
+    website: detail.websiteUrl,
+    address: detail.address,
+    appUrl: detail.appUrl,
+    appDescription: detail.appDescription,
+    googleEmail: detail.googleEmail,
+    inviteCode: getCompanyInviteCode(company),
+    portfolios: getCompanyPortfolios(company).map(work => ({
+      id: work.id, title: work.title, year: work.year,
+      image: work.image?.replace(/^\.\.\//, '') || '',
+    })),
+    representative: representative ? { name: representative.name, email: representative.email, phone: representative.phone } : null,
+    members: users.filter(user => user.companyId === company.id).map(user => ({
+      id: user.id, name: user.name, email: user.email, role: user.perm === 'OWNER' ? 'OWNER' : 'MEMBER', permission: user.perm === 'OWNER' ? 'WRITE' : user.perm, joined: user.date,
+    })),
+  };
+  const page = company.type === 'PRODUCTION' ? 'owner-prod.html' : 'owner.html';
+  window.location.href = `../${page}?adminCompanyPreview=${encodeURIComponent(JSON.stringify(preview))}`;
+}
+
 function closeCompanyDetail() {
   if (companyWorkEditor.open) closeCompanyWorkEditor();
   selectedCompanyId = null;
@@ -5203,6 +5251,10 @@ renderCompanies();
 renderTemporaryCompanies();
 if (['users', 'companies', 'temporary-companies'].includes(location.hash.slice(1))) {
   switchTab(location.hash.slice(1));
+}
+const returnedCompanyId = Number(new URLSearchParams(location.search).get('company'));
+if (location.hash === '#companies' && companies.some(company => company.id === returnedCompanyId)) {
+  selectCompany(returnedCompanyId);
 }
 </script>
 </body>

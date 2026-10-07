@@ -1,5 +1,137 @@
 (function () {
-  if (!window.__SHORTFLOW_DEFER_NAV__ && !document.querySelector('script[data-utility-remote-script]')) {
+  const previewStorageKey = 'shortflow-admin-company-preview';
+  const previewParams = new URLSearchParams(window.location.search);
+  let adminPreview = null;
+  try {
+    const encoded = previewParams.get('adminCompanyPreview');
+    const stored = encoded || sessionStorage.getItem(previewStorageKey);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed && parsed.id && parsed.name && ['PRODUCTION', 'PLATFORM'].includes(parsed.type)) {
+        adminPreview = parsed;
+        sessionStorage.setItem(previewStorageKey, JSON.stringify(parsed));
+      }
+    }
+  } catch (error) {
+    adminPreview = null;
+  }
+  if (adminPreview && previewParams.has('adminCompanyPreview')) {
+    previewParams.delete('adminCompanyPreview');
+    const remaining = previewParams.toString();
+    history.replaceState(null, '', `${location.pathname}${remaining ? `?${remaining}` : ''}${location.hash}`);
+  }
+  window.ShortflowAdminPreview = {
+    company: adminPreview,
+    applyProfile(companyInfo, companyProfile, userProfile, companyMembers, options = {}) {
+      if (!adminPreview) return;
+      companyInfo.name = adminPreview.name;
+      companyInfo.type = adminPreview.type === 'PRODUCTION' ? '제작사' : '플랫폼';
+      companyInfo.inviteCode = adminPreview.inviteCode || '-';
+      Object.assign(companyProfile, {
+        name: adminPreview.name,
+        email: adminPreview.email || '',
+        country: adminPreview.country || '',
+        description: adminPreview.description || '',
+        phone: adminPreview.phone || '',
+        website: adminPreview.website || '',
+        address: adminPreview.address || '',
+      });
+      if (adminPreview.type === 'PLATFORM') {
+        companyProfile.appUrl = adminPreview.appUrl || '';
+        companyProfile.appDescription = adminPreview.appDescription || '';
+      } else {
+        companyProfile.googleEmail = adminPreview.googleEmail || '';
+      }
+      const representative = adminPreview.representative || {};
+      userProfile.name = representative.name || '회사 관리자';
+      userProfile.email = representative.email || adminPreview.email || '';
+      userProfile.phone = representative.phone || '';
+      if (options.emailVerification) options.emailVerification.draftEmail = userProfile.email;
+      companyMembers.splice(0, companyMembers.length, ...(adminPreview.members || []).map(member => ({
+        id: String(member.id), name: member.name, email: member.email, role: member.role,
+        permission: member.permission, joined: member.joined, you: member.role === 'OWNER',
+      })));
+      if (options.creditInfo) {
+        options.creditInfo.balance = '-';
+        options.creditInfo.updatedAt = '-';
+        options.creditInfo.history.splice(0);
+      }
+      if (options.representativeWorks) {
+        options.representativeWorks.splice(0, options.representativeWorks.length, ...(adminPreview.portfolios || []));
+      }
+    },
+    exit() {
+      try { sessionStorage.removeItem(previewStorageKey); } catch (error) { /* Storage can be unavailable. */ }
+    },
+  };
+
+  if (adminPreview) {
+    const isFilter = element => element.matches('input[type="search"], [data-admin-preview-filter], .content-search, .contract-search')
+      || /search|filter|sort/i.test(`${element.id} ${element.className}`);
+    const protectFields = () => {
+      document.querySelectorAll('input, textarea, select, [contenteditable="true"]').forEach(element => {
+        if (element.closest('.admin-preview-banner') || isFilter(element)) return;
+        if (element.matches('[contenteditable]')) element.contentEditable = 'false';
+        else if (element.matches('select, input[type="checkbox"], input[type="radio"], input[type="file"], input[type="date"], input[type="month"]')) element.disabled = true;
+        else if (!element.matches('input[type="hidden"]')) element.readOnly = true;
+      });
+    };
+    let scheduled = false;
+    const scheduleProtection = () => {
+      if (scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(() => { scheduled = false; protectFields(); });
+    };
+    const showBlockedNotice = () => {
+      let notice = document.getElementById('admin-preview-notice');
+      if (!notice) {
+        notice = document.createElement('div');
+        notice.id = 'admin-preview-notice';
+        notice.className = 'admin-preview-notice';
+        notice.setAttribute('role', 'status');
+        document.body.appendChild(notice);
+      }
+      notice.textContent = '관리자 조회 모드에서는 변경할 수 없습니다.';
+      notice.classList.add('show');
+      clearTimeout(notice._hideTimer);
+      notice._hideTimer = setTimeout(() => notice.classList.remove('show'), 2300);
+    };
+    const block = event => { event.preventDefault(); event.stopImmediatePropagation(); showBlockedNotice(); };
+    document.addEventListener('click', event => {
+      const exitLink = event.target.closest('[data-admin-preview-exit]');
+      if (exitLink) { window.ShortflowAdminPreview.exit(); return; }
+      const link = event.target.closest('a');
+      if (link) {
+        if (link.matches('[data-onboarding-trigger]') || /(?:login\/|first-login-setup|admin\/)/.test(link.getAttribute('href') || '')) block(event);
+        return;
+      }
+      const control = event.target.closest('button, [role="button"], input[type="submit"], input[type="button"]');
+      if (!control) return;
+      if (control.closest('.top-nav, .sub-nav') || control.matches('[data-admin-preview-allow]')) return;
+      const description = [control.textContent, control.getAttribute('aria-label'), control.title, control.dataset.action, control.getAttribute('onclick')].filter(Boolean).join(' ');
+      if (/(?:go|open)[A-Za-z]*Detail\(/.test(control.getAttribute('onclick') || '')) return;
+      if (/(?:저장|수정|삭제|등록|추가|생성|발송|전송|보내|제출|승인|거절|신청|구매|결제|충전|차감|업로드|업데이트|초대|탈퇴|로그아웃|장바구니|문의하기|확정|확인|계약 체결)/i.test(description)) { block(event); return; }
+      if (control.matches('[data-tab], [data-workflow-id], [data-message-id], [data-platform-workflow-stage], [data-workflow-detail-mode], [data-workflow-stat-filter], [data-contract-filter], [data-contract-page]')) return;
+      if (/(?:보기|상세|닫기|취소|뒤로|이전|다음|목록|검색|필터|정렬|페이지|펼치기|접기|복사|선택|조회|미리보기|전체)/.test(description)) return;
+      block(event);
+    }, true);
+    document.addEventListener('submit', block, true);
+    document.addEventListener('beforeinput', event => {
+      if (!isFilter(event.target)) block(event);
+    }, true);
+    document.addEventListener('change', event => {
+      if (event.target.matches('input, textarea, select') && !isFilter(event.target)) block(event);
+    }, true);
+    document.addEventListener('drop', block, true);
+    const startProtection = () => {
+      protectFields();
+      new MutationObserver(scheduleProtection).observe(document.body, { childList: true, subtree: true });
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startProtection, { once: true });
+    else startProtection();
+  }
+
+  if (!adminPreview && !window.__SHORTFLOW_DEFER_NAV__ && !document.querySelector('script[data-utility-remote-script]')) {
     const utilityScript = document.createElement('script');
     utilityScript.src = 'utility-remote.js';
     utilityScript.dataset.utilityRemoteScript = 'true';
@@ -12,14 +144,11 @@
     { id: 'platform-dashboard', label: '대시보드', href: 'shortflow-dashboard.html', aliases: ['dashboard'], role: 'platform' },
     { id: 'my-content', label: '콘텐츠 관리', href: 'contentlist-prod.html', role: 'producer' },
     { id: 'producer-dashboard', label: '대시보드', href: 'distribution-version.html', role: 'producer' },
-    { id: 'script-analysis', label: 'AI 대본분석', href: '#', role: 'producer' },
-    { id: 'production-collab', label: '제작 협업', href: 'investor-collaboration.html', role: 'investor' },
-    { id: 'guide', label: '이용가이드', href: '#', role: 'shared' },
+    { id: 'script-analysis', label: 'AI Studio', href: 'aistudio.html', role: 'producer' },
   ];
   const rolePages = {
     platform: new Set(['platform-collab', 'content', 'concierge', 'platform-dashboard', 'dashboard']),
     producer: new Set(['my-content', 'producer-dashboard', 'script-analysis']),
-    investor: new Set(['production-collab']),
   };
 
   const platformDashboardTabs = [
@@ -52,13 +181,11 @@
   const accountProfiles = {
     platform: { company: 'Reelio', roleLabel: '플랫폼', accountHref: 'owner.html' },
     producer: { company: 'Reelio', roleLabel: '제작사', accountHref: 'owner-prod.html' },
-    investor: { company: 'Reelio', roleLabel: '투자자', accountHref: '#' },
   };
 
   const homeLinks = {
     platform: 'content-list.html',
     producer: 'contentlist-prod.html',
-    investor: 'investor-collaboration.html',
   };
 
   function getPreferredLanguage() {
@@ -74,9 +201,28 @@
     const currentPage = activePage || 'platform-dashboard';
     const currentRole = resolveViewRole(currentPage);
     const currentLanguage = getPreferredLanguage();
-    const account = accountProfiles[currentRole] || accountProfiles.platform;
+    const account = adminPreview
+      ? { company: adminPreview.name, roleLabel: adminPreview.type === 'PRODUCTION' ? '제작사' : '플랫폼', accountHref: adminPreview.type === 'PRODUCTION' ? 'owner-prod.html' : 'owner.html' }
+      : accountProfiles[currentRole] || accountProfiles.platform;
+    const adminReturnHref = adminPreview ? `admin/member-admin.html?company=${encodeURIComponent(adminPreview.id)}#companies` : '';
+    const escapeHtml = value => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
     return `
+      ${adminPreview ? `
+        <div class="admin-preview-banner" role="region" aria-label="관리자 조회 모드">
+          <div class="admin-preview-inner">
+            <div class="admin-preview-context">
+              <span class="admin-preview-label"><span class="admin-preview-dot" aria-hidden="true"></span>관리자 조회</span>
+              <span class="admin-preview-divider" aria-hidden="true"></span>
+              <strong class="admin-preview-company" title="${escapeHtml(adminPreview.name)}">${escapeHtml(adminPreview.name)}</strong>
+              <span class="admin-preview-readonly">읽기 전용</span>
+            </div>
+            <a class="admin-preview-exit" href="${adminReturnHref}" data-admin-preview-exit aria-label="관리자로 돌아가기" title="관리자로 돌아가기">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5-5 5 5 5"/><path d="M4 10h10a6 6 0 0 1 6 6v3"/></svg>
+              <span class="admin-preview-exit-label">관리자로 돌아가기</span>
+            </a>
+          </div>
+        </div>` : ''}
       <header class="top-nav">
         <div class="nav-inner">
           <a class="brand" href="${homeLinks[currentRole] || homeLinks.platform}" aria-label="숏플로우 홈">
@@ -112,7 +258,7 @@
               </button>
               <div class="account-menu" role="menu">
                 <a class="account-head" href="${account.accountHref}" role="menuitem">
-                  <strong>${account.company}</strong>
+                  <strong>${escapeHtml(account.company)}</strong>
                   <span>${account.roleLabel}</span>
                 </a>
                 ${currentRole === 'platform' ? `
@@ -121,9 +267,9 @@
                     <span>장바구니</span>
                   </a>
                 ` : ''}
-                <a class="account-menu-item danger" href="login/login.html" role="menuitem">
+                <a class="account-menu-item danger" href="${adminPreview ? adminReturnHref : 'login/login.html'}" role="menuitem" ${adminPreview ? 'data-admin-preview-exit' : ''}>
                   <span class="account-menu-icon">↪</span>
-                  <span>로그아웃</span>
+                  <span>${adminPreview ? '관리자로 돌아가기' : '로그아웃'}</span>
                 </a>
               </div>
             </div>
@@ -134,6 +280,7 @@
   }
 
   function resolveViewRole(currentPage) {
+    if (adminPreview) return adminPreview.type === 'PRODUCTION' ? 'producer' : 'platform';
     if (rolePages.platform.has(currentPage)) {
       rememberViewRole('platform');
       return 'platform';
@@ -142,13 +289,9 @@
       rememberViewRole('producer');
       return 'producer';
     }
-    if (rolePages.investor.has(currentPage)) {
-      rememberViewRole('investor');
-      return 'investor';
-    }
     try {
       const savedRole = localStorage.getItem('shortflow-view-role');
-      return ['platform', 'producer', 'investor'].includes(savedRole) ? savedRole : 'platform';
+      return ['platform', 'producer'].includes(savedRole) ? savedRole : 'platform';
     } catch (error) {
       return 'platform';
     }
@@ -334,6 +477,7 @@
   }
 
   function addUtilityShortcutButtons() {
+    if (adminPreview) return;
     if (document.querySelector('.utility-remote')) return;
 
     const remote = document.createElement('div');
@@ -366,16 +510,6 @@
       rememberViewRole('producer');
     });
     remote.appendChild(producerButton);
-
-    const investorButton = document.createElement('a');
-    investorButton.className = 'utility-toggle investor-view-toggle' + (currentRole === 'investor' ? ' active' : '');
-    investorButton.href = 'investor-collaboration.html';
-    investorButton.setAttribute('aria-label', '투자자 입장 화면');
-    investorButton.textContent = '투자자 입장 뷰';
-    investorButton.addEventListener('click', function() {
-      rememberViewRole('investor');
-    });
-    remote.appendChild(investorButton);
 
     const adminButton = document.createElement('a');
     adminButton.className = 'utility-toggle admin-toggle';

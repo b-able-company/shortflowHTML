@@ -61,7 +61,7 @@ window.CART_ITEMS = [
   }
 ];
 
-window.PLATFORM_NAME = "Reelio";
+window.PLATFORM_NAME = window.ShortflowAdminPreview?.company?.name || "Reelio";
 window.RELEASE_OPTIONS = ["1년", "2년", "3년", "추후협의"];
 window.SETTLEMENT_OPTIONS = ["MG + RS", "RS", "Flat Fee"];
 window.EXCLUSIVITY_OPTIONS = ["독점", "비독점"];
