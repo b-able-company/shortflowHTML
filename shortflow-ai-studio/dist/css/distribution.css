@@ -1,0 +1,37 @@
+/* ==========================================================================
+   Distribution — studio-wide list + per-project distribution checklist
+   ========================================================================== */
+.distribution-rows { margin-top: 40px; display: flex; flex-direction: column; gap: 4px; }
+.distribution-row { display: grid; grid-template-columns: 56px minmax(0, 1.1fr) minmax(0, 2fr) 180px; align-items: center; gap: 24px; padding: 16px; border-radius: var(--radius-lg); background: var(--color-surface); }
+.distribution-row__title { font: 700 17px/1.3 var(--font-sans); letter-spacing: -0.02em; }
+.distribution-row__meta { margin-top: 3px; }
+.distribution-row__steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.distribution-step__bar { height: 3px; border-radius: 3px; background: var(--color-fill-2); }
+.distribution-step--reached .distribution-step__bar { background: var(--color-text-secondary); }
+.distribution-step--live .distribution-step__bar { background: var(--color-positive); }
+.distribution-step__label { font: 500 12px/1.3 var(--font-sans); color: var(--color-text-tertiary); margin-top: 8px; }
+.distribution-step--reached .distribution-step__label { color: var(--color-text-primary); }
+.distribution-row__action { text-align: right; }
+
+/* Per-project distribution */
+.distribution-intro { margin-top: 10px; max-width: 560px; }
+.readiness-list { margin-top: 40px; display: flex; flex-direction: column; gap: 2px; }
+.readiness-item { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--color-surface); border-radius: var(--radius-md); }
+.readiness-item__label { flex: 1; font: 600 15px/1.3 var(--font-sans); color: var(--color-text-primary); }
+.distribution-submit { display: flex; align-items: center; gap: 16px; margin-top: 32px; }
+.distribution-detail__header { display: flex; align-items: center; gap: 24px; margin-top: 16px; }
+.distribution-detail__header .poster { flex: none; }
+.distribution-detail__title { margin: 0; }
+.distribution-detail__meta { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; font: var(--type-callout); color: var(--color-text-secondary); }
+.distribution-package, .distribution-handoff { margin-top: 48px; }
+.distribution-detail__label { margin: 0 0 14px; font: 600 13px/1.4 var(--font-sans); color: var(--color-text-tertiary); }
+.distribution-detail .readiness-list { margin-top: 0; }
+.distribution-detail .readiness-item { min-height: 52px; }
+.distribution-detail .readiness-item > .caption { text-align: right; }
+.distribution-handoff__steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.distribution-handoff__top { display: flex; align-items: center; justify-content: space-between; }
+.distribution-handoff__icon { width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--color-fill-2); }
+.distribution-handoff__title { margin: 12px 0 6px; font: 600 15px/1.4 var(--font-sans); }
+.distribution-detail__note { margin-top: 48px; }
+.distribution-detail .distribution-submit .btn { border-radius: var(--radius-pill); padding-inline: 24px; }
+.submit-note { margin: 24px 24px 0; font: var(--type-caption); color: var(--color-text-secondary); white-space: pre-wrap; overflow-wrap: anywhere; }

@@ -1,0 +1,36 @@
+/* ==========================================================================
+   Sidebar — global nav, project switcher, credits, workspace, "Back to Shortflow"
+   ========================================================================== */
+.sidebar { width: var(--sidebar-width); flex: none; height: var(--app-height); position: sticky; top: 0; display: flex; flex-direction: column; background: var(--color-sidebar); padding: 20px 12px 14px; }
+.sidebar__brand { padding: 0 10px; height: 28px; display: flex; align-items: center; margin-bottom: 24px; cursor: pointer; }
+.wordmark { font: 800 17px/1 var(--font-sans); letter-spacing: -0.04em; color: var(--color-text-primary); white-space: nowrap; }
+.wordmark__product { font-weight: 500; color: var(--color-text-tertiary); margin-left: 5px; }
+.sidebar__nav { display: flex; flex-direction: column; gap: 2px; }
+.sidebar__nav--project { margin-top: 14px; }
+.sidebar__nav--quiet { gap: 0; }
+.sidebar__group-label { margin-top: 28px; padding: 0 10px 8px; }
+.sidebar__new-badge { color: var(--color-accent); }
+
+/* Project switcher */
+.project-switcher { position: relative; }
+.project-switcher__button { width: 100%; display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: var(--radius-md); background: var(--color-fill-1); }
+.project-switcher__button--open { background: var(--color-fill-2); }
+.project-switcher__text { flex: 1; min-width: 0; }
+.project-switcher__label { font: var(--type-micro); letter-spacing: var(--tracking-micro); color: var(--color-text-tertiary); margin-bottom: 4px; }
+.project-switcher__title { font: 700 15px/1.2 var(--font-sans); letter-spacing: -0.02em; color: var(--color-text-primary); }
+.project-switcher__format { font: 500 12px/1.3 var(--font-sans); color: var(--color-text-tertiary); margin-top: 2px; }
+.project-switcher__menu { position: absolute; top: calc(100% + 6px); left: 0; z-index: 40; }
+
+/* Credits */
+.credit-balance { display: flex; flex-direction: column; gap: 6px; padding: 10px; border-radius: var(--radius-md); }
+.credit-balance__row { display: flex; align-items: center; justify-content: space-between; }
+.credit-balance__label { display: inline-flex; align-items: center; gap: 6px; font: 500 13px/1 var(--font-sans); color: var(--color-text-secondary); }
+.credit-balance__value { font: 500 13px/1 var(--font-mono); color: var(--color-text-primary); }
+.sidebar__divider { height: 1px; background: var(--color-border); margin: 8px 10px 10px; }
+
+/* Workspace */
+.workspace { display: flex; align-items: center; gap: 10px; padding: 0 10px; margin-bottom: 6px; }
+.workspace__avatar { width: 26px; height: 26px; border-radius: 7px; background: var(--color-surface-high); display: flex; align-items: center; justify-content: center; font: 700 12px/1 var(--font-sans); color: var(--color-text-secondary); }
+.workspace__text { flex: 1; min-width: 0; }
+.workspace__name { font: 600 13px/1.2 var(--font-sans); color: var(--color-text-primary); }
+.workspace__role { font: 400 11px/1.3 var(--font-sans); color: var(--color-text-tertiary); }

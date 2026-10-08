@@ -144,7 +144,7 @@
     { id: 'platform-dashboard', label: '대시보드', href: 'shortflow-dashboard.html', aliases: ['dashboard'], role: 'platform' },
     { id: 'my-content', label: '콘텐츠 관리', href: 'contentlist-prod.html', role: 'producer' },
     { id: 'producer-dashboard', label: '대시보드', href: 'distribution-version.html', role: 'producer' },
-    { id: 'script-analysis', label: 'AI Studio', href: 'aistudio.html', role: 'producer' },
+    { id: 'script-analysis', label: 'AI Studio', href: 'shortflow-ai-studio/index.html', role: 'producer' },
   ];
   const rolePages = {
     platform: new Set(['platform-collab', 'content', 'concierge', 'platform-dashboard', 'dashboard']),

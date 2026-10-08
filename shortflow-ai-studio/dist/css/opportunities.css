@@ -1,0 +1,78 @@
+/* ==========================================================================
+   Opportunities list + Opportunity detail, and the Projects list
+   ========================================================================== */
+.list-header__title { margin-top: 10px; }
+.list-header__sub { margin-top: 8px; }
+.list-tabs { margin-top: 32px; }
+.opportunity-list__feature { margin-top: 32px; }
+.opportunity-list__rows { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 24px; margin-top: 40px; }
+.opportunities-page .opportunity-feature { aspect-ratio: 16 / 7; min-height: 400px; }
+.opportunities-page .opportunity-feature__title { max-width: 340px; font-size: 36px; line-height: 1.1; letter-spacing: -.04em; text-wrap: initial; word-break: keep-all; }
+.opportunities-page .opportunity-feature__summary { font-size: 14px; line-height: 1.5; }
+.opportunities-page .opportunity-feature > .media-frame { position: absolute; inset: 0; height: 100%; }
+.opportunity-tile { all: unset; display: block; min-width: 0; cursor: pointer; }
+.opportunity-tile > .media-frame { width: 100%; margin-bottom: 16px; }
+.opportunity-tile .kicker { font-size: 11px; letter-spacing: .08em; }
+.opportunity-tile__title { margin-top: 6px; font: 600 16px/1.4 var(--font-sans); letter-spacing: -.025em; word-break: keep-all; }
+.opportunity-tile__meta { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: 10px; font: var(--type-caption); color: var(--color-text-tertiary); }
+.opportunity-tile:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 6px; border-radius: 14px; }
+@media (max-width: 1000px) {
+  .opportunity-list__rows { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .opportunities-page { padding-inline: 24px; }
+  .opportunities-page .list-tabs { overflow-x: auto; }
+  .opportunities-page .list-tabs button { flex-shrink: 0; }
+  .opportunities-page .opportunity-feature { min-height: 380px; }
+  .opportunities-page .opportunity-feature__content { padding: 24px; }
+  .opportunities-page .opportunity-feature__title { font-size: 30px; }
+  .opportunity-list__rows { grid-template-columns: minmax(0, 1fr); margin-top: 28px; }
+}
+
+/* Detail hero */
+.opportunity-detail { animation: fade-up var(--duration-slow) var(--ease-out); }
+.opportunity-hero { position: relative; height: 420px; }
+.opportunity-hero > .media-frame { position: absolute; inset: 0; }
+.opportunity-hero__scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(22,22,24,.2) 0%, rgba(22,22,24,.35) 50%, var(--color-background) 100%); }
+.opportunity-hero__content { position: relative; max-width: 1180px; margin: 0 auto; padding: 28px 56px 0; height: 100%; display: flex; flex-direction: column; }
+.back-link { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font: 500 14px/1 var(--font-sans); color: rgba(255,255,255,.75); align-self: flex-start; }
+.opportunity-hero__tags { display: flex; gap: 8px; }
+.opportunity-hero__title { font: 700 52px/1.08 var(--font-sans); letter-spacing: -0.04em; margin-top: 18px; max-width: 760px; text-wrap: balance; }
+.opportunity-hero__summary { margin-top: 14px; max-width: 600px; margin-bottom: 8px; }
+
+/* Detail body */
+.opportunity-body { max-width: 1180px; margin: 0 auto; padding: 40px 56px 96px; display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 72px; }
+.opportunity-section + .opportunity-section { margin-top: 56px; }
+.looking-for { margin: 20px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
+.looking-for__item { display: flex; gap: 14px; font: var(--type-body); color: var(--color-text-primary); }
+.looking-for__bullet { width: 5px; height: 5px; border-radius: 50%; background: var(--color-text-tertiary); margin-top: 10px; flex: none; }
+.opportunity-timeline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; margin-top: 24px; }
+.opportunity-timeline__bar { height: 3px; border-radius: 3px; background: var(--color-fill-2); }
+.opportunity-timeline__step--now .opportunity-timeline__bar { background: var(--color-accent); }
+.opportunity-timeline__label { font: 600 14px/1.3 var(--font-sans); color: var(--color-text-secondary); margin-top: 14px; }
+.opportunity-timeline__step--now .opportunity-timeline__label { color: var(--color-text-primary); }
+.opportunity-timeline__date { font: var(--type-caption); color: var(--color-text-tertiary); margin-top: 3px; }
+.benefit-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; margin-top: 24px; }
+.benefit__title { font: 600 15px/1.3 var(--font-sans); color: var(--color-text-primary); }
+.benefit__desc { font: var(--type-caption); color: var(--color-text-tertiary); margin-top: 6px; }
+.requirement-list { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
+
+/* Detail sidebar card */
+.opportunity-aside { position: sticky; top: 32px; align-self: start; }
+.opportunity-card { border-radius: var(--radius-xl); background: var(--color-surface); padding: 24px; }
+.opportunity-card__deadline-row { display: flex; align-items: baseline; justify-content: space-between; }
+.opportunity-card__dday { font: 700 34px/1 var(--font-sans); letter-spacing: -0.03em; color: var(--color-text-primary); }
+.opportunity-card__dday--soon { color: var(--color-accent); }
+.opportunity-facts { margin-top: 24px; display: flex; flex-direction: column; }
+.opportunity-fact { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; box-shadow: inset 0 -1px 0 var(--color-border); font: var(--type-callout); }
+.opportunity-fact__key { color: var(--color-text-tertiary); font-weight: 400; }
+.opportunity-fact__value { color: var(--color-text-primary); text-align: right; }
+.opportunity-card__cta { margin-top: 24px; }
+.opportunity-card__secondary { margin-top: 8px; }
+.opportunity-card__linked-note { margin-top: 12px; text-align: center; }
+.opportunity-card__footnote { display: flex; gap: 10px; margin-top: 20px; padding: 14px 0 0; box-shadow: inset 0 1px 0 var(--color-border); font: var(--type-caption); color: var(--color-text-tertiary); }
+.opportunity-card__footnote .icon { margin-top: 2px; }
+
+/* Projects list */
+.list-header--with-action { display: flex; align-items: flex-end; justify-content: space-between; }
+.project-grid--wide { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 28px; margin-top: 32px; }

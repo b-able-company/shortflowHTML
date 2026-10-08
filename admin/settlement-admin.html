@@ -956,9 +956,9 @@ td { padding: 9px 12px; vertical-align: middle; }
 }
 .rs-request-table thead th:last-child,
 .rs-request-table td:last-child {
-  width: 60px;
-  min-width: 60px;
-  max-width: 60px;
+  width: 112px;
+  min-width: 112px;
+  max-width: 112px;
   text-align: center;
 }
 .rs-request-table thead th:last-child {
@@ -1130,6 +1130,67 @@ td { padding: 9px 12px; vertical-align: middle; }
   background: rgb(242, 242, 242);
   color: #555;
 }
+.rs-request-selection-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  bottom: -10px;
+  z-index: 5;
+  min-height: 76px;
+  margin-top: auto;
+  padding: 16px 0;
+  border-top: 1px solid #eef0f3;
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(16px);
+}
+.rs-request-selection-count { color: #555; font-size: 12.5px; }
+.rs-request-selection-count strong { color: #17191d; font-size: 13px; }
+.rs-request-selection-help { color: #929292; font-size: 11.5px; }
+.rs-request-send-btn {
+  min-width: 144px;
+  height: 42px;
+  margin-left: auto;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 12px;
+  background: #191f28;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.rs-request-send-btn:disabled { background: #f2f4f6; color: #b0b8c1; cursor: default; }
+.rs-request-send-btn:not(:disabled):hover { background: #333d4b; }
+.rs-select-checkbox { width: 15px; height: 15px; accent-color: #1f2329; cursor: pointer; }
+.rs-select-checkbox:disabled { opacity: .35; cursor: default; }
+.rs-acquisition-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 86px;
+  height: 28px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: #f2f4f6;
+  color: #8b95a1;
+  font-family: inherit;
+  font-size: 11px;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.rs-acquisition-btn:hover { background: #e5e8eb; }
+.rs-acquisition-btn.is-acquired { background: #eaf2ff; color: #3182f6; }
+.rs-acquisition-btn:focus-visible, .rs-request-send-btn:focus-visible { outline: 2px solid #3182f6; outline-offset: 3px; }
+.rs-send-review-panel { width: min(520px, 100%); }
+.rs-send-review-list { display: grid; gap: 8px; margin-top: 14px; }
+.rs-send-review-item { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 11px 12px; border: 1px solid #e7e8eb; border-radius: 7px; background: #fff; font-size: 12.5px; }
+.rs-send-review-item span:last-child { color: #777; font-size: 11.5px; }
+.rs-send-review-note { margin: 0; color: #666; font-size: 12px; line-height: 1.55; }
 .rs-request-table .ops-check-cell::after {
   left: 50%;
   top: 50%;
@@ -1558,6 +1619,26 @@ td { padding: 9px 12px; vertical-align: middle; }
   border-color: #333;
   background: #333;
 }
+
+/* Keep platform-level controls on the same first-content-row baseline. */
+#view-rs-requests .ops-layout { display: flex; flex-direction: column; }
+#view-rs-requests .ops-section { flex-shrink: 0; padding-bottom: 20px; }
+.rs-request-table thead th:first-child,
+.rs-request-table td:first-child { width: 44px; min-width: 44px; max-width: 44px; }
+.rs-request-table thead th:nth-child(6),
+.rs-request-table td:nth-child(6) { width: 92px; min-width: 92px; max-width: 92px; }
+.rs-request-table tbody td:last-child { padding: 3px 12px 0; vertical-align: top; text-align: center; line-height: 28px; }
+.rs-request-table thead th:last-child { padding: 0 12px; }
+.rs-request-table .rs-reply-filter-btn { justify-content: center; }
+.rs-request-table .rs-select-checkbox { display: block; margin: 9px auto 0; }
+.rs-request-table thead .rs-select-checkbox { margin-top: 0; }
+.rs-request-table .rs-send-status-badge { height: 24px; border-radius: 6px; font-weight: 500; }
+.rs-request-table .rs-send-status-badge.is-completed { color: #4e5968; background: #f2f4f6; }
+.rs-send-review-panel .settlement-modal-close { margin-left: auto; }
+.rs-send-review-panel { border-radius: 20px; }
+.rs-send-review-panel .settlement-modal-body { background: #fff; padding: 24px; }
+.rs-send-review-panel .settlement-modal-head { padding: 24px; }
+.rs-send-review-panel .settlement-modal-foot { padding: 16px 24px 24px; }
 
 .ops-amount { font-family: monospace; font-weight: 500; font-size: 12.5px; }
 .type-badge { min-height: 22px; display: inline-flex; align-items: center; justify-content: center; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 430; font-family: inherit; white-space: nowrap; }
@@ -4400,18 +4481,18 @@ td { padding: 9px 12px; vertical-align: middle; }
         <div class="ops-table-scroll has-border-grid standalone-grid">
           <table class="ops-table grid-table rs-request-table">
             <colgroup>
-              <col style="width:40px">
+              <col style="width:44px">
               <col style="width:168px">
               <col style="width:132px">
               <col>
               <col style="width:196px">
               <col style="width:70px">
               <col style="width:112px">
-              <col style="width:60px">
+              <col style="width:112px">
             </colgroup>
             <thead>
               <tr>
-                <th>No</th>
+                <th><input class="rs-select-checkbox" id="rs-request-select-all" type="checkbox" aria-label="현재 목록 전체 선택" onchange="toggleAllRsRequestSelections(this.checked)" /></th>
                 <th>플랫폼사명</th>
                 <th>
                   <div class="rs-type-filter" id="rs-type-filter">
@@ -4433,12 +4514,12 @@ td { padding: 9px 12px; vertical-align: middle; }
                 <th>
                   <div class="rs-reply-filter" id="rs-reply-filter">
                     <button class="rs-reply-filter-btn" type="button" onclick="toggleRsReplyFilterMenu(event)" aria-haspopup="listbox" aria-expanded="false">
-                      <span>회신</span><i class="ti ti-chevron-down"></i>
+                      <span>자료 확인</span><i class="ti ti-chevron-down"></i>
                     </button>
-                    <div class="rs-reply-filter-menu" role="listbox" aria-label="회신 필터">
+                    <div class="rs-reply-filter-menu" role="listbox" aria-label="자료 확인 필터">
                       <button class="rs-reply-filter-option active" type="button" data-value="" onclick="setRsRequestReplyFilter('')">전체</button>
-                      <button class="rs-reply-filter-option" type="button" data-value="pending" onclick="setRsRequestReplyFilter('pending')">미회신</button>
-                      <button class="rs-reply-filter-option" type="button" data-value="completed" onclick="setRsRequestReplyFilter('completed')">완료</button>
+                      <button class="rs-reply-filter-option" type="button" data-value="pending" onclick="setRsRequestReplyFilter('pending')">미확인</button>
+                      <button class="rs-reply-filter-option" type="button" data-value="completed" onclick="setRsRequestReplyFilter('completed')">확인 완료</button>
                     </div>
                   </div>
                 </th>
@@ -4446,6 +4527,32 @@ td { padding: 9px 12px; vertical-align: middle; }
             </thead>
             <tbody id="rs-request-tbody"></tbody>
           </table>
+        </div>
+      </div>
+      <div class="rs-request-selection-bar" id="rs-request-selection-bar">
+        <span class="rs-request-selection-count"><strong id="rs-request-selection-count">0개</strong> 선택</span>
+        <button class="rs-request-send-btn" id="rs-request-send-btn" type="button" onclick="openRsRequestSendModal()" disabled>요청 메일 보내기</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="settlement-modal" id="rs-request-send-modal" onclick="closeRsRequestSendModal()">
+    <div class="settlement-modal-panel rs-send-review-panel" role="dialog" aria-modal="true" aria-labelledby="rs-request-send-title" onclick="event.stopPropagation()">
+      <div class="settlement-modal-head">
+        <div>
+          <div class="settlement-modal-title" id="rs-request-send-title">RS 자료 요청 발송</div>
+          <div class="settlement-modal-sub" id="rs-request-send-subtitle"></div>
+        </div>
+        <button class="settlement-modal-close" type="button" aria-label="닫기" onclick="closeRsRequestSendModal()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="settlement-modal-body">
+        <p class="rs-send-review-note">아래 플랫폼사에 자료 요청을 발송합니다. 발송 후 상태는 ‘발송 완료’로 변경됩니다.</p>
+        <div class="rs-send-review-list" id="rs-request-send-list"></div>
+      </div>
+      <div class="settlement-modal-foot">
+        <div class="process-review-actions">
+          <button class="btn process-review-cancel-btn" type="button" onclick="closeRsRequestSendModal()">취소</button>
+          <button class="btn btn-primary process-review-confirm-btn" type="button" onclick="confirmRsRequestSend()">선택 항목 발송</button>
         </div>
       </div>
     </div>
@@ -4793,6 +4900,8 @@ let rsRequestMonth = '';
 let rsRequestReplyFilter = '';
 let rsRequestTypeFilter = '';
 const rsRequestReplyState = {};
+const rsRequestSendState = {};
+const rsRequestSelectedKeys = new Set();
 const rsRequestMockGroups = [
   { ym: '2026-08', platform: 'Alpha Stream', contents: ['Neon Doorstep', 'Backup Love', 'Scene Pop Romance'], repliedDefault: true },
   { ym: '2026-08', platform: 'Beta Mini', contents: ['Cake Shop Prince'], repliedDefault: false },
@@ -7196,9 +7305,9 @@ function rsTrackReplyState(contract, ym, sentAt, replyMeta = rsTrackReplyMeta(co
 
 function rsTrackRows(contract) {
   return rsRequestMonthsForContract(contract).map((ym) => {
-    const sendInfo = rsRequestSendInfo(ym);
-    const isSent = sendInfo.status === '발송완료';
     const replyMeta = rsTrackReplyMeta(contract, ym);
+    const sendInfo = rsRequestSendInfo(replyMeta.key);
+    const isSent = sendInfo.status === '발송완료';
     const replied = rsTrackReplyState(contract, ym, sendInfo.sentAt, replyMeta);
     return {
       ym,
@@ -7207,7 +7316,7 @@ function rsTrackRows(contract) {
       targetPeriod: rsTrackTargetPeriod(contract, ym),
       sentAt: sendInfo.sentAt,
       sendStatus: sendInfo.status,
-      replyStatus: replied ? '확인완료' : (isSent ? '미확인' : '확인전')
+      replyStatus: replied ? '확인 완료' : '미확인'
     };
   });
 }
@@ -7244,7 +7353,7 @@ function renderRsRequestTrackPanel() {
       <td><span class="rs-track-period">${escapeHtml(row.targetPeriod)}</span></td>
       <td class="rs-track-sent-cell">${row.sentAt}</td>
       <td class="rs-track-status-cell">${rsSendStatusBadge(row.sendStatus)}</td>
-      <td class="rs-track-check-cell"><button class="rs-track-check ${row.replied ? 'is-checked' : ''}" type="button" role="checkbox" aria-checked="${row.replied ? 'true' : 'false'}" aria-label="${escapeHtml(row.ym)} 회신 확인" onclick="toggleRsRequestReply('${escapeHtml(row.replyKey)}', ${row.replied ? 'false' : 'true'})"></button></td>
+      <td class="rs-track-check-cell"><button class="rs-track-check ${row.replied ? 'is-checked' : ''}" type="button" role="checkbox" aria-checked="${row.replied ? 'true' : 'false'}" aria-label="${escapeHtml(row.ym)} 자료 확인 상태" onclick="toggleRsRequestReply('${escapeHtml(row.replyKey)}', ${row.replied ? 'false' : 'true'})"></button></td>
     </tr>
   `;
   }).join('') : `<tr><td colspan="7"><div class="rs-track-empty">요청 일정이 없습니다.</div></td></tr>`;
@@ -7272,20 +7381,13 @@ function rsRequestGroupKey(ym, platform) {
   return `${ym}__${platform}`.replace(/[^a-zA-Z0-9_-]/g, '_');
 }
 
-function rsRequestSendInfo(ym) {
-  const sentAt = `${ym}-10`;
-  const sendDate = new Date(`${sentAt}T00:00:00`);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return {
-    status: sendDate > today ? '발송예정' : '발송완료',
-    sentAt
-  };
+function rsRequestSendInfo(key) {
+  return rsRequestSendState[key] || { status: '미발송', sentAt: '-' };
 }
 
 function rsSendStatusBadge(status) {
   const isCompleted = status === '발송완료';
-  return `<span class="rs-send-status-badge ${isCompleted ? 'is-completed' : 'is-scheduled'}">${isCompleted ? '완료' : '예정'}</span>`;
+  return `<span class="rs-send-status-badge ${isCompleted ? 'is-completed' : 'is-scheduled'}">${isCompleted ? '발송 완료' : '미발송'}</span>`;
 }
 
 function isRsRequestGroupReplied(group) {
@@ -7511,21 +7613,23 @@ function renderRsRequests() {
   const tbody = document.getElementById('rs-request-tbody');
   const summary = document.getElementById('rs-request-summary');
   if (summary) {
-    const counts = { total: groups.length, scheduled: 0, pending: 0, completed: 0 };
+    const counts = { total: groups.length, unsent: 0, sent: 0, pending: 0, completed: 0 };
     groups.forEach((group) => {
-      if (rsRequestSendInfo(group.plannedMonth).status === '발송예정') counts.scheduled++;
-      else if (isRsRequestGroupReplied(group)) counts.completed++;
+      if (rsRequestSendInfo(group.key).status === '발송완료') counts.sent++;
+      else counts.unsent++;
+      if (isRsRequestGroupReplied(group)) counts.completed++;
       else counts.pending++;
     });
     summary.innerHTML = [
       ['전체', counts.total],
-      ['발송 예정', counts.scheduled],
-      ['미회신', counts.pending],
-      ['회신 완료', counts.completed]
+      ['미발송', counts.unsent],
+      ['발송 완료', counts.sent],
+      ['자료 미확인', counts.pending],
+      ['자료 확인 완료', counts.completed]
     ].map(([label, count]) => `<div class="rs-request-stat"><span class="rs-request-stat-label">${label}</span><span class="rs-request-stat-value">${count}<span class="rs-request-stat-unit">건</span></span></div>`).join('');
   }
   const summaryNote = document.getElementById('rs-request-summary-note');
-  if (summaryNote) summaryNote.textContent = `${Number(ym.slice(5, 7))}월 10일 정기 발송`;
+  if (summaryNote) summaryNote.textContent = `${Number(ym.slice(5, 7))}월 요청 대상`;
   syncRsReplyFilterMenu();
   syncRsTypeFilterMenu();
   if (!tbody) return;
@@ -7544,25 +7648,36 @@ function renderRsRequests() {
       .filter((name) => !rsRequestTypeFilter || group.requestTypes?.get(name) === rsRequestTypeFilter);
     return { group, contentNames, replied, matchesReply };
   }).filter((item) => item.matchesReply && item.contentNames.length);
+  const visibleSelectableKeys = visibleGroups
+    .map((item) => item.group.key)
+    .filter((key) => rsRequestSendInfo(key).status !== '발송완료');
+  const selectAll = document.getElementById('rs-request-select-all');
+  if (selectAll) {
+    const selectedVisibleCount = visibleSelectableKeys.filter((key) => rsRequestSelectedKeys.has(key)).length;
+    selectAll.disabled = visibleSelectableKeys.length === 0;
+    selectAll.checked = visibleSelectableKeys.length > 0 && selectedVisibleCount === visibleSelectableKeys.length;
+    selectAll.indeterminate = selectedVisibleCount > 0 && selectedVisibleCount < visibleSelectableKeys.length;
+  }
   tbody.innerHTML = visibleGroups.length ? visibleGroups.map((item, index) => {
     const { group, contentNames, replied } = item;
-    const sendInfo = rsRequestSendInfo(group.plannedMonth);
+    const sendInfo = rsRequestSendInfo(group.key);
     const sentAtDisplay = sendInfo.status === '발송완료' ? sendInfo.sentAt : '-';
+    const selectable = sendInfo.status !== '발송완료';
     const requestTypes = contentNames.map((name) => group.requestTypes?.get(name) || '-');
     const releasePeriods = contentNames.map((name) => group.releasePeriods?.get(name) || '-');
-    const rowNo = visibleGroups.length - index;
     return `
       <tr>
-        <td class="ops-muted ops-mono">${rowNo}</td>
+        <td><input class="rs-select-checkbox" type="checkbox" data-rs-request-key="${escapeHtml(group.key)}" aria-label="${escapeHtml(group.platform)} 발송 대상 선택" ${rsRequestSelectedKeys.has(group.key) ? 'checked' : ''} ${selectable ? '' : 'disabled'} onchange="toggleRsRequestSelection('${escapeHtml(group.key)}', this.checked)" /></td>
         <td><span class="ops-group-title" title="${escapeHtml(group.platform)}">${escapeHtml(group.platform)}</span></td>
         <td class="rs-request-type-cell"><div class="rs-request-type-list">${requestTypes.map((type) => `<div class="rs-request-type-label">${escapeHtml(type)}</div>`).join('')}</div></td>
         <td class="rs-request-content-cell"><div class="rs-request-content-list">${contentNames.map((name) => `<div class="rs-request-content-name"><span class="rs-request-content-label" title="${escapeHtml(name)}">${escapeHtml(name)}</span><button class="rs-request-contract-shortcut" type="button" aria-label="${escapeHtml(name)} 계약관리 상세로 이동" title="계약관리 상세로 이동" onclick="openRsRequestContractShortcut(event)"><i class="ti ti-arrow-up-right"></i></button></div>`).join('')}</div></td>
         <td class="rs-request-release-cell"><div class="rs-request-release-list">${releasePeriods.map((period) => `<div class="rs-request-release-period ops-mono">${escapeHtml(period)}</div>`).join('')}</div></td>
         <td>${rsSendStatusBadge(sendInfo.status)}</td>
         <td class="ops-muted ops-mono">${sentAtDisplay}</td>
-        <td class="ops-check-cell ${replied ? 'is-checked' : ''}"><input class="ops-check" type="checkbox" aria-label="${escapeHtml(group.platform)} 회신여부" ${replied ? 'checked' : ''} onchange="toggleRsRequestReply('${group.key}', this.checked)" /></td>
+        <td><button class="rs-acquisition-btn ${replied ? 'is-acquired' : ''}" type="button" aria-pressed="${replied}" aria-label="${escapeHtml(group.platform)} 자료 확인 상태 변경" onclick="toggleRsRequestReply('${group.key}', ${replied ? 'false' : 'true'})">${replied ? '<i class="ti ti-check"></i>확인 완료' : '미확인'}</button></td>
       </tr>`;
   }).join('') : emptyRow(8, '해당 월에 요청할 RS 계약이 없습니다');
+  updateRsRequestSelectionBar();
 }
 
 function openRsRequestContractShortcut(event) {
@@ -7573,13 +7688,85 @@ function openRsRequestContractShortcut(event) {
   selectContract(targetContract.id);
 }
 
+function currentRsRequestSelectedGroups() {
+  return rsRequestGroupsForMonth(selectedRsRequestYm()).filter((group) =>
+    rsRequestSelectedKeys.has(group.key) && rsRequestSendInfo(group.key).status !== '발송완료'
+  );
+}
+
+function updateRsRequestSelectionBar() {
+  const selected = currentRsRequestSelectedGroups();
+  const count = document.getElementById('rs-request-selection-count');
+  const button = document.getElementById('rs-request-send-btn');
+  if (count) count.textContent = `${selected.length}개`;
+  if (button) {
+    button.disabled = selected.length === 0;
+    button.textContent = selected.length ? `${selected.length}개 요청 보내기` : '요청 메일 보내기';
+  }
+}
+
+function toggleRsRequestSelection(key, checked) {
+  if (checked) rsRequestSelectedKeys.add(key);
+  else rsRequestSelectedKeys.delete(key);
+  renderRsRequests();
+}
+
+function toggleAllRsRequestSelections(checked) {
+  document.querySelectorAll('#rs-request-tbody .rs-select-checkbox:not(:disabled)').forEach((input) => {
+    const key = input.dataset.rsRequestKey;
+    if (!key) return;
+    if (checked) rsRequestSelectedKeys.add(key);
+    else rsRequestSelectedKeys.delete(key);
+  });
+  renderRsRequests();
+}
+
+function openRsRequestSendModal() {
+  const selected = currentRsRequestSelectedGroups();
+  if (!selected.length) return;
+  const ym = selectedRsRequestYm();
+  const subtitle = document.getElementById('rs-request-send-subtitle');
+  const list = document.getElementById('rs-request-send-list');
+  if (subtitle) subtitle.textContent = `${ym.replace('-', '년 ')}월 · ${selected.length}개 플랫폼사`;
+  if (list) {
+    list.innerHTML = selected.map((group) => `
+      <div class="rs-send-review-item">
+        <strong>${escapeHtml(group.platform)}</strong>
+        <span>콘텐츠 ${group.contents.size}개</span>
+      </div>
+    `).join('');
+  }
+  document.getElementById('rs-request-send-modal')?.classList.add('show');
+}
+
+function closeRsRequestSendModal() {
+  document.getElementById('rs-request-send-modal')?.classList.remove('show');
+}
+
+function confirmRsRequestSend() {
+  const selected = currentRsRequestSelectedGroups();
+  if (!selected.length) return closeRsRequestSendModal();
+  const sentAt = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit'
+  }).format(new Date());
+  selected.forEach((group) => {
+    rsRequestSendState[group.key] = { status: '발송완료', sentAt };
+    rsRequestSelectedKeys.delete(group.key);
+  });
+  closeRsRequestSendModal();
+  renderRsRequests();
+  renderRsRequestTrackPanel();
+}
+
 function changeRsRequestYear(value) {
   rsRequestYear = value || currentSettlementMonth().slice(0, 4);
+  rsRequestSelectedKeys.clear();
   renderRsRequests();
 }
 
 function changeRsRequestMonth(value) {
   rsRequestMonth = String(value || '01').padStart(2, '0');
+  rsRequestSelectedKeys.clear();
   renderRsRequests();
 }
 

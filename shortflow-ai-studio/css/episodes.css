@@ -1,0 +1,93 @@
+/* ==========================================================================
+   Episodes — episode rail, in-production progress, finished episode player,
+   scene-level remake, series-complete banner
+   ========================================================================== */
+.episodes-layout { display: flex; }
+.episodes-main { flex: 1; min-width: 0; padding: 0 56px; }
+
+/* Left rail */
+.episode-rail { width: 248px; flex: none; padding: 28px 12px 40px; overflow-y: auto; height: var(--app-height); position: sticky; top: 0; }
+.episode-rail__label { padding: 0 10px 12px; }
+.episode-rail__item { width: 100%; display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: var(--radius-md); }
+.episode-rail__item--selected { background: var(--color-fill-2); }
+.episode-rail__code { font: 500 12px/1 var(--font-mono); color: var(--color-text-tertiary); width: 40px; }
+.episode-rail__title { flex: 1; min-width: 0; font: 600 13px/1.3 var(--font-sans); color: var(--color-text-primary); }
+.episode-rail__title--queued { color: var(--color-text-tertiary); }
+.episode-rail__percent { font: 600 11px/1 var(--font-sans); color: var(--color-working); }
+.episode-rail__queued-dot { width: 6px; height: 6px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--color-text-disabled); }
+
+/* Series complete banner */
+.series-complete { margin-top: 28px; padding: 20px 24px; border-radius: var(--radius-xl); background: var(--color-surface); display: flex; align-items: center; gap: 20px; animation: fade-up var(--duration-slow) var(--ease-out); }
+.series-complete__text { flex: 1; }
+.series-complete__meta { margin-top: 2px; }
+
+/* In production — script cards become scene images from left to right */
+.episode-progress { width: 100%; padding: 56px 0; animation: fade-up var(--duration-slow) var(--ease-out); }
+.episode-progress__title { margin-top: 20px; font: var(--type-title-1); letter-spacing: var(--tracking-title-1); color: var(--color-text-primary); }
+.episode-progress__now { margin-top: 8px; font: var(--type-callout); color: var(--color-text-tertiary); }
+.storyboard { display: flex; gap: 8px; height: 420px; margin-top: 48px; }
+.sb-card { position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; border-radius: 12px; background: var(--color-fill-1); transition: flex-grow 1.1s var(--ease-out); }
+.sb-card--current { flex-grow: 2.8; box-shadow: 0 0 0 1px var(--color-border-strong); }
+.sb-card--todo { background: transparent; box-shadow: inset 0 0 0 1px var(--color-border); }
+.sb-card__img { position: absolute; inset: -20px; opacity: var(--sb-image-opacity); filter: blur(var(--sb-blur)) saturate(var(--sb-saturation)) brightness(var(--sb-brightness)); transition: filter 250ms linear, opacity 250ms linear; }
+.sb-card__img .media-frame { width: 100%; height: 100%; aspect-ratio: auto; }
+.sb-card__script { position: absolute; inset: 0 0 auto; display: flex; flex-direction: column; gap: 10px; padding: 18px 14px; opacity: var(--sb-script-opacity); font: 500 13px/1.5 var(--font-sans); color: var(--color-text-disabled); text-wrap: pretty; word-break: keep-all; transition: opacity 250ms linear; }
+.sb-card--current .sb-card__script { padding: 24px 22px; font: 600 19px/1.45 var(--font-sans); letter-spacing: -.02em; color: #fff; text-shadow: 0 1px 12px rgba(0,0,0,.4); }
+.sb-card__line { font-weight: 400; color: inherit; opacity: .75; }
+.sb-card__foot { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 32px 12px 12px; font: 500 11px/1 var(--font-mono); color: rgba(255,255,255,.6); }
+.sb-card--done .sb-card__foot, .sb-card--current .sb-card__foot { background: linear-gradient(180deg, transparent, rgba(10,10,11,.6)); }
+.sb-card--todo .sb-card__foot { color: var(--color-text-disabled); }
+.sb-card--current .sb-card__foot { padding: 40px 20px 18px; }
+.sb-card__phase { display: inline-flex; align-items: center; gap: 8px; font: 500 13px/1 var(--font-sans); color: #fff; }
+.sb-card__live { width: 6px; height: 6px; flex: none; border-radius: 50%; background: #fff; animation: pulse 1.4s ease-in-out infinite; }
+.episode-progress__note { margin-top: 28px; color: var(--color-text-tertiary); }
+
+@media (max-width: 980px) {
+  .storyboard { height: 360px; }
+  .sb-card--current { flex-grow: 2.2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sb-card, .sb-card__img, .sb-card__script { transition: none; }
+  .sb-card__live { animation: none; }
+}
+
+/* Finished episode */
+.finished-episode { display: flex; gap: 48px; padding: 40px 0 64px; animation: fade-up var(--duration-slow) var(--ease-out); }
+.finished-episode__info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.finished-episode__title { margin-top: 12px; }
+.finished-episode__subtitle { font: var(--type-headline); font-weight: 500; color: var(--color-text-secondary); margin-top: 6px; }
+.finished-episode__actions { display: flex; gap: 8px; margin-top: 28px; }
+.finished-episode__summary { font: var(--type-body); color: var(--color-text-secondary); margin-top: 24px; max-width: 520px; }
+.finished-episode__scenes { margin-top: 36px; }
+.finished-episode__scenes-title { font: 600 15px/1.3 var(--font-sans); }
+.finished-episode__scenes-hint { margin-top: 4px; }
+
+/* Video player */
+.video-player { height: min(calc(var(--app-height) - 120px), 720px); aspect-ratio: 9 / 16; flex: none; }
+.video-player .media-frame { height: 100%; box-shadow: var(--shadow-media); }
+.video-player__toggle { all: unset; cursor: pointer; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.video-player__play { width: 64px; height: 64px; border-radius: 50%; background: var(--color-media-scrim); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; color: #fff; }
+.video-player__controls { position: absolute; left: 16px; right: 16px; bottom: 16px; pointer-events: none; }
+.video-player__time { display: flex; justify-content: space-between; margin-top: 8px; font: 500 12px/1 var(--font-mono); color: rgba(255,255,255,.85); }
+
+/* Scene remake */
+.remake-picker { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin-top: 16px; max-width: 520px; }
+.remake-picker__number { position: absolute; left: 6px; bottom: 6px; font: 600 10px/1 var(--font-sans); color: #fff; }
+.remake-card { margin-top: 20px; padding: 20px; border-radius: var(--radius-lg); background: var(--color-surface); display: flex; gap: 20px; max-width: 520px; animation: pop-in var(--duration) var(--ease-out); }
+.remake-card__thumb { width: 84px; flex: none; }
+.remake-card__body { flex: 1; min-width: 0; }
+.remake-card__title { font: 600 16px/1.3 var(--font-sans); }
+.remake-card__text { font: var(--type-caption); color: var(--color-text-secondary); margin-top: 6px; }
+.remake-card__cost-note { margin-top: 10px; }
+.remake-card__actions { display: flex; align-items: center; gap: 14px; margin-top: 14px; }
+
+/* Queued episode */
+.episode-queued { padding: 96px 0; max-width: 520px; }
+.episode-queued__title { margin-top: 18px; }
+.episode-queued__desc { margin-top: 10px; }
+.episode-queued__action { margin-top: 24px; }
+
+/* No episodes yet */
+.episodes-empty__desc { margin-top: 10px; }
+.episodes-empty__action { margin-top: 28px; }
