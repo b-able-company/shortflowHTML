@@ -100,7 +100,6 @@ function Sidebar({ route, projects, go, credits }) {
         <span className="workspace__avatar">{SF.user.initial}</span>
         <div className="workspace__text"><div className="workspace__name">{SF.user.company}</div><div className="workspace__role">{SF.user.name} · Producer</div></div>
       </div>
-      <NavItem quiet icon="arrow-up-left" label="Back to Shortflow" onClick={() => {}} />
     </aside>
   );
 }

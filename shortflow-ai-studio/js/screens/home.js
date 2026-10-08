@@ -6,42 +6,39 @@ const { cx, Button, Icon, Frame, Poster, Tag, StatusBadge, Input, Sheen } = wind
 const { BorderBeam } = window;
 
 function ContinueHero({ p, go }) {
-  const prod = p.production || SF.prod;
-  const eps = p.flow.eps;
-  const done = eps.filter((v) => v >= 1).length;
-  const cur = eps.findIndex((v) => v < 1);
-  const episode = prod.episodes[cur >= 0 ? cur : Math.max(0, eps.length - 1)] || prod.episodes[0];
-  const making = p.flow.stage === 'producing' && cur >= 0;
-  const progress = eps.length ? eps.reduce((sum, v) => sum + v, 0) / eps.length : 0;
+  const eps = p.flow.eps; const done = eps.filter((v) => v >= 1).length; const cur = eps.findIndex((v) => v < 1);
+  const curEp = cur >= 0 ? SF.prod.episodes[cur % SF.prod.episodes.length] : null;
+  const open = () => go({ name: 'episodes', projectId: p.id });
+  const scenes = curEp ? window.sceneList(curEp) : [];
+  const n = Math.max(scenes.length, 1); const v = cur >= 0 ? eps[cur] : 1;
+  const si = Math.min(n - 1, Math.floor(v * n)); const scene = scenes[si];
+  const dev = curEp ? Math.min(1, v * n - si) : 1;
   return (
     <section className="continue-hero" style={{ '--project-hue': p.hue }}>
       <div className="continue-hero__glow" />
       <div className="continue-hero__content">
         <Kicker>Continue creating</Kicker>
         <div className="display-title continue-hero__title">{p.title}</div>
-        <div className="continue-hero__status">
-          <StatusBadge status={making ? 'generating' : 'done'} label={making ? 'Making' : 'Ready'} />
-          {making && <><span>{episode.code}</span><span className="text-primary">{Math.round(eps[cur] * 100)}%</span></>}
-          {!making && <span>All episodes are ready</span>}
+        <div className="continue-hero__now">
+          <StatusBadge status={curEp ? 'generating' : 'done'} label="" />
+          {curEp ? <>Making {curEp.code}<span className="continue-hero__pct">{Math.round(eps[cur] * 100)}%</span></> : 'All episodes ready'}
         </div>
-        <div className="continue-hero__progress">
-          <div className="continue-hero__segments" role="progressbar" aria-label="Series production" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}>
-            {eps.map((value, i) => <span key={i} className="continue-hero__segment"><span style={{ width: Math.max(0, Math.min(1, value)) * 100 + '%' }} /></span>)}
-          </div>
-          <div className="continue-hero__count"><span className="text-primary">{done}</span> of {eps.length} episodes ready</div>
+        <div className="continue-hero__push" />
+        <div className="continue-hero__eps" aria-label={done + ' of ' + eps.length + ' episodes ready'}>
+          {eps.map((v, i) => <span key={i} className={cx('continue-hero__seg', v >= 1 && 'is-done', i === cur && 'is-current')} style={{ '--fill': Math.round(Math.min(v, 1) * 100) + '%' }} />)}
         </div>
+        <div className="continue-hero__count"><span className="text-primary">{done}</span> of {eps.length} episodes ready</div>
         <div className="continue-hero__actions">
-          <Button variant="primary" size="lg" iconRight="arrow-right" onClick={() => go({ name: 'episodes', projectId: p.id })}>Continue</Button>
+          <Button variant="primary" size="lg" iconRight="arrow-right" onClick={open}>Continue</Button>
         </div>
       </div>
-      <div className="continue-hero__preview">
-        <button className="unstyled-button continue-hero__frame" aria-label={'Open ' + episode.code + ': ' + episode.title} onClick={() => go({ name: 'episodes', projectId: p.id })}>
-          <Frame hue={p.hue} seed={p.id + episode.code} radius={14}>
-            {making && <Sheen slow />}
-            <div className="episode-thumb__code"><Tag variant="media">{episode.code}</Tag></div>
-          </Frame>
-        </button>
-      </div>
+      <button className={cx('unstyled-button continue-hero__visual is-liftable', curEp && 'is-making')} onClick={open} aria-label={'Open ' + (curEp ? curEp.code : p.title)}>
+        <div className="continue-hero__frame">
+          <div className="continue-hero__dev" style={{ '--dev': dev }}><Frame hue={p.hue} seed={p.id + (scene ? scene.id : 'final')} radius={0} /></div>
+          {curEp && <div className="continue-hero__aurora" />}
+          {curEp && <div className="continue-hero__visual-tag"><Tag variant="media">{curEp.code}</Tag></div>}
+        </div>
+      </button>
     </section>
   );
 }

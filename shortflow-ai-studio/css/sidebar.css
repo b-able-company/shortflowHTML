@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Sidebar — global nav, project switcher, credits, workspace, "Back to Shortflow"
+   Sidebar — global nav, project switcher, credits, workspace
    ========================================================================== */
 .sidebar { width: var(--sidebar-width); flex: none; height: var(--app-height); position: sticky; top: 0; display: flex; flex-direction: column; background: var(--color-sidebar); padding: 20px 12px 14px; }
 .sidebar__brand { padding: 0 10px; height: 28px; display: flex; align-items: center; margin-bottom: 24px; cursor: pointer; }
