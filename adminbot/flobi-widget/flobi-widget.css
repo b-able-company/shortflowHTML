@@ -1,0 +1,179 @@
+/* Flobi — Shortflow Admin AI 어시스턴트 위젯 (iMessage Blue) */
+.sfw{position:absolute;inset:0;pointer-events:none;font-family:Pretendard,"Pretendard Variable",-apple-system,"Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;color:var(--ink);z-index:50}
+.sfw *{box-sizing:border-box}
+.sfw button{font:inherit;cursor:pointer;border:0;background:none;color:inherit;padding:0;text-align:inherit}
+.sfw p{margin:0}.sfw ul,.sfw ol{list-style:none;margin:0;padding:0}
+.sfw .mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.sfw > .l{position:absolute;right:24px;bottom:24px;pointer-events:auto;transition:opacity .25s,transform .45s var(--ease)}
+.sfw.open > .l{opacity:0;transform:scale(.6) translateY(10px);pointer-events:none}
+.sfw .win{position:absolute;right:24px;bottom:24px;width:min(var(--w),calc(100% - 32px));height:var(--hgt);max-height:calc(100% - 48px);display:flex;flex-direction:column;pointer-events:none;opacity:0;visibility:hidden;transform:translateY(18px) scale(.94);transform-origin:100% 100%;transition:opacity .2s,transform .35s var(--ease),visibility 0s .35s,box-shadow .25s}
+.sfw.open .win{pointer-events:auto;opacity:1;visibility:visible;transform:none;transition:opacity .25s,transform .5s var(--ease),visibility 0s,box-shadow .25s}
+.sfw .h{flex:none;cursor:grab;user-select:none;touch-action:none;position:relative}
+.sfw .win.dragging .h{cursor:grabbing}
+.sfw .b{flex:1;overflow-y:auto;min-height:0;scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.12) transparent}
+.sfw .sg{flex:none;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.sfw .sg::-webkit-scrollbar{display:none}
+.sfw .sg:empty{display:none}
+.sfw .sg button{white-space:nowrap;flex:none}
+.sfw .in{flex:none;display:flex;align-items:center}
+.sfw textarea{flex:1;min-width:0;resize:none;border:0;outline:0;background:none;font:inherit;color:inherit;max-height:96px;line-height:1.45}
+.sfw .send{flex:none;display:grid;place-items:center;transition:background .2s,transform .2s,opacity .2s}
+.sfw .send:disabled{cursor:default}
+.sfw svg{width:1em;height:1em;display:block}
+.sfw .m{animation:sfwIn .4s var(--ease) both}
+.sfw.static .m{animation:none}
+@keyframes sfwIn{from{opacity:0;transform:translateY(8px)}}
+.sfw .spark{display:block;width:1em;height:1em;background:currentColor;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%)}
+.sfw .badge{position:absolute;top:-2px;right:-2px;width:14px;height:14px;border-radius:50%;opacity:0;transform:scale(0);transition:.3s var(--ease)}
+.sfw.unread .badge{opacity:1;transform:none}
+
+.sfw[data-s=flobi]{--w:370px;--hgt:590px;--ink:#1f2a33;--sub:#5b6670;--mute:#98a2ab;--line:#edf0f2;--fill:#f4f6f8;--lav:var(--acc);--lav1:var(--t1);--lav2:var(--t2);--acc:#1fb5a5;--rgb:31,181,165;--t1:#e7f8f5;--t2:#cdf1eb;--tile:#c4efe8;--deep:#0b8f82;--ub:#cdf1eb;--ubt:#0d3b36;--aib:var(--fill);--face:#1f3340;--eye:#7df3e3;--ant:#ffd45e;--cheek:#ffb8cb;--happy:#ff9fba;--headg:#e9f9f6;--lime:#d7f171;--ease:cubic-bezier(.22,1,.36,1);letter-spacing:-.01em}
+.sfw[data-s=flobi] .mono{letter-spacing:.04em}
+/* launcher */
+.sfw[data-s=flobi] > .l{display:flex;align-items:flex-end;gap:10px}
+.sfw[data-s=flobi] .l-say{background:#fff;border-radius:14px 14px 4px 14px;padding:9px 13px;font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;margin-bottom:36px;box-shadow:0 8px 24px -8px rgba(37,34,58,.22),0 0 0 1px rgba(37,34,58,.05);transform-origin:100% 100%;animation:b2Say 10s var(--ease) infinite}
+.sfw[data-s=flobi] > .l.demo .l-say{animation:none}
+@keyframes b2Say{0%,6%{opacity:0;transform:translateY(4px)}12%,62%{opacity:1;transform:none}68%,100%{opacity:0;transform:translateY(4px)}}
+.sfw[data-s=flobi] .l-btn{position:relative;width:62px;height:62px;border-radius:22px;background:var(--tile);display:grid;place-items:center;box-shadow:0 12px 28px -10px rgba(var(--rgb),.5),0 2px 6px rgba(37,34,58,.08),inset 0 1px 0 rgba(255,255,255,.7);transition:transform .4s var(--ease),box-shadow .4s var(--ease)}
+.sfw[data-s=flobi] .l-btn:hover{transform:translateY(-3px);box-shadow:0 18px 32px -10px rgba(var(--rgb),.55),0 2px 6px rgba(37,34,58,.08),inset 0 1px 0 rgba(255,255,255,.7)}
+.sfw[data-s=flobi] .l-btn:active{transform:scale(.95)}
+.sfw[data-s=flobi] .l-btn .flobi{animation:bFloat 3.4s ease-in-out infinite}
+.sfw[data-s=flobi] .badge{background:var(--lav);border:2.5px solid #fff;top:-3px;right:-3px}
+/* window */
+.sfw[data-s=flobi] .win{border-radius:24px;background:#fff;box-shadow:0 30px 70px -20px rgba(37,34,58,.3),0 0 0 1px rgba(37,34,58,.06);overflow:hidden}
+.sfw[data-s=flobi] .win.dragging{transform:scale(1.01);box-shadow:0 40px 90px -20px rgba(37,34,58,.38),0 0 0 1px rgba(37,34,58,.06)}
+.sfw[data-s=flobi] .h{display:flex;align-items:center;justify-content:space-between;padding:14px 12px 14px 16px;border-bottom:1px solid var(--line)}
+.sfw[data-s=flobi] .h-id{display:flex;align-items:center;gap:10px}
+.sfw[data-s=flobi] .h-id .av{width:38px;height:38px;border-radius:13px;background:var(--lav1);display:grid;place-items:center}
+.sfw[data-s=flobi] .h-id b{display:flex;align-items:center;gap:6px;font-size:15px;font-weight:700}
+.sfw[data-s=flobi] .h-id b span{font-family:"JetBrains Mono",monospace;font-size:9.5px;font-weight:600;color:var(--deep);background:var(--lav1);border-radius:5px;padding:2px 5px;letter-spacing:.06em}
+.sfw[data-s=flobi] .h-id small{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--mute);margin-top:2px}
+.sfw[data-s=flobi] .h-id small i{width:6px;height:6px;border-radius:50%;background:#8fd14f}
+.sfw[data-s=flobi] .h-ctl{display:flex;gap:2px}
+.sfw[data-s=flobi] .h-ctl button{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;color:var(--mute);font-size:16px;transition:background .2s,color .2s}
+.sfw[data-s=flobi] .h-ctl button:hover{background:var(--fill);color:var(--ink)}
+.sfw[data-s=flobi] .b{padding:12px 16px}
+/* welcome */
+.sfw[data-s=flobi] .w{text-align:center;padding:22px 2px 4px}
+.sfw[data-s=flobi] .w-mas{display:inline-grid;place-items:center;width:96px;height:96px;border-radius:32px;background:var(--lav1)}
+.sfw[data-s=flobi] .w-mas .flobi{animation:bFloat 3.4s ease-in-out infinite}
+.sfw[data-s=flobi] .w h3{font-size:20px;font-weight:700;margin:16px 0 6px;letter-spacing:-.025em}
+.sfw[data-s=flobi] .w p{font-size:14px;color:var(--sub);line-height:1.55}
+.sfw[data-s=flobi] .w-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:24px;text-align:left}
+.sfw[data-s=flobi] .w-chips button{background:var(--fill);border-radius:16px;padding:12px 13px 13px;font-size:13px;font-weight:600;line-height:1.42;color:#33404a;transition:background .2s,transform .3s var(--ease)}
+.sfw[data-s=flobi] .w-chips button:hover{background:var(--lav1);transform:translateY(-1px)}
+.sfw[data-s=flobi] .w-chips small{display:block;font-size:10px;color:var(--deep);margin-bottom:5px;font-weight:600}
+/* messages */
+.sfw[data-s=flobi] .m.u,.sfw[data-s=flobi] .m.ai{display:flex;gap:8px;margin:14px 0}
+.sfw[data-s=flobi] .m.u{justify-content:flex-end}
+.sfw[data-s=flobi] .m.u .bub{background:var(--ub);color:var(--ubt);border-radius:18px 18px 5px 18px;padding:10px 14px;font-size:14px;font-weight:500;line-height:1.45;max-width:80%}
+.sfw[data-s=flobi] .m.ai .av{flex:none;width:28px;height:28px;border-radius:10px;background:var(--lav1);display:grid;place-items:center}
+.sfw[data-s=flobi] .m.ai .bub{flex:1;min-width:0;background:var(--aib);border-radius:5px 18px 18px 18px;padding:12px 14px}
+.sfw[data-s=flobi] .m.ai .bub>p{font-size:14px;line-height:1.6;color:var(--ink)}
+.sfw[data-s=flobi] .st{display:flex;align-items:baseline;gap:4px;margin-top:12px;background:#fff;border-radius:12px;padding:10px 12px}
+.sfw[data-s=flobi] .st small{font-size:12px;color:var(--sub);margin-right:auto;align-self:center;font-weight:500}
+.sfw[data-s=flobi] .st b{font-size:24px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;color:var(--deep)}
+.sfw[data-s=flobi] .st em{font-style:normal;font-size:13px;font-weight:600;color:var(--deep)}
+.sfw[data-s=flobi] .rows{margin-top:4px}
+.sfw[data-s=flobi] .rows li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 2px;border-bottom:1px solid #e6eaed}
+.sfw[data-s=flobi] .rows li:last-child{border-bottom:0}
+.sfw[data-s=flobi] .rows b{display:block;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+.sfw[data-s=flobi] .rows small{display:block;font-size:11px;color:var(--mute);margin-top:1px}
+.sfw[data-s=flobi] .rows span{font-size:12px;color:var(--sub);white-space:nowrap;font-variant-numeric:tabular-nums}
+.sfw[data-s=flobi] .act{display:inline-flex;align-items:center;gap:2px;margin-top:8px;color:var(--deep);font-size:13px;font-weight:600}
+.sfw[data-s=flobi] .act svg{font-size:13px}
+.sfw[data-s=flobi] .think .bub{display:flex;align-items:center;gap:10px;flex:0 1 auto}
+.sfw[data-s=flobi] .think small{font-size:12px;color:var(--sub);font-weight:500}
+.sfw[data-s=flobi] .pix{display:flex;gap:3px}
+.sfw[data-s=flobi] .pix i{width:6px;height:6px;border-radius:2px;background:var(--lav2);animation:b2Pix 1.4s ease-in-out infinite}
+@keyframes b2Pix{0%,100%{background:var(--lav2)}40%{background:var(--lav)}}
+/* footer */
+.sfw[data-s=flobi] .sg{padding:4px 16px 10px}
+.sfw[data-s=flobi] .sg button{padding:7px 12px;border-radius:999px;background:var(--fill);font-size:12.5px;font-weight:500;color:var(--sub);transition:background .2s,color .2s}
+.sfw[data-s=flobi] .sg button:hover{background:var(--lav1);color:var(--deep)}
+.sfw[data-s=flobi] .in{margin:0 12px 12px;background:var(--fill);border-radius:24px;padding:6px 6px 6px 16px;min-height:48px;transition:background .2s,box-shadow .2s}
+.sfw[data-s=flobi] .in:focus-within{background:#fff;box-shadow:0 0 0 1.5px rgba(var(--rgb),.45),0 4px 14px rgba(var(--rgb),.12)}
+.sfw[data-s=flobi] textarea{font-size:14px;padding:7px 0}
+.sfw[data-s=flobi] textarea::placeholder{color:#a7b0b8}
+.sfw[data-s=flobi] .send{width:36px;height:36px;border-radius:50%;background:var(--lav);color:#fff;font-size:17px}
+.sfw[data-s=flobi] .send:disabled{background:#dde3e7}
+.sfw[data-s=flobi] .send:not(:disabled):active{transform:scale(.92)}
+
+.sfw[data-s=flobi] .h-id small i{background:var(--acc);box-shadow:0 0 0 3px var(--t2)}.sfw[data-s=flobi] .badge{background:var(--ant)}
+
+
+/* iMessage Blue palette (확정) */
+.sfw[data-s=flobi]{--acc:#0a84ff;--rgb:10,132,255;--t1:#ebf4ff;--t2:#d3e7ff;--tile:#d6e9ff;--deep:#0a70e0;--ub:#0a84ff;--ubt:#fff;--fill:#f2f2f5;--aib:#efeff2;--face:#1c2a3e;--eye:#8fdcff;--ant:#ffd45e;--cheek:#ffbcd0;--happy:#ff9fba;--headg:#eaf3ff;--ink:#1c1c1e;--sub:#5f6470;--mute:#9a9ea8;--line:#ececf0}
+
+/* Shared admin overlay host. */
+.flobi-root{position:fixed;inset:0;pointer-events:none;z-index:9999}
+
+/* Floby: scalable glossy shell. The existing mood classes drive expressions. */
+.sfw .flobi{position:relative;display:inline-block;width:1em;height:1em;flex:none;line-height:0;isolation:isolate}
+.sfw .flobi i,.sfw .flobi span{position:absolute;display:block;pointer-events:none}
+.sfw .flobi::after{content:"";position:absolute;left:17%;right:17%;bottom:-.035em;height:.055em;border-radius:50%;background:radial-gradient(ellipse,rgba(85,84,147,.22),rgba(85,84,147,0) 72%);z-index:-1}
+.sfw .flobi .fb-head{left:.075em;right:.075em;top:.22em;bottom:.065em;border-radius:48% 48% 42% 42% / 53% 53% 40% 40%;border:.012em solid #b9b9d0;background:radial-gradient(ellipse at 35% 16%,#fff 0 28%,#fafaff 52%,#e1e2f2 80%,#b8bad5 100%);box-shadow:inset .018em .025em .018em #fff,inset -.025em -.032em .035em #b7bad3,0 .025em .025em #555a8726;z-index:2}
+.sfw .flobi .fb-head::before{content:"";position:absolute;left:12%;right:18%;top:2%;height:11%;border-radius:50%;background:linear-gradient(90deg,transparent,#fff,transparent);opacity:.85}
+.sfw .flobi .fb-face{left:.085em;right:.085em;top:.105em;bottom:.085em;overflow:hidden;border-radius:44% 44% 35% 35% / 51% 51% 36% 36%;border:.012em solid #171c30;background:radial-gradient(ellipse at 72% 0%,#47495e 0,transparent 44%),linear-gradient(145deg,#2c344b,#171c2d 68%,#282d43);box-shadow:0 -.016em .012em #a9aabc,inset 0 .018em .018em #ffffff20,inset 0 -.022em .03em #0c1026}
+.sfw .flobi .fb-face::before{content:"";position:absolute;inset:0;background:linear-gradient(153deg,#ffffff1a,transparent 40%);border-radius:inherit}
+.sfw .flobi .fb-face::after{content:"";position:absolute;right:13%;top:5%;width:12%;height:8%;border-radius:50%;background:#fff4ef;opacity:.8;transform:rotate(32deg);box-shadow:0 0 .025em #fff8}
+.sfw .flobi .fb-ant{left:.48em;top:.075em;width:.04em;height:.185em;background:linear-gradient(90deg,#141b30,#454b60 55%,#171e30);border-radius:.025em .025em 0 0;transform-origin:50% 100%;animation:fbAnt 4.6s ease-in-out infinite;z-index:1}
+.sfw .flobi .fb-ant::after{content:"";position:absolute;width:.12em;height:.12em;left:-.04em;top:-.09em;border-radius:50%;border:.009em solid #f5b72d;background:radial-gradient(ellipse at 67% 22%,#fff 0 9%,#fff8cc 10% 16%,transparent 18%),radial-gradient(circle at 40% 30%,#fff3a8,#ffdc58 55%,#ffb52e 90%);box-shadow:inset .012em .008em .012em #fff8,0 .008em .01em #c58b2233}
+.sfw .flobi .fb-ear{top:.455em;bottom:auto;width:.11em;height:.275em;border:.009em solid #dc8eab;border-radius:48%;background:radial-gradient(ellipse at 30% 20%,#fff4f8 0 8%,transparent 16%),linear-gradient(95deg,#f092b5,#ffc7db 46%,#ffb5cf 68%,#e187a5);box-shadow:inset .013em 0 .018em #fff8,.014em 0 0 #34354c;z-index:1}
+.sfw .flobi .fb-ear.l{left:.018em;right:auto;transform:rotate(-4deg)}
+.sfw .flobi .fb-ear.r{right:.018em;left:auto;transform:rotate(4deg);box-shadow:inset -.012em 0 .018em #fff8,-.014em 0 0 #34354c}
+.sfw .flobi .fb-eye{top:34%;width:.075em;height:.155em;border:0;border-radius:50% / 35%;background:linear-gradient(130deg,#f2fdff,#a8e2ff);box-shadow:0 0 .055em #83cfff88,inset .007em 0 .01em #fff;transform-origin:center;animation:fbBlink 7.3s ease-in-out infinite}
+.sfw .flobi .fb-eye::after{content:"";position:absolute;left:20%;top:8%;width:40%;height:25%;border-radius:50%;background:#fff;opacity:.9}
+.sfw .flobi .fb-eye.l{left:23%;right:auto;bottom:auto}
+.sfw .flobi .fb-eye.r{right:23%;left:auto;bottom:auto}
+.sfw .flobi .fb-mouth{left:50%;bottom:24%;width:.105em;height:.055em;margin-left:-.0525em;border:0;border-radius:20% 20% 65% 65%;background:radial-gradient(ellipse at 50% 100%,#ffd1e0 0 44%,transparent 48%),linear-gradient(#f283a5,#ffb3cd);box-shadow:0 .005em .012em #ff99c522}
+.sfw .flobi .fb-ck{bottom:24%;width:.065em;height:.027em;border-radius:50%;background:linear-gradient(#ffc2d8,#f49cb9);box-shadow:0 0 .025em #ff8cb733;opacity:1}
+.sfw .flobi .fb-ck.l{left:10%;right:auto;top:auto}
+.sfw .flobi .fb-ck.r{right:10%;left:auto;top:auto}
+.sfw .flobi.happy .fb-eye{top:38%;height:.08em;width:.10em;border:.022em solid #d3f1ff;border-bottom:0;border-radius:80% 80% 0 0;background:none;box-shadow:none}
+.sfw .flobi.happy .fb-eye::after{display:none}
+.sfw .flobi.happy .fb-mouth{width:.13em;height:.075em;margin-left:-.065em}
+.sfw .flobi.wink .fb-eye.r{top:39%;height:.085em;width:.085em;background:none;border-left:.022em solid #c1eaff;border-bottom:.022em solid #c1eaff;border-radius:.012em;box-shadow:none;animation:none;transform:rotate(45deg)}
+.sfw .flobi.wink .fb-eye.r::after{display:none}
+.sfw .flobi.think .fb-eye{animation:fbLook 5.7s ease-in-out infinite}
+.sfw .flobi.think .fb-mouth{width:.07em;height:.025em;margin-left:-.035em;border-radius:0 0 60% 60%}
+@keyframes fbBlink{0%,37%,40%,74%,77%,81%,84%,100%{transform:scaleY(1)}38.5%,75.5%,82.5%{transform:scaleY(.08)}}
+@keyframes fbLook{0%,15%,100%{transform:translateX(0) scaleY(1)}30%,48%{transform:translateX(.025em) scaleY(1)}52%{transform:translateX(.025em) scaleY(.1)}56%{transform:translateX(.025em) scaleY(1)}72%,86%{transform:translateX(-.018em) scaleY(1)}}
+@keyframes fbAnt{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+@keyframes bFloat{0%,100%{transform:translateY(1px)}50%{transform:translateY(-2px)}}
+@media(prefers-reduced-motion:reduce){
+  .sfw .flobi,.sfw .flobi *,.sfw .pix i,.sfw .m,.sfw .l-say{animation:none!important}
+  .sfw > .l,.sfw .win,.sfw .l-btn,.sfw .badge{transition:none!important}
+}
+
+/* Keep Korean words together; wrap unusually long unspaced text only as needed. */
+.sfw[data-s=flobi] .w-chips button,
+.sfw[data-s=flobi] .bub,
+.sfw[data-s=flobi] textarea{
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+}
+.sfw[data-s=flobi] .w-chips button{min-width:0}
+
+/* Quiet launcher: two blinks per 16 seconds, with coordinated head turns.
+   Individual rotate composes with the existing floating transform. */
+.sfw[data-s=flobi] .l-btn .flobi{
+  animation:bFloat 3.4s ease-in-out infinite,fbLauncherTurn 16s ease-in-out infinite;
+  transform-origin:50% 65%;
+}
+.sfw .l-btn .flobi .fb-eye{animation:fbLauncherBlink 16s ease-in-out infinite}
+.sfw .l-btn .flobi .fb-face{animation:fbLauncherFace 16s ease-in-out infinite}
+@keyframes fbLauncherBlink{
+  0%,18%,20%,68%,70%,100%{transform:scaleY(1)}
+  19%,69%{transform:scaleY(.08)}
+}
+@keyframes fbLauncherTurn{
+  0%,22%,48%,58%,88%,100%{rotate:0deg}
+  29%,40%{rotate:-7deg}
+  65%,79%{rotate:6deg}
+}
+@keyframes fbLauncherFace{
+  0%,22%,48%,58%,88%,100%{transform:perspective(2em) translateX(0) rotateY(0deg)}
+  29%,40%{transform:perspective(2em) translateX(-.025em) rotateY(-10deg)}
+  65%,79%{transform:perspective(2em) translateX(.025em) rotateY(10deg)}
+}

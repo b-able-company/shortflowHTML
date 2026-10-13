@@ -1,3 +1,23 @@
+// Resolve shared widget assets relative to this script, including nested admin routes.
+const adminCommonBase = new URL('.', document.currentScript.src);
+document.addEventListener('DOMContentLoaded', () => {
+  if (new URLSearchParams(location.search).has('embed') || document.body.classList.contains('embed-compose')) return;
+  if (document.querySelector('script[data-adminbot]')) return;
+  const style = document.createElement('link');
+  style.rel = 'stylesheet';
+  style.href = new URL('../adminbot/flobi-widget/flobi-widget.css', adminCommonBase).href;
+  document.head.appendChild(style);
+  const script = document.createElement('script');
+  script.dataset.adminbot = 'true';
+  script.src = new URL('../adminbot/flobi-widget/flobi-widget.js', adminCommonBase).href;
+  script.onload = () => {
+    const integration = document.createElement('script');
+    integration.src = new URL('../adminbot/adminbot.js', adminCommonBase).href;
+    document.head.appendChild(integration);
+  };
+  document.head.appendChild(script);
+});
+
 try {
   localStorage.removeItem('shortflow-sidebar-collapsed');
 } catch (error) {
